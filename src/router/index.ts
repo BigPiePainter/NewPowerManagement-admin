@@ -1,6 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import WorkSpaceView from '../views/WorkSpaceView.vue'
+import SchoolManagementView from '../views/SchoolManagementView.vue'
+import AccountManagementView from '../views/AccountManagementView.vue'
+import LiveClassView from '../views/LiveClassView.vue'
+import CourseManagementView from '../views/CourseManagementView.vue'
+import ShopManagementView from '../views/ShopManagementView.vue'
+import QuestionBankManagementView from '../views/QuestionBankManagementView.vue'
+import PointsManagementView from '../views/PointsManagementView.vue'
+import OrderManagementView from '../views/OrderManagementView.vue'
+import SettingView from '../views/SettingView.vue'
+
 import MainLayout from '../components/MainLayout.vue'
 
 import ViewA from '../views/ViewA.vue'
@@ -24,6 +35,56 @@ const router = createRouter({
           path: 'main',
           name: 'main',
           component: HomeView,
+        },
+        {
+          path: 'work-space',
+          name: 'work-space',
+          component: WorkSpaceView,
+        },
+        {
+          path: 'school-management',
+          name: 'school-management',
+          component: SchoolManagementView,
+        },
+        {
+          path: 'account-management',
+          name: 'account-management',
+          component: AccountManagementView,
+        },
+        {
+          path: 'live-class',
+          name: 'live-class',
+          component: LiveClassView,
+        },
+        {
+          path: 'course-management',
+          name: 'course-management',
+          component: CourseManagementView,
+        },
+        {
+          path: 'shop-management',
+          name: 'shop-management',
+          component: ShopManagementView,
+        },
+        {
+          path: 'question-bank-management',
+          name: 'question-bank-management',
+          component: QuestionBankManagementView,
+        },
+        {
+          path: 'points-management',
+          name: 'points-management',
+          component: PointsManagementView,
+        },
+        {
+          path: 'order-management',
+          name: 'order-management',
+          component: OrderManagementView,
+        },
+        {
+          path: 'setting',
+          name: 'setting',
+          component: SettingView,
         },
         {
           path: 'viewa',
