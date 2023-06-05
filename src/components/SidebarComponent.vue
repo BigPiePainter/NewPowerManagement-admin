@@ -16,6 +16,16 @@ const items = [
     {
         index: '/school-management',
         title: '学校管理',
+        subs: [
+            {
+                index: '/class-management',
+                title: '班级管理',
+            },
+            {
+                index: '/teacher-group-management',
+                title: '教研组管理',
+            },
+        ],
     },
     {
         index: '/account-management',
