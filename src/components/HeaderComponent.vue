@@ -7,7 +7,7 @@ import { ArrowDown } from '@element-plus/icons-vue'
 
     <div class="user-avatar"></div>
     <el-dropdown class="user-action">
-      <span class="el-dropdown-link">
+      <span>
         Zack Zhang
         <el-icon class="el-icon--right">
           <arrow-down />
