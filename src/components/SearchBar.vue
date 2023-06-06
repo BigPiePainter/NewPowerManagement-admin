@@ -4,8 +4,13 @@ interface searchElement {
   value: string
   type?: InputType
 }
+// enum InputType {
+//   Input,
+//   Select
+// }
 </script>
 <script setup lang="ts">
+import { InputType } from '@/type'
 import { Search, Refresh } from '@element-plus/icons-vue'
 
 const emit = defineEmits(['change'])
@@ -26,8 +31,6 @@ const clickRefresh = () => {
     emit('change', props.items)
   })
 }
-
-const select = InputType.Select
 </script>
 
 <template>
@@ -35,7 +38,7 @@ const select = InputType.Select
     <div class="search-element" v-for="item in items" :key="item.name">
       <el-text class="search-title">{{ item.name }}</el-text>
       <el-select
-        v-if="item.type === select"
+        v-if="item.type == InputType.Select"
         class="search-input"
         placeholder="请输入"
         v-model="item.value"
