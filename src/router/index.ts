@@ -7,6 +7,7 @@ import ClassManagementView from '../views/ClassManagementView.vue'
 import TeacherGroupManagementView from '../views/TeacherGroupManagementView.vue'
 import AccountManagementView from '../views/AccountManagementView.vue'
 import LiveClassView from '../views/LiveClassView.vue'
+import CourseApprovalView from '../views/CourseApprovalView.vue'
 import CourseManagementView from '../views/CourseManagementView.vue'
 import ShopManagementView from '../views/ShopManagementView.vue'
 import QuestionBankManagementView from '../views/QuestionBankManagementView.vue'
@@ -36,85 +37,92 @@ const router = createRouter({
         {
           path: 'main',
           name: 'main',
-          component: HomeView,
+          component: HomeView
         },
         {
           path: 'work-space',
           name: 'work-space',
-          component: WorkSpaceView,
+          component: WorkSpaceView
         },
         {
           path: 'school-management',
           name: 'school-management',
-          component: SchoolManagementView,
+          component: SchoolManagementView
         },
         {
           path: 'class-management',
           name: 'class-management',
-          component: ClassManagementView,
+          component: ClassManagementView
         },
         {
           path: 'teacher-group-management',
           name: 'teacher-group-management',
-          component: TeacherGroupManagementView,
+          component: TeacherGroupManagementView
         },
         {
           path: 'account-management',
           name: 'account-management',
-          component: AccountManagementView,
+          component: AccountManagementView
         },
         {
           path: 'live-class',
           name: 'live-class',
-          component: LiveClassView,
+          component: LiveClassView
         },
+        //课程管理-课程审核
+        {
+          path: 'course-approval',
+          name: 'course-approval',
+          component: CourseApprovalView
+        },
+        //课程管理-课程管理
         {
           path: 'course-management',
           name: 'course-management',
-          component: CourseManagementView,
+          component: CourseManagementView
         },
         {
           path: 'shop-management',
           name: 'shop-management',
-          component: ShopManagementView,
+          component: ShopManagementView
         },
         {
           path: 'question-bank-management',
           name: 'question-bank-management',
-          component: QuestionBankManagementView,
+          component: QuestionBankManagementView
         },
         {
           path: 'points-management',
           name: 'points-management',
-          component: PointsManagementView,
+          component: PointsManagementView
         },
         {
           path: 'order-management',
           name: 'order-management',
-          component: OrderManagementView,
+          component: OrderManagementView
         },
         {
           path: 'setting',
           name: 'setting',
-          component: SettingView,
+          component: SettingView
         },
         {
           path: 'viewa',
           name: 'viewa',
-          component: ViewA,
+          component: ViewA
         },
         {
           path: 'viewb',
           name: 'viewb',
-          component: ViewB,
+          component: ViewB
         },
         {
           path: '*',
           name: 'Error',
-          component: HomeView,
+          component: HomeView
         }
-      ],
-    },
+      ]
+    }
     // {
     //   path: '/about',
     //   name: 'about',

@@ -1,22 +1,18 @@
+<script lang="ts">
+interface searchElement {
+  name: string
+  value: string
+  type?: InputType
+}
+</script>
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
 import { Search, Refresh } from '@element-plus/icons-vue'
 
 const emit = defineEmits(['change'])
 
-enum InputType { Input, Select }
-
-interface searchElement {
-  name: string,
-  value: string,
-  type?: InputType;
-}
-
-type Props = {
+const props = defineProps<{
   items: searchElement[]
-}
-const props = defineProps<Props>()
-
+}>()
 
 const clickSearch = () => {
   //传递给父组件
@@ -24,20 +20,26 @@ const clickSearch = () => {
 }
 
 const clickRefresh = () => {
-  props.items.forEach(item => {
+  props.items.forEach((item) => {
     console.log(item)
-    item.value = ""
+    item.value = ''
     emit('change', props.items)
-  });
+  })
 }
 
+const select = InputType.Select
 </script>
 
 <template>
   <div class="search-bar-element">
     <div class="search-element" v-for="item in items" :key="item.name">
       <el-text class="search-title">{{ item.name }}</el-text>
-      <el-select v-if="item.type == InputType.Select" class="search-input" placeholder="请输入" v-model="item.value" />
+      <el-select
+        v-if="item.type === select"
+        class="search-input"
+        placeholder="请输入"
+        v-model="item.value"
+      />
       <el-input v-else class="search-input" placeholder="请输入" v-model="item.value" />
     </div>
 
@@ -48,33 +50,29 @@ const clickRefresh = () => {
   </div>
 </template>
 
-
-
 <style scoped lang="scss">
 .search-bar-element {
   display: flex;
 
-  >.search-element {
+  > .search-element {
     display: flex;
     align-items: center;
 
-    >.search-title {
+    > .search-title {
       margin-right: 8px;
       white-space: nowrap;
     }
 
-    >.search-input {
+    > .search-input {
       max-width: 300px;
       max-height: 30px;
       margin-right: 12px;
     }
   }
 
-  >.button {
+  > .button {
     margin-top: 1px;
     max-height: 30px;
   }
-
-
 }
 </style>
