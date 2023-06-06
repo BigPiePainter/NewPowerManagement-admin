@@ -3,74 +3,74 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const items = [
-    {
-        index: '/main',
-        title: '系统首页',
-    },
-    {
-        index: '/work-space',
-        title: '工作台',
-    },
-    {
-        index: '/school-management',
-        title: '学校管理',
-        subs: [
-            {
-                index: '/class-management',
-                title: '班级管理',
-            },
-            {
-                index: '/teacher-group-management',
-                title: '教研组管理',
-            },
-        ],
-    },
-    {
-        index: '/account-management',
-        title: '账号管理',
-    },
-    {
-        index: '/live-class',
-        title: '实时课堂',
-    },
-    {
-        index: '/course-management',
-        title: '课程管理',
-    },
-    {
-        index: '/shop-management',
-        title: '商城管理',
-    },
-    {
-        index: '/question-bank-management',
-        title: '题库管理',
-    },
-    {
-        index: '/points-management',
-        title: '积分管理',
-    },
-    {
-        index: '/order-management',
-        title: '订单管理',
-    },
-    {
-        index: '/setting',
-        title: '设置',
-    },
-    {
-        index: '1',
-        title: '展开栏',
-        subs: [
-            {
-                index: '/viewa',
-                title: 'A',
-            },
-            {
-                index: '/viewb',
-                title: 'B',
-            },
-        ],
-    },
+  {
+    index: '/main',
+    title: '系统首页',
+  },
+  {
+    index: '/work-space',
+    title: '工作台',
+  },
+  {
+    index: '/school-management',
+    title: '学校管理',
+    subs: [
+      {
+        index: '/class-management',
+        title: '班级管理',
+      },
+      {
+        index: '/teacher-group-management',
+        title: '教研组管理',
+      },
+    ],
+  },
+  {
+    index: '/account-management',
+    title: '账号管理',
+  },
+  {
+    index: '/live-class',
+    title: '实时课堂',
+  },
+  {
+    index: '/course-management',
+    title: '课程管理',
+  },
+  {
+    index: '/shop-management',
+    title: '商城管理',
+  },
+  {
+    index: '/question-bank-management',
+    title: '题库管理',
+  },
+  {
+    index: '/points-management',
+    title: '积分管理',
+  },
+  {
+    index: '/order-management',
+    title: '订单管理',
+  },
+  {
+    index: '/setting',
+    title: '设置',
+  },
+  {
+    index: '1',
+    title: '展开栏',
+    subs: [
+      {
+        index: '/viewa',
+        title: 'A',
+      },
+      {
+        index: '/viewb',
+        title: 'B',
+      },
+    ],
+  },
 ];
 
 const route = useRoute()
@@ -113,7 +113,7 @@ const route = useRoute()
   box-sizing: border-box;
 
   //   background-color: #212146;
-  > .sidebar-header {
+  >.sidebar-header {
     height: $header-height;
 
     // color: #fff;
@@ -128,7 +128,8 @@ const route = useRoute()
     //border-bottom: 3px #2c2c58 solid;
     box-sizing: border-box;
   }
-  > .el-menu {
+
+  >.el-menu {
     height: calc(100vh - $header-height);
     //border-right: 3px #f0f2f5 solid;
     border-right: 1px #f0f2f5 solid;
