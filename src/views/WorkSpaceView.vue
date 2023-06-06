@@ -13,21 +13,25 @@ var data2 = {
 //[] 是变量索引
 //.  是字符串索引
 
+// const name = ref("123")
+
+// const c = abc(() => {
+//   var nameB = "235"
+  
+//   name
+
+// })
 
 
-
-
-
-
-
+// const c = abc(function(){
+//   var nameB = "235"
+//   this.name
+// })
 </script>
 
 <template>
   <div>
-
     <DisplayCard v-for="i in 10" :key="i" title="a" :amount="100"> </DisplayCard>
-
-
     <el-row :gutter="18">
       <el-col :span="5">
         <el-card shadow="always"> Always </el-card>
