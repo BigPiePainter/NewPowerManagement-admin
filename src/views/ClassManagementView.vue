@@ -1,49 +1,40 @@
 <script setup lang="ts">
+import { ref, reactive } from 'vue';
+import SearchBar from '../components/SearchBar.vue'
 
+const items = reactive([
+  { name: "班级名称", value: "" },
+  { name: "负责老师", value: "" },
+  { name: "年级", value: "" },
+  { name: "学科", value: "" },
+])
+
+const refresh = () => {
+  console.log(items)
+}
 </script>
 
 <template>
-<div>
-  <el-row :gutter="18" justify="center">
-    <el-col :span="5">
-      <el-card shadow="always"> Always </el-card>
-    </el-col>
-    <el-col :span="5">
-      <el-card shadow="hover"> Hover </el-card>
-    </el-col>
-    <el-col :span="5">
-      <el-card shadow="never"> Never </el-card>
-    </el-col>
-    <el-col :span="5">
-      <el-card shadow="never"> Never </el-card>
-    </el-col>
-  </el-row>
+  <div>
+    <div>
+      <SearchBar class="search-bar" :items="items" @change="refresh()" />
+    </div>
+    <div>
+      <el-button class="new-class-button">新建班级</el-button>
 
-  <el-row :gutter="18" justify="center">
-    <el-col :span="5">
-      <el-card shadow="always"> Always </el-card>
-    </el-col>
-    <el-col :span="5">
-      <el-card shadow="hover"> Hover </el-card>
-    </el-col>
-    <el-col :span="5">
-
-    </el-col>
-    <el-col :span="5">
-
-    </el-col>
-  </el-row>
-</div>
+    </div>
+  </div>
 </template>
-<style>
-.el-row {
-  margin-top: 2vw;
+
+<style scoped lang="scss">
+.search-bar {
+  margin-top: 15px;
+  margin-left: 15px;
+  margin-right: 15px;
 }
-.el-row:last-child {
-  margin-bottom: 0;
-}
-.el-col {
-  margin-left: 1vw;
-  margin-right: 1vw;
+.new-class-button{
+  margin-top: 15px;
+  margin-left: 15px;
+  max-height: 30px;
 }
 </style>
