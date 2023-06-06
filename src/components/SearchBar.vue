@@ -34,7 +34,7 @@ const clickRefresh = () => {
 </script>
 
 <template>
-  <div class="search-bar">
+  <div class="search-bar-element">
     <div class="search-element" v-for="item in items" :key="item.name">
       <el-text class="search-title">{{ item.name }}</el-text>
       <el-select v-if="item.type == InputType.Select" class="search-input" placeholder="请输入" v-model="item.value" />
@@ -51,7 +51,7 @@ const clickRefresh = () => {
 
 
 <style scoped lang="scss">
-.search-bar {
+.search-bar-element {
   display: flex;
 
   >.search-element {
