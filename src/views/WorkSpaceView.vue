@@ -55,7 +55,7 @@ var data2 = {
 </template>
 <style>
 .el-row {
-  margin-bottom: 20px;
+  margin-top: 2vw;
 }
 
 .el-row:last-child {
@@ -63,7 +63,6 @@ var data2 = {
 }
 
 .el-col {
-  border-radius: 4px;
   margin-left: 1vw;
   margin-right: 1vw;
 }

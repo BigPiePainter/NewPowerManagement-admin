@@ -2,4 +2,20 @@
 
 body {
   margin: 0;
+  font-family: PingFangSC-Regular, sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  // height: 8px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d7d7d7;
+  border: none;
 }
