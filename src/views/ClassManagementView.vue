@@ -76,7 +76,7 @@ const refresh = () => {
   margin-top: 15px;
   margin-left: 15px;
   padding-bottom: 20px;
-  height: 650px;
+  height: calc(100vh - 200px);
   width: calc(100vw - $sidebar-width - 15px);
   box-sizing: border-box;
 }
