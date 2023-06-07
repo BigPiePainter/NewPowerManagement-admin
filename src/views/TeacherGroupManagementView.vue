@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import SearchBar from '../components/SearchBar.vue'
-import { RouterLink } from 'vue-router'
+import {useRouter} from 'vue-router'
+const router = useRouter()
 
 const items = reactive([
   { name: "教研组名称", value: "" },
@@ -14,13 +15,13 @@ const tableData = reactive<object[]>([{
   groupLeader: '庄老师',
   memberNum: '9',
   createDate: '2021-12-02',
-}, {
+},{
   id: '54321',
   teacherGroupName: '英语组',
   groupLeader: '庄老师',
   memberNum: '9',
   createDate: '2021-12-02',
-}, {
+},{
   id: '666345',
   teacherGroupName: '英语组',
   groupLeader: '庄老师',
@@ -42,8 +43,9 @@ const pushData = () => {
 }
 pushData()
 
-const clickDetail = (rowData: string) => {
+const clickDetail = (rowData:string) => {
   console.log(rowData)
+  router.push('teacher-group-detail')
 }
 const editItem = () => { }
 const deleteItem = () => { }
@@ -64,8 +66,7 @@ const refresh = () => {
         <el-table-column fixed prop="id" label="ID" />
         <el-table-column prop="teacherGroupName" label="教研组名称">
           <template #default="scope">
-            <RouterLink to="teacher-group-detail" type="primary" @click="clickDetail(scope.row.id)">{{ scope.row.teacherGroupName }}
-            </RouterLink>
+            <el-button link type="primary" @click="clickDetail(scope.row.id)">{{ scope.row.teacherGroupName }} </el-button>
           </template>
         </el-table-column>
         <el-table-column prop="groupLeader" label="教研组组长" />
