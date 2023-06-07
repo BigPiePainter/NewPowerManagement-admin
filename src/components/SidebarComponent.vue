@@ -27,7 +27,30 @@ const items = [
   },
   {
     index: '/account-management',
-    title: '账号管理'
+    title: '账号管理', 
+    subs: [
+      {
+        index: '/account-role-managment',
+        title: '角色管理'
+      },
+      {
+        index: '/acount-equipment-management',
+        title: '账号设备管理'
+      },
+      {
+        index: '/account-teacher-managament',
+        title: '老师管理'
+      },
+      {
+        index: '/account-student-management',
+        title: '学生管理'
+      },
+      {
+        index: '/account-temoorary-student',
+        title: '临时学生'
+      }  
+    ]
+    
   },
   {
     index: '/live-class',
