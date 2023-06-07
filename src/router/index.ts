@@ -5,6 +5,7 @@ import WorkSpaceView from '../views/WorkSpaceView.vue'
 import SchoolManagementView from '../views/SchoolManagementView.vue'
 import ClassManagementView from '../views/ClassManagementView.vue'
 import TeacherGroupManagementView from '../views/TeacherGroupManagementView.vue'
+import TeacherGroupDetailView from '../views/TeacherGroupDetailView.vue'
 import AccountManagementView from '../views/AccountManagementView.vue'
 import LiveClassView from '../views/LiveClassView.vue'
 import CourseApprovalView from '../views/CourseApprovalView.vue'
@@ -58,6 +59,11 @@ const router = createRouter({
           path: 'teacher-group-management',
           name: 'teacher-group-management',
           component: TeacherGroupManagementView
+        },
+        {
+          path: 'teacher-group-detail',
+          name: 'teacher-group-detail',
+          component: TeacherGroupDetailView
         },
         {
           path: 'account-management',
