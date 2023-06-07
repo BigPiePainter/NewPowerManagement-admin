@@ -1,25 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import WorkSpaceView from '../views/WorkSpaceView.vue'
-import SchoolManagementView from '../views/SchoolManagementView.vue'
-import ClassManagementView from '../views/ClassManagementView.vue'
-import TeacherGroupManagementView from '../views/TeacherGroupManagementView.vue'
+import HomeView from '@/views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
+import WorkSpaceView from '@/views/WorkSpaceView.vue'
+import SchoolManagementView from '@/views/SchoolManagementView.vue'
+import ClassManagementView from '@/views/ClassManagementView.vue'
+import TeacherGroupManagementView from '@/views/TeacherGroupManagementView.vue'
 import TeacherGroupDetailView from '../views/TeacherGroupDetailView.vue'
-import AccountManagementView from '../views/AccountManagementView.vue'
-import LiveClassView from '../views/LiveClassView.vue'
-import CourseApprovalView from '../views/CourseApprovalView.vue'
-import CourseManagementView from '../views/CourseManagementView.vue'
-import ShopManagementView from '../views/ShopManagementView.vue'
-import QuestionBankManagementView from '../views/QuestionBankManagementView.vue'
-import PointsManagementView from '../views/PointsManagementView.vue'
-import OrderManagementView from '../views/OrderManagementView.vue'
-import SettingView from '../views/SettingView.vue'
+import AccountRoleManagmentView from '@/views/AccountRoleManagmentView.vue'
+import LiveClassView from '@/views/LiveClassView.vue'
+import CourseApprovalView from '@/views/CourseApprovalView.vue'
+import AccountEquipmentManagementView from '@/views/AccountEquipmentManagementView.vue'
+import CourseManagementView from '@/views/CourseManagementView.vue'
+import ShopManagementView from '@/views/ShopManagementView.vue'
+import QuestionBankManagementView from '@/views/QuestionBankManagementView.vue'
+import PointsManagementView from '@/views/PointsManagementView.vue'
+import OrderManagementView from '@/views/OrderManagementView.vue'
+import SettingView from '@/views/SettingView.vue'
+import AccountStudentManagementView from '@/views/AccountStudentManagementView.vue'
+import AccountTeacherManagamentView from '@/views/AccountTeacherManagamentView.vue'
+import AccountTemporaryStudentsView from '@/views/AccountTemporaryStudentsView.vue'
+import MainLayout from '@/components/MainLayout.vue'
 
-import MainLayout from '../components/MainLayout.vue'
-
-import ViewA from '../views/ViewA.vue'
-import ViewB from '../views/ViewB.vue'
+import ViewA from '@/views/ViewA.vue'
+import ViewB from '@/views/ViewB.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -70,6 +73,13 @@ const router = createRouter({
           name: 'account-management',
           component: AccountManagementView
         },
+        {
+          path: 'account-temoorary-student',
+          name: 'account-temoorary-student',
+          component: AccountTemporaryStudentsView
+        },
+        
+
         {
           path: 'live-class',
           name: 'live-class',
@@ -132,7 +142,7 @@ const router = createRouter({
     // {
     //   path: '/about',
     //   name: 'about',
-    //   component: () => import('../views/AboutView.vue')
+    //   component: () => import('@/views/AboutView.vue')
     // }
   ]
 })
