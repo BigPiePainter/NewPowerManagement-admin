@@ -20,7 +20,7 @@ const fakeData = reactive([{
   untilDate: '2021-12-02',
 }])
 const pushData = () => {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 1000; i++) {
     tableData.push(fakeData[0])
   }
   console.log(tableData)
