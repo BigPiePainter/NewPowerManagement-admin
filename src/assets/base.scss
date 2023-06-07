@@ -1,5 +1,8 @@
 @import './variables.scss';
 
+$page-height: calc(100vh - $header-height - $page-gap * 2);
+$page-width: calc(100vw - $sidebar-width - $page-gap * 2);
+
 :root {
   --el-menu-border-color: red;
 }

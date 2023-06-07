@@ -9,7 +9,7 @@ import SidebarComponent from './SidebarComponent.vue'
     <div class="page-content">
       <HeaderComponent />
       <div class="content-box">
-        <router-view />
+        <router-view class="router-view" />
       </div>
     </div>
   </div>
@@ -27,8 +27,19 @@ import SidebarComponent from './SidebarComponent.vue'
       width: $width;
       height: calc(100vh - $header-height);
       overflow: auto;
+      background-color: #f0f2f5;
 
-      box-shadow: 3px 3px 15px 1px #dbdbdb inset;
+      //box-shadow: 3px 3px 15px 1px #dbdbdb inset;
+
+      > .router-view {
+        margin: $page-gap;
+        width: $page-width;
+        height: $page-height;
+        //box-shadow: 0px 0px 15px 1px #dbdbdb;
+        overflow: auto;
+        background-color: #ffffff;
+        //height: calc(100vh - $header-height - 10px);
+      }
     }
   }
 }

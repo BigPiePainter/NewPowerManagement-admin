@@ -4,11 +4,8 @@ interface searchElement {
   value: string
   type?: InputType
 }
-// enum InputType {
-//   Input,
-//   Select
-// }
 </script>
+
 <script setup lang="ts">
 import { InputType } from '@/type'
 import { Search, Refresh } from '@element-plus/icons-vue'
@@ -19,12 +16,11 @@ const props = defineProps<{
   items: searchElement[]
 }>()
 
-const clickSearch = () => {
-  //传递给父组件
+const clickSearch = () : void => {
   emit('change', props.items)
 }
 
-const clickRefresh = () => {
+const clickRefresh = () : void => {
   props.items.forEach((item) => {
     console.log(item)
     item.value = ''
