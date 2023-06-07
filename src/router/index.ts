@@ -5,7 +5,7 @@ import WorkSpaceView from '@/views/WorkSpaceView.vue'
 import SchoolManagementView from '@/views/SchoolManagementView.vue'
 import ClassManagementView from '@/views/ClassManagementView.vue'
 import TeacherGroupManagementView from '@/views/TeacherGroupManagementView.vue'
-import TeacherGroupDetailView from '../views/TeacherGroupDetailView.vue'
+import TeacherGroupDetailView from '@/views/TeacherGroupDetailView.vue'
 import AccountRoleManagmentView from '@/views/AccountRoleManagmentView.vue'
 import LiveClassView from '@/views/LiveClassView.vue'
 import CourseApprovalView from '@/views/CourseApprovalView.vue'
@@ -69,9 +69,24 @@ const router = createRouter({
           component: TeacherGroupDetailView
         },
         {
-          path: 'account-management',
-          name: 'account-management',
-          component: AccountManagementView
+          path: 'account-role-managment',
+          name: 'account-role-managment',
+          component: AccountRoleManagmentView
+        },
+        {
+          path: 'acount-equipment-management',
+          name: 'acount-equipment-management',
+          component: AccountEquipmentManagementView
+        },
+        {
+          path: 'account-teacher-managament',
+          name: 'account-teacher-managament',
+          component: AccountTeacherManagamentView
+        },
+        {
+          path: 'account-student-management',
+          name: 'account-student-management',
+          component: AccountStudentManagementView
         },
         {
           path: 'account-temoorary-student',
