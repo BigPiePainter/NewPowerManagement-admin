@@ -94,15 +94,14 @@ const refresh = () => {
 
   </div>
 
-  <TablePage class="table-page table" :columns="tableColumns" :data="tableData">
+  <TablePage class="table" :columns="tableColumns" :data="tableData">
       </TablePage>
 </template>
 
 <style scoped lang="scss">
 
   .table{
-    margin-left: 15px;
-    margin-top: 15px;
+
   }
 
 
