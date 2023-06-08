@@ -17,7 +17,7 @@ const generateColumns = (length = 10, prefix = 'column-', props?: any) =>
 
 const generateData = (
     columns: ReturnType<typeof generateColumns>,
-    length = 200,
+    length = 20,
     prefix = 'row-'
 ) =>
     Array.from({ length }).map((_, rowIndex) => {
@@ -34,7 +34,7 @@ const generateData = (
     })
 
 const columns = generateColumns(10)
-const data = generateData(columns, 200)
+const data = generateData(columns, 10)
 
 console.log("columns", columns)
 console.log("data", data)
@@ -43,8 +43,15 @@ console.log("data", data)
 </script>
 
 <template>
-    <el-table-v2 :columns="columns" :data="data" :width="700" :height="700" ></el-table-v2>
-    <el-button link type="primary" size="small">关闭</el-button>
+    <el-table-v2 :columns="columns" :data="data" :width="700" :height="700" >
+        <el-button link type="primary" size="small">删除</el-button>
+        <el-button link type="primary" size="small">删除</el-button>
+        <el-button link type="primary" size="small">删除</el-button>
+        <el-button link type="primary" size="small">删除</el-button>
+        <el-button link type="primary" size="small">删除</el-button>
+        <el-button link type="primary" size="small">删除</el-button>
+    </el-table-v2>
+   
 
 
 
