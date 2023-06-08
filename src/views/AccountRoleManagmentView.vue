@@ -185,21 +185,23 @@ const tableData: object[] = [
 
 <template>
       <el-button class="ARMbutton">新建学生</el-button>
-  <TablePage class="table" :columns="tableColumns" :data="tableData">
+  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
 
   </TablePage>
 </template>
 
 <style scoped lang="scss">
+$gap: 15px;
 
-.table {
-
-  width: $page-width;
-  height: 82.5vh;
+.page-container {
+  width: calc($page-width - $gap);
+  height: $page-height;
+  margin-left: $gap;
+  //margin-right: $gap;
 }
 
-
 .ARMbutton{
+  margin-left:37.5px;
   margin-top: 15px;
   margin-bottom: 15px;
   

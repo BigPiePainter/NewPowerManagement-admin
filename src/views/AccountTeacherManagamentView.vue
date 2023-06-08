@@ -271,7 +271,7 @@ const tableData: object[] = [
     tiedTime: "2011-9-19 18:23",
     loginTime: "2012-12-22 19:23"
   }
-  
+
 ]
 
 
@@ -286,36 +286,26 @@ const refresh = () => {
 
 
 <template>
-  <TablePage class="table-page table" :columns="tableColumns" :data="tableData">
+  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar ">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
-
 
     </div>
   </TablePage>
 </template>
 
 <style scoped lang="scss">
+$gap: 15px;
 
-.table {
 
-  width: $page-width;
-  height: 82.5vh;
+.page-container {
+  width: calc($page-width - $gap);
+  height: $page-height;
+  margin-left: $gap;
+  //margin-right: $gap;
 }
 
-
-
 .div-search-bar {
-  display: flex;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  margin-right: 15px;
-
-  >.search-bar-button {
-    max-width: 70px;
-    max-height: 30px;
-    margin-left: 12px;
-  }
-
+  margin: $gap;
 }
 </style>
