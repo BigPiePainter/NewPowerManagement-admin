@@ -1,15 +1,25 @@
 <script setup lang="ts">
 import { ArrowDown } from '@element-plus/icons-vue'
 import { ArrowRight } from '@element-plus/icons-vue'
+import { useBreadcrumbStore } from '@/stores/breadcrumb'
+const breadcrumbStore = useBreadcrumbStore()
+breadcrumbStore.data = [{ name: '工作台', path: '/' }]
 </script>
 
 <template>
   <div class="header">
     <el-breadcrumb :separator-icon="ArrowRight" class="breadcrumb">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <template v-for="item in breadcrumbStore.data" :key="item">
+        <el-breadcrumb-item v-if="item.path" :to="{ path: item.path }">{{
+          item.name
+        }}</el-breadcrumb-item>
+        <el-breadcrumb-item v-else>{{ item.name }}</el-breadcrumb-item>
+      </template>
+
+      <!-- <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item><a href="/">夜夜夜夜</a></el-breadcrumb-item>
       <el-breadcrumb-item>是否独立空间范围</el-breadcrumb-item>
-      <el-breadcrumb-item>我分析</el-breadcrumb-item>
+      <el-breadcrumb-item>我分析</el-breadcrumb-item> -->
     </el-breadcrumb>
     <div class="space"></div>
     <div class="user-avatar"></div>
