@@ -3,9 +3,14 @@
 $page-height: calc(100vh - $header-height - $page-gap * 2);
 $page-width: calc(100vw - $sidebar-width - $page-gap * 2);
 
-:root {
-  --el-menu-border-color: red;
-}
+// :root {
+//   // --el-menu-border-color: red;
+//   --el-menu-bg-color: red;
+// }
+
+// :root {
+//   --el-color-primary: #15ae6d;
+// }
 
 /* 
 :root {

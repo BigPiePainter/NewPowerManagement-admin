@@ -27,7 +27,7 @@ const items = [
   },
   {
     index: '/account-management',
-    title: '账号管理', 
+    title: '账号管理',
     subs: [
       {
         index: '/account-role-managment',
@@ -48,9 +48,8 @@ const items = [
       {
         index: '/account-temoorary-student',
         title: '临时学生'
-      }  
+      }
     ]
-    
   },
   {
     index: '/live-class',
@@ -112,7 +111,10 @@ const route = useRoute()
 <template>
   <div class="sidebar">
     <div class="sidebar-header">管理后台</div>
-    <el-menu :default-active="route.path" router>
+    <el-menu
+      :default-active="route.path"
+      router
+    >
       <template v-for="item in items" :key="item.index">
         <template v-if="item.subs">
           <el-sub-menu :index="item.index" :key="item.index">
@@ -144,8 +146,9 @@ const route = useRoute()
   width: $sidebar-width;
 
   box-sizing: border-box;
+  //color: white;
 
-  //   background-color: #212146;
+  //background-color: $sidebar-color;
   > .sidebar-header {
     height: $header-height;
 
@@ -166,6 +169,8 @@ const route = useRoute()
     height: calc(100vh - $header-height);
     //border-right: 3px #f0f2f5 solid;
     border-right: 1px #f0f2f5 solid;
+
+    // background-color: $sidebar-color;
 
     overflow: auto;
   }

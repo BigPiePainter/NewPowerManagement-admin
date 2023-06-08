@@ -16,7 +16,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         // 配置全局sass变量注入
-        additionalData: '@import "@/assets/base.scss";'
+        additionalData: '@use "@/assets/base.scss" as *;'
       }
     }
   }

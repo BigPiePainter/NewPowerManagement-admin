@@ -9,4 +9,13 @@ import zhCn from 'element-plus/lib/locale/lang/zh-cn'
   </el-config-provider>
 </template>
 
-<style scoped></style>
+<style lang="scss">
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': $primary-color
+    )
+  )
+);
+@use 'element-plus/theme-chalk/src/index.scss' as *;
+</style>
