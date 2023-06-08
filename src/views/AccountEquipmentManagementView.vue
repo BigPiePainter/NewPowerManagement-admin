@@ -5,6 +5,12 @@ import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import {InputType} from '@/type'
 
+import { useBreadcrumbStore } from '@/stores/breadcrumb'
+const breadcrumbStore = useBreadcrumbStore()
+breadcrumbStore.data = [
+  { name: '账号管理', path: '' },
+  { name: '账号设备管理', path: '/acount-equipment-management' },
+]
 
 const items = reactive([
   { name: "", value: "",label:"学生", type: InputType.Select },
@@ -97,6 +103,7 @@ const refresh = () => {
 
 <style scoped lang="scss">
 $gap: 15px;
+
 
 .page-container {
   width: calc($page-width - $gap);
