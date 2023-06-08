@@ -9,7 +9,9 @@ import SidebarComponent from './SidebarComponent.vue'
     <div class="page-content">
       <HeaderComponent />
       <div class="content-box">
-        <router-view class="router-view" />
+        <div class="router-view">
+          <router-view />
+        </div>
       </div>
     </div>
   </div>
