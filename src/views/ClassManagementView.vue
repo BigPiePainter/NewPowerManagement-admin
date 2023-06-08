@@ -5,7 +5,7 @@ import {useRouter} from 'vue-router'
 const router = useRouter()
 
 const items = reactive([
-  { name: "班级名称", value: "" },
+  { name: "班级名称", value: "", },
   { name: "负责老师", value: "" },
   { name: "年级", value: "" },
   { name: "学科", value: "" },

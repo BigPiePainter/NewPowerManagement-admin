@@ -2,6 +2,7 @@
 interface searchElement {
   name: string
   value: string
+  label?: string
   type?: InputType
 }
 </script>
@@ -20,6 +21,15 @@ const clickSearch = () : void => {
   emit('change', props.items)
 }
 
+const defaultLabel = () => {
+  props.items.forEach(item => {
+    if(!item.label){
+      item.label = "请输入"
+    }
+  });
+}
+defaultLabel()
+
 const clickRefresh = () : void => {
   props.items.forEach((item) => {
     console.log(item)
@@ -36,10 +46,10 @@ const clickRefresh = () : void => {
       <el-select
         v-if="item.type == InputType.Select"
         class="search-input"
-        placeholder="请输入"
+        :placeholder="item.label"
         v-model="item.value"
       />
-      <el-input v-else class="search-input" placeholder="请输入" v-model="item.value" />
+      <el-input v-else class="search-input" :placeholder="item.label" v-model="item.value" />
     </div>
 
     <div style="flex-grow: 1"></div>

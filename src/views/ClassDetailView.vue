@@ -63,7 +63,7 @@ const refresh = () => {
 <template>
   <div class="div-class-detail">
     <div class="card-left">
-        
+
     </div>
     <div class="card-right">
       <TablePage class="table-page" :columns="tableColumns" :data="tableData">
