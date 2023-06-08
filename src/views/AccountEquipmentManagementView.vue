@@ -101,6 +101,9 @@ const refresh = () => {
 <style scoped lang="scss">
 
   .table{
+height: 82.5vh;
+
+width: $page-width;
 
   }
 

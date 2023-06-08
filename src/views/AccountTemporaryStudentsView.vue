@@ -108,7 +108,7 @@ const refresh = () => {
   // margin-top: 15px;
 
   width: $page-width;
-  height: $page-height;
+  height: 82.5vh;
 }
 
 

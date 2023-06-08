@@ -94,6 +94,184 @@ const tableData: object[] = [
     tiedTime: "2011-9-19 18:23",
     loginTime: "2012-12-22 19:23"
   },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  },
+  {
+    id: '3',
+    studentName: 'Aaron',
+    userName: 'Aaron191518',
+    eqipmentModel: 'iphone',
+    tiedTime: "2011-9-19 18:23",
+    loginTime: "2012-12-22 19:23"
+  }
+  
 ]
 
 
@@ -108,7 +286,7 @@ const refresh = () => {
 
 
 <template>
-  <TablePage class="table" :columns="tableColumns" :data="tableData">
+  <TablePage class="table-page table" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar ">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
 
@@ -122,7 +300,7 @@ const refresh = () => {
 .table {
 
   width: $page-width;
-  height: $page-height;
+  height: 82.5vh;
 }
 
 

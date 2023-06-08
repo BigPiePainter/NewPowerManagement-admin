@@ -195,7 +195,7 @@ const tableData: object[] = [
 .table {
 
   width: $page-width;
-  height: $page-height;
+  height: 82.5vh;
 }
 
 
