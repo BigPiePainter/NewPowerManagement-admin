@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import SearchBar from '../components/SearchBar.vue'
+import {useRouter} from 'vue-router'
+const router = useRouter()
 
 const items = reactive([
   { name: "班级名称", value: "" },
@@ -27,6 +29,10 @@ const pushData = () => {
 }
 pushData()
 
+const clickDetail = (rowData:string) => {
+  console.log(rowData)
+  router.push('class-detail')
+}
 const editItem = () => { }
 const deleteItem = () => { }
 
@@ -36,7 +42,7 @@ const refresh = () => {
 </script>
 
 <template>
-  <div>
+  <div class="div-class-management">
     <div>
       <SearchBar class="search-bar" :items="items" @change="refresh()" />
     </div>
@@ -44,7 +50,11 @@ const refresh = () => {
       <el-button class="new-class-button">新建班级</el-button>
       <el-table class="table-class-management" :data="tableData">
         <el-table-column fixed prop="id" label="ID" />
-        <el-table-column prop="className" label="班级名称" />
+        <el-table-column prop="className" label="班级名称">
+          <template #default="scope">
+            <el-button link type="primary" @click="clickDetail(scope.row.id)">{{ scope.row.className }} </el-button>
+          </template>
+        </el-table-column>
         <el-table-column prop="teacher" label="负责老师" />
         <el-table-column prop="grade" label="年级" />
         <el-table-column prop="major" label="学科" />
@@ -67,7 +77,10 @@ const refresh = () => {
   margin-left: 17px;
   margin-right: 15px;
 }
-
+.div-class-management{
+  height: $page-height;
+  flex-grow: 1;
+}
 .cell {
   margin-right: 10px;
 }
@@ -76,8 +89,7 @@ const refresh = () => {
   margin-top: 15px;
   margin-left: 15px;
   padding-bottom: 20px;
-  height: calc(100vh - 200px);
-  width: calc(100vw - $sidebar-width - 15px);
+  width: calc($page-width - 20px);
   box-sizing: border-box;
 }
 

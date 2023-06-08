@@ -4,6 +4,7 @@ import LoginView from '@/views/LoginView.vue'
 import WorkSpaceView from '@/views/WorkSpaceView.vue'
 import SchoolManagementView from '@/views/SchoolManagementView.vue'
 import ClassManagementView from '@/views/ClassManagementView.vue'
+import ClassDetailView from '@/views/ClassDetailView.vue'
 import TeacherGroupManagementView from '@/views/TeacherGroupManagementView.vue'
 import TeacherGroupDetailView from '@/views/TeacherGroupDetailView.vue'
 import AccountRoleManagmentView from '@/views/AccountRoleManagmentView.vue'
@@ -57,6 +58,11 @@ const router = createRouter({
           path: 'class-management',
           name: 'class-management',
           component: ClassManagementView
+        },
+        {
+          path: 'class-detail',
+          name: 'class-detail',
+          component: ClassDetailView
         },
         {
           path: 'teacher-group-management',

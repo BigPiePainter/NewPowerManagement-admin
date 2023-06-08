@@ -56,13 +56,13 @@ const refresh = () => {
 </script>
 
 <template>
-  <div>
+  <div class="div-teacher-group-management">
     <div>
       <SearchBar class="search-bar" :items="items" @change="refresh()" />
     </div>
     <div class="table-div">
-      <el-button class="new-class-button">新建教研组</el-button>
-      <el-table class="table-class-management" :data="tableData">
+      <el-button class="new-teacher-group-button">新建教研组</el-button>
+      <el-table class="table-teacher-group-management" :data="tableData">
         <el-table-column fixed prop="id" label="ID" />
         <el-table-column prop="teacherGroupName" label="教研组名称">
           <template #default="scope">
@@ -89,21 +89,18 @@ const refresh = () => {
   margin-left: 17px;
   margin-right: 15px;
 }
-
-.cell {
-  margin-right: 10px;
+.div-teacher-group-management{
+  height: $page-height;
+  flex-grow: 1;
 }
-
-.table-class-management {
+.table-teacher-group-management {
   margin-top: 15px;
   margin-left: 15px;
   padding-bottom: 20px;
-  height: calc(100vh - 200px);
-  width: calc(100vw - $sidebar-width - 15px);
+  width: calc($page-width - 20px);
   box-sizing: border-box;
 }
-
-.new-class-button {
+.new-teacher-group-button {
   margin-top: 15px;
   margin-left: 15px;
   max-height: 30px;
