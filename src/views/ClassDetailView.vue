@@ -4,7 +4,40 @@ import {
     ElButton,
     TableV2FixedDir,
 } from 'element-plus'
-
+const slotHeader = [
+    {
+        dataKey: 'id',
+        key: 'id',
+        title: '22',
+        width: 150
+    },
+    {
+        dataKey: 'studentName',
+        key: 'studentName',
+        title: '学生姓名',
+        width: 200
+    },
+    {
+        dataKey: 'userName',
+        key: 'userName',
+        title: '用户名',
+        width: 200
+    },
+    {
+        key: 'option',
+        title: '操作',
+        cellRenderer: () => (
+            <>
+                <el-button link type="primary">
+                    移除
+                </el-button>
+            </>
+        ),
+        width: 150,
+        fixed: 'right',
+        align: 'center',
+    },
+]
 const tableColumns = [
     {
         dataKey: 'id',
@@ -40,7 +73,7 @@ const tableColumns = [
     },
 ]
 
-const tableData: object[] = [];
+const tableData: object[] = [{ id: '1456', studentName: 'Nick', userName: 'Nick191518' }];
 
 const fakeData = { id: '123456', studentName: 'Nick', userName: 'Nick191518' };
 
@@ -76,7 +109,12 @@ console.log(tableData)
                     <el-auto-resizer>
                         <template #default="{ height, width }">
                             <el-table-v2 class="class-detail-table" :columns="tableColumns" :data="tableData"
-                                :height="height" :width="width" />
+                                :height="height" :width="width">
+                                <template #header-cell="scope">
+                                    <el-button v-if="scope.column.key == 'option'" @click="console.log(scope)">{{ scope.column.title }}</el-button>
+                                    <span v-else>{{ scope.column.title }}</span>
+                                </template>
+                            </el-table-v2>
                         </template>
                     </el-auto-resizer>
                     <el-divider class="table-border" direction="vertical" />
@@ -139,4 +177,5 @@ console.log(tableData)
         >.class-detail-table {}
     }
 
-}</style>
+}
+</style>
