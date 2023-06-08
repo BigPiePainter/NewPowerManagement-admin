@@ -3,95 +3,114 @@ import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
+import { InputType } from '@/type'
+
+
+const items = reactive([
+  { name: "姓名", value: "" },
+  { name: "手机", value: ""}
+
+])
+
 
 const tableColumns = [
   {
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 150
+    width: 200,
   },
   {
     dataKey: 'studentName',
     key: 'studentName',
-    title: '学生姓名',
-    width: 200
+    title: '姓名',
+    width: 200,
   },
   {
-    dataKey: 'userName',
-    key: 'userName',
-    title: '用户名',
-    width: 200
+    dataKey: 'phoneNumber',
+    key: 'phoneNumber',
+    title: '手机号',
+    width: 200,
+  },
+  {
+    dataKey: 'school',
+    key: 'school',
+    title: '学校',
+    width: 200,
   },
   {
     key: 'option',
     title: '操作',
     cellRenderer: () => (
       <>
-        <el-button link type="primary">
-          移除
+        <el-button link type="primary" class="">
+          编辑
+        </el-button>
+        <el-button link type="primary" class="">
+          转为正式学生
+        </el-button>
+        <el-button link type="primary" class="">
+          重置密码
+        </el-button>
+        <el-button link type="primary" class="">
+          删除
         </el-button>
       </>
     ),
-    width: 150,
-    fixed: 'right',
+    
+    width: 300,
+  fixed: 'right',
     align: 'center'
   }
 ]
 
-const tableData: object[] = [{ id: '1456', studentName: 'Nick', userName: 'Nick191518' }]
 
-const fakeData = { id: '123456', studentName: 'Nick', userName: 'Nick191518' }
+let fakeData = {
+  id: '1',
+  studentName: 'Aaron',
+  school: '上虞中学',
+  phoneNumber: '155799928891',
+  createTime: "2011-9-19 18:23",
+}
 
-const generateData = (data: object[], fakeItem: object) => {
-  for (let i = 0; i < 1000; i++) {
-    data.push(fakeItem)
-  }
+const tableData: object[] = []
+
+for (let index = 0; index < 100; index++) {
+  let data = { ...fakeData }
+  data.id += index;
+  tableData.push(data)
 }
 
 
-generateData(tableData, fakeData)
+
+
 console.log(tableData)
 
 const refresh = () => {
   console.log(items)
 }
+
 </script>
 
-<template>
-  <div class="div-class-detail">
 
-      <TablePage class="table-page" :columns="tableColumns" :data="tableData">
-      </TablePage>
+<template>
+  <div class="div-search-bar ">
+    <SearchBar :items="items" @change="refresh()"></SearchBar>
 
   </div>
+  <TablePage class="table-page table" :columns="tableColumns" :data="tableData">
+  </TablePage>
 </template>
 
 <style scoped lang="scss">
-.div-class-detail {
-  $card-left-width: 350px;
+.table {
+  // margin-left: 15px;
+  // margin-top: 15px;
 
+  width: $page-width;
   height: $page-height;
-  display: flex;
-
-  > .card-left {
-    width: $card-left-width;
-    min-width: $card-left-width;
-    max-width: $card-left-width;
-    box-shadow: 0px 0px 10px 1px #e1e2e4;
-    margin-right: $page-gap;
-  }
-  > .card-right {
-    width: calc($page-width - $card-left-width - $page-gap);
-    box-shadow: 0px 0px 10px 1px #e1e2e4;
-    padding-left: 20px;
-    flex-grow: 1;
-    > .table-page {
-      height: $page-height;
-      width: calc($page-width - $card-left-width - $page-gap - 20px);
-    }
-  }
 }
+
 
 .div-search-bar {
   display: flex;
@@ -99,10 +118,11 @@ const refresh = () => {
   margin-bottom: 15px;
   margin-right: 15px;
 
-  > .search-bar-button {
+  >.search-bar-button {
     max-width: 70px;
     max-height: 30px;
     margin-left: 12px;
   }
+
 }
 </style>
