@@ -105,7 +105,7 @@ const tableColumns = [
     ),
     width: 180,
     fixed: 'right',
-    align: 'center'
+    align: 'left'
   }
 ]
 

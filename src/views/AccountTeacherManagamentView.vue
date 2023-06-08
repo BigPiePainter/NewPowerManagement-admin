@@ -41,36 +41,49 @@ const tableColumns = [
     width: 200
   },
   {
-    dataKey: 'eqipmentModel',
-    key: 'eqipmentModel',
-    title: '设备型号',
-    width: 200
+    dataKey: 'teacherGrade',
+    key: 'teacherGrade',
+    title: '年级',
+    width: 100
   },
   {
-    dataKey: 'tiedTime',
-    key: 'iedTime',
-    title: '绑定时间',
+    dataKey: 'teacherSubject',
+    key: 'teacherSubject',
+    title: '学科',
+    width: 100
+  },  
+  {
+    dataKey: 'teacherCellnumber',
+    key: 'teacherCellnumber',
+    title: '手机号码',
     width: 200
   },
   {
     dataKey: 'loginTime',
     key: 'loginTime',
     title: '最后登录时间',
-    width: 200
+    width: 300,
   },
+
   {
     key: 'option',
     title: '操作',
     cellRenderer: () => (
       <>
         <el-button link type="primary" class="">
-          解绑
+          编辑
+        </el-button>
+        <el-button link type="primary" class="">
+          重置密码
+        </el-button>
+        <el-button link type="primary" class="">
+          删除
         </el-button>
       </>
     ),
-    width: 150,
+    width: 180,
     fixed: 'right',
-    align: 'center'
+    align: 'left'
   }
 ]
 
@@ -79,40 +92,45 @@ const tableData: object[] = [
     id: '1',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '2',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
 
@@ -120,160 +138,180 @@ const tableData: object[] = [
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   },
   {
     id: '3',
     studentName: 'Aaron',
     userName: 'Aaron191518',
-    eqipmentModel: 'iphone',
-    tiedTime: "2011-9-19 18:23",
+    teacherGrade: '9 year',
+    teacherSubject: "数学",
+    teacherCellnumber: 18636666666,
     loginTime: "2012-12-22 19:23"
   }
 

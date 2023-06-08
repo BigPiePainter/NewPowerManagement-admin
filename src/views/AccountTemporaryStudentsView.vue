@@ -43,6 +43,13 @@ const tableColumns = [
     width: 200
   },
   {
+    dataKey: 'loginTime',
+    key: 'loginTime',
+    title: '最后登陆时间',
+    width: 200,
+    margin-left,
+  },
+  {
     key: 'option',
     title: '操作',
     cellRenderer: () => (
@@ -64,7 +71,7 @@ const tableColumns = [
 
     width: 300,
     fixed: 'right',
-    align: 'center'
+    align: 'left'
   }
 ]
 
@@ -73,7 +80,7 @@ let fakeData = {
   studentName: 'Aaron',
   school: '上虞中学',
   phoneNumber: '155799928891',
-  createTime: '2011-9-19 18:23'
+  loginTime: '2011-9-19 18:23'
 }
 
 const tableData: object[] = []
