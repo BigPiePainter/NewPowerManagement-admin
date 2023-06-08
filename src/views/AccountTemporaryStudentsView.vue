@@ -47,7 +47,6 @@ const tableColumns = [
     key: 'loginTime',
     title: '最后登陆时间',
     width: 200,
-    margin-left,
   },
   {
     key: 'option',
