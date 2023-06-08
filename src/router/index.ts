@@ -21,7 +21,8 @@ import AccountStudentManagementView from '@/views/AccountStudentManagementView.v
 import AccountTeacherManagamentView from '@/views/AccountTeacherManagamentView.vue'
 import AccountTemporaryStudentsView from '@/views/AccountTemporaryStudentsView.vue'
 import MainLayout from '@/components/MainLayout.vue'
-
+import PointsDetailView from '@/views/PointsDetailView.vue'
+import StudentPointsView from '@/views//StudentPointsView.vue'
 import ViewA from '@/views/ViewA.vue'
 import ViewB from '@/views/ViewB.vue'
 
@@ -133,6 +134,17 @@ const router = createRouter({
           name: 'points-management',
           component: PointsManagementView
         },
+        {
+          path: 'student-points-management',
+          name: 'student-points-management',
+          component: StudentPointsView
+        },
+        {
+          path: 'points-detail',
+          name: 'points-detail',
+          component: PointsDetailView
+        },
+
         {
           path: 'order-management',
           name: 'order-management',

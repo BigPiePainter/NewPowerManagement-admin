@@ -9,6 +9,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '积分管理', path: '' },
+  { name: '积分明细', path: '' },
 ]
 
 const items = reactive([
