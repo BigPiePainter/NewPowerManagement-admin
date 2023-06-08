@@ -9,12 +9,12 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '积分管理', path: '' },
+  { name: '学生积分', path: '' },
 ]
 
 const items = reactive([
   { name: '班级', value: '', type:InputType.Select, label:"请选择"},
-  { name: '时间范围', value: '', type:InputType.Select, label:"请选择"},
-  { name: '用户姓名', value:''}
+  { name: '用户姓名', value: '', type:InputType.Select, label:"请选择"},
 ])
 
 const tableColumns = [
@@ -49,28 +49,38 @@ const tableColumns = [
     width: 200,
   },
   {
-    dataKey: 'studentType',
-    key: 'studentType',
-    title: '学生类型',
+    dataKey: 'accumulatePoint',
+    key: 'accumulatePoint',
+    title: '累计积分数',
     width: 100,
   },
   {
-    dataKey: 'pointReason',
-    key: 'pointReason',
-    title: '原因',
+    dataKey: 'spentPoint',
+    key: 'spentPoint',
+    title: '消耗积分数',
     width: 100,
   }, 
    {
-    dataKey: 'userPointAmount',
-    key: 'userPointAmount',
-    title: '积分数',
+    dataKey: 'presentPoints',
+    key: 'presentPoints',
+    title: '当前积分数',
     width: 200,
   },
   {
-    dataKey: 'userPointTime',
-    key: 'userPointTime',
-    title: '时间',
-    width: 200,
+    key: 'option',
+    title: '操作',
+
+    cellRenderer: () => (
+      <>
+        <el-button link type="primary" class="">
+          变更积分数
+        </el-button>
+      </>
+    ),
+
+    width: 100,
+    fixed: 'right',
+    align: 'left'
   }
 ]
 
@@ -79,11 +89,10 @@ let fakeData = {
   userName: 'askldjkasjdlkasld',
   studentCellNumber: '15536996997',
   studentGrade: '9',
-  studentType:"正式学生",
+  accumulatePoint:"2790",
   studenName: '张家豪',
-  pointReason:'购买课程',
-  userPointAmount:'+10',
-  userPointTime:'2022-11-11 20:23'
+  spentPoint:'2010',
+  presentPoints:'780',
 }
 
 const tableData: object[] = []
