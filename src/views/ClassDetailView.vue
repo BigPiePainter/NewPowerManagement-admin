@@ -43,19 +43,22 @@ const tableColumns = [
   {
     key: 'option',
     title: '操作',
-    cellRenderer: () => (
-      <>
-        <el-button link type="primary">
-          移除
-        </el-button>
-      </>
-    ),
+    cellRenderer: (item: any) => {
+      return (
+        <div>
+          <ElButton link type='primary' onClick={() => deleteStudent(item)}>移除</ElButton>
+        </div>
+      )
+    },
     width: 150,
     fixed: 'right',
     align: 'center'
   }
 ]
 
+const deleteStudent = (props: object) => {
+  console.log(props)
+}
 // const leftCardData: object = {}
 console.log(route.query.id)
 const tableData: object[] = [{ id: '1456', studentName: 'Nick', userName: 'Nick191518' }]
@@ -67,7 +70,6 @@ for (let index = 0; index < 100; index++) {
   data.id += index;
   tableData.push(data)
 }
-
 
 const refresh = () => {
   console.log(items)
