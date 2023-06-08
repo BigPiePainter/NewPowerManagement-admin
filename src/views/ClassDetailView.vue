@@ -8,13 +8,17 @@ import { useRoute } from 'vue-router'
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '学校管理', path: '' }, { name: '班级管理', path: '/class-management' }, { name: '班级详情', path: '/class-detail' }]
+breadcrumbStore.data = [
+  { name: '学校管理', path: '' },
+  { name: '班级管理', path: '/class-management' },
+  { name: '班级详情', path: '/class-detail' }
+]
 
 
 const route = useRoute()
 
 const items = reactive([
-  { name: "姓名/用户名", value: "", type: InputType.Select },
+  { name: "姓名/用户名", value: "" },
 ])
 
 const tableColumns = [
@@ -70,12 +74,12 @@ const refresh = () => {
 }
 
 const detailItem = reactive({
-  className:'中考冲刺',
-  teacher:'Mr.庄',
-  major:'科学',
-  grade:'初三',
-  startDate:'2023-01-01',
-  endDate:'2023-06-01',
+  className: '中考冲刺',
+  teacher: 'Mr.庄',
+  major: '科学',
+  grade: '初三',
+  startDate: '2023-01-01',
+  endDate: '2023-06-01',
 })
 </script>
 

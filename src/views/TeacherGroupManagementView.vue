@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import SearchBar from '../components/SearchBar.vue'
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 const router = useRouter()
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '学校管理', path: '' }, { name: '教研组管理', path: '/class-management' }]
+breadcrumbStore.data = [
+  { name: '学校管理', path: '' },
+  { name: '教研组管理', path: '/teacher-group-management' }
+]
 
 const items = reactive([
   { name: "教研组名称", value: "" },
@@ -19,13 +22,13 @@ const tableData = reactive<object[]>([{
   groupLeader: '庄老师',
   memberNum: '9',
   createDate: '2021-12-02',
-},{
+}, {
   id: '54321',
   teacherGroupName: '英语组',
   groupLeader: '庄老师',
   memberNum: '9',
   createDate: '2021-12-02',
-},{
+}, {
   id: '666345',
   teacherGroupName: '英语组',
   groupLeader: '庄老师',
@@ -47,7 +50,7 @@ const pushData = () => {
 }
 pushData()
 
-const clickDetail = (rowData:string) => {
+const clickDetail = (rowData: string) => {
   console.log(rowData)
   router.push('teacher-group-detail')
 }
@@ -70,7 +73,8 @@ const refresh = () => {
         <el-table-column fixed prop="id" label="ID" />
         <el-table-column prop="teacherGroupName" label="教研组名称">
           <template #default="scope">
-            <el-button link type="primary" @click="clickDetail(scope.row.id)">{{ scope.row.teacherGroupName }} </el-button>
+            <el-button link type="primary" @click="clickDetail(scope.row.id)">{{ scope.row.teacherGroupName }}
+            </el-button>
           </template>
         </el-table-column>
         <el-table-column prop="groupLeader" label="教研组组长" />
@@ -93,10 +97,12 @@ const refresh = () => {
   margin-left: 17px;
   margin-right: 15px;
 }
-.div-teacher-group-management{
+
+.div-teacher-group-management {
   height: $page-height;
   flex-grow: 1;
 }
+
 .table-teacher-group-management {
   margin-top: 15px;
   margin-left: 15px;
@@ -104,9 +110,9 @@ const refresh = () => {
   width: calc($page-width - 20px);
   box-sizing: border-box;
 }
+
 .new-teacher-group-button {
   margin-top: 15px;
   margin-left: 15px;
   max-height: 30px;
-}
-</style>
+}</style>
