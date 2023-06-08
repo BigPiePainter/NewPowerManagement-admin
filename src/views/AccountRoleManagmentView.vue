@@ -1,98 +1,207 @@
-<script lang="ts" setup>
-import { ref, reactive } from 'vue';
-
-const test = reactive([
-  { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" },
-  { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" }, { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" }, { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" }, { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" }, { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" }, { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" }, { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" }, { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" }, { id: "123456", roleName: "jlxmfzrjoisjd", creator: "系统管理员", status: "启用", note: "分校管理员" },
-  { id: "234567", roleName: "jlxmfzrjoisjx", creator: "系统管理员", status: "关闭", note: "超级管理员" },
-])
-
-const handleClick = () => {
-  console.log('click')
-}
-
-//预留接口
-//  const tableData = reactive([{
-//   id: "",
-//   roleName: "",
-//   creator: "",
-//   status: "",
-//   note: "",
-// }])
-
-// const giveData = () => {
-//   for (let i = 0; i < 10; i++) {
-//     tableData[i].id = "136494"
-//     tableData[i].roleName = "nick"
-//     tableData[i].creator = "nick"
-//     tableData[i].status = "china"
-//     tableData[i].note = "6"
-//   }
-// }
+<script setup lang="tsx">
+import { ref, reactive } from 'vue'
+import { ElButton } from 'element-plus'
+import TablePage from '@/components/TablePage.vue'
+import { InputType } from '@/type'
 
 
+
+const tableColumns = [
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 150
+  },
+  {
+    dataKey: 'roleName',
+    key: 'roleName',
+    title: '姓名',
+    width: 200
+  },
+  {
+    dataKey: 'userName',
+    key: 'userName',
+    title: '用户名',
+    width: 200
+  },
+  {
+    dataKey: 'creatorName',
+    key: 'creatorName',
+    title: '创建者',
+    width: 200
+  },
+  {
+    dataKey: 'status',
+    key: 'status',
+    title: '状态',
+    width: 200
+  },
+  {
+    dataKey: 'Note',
+    key: 'Note',
+    title: '备注',
+    width: 200
+  },
+  {
+    key: 'option',
+    title: '操作',
+    cellRenderer: () => (
+      <>
+        <el-button link type="primary" class="">
+          编辑
+        </el-button>
+        <el-button link type="primary" class="">
+          关闭
+        </el-button>
+        <el-button link type="primary" class="">
+          删除
+        </el-button>
+      </>
+    ),
+    width: 150,
+    fixed: 'right',
+    align: 'center'
+  }
+]
+
+const tableData: object[] = [
+  {
+    id: '1',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '2',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '3',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '4',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '5',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '6',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '7',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '8',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '9',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '10',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '11',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '12',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '13',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  },
+  {
+    id: '14',
+    roleName: 'Aaron',
+    userName: 'Aaron191518',
+    creatorName: '系统管理员',
+    status: "启用",
+    Note: "这里是备注"
+  }
+]
 
 </script>
 
 
-
 <template>
-  <div class="page-container">
-    
-    <el-row class="account-management-button">
-      <el-button>新建角色</el-button>
-    </el-row>
-    <el-table :data="test" class="account-management-table">
-      <el-table-column prop="id" label="ID" />
-      <el-table-column prop="roleName" label="角色名称" />
-      <el-table-column prop="creator" label="创建人" />
-      <el-table-column prop="status" label="状态" />
-      <el-table-column prop="note" label="备注" />
-      <el-table-column label="操作">
-        <template #default>
+      <el-button class="ARMbutton">新建学生</el-button>
+  <TablePage class="table" :columns="tableColumns" :data="tableData">
 
-          <el-button link type="primary" size="small" @click="handleClick">编辑</el-button>
-          <el-button link type="primary" size="small">关闭</el-button>
-          <el-button link type="primary" size="small">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+  </TablePage>
 </template>
 
-
-
 <style scoped lang="scss">
-.page-container {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - $header-height - 50px);
 
+.table {
 
-  >.account-management-button {
-    margin-left: 15px;
-    margin-top: 28px;
-  }
-
-  >.account-management-table {
-    display: flex;
-    justify-content: flex-start;
-    margin-left: 15px;
-    margin-top: 10px;
-
-    width: calc(100vw - $sidebar-width - 15px);
-
-    flex-grow: 1;
-
-  }
+  width: $page-width;
+  height: $page-height;
 }
+
+
+.ARMbutton{
+  margin-top: 15px;
+  margin-left: 15px;
+}
+
 </style>
