@@ -19,12 +19,6 @@ const tableColumns = [
     width: 150
   },
   {
-    dataKey: 'roleName',
-    key: 'roleName',
-    title: '姓名',
-    width: 200
-  },
-  {
     dataKey: 'userName',
     key: 'userName',
     title: '用户名',
@@ -73,7 +67,6 @@ const tableColumns = [
 const tableData: object[] = [
   {
     id: '1',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -81,7 +74,6 @@ const tableData: object[] = [
   },
   {
     id: '2',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -89,7 +81,6 @@ const tableData: object[] = [
   },
   {
     id: '3',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -97,7 +88,6 @@ const tableData: object[] = [
   },
   {
     id: '4',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -105,7 +95,6 @@ const tableData: object[] = [
   },
   {
     id: '5',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -113,7 +102,6 @@ const tableData: object[] = [
   },
   {
     id: '6',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -121,7 +109,6 @@ const tableData: object[] = [
   },
   {
     id: '7',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -129,7 +116,6 @@ const tableData: object[] = [
   },
   {
     id: '8',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -137,7 +123,6 @@ const tableData: object[] = [
   },
   {
     id: '9',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -145,7 +130,6 @@ const tableData: object[] = [
   },
   {
     id: '10',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -153,7 +137,6 @@ const tableData: object[] = [
   },
   {
     id: '11',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -161,7 +144,6 @@ const tableData: object[] = [
   },
   {
     id: '12',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -169,7 +151,6 @@ const tableData: object[] = [
   },
   {
     id: '13',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -177,7 +158,6 @@ const tableData: object[] = [
   },
   {
     id: '14',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
