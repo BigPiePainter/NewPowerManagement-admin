@@ -81,7 +81,6 @@ const items = [
     index: '/points-management',
     title: '积分管理',
     subs: [
-
       {
         index: '/student-points-management',
         title: '学生积分'
@@ -89,64 +88,28 @@ const items = [
       {
         index: '/points-detail',
         title: '积分明细'
-      },
-    ]
-     },
-      {
-        index: '/setting',
-        title: '设置',
-        subs: [
-
-      {
-        index: '/student-points-management',
-        title: '分类管理'
-      },
-      {
-        index: '/points-detail',
-        title: '标签管理'
-      },
-      {
-        index: '/student-points-management',
-        title: '课程类目'
-      },
-      {
-        index: '/points-detail',
-        title: '考试资讯'
-      },
-      {
-        index: '/student-points-management',
-        title: '考试时间'
-      },
-      {
-        index: '/points-detail',
-        title: 'banner'
-      },
-      {
-        index: '/points-detail',
-        title: '消息中心'
-      },
-      {
-        index: '/points-detail',
-        title: '家长报告'
-      },
-      
-    ]
-      },
-      {
-        index: '1',
-        title: '展开栏',
-        subs: [
-          {
-            index: '/viewa',
-            title: 'A'
-          },
-          {
-            index: '/viewb',
-            title: 'B'
-          }
-        ]
       }
     ]
+  },
+  {
+    index: '/setting',
+    title: '设置'
+  },
+  {
+    index: '1',
+    title: '展开栏',
+    subs: [
+      {
+        index: '/viewa',
+        title: 'A'
+      },
+      {
+        index: '/viewb',
+        title: 'B'
+      }
+    ]
+  }
+]
 
 const route = useRoute()
 </script>
@@ -182,8 +145,10 @@ const route = useRoute()
 
 <style scoped lang="scss">
 .sidebar {
+  
   --el-menu-text-color: #ebebeb;
   --el-menu-bg-color: #{$sidebar-color};
+  //--el-menu-bg-color: #00000000;
   --el-menu-hover-bg-color: #{$sidebar-hover-color};
 
   height: 100vh;
@@ -197,7 +162,7 @@ const route = useRoute()
 
   border-right: 1px #f0f2f5 solid;
 
-  >.sidebar-header {
+  > .sidebar-header {
     height: $header-height;
 
     font-size: 18px;
@@ -213,7 +178,7 @@ const route = useRoute()
     box-sizing: border-box;
   }
 
-  >.el-menu {
+  > .el-menu {
     height: calc(100vh - $header-height);
     scrollbar-gutter: stable;
     border-right: none;

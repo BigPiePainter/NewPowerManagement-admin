@@ -33,8 +33,6 @@ const tableData = reactive<object[]>([
   }
 ])
 
-
-
 const pushData = () => {
   for (let i = 10086; i < 10200; i++) {
     var fakeData = {

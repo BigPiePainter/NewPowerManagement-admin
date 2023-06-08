@@ -44,6 +44,8 @@ const props = defineProps<Props>()
     flex-grow: 1;
     min-height: 0px;
     box-sizing: border-box;
+
+    //border: 1px #f0f2f5 solid;
   }
 
   > .page-table-pagination {

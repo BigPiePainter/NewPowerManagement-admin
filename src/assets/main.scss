@@ -6,7 +6,15 @@ body {
 }
 
 .el-table-v2 {
-  color: var(--el-table-text-color);;
+  color: var(--el-table-text-color);
+
+  $header-color: rgb(234, 238, 246);
+  .el-table-v2__header {
+    background-color: $header-color;
+  }
+  .el-table-v2__header-cell {
+    background-color: $header-color;
+  }
 }
 
 ::-webkit-scrollbar {
