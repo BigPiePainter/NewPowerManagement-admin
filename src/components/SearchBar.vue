@@ -70,7 +70,6 @@ const clickRefresh = () : void => {
   }
 
   > .button {
-    margin-top: 1px;
     max-height: 30px;
   }
 }

@@ -1,7 +1,12 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
+import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
+
+const items = reactive([
+  { name: "姓名/用户名", value: "" },
+])
 
 const tableColumns = [
   {
@@ -49,20 +54,22 @@ const generateData = (data: object[], fakeItem: object) => {
 }
 generateData(tableData, fakeData)
 console.log(tableData)
+
+const refresh = () => {
+  console.log(items)
+}
 </script>
 
 <template>
   <div class="div-class-detail">
-    <div class="card-left"></div>
+    <div class="card-left">
+        
+    </div>
     <div class="card-right">
       <TablePage class="table-page" :columns="tableColumns" :data="tableData">
         <div class="div-search-bar">
         
-            
-
-          <el-text class="search-bar-title">姓名/用户名</el-text>
-          <el-input class="search-bar-input" placeholder="请输入"></el-input>
-          <el-button class="search-bar-button">搜索</el-button>
+            <SearchBar :items="items" @change="refresh()"></SearchBar>
 
           <div style="flex-grow: 1"></div>
 
@@ -70,28 +77,6 @@ console.log(tableData)
         </div>
       </TablePage>
 
-      <!-- <div class="div-table">
-        <div class="div-table-2">
-          <el-auto-resizer>
-            <template #default="{ height, width }">
-              <el-table-v2
-                class="class-detail-table"
-                :columns="tableColumns"
-                :data="tableData"
-                :height="height"
-                :width="width"
-              >
-                <template #header-cell="props">
-                  <el-button v-if="props.column.key == 'option'" @click="console.log(props)">{{
-                    props.column.title
-                  }}</el-button>
-                  <span v-else>{{ props.column.title }}</span>
-                </template>
-              </el-table-v2>
-            </template>
-          </el-auto-resizer>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -127,32 +112,11 @@ console.log(tableData)
   margin-top: 15px;
   margin-bottom: 15px;
   margin-right: 15px;
-  > .search-bar-title {
-    margin-right: 8px;
-    white-space: nowrap;
-  }
-
-  > .search-bar-input {
-    max-width: 200px;
-    max-height: 30px;
-    margin-right: 12px;
-  }
 
   > .search-bar-button {
     max-width: 70px;
     max-height: 30px;
-  }
-}
-
-.div-table {
-  margin-top: 15px;
-
-  > .div-table-2 {
-    height: calc($page-height - 100px);
-    display: flex;
-
-    > .class-detail-table {
-    }
+    margin-left: 12px;
   }
 }
 </style>
