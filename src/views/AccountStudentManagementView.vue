@@ -30,7 +30,8 @@ const tableColumns = [
     dataKey: 'studentName',
     key: 'studentName',
     title: '姓名',
-    width: 80
+    width: 80,
+    cellRenderer: ({ cellData: studentName }:any) => <ElButton link type='primary'>{studentName}</ElButton>,
   },
   {
     dataKey: 'userName',
@@ -105,7 +106,7 @@ const tableColumns = [
     ),
     width: 180,
     fixed: 'right',
-    align: 'center'
+    align: 'left'
   }
 ]
 

@@ -71,7 +71,7 @@ const tableColumns = [
                 </el-button>
             </>
         ),
-        width: 150,
+        width: 180,
         fixed: 'right',
         align: 'center'
     }
