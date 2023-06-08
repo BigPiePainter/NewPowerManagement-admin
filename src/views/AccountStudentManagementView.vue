@@ -79,7 +79,7 @@ const tableColumns = [
     dataKey: 'note',
     key: 'note',
     title: '备注',
-    width: 100
+    width: 120
   },
   {
     dataKey: 'loginTime',
@@ -99,12 +99,12 @@ const tableColumns = [
         <el-button link type="primary" class="">
           重置密码
         </el-button>
-        <el-button link type="primary" class="">
+        <el-button link type="danger" class="">
           删除
         </el-button>
       </>
     ),
-    width: 180,
+    width: 170,
     fixed: 'right',
     align: 'left'
   }
