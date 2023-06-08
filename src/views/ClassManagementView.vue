@@ -8,6 +8,7 @@ const router = useRouter()
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
+
 breadcrumbStore.data = [
   { name: '学校管理', path: '' },
   { name: '班级管理', path: '/class-management' }
@@ -22,24 +23,41 @@ const items = reactive([
 
 const tableData = reactive<object[]>([
   {
-      id: 12345,
-      className: '666',
+    id: 12345,
+    className: '666',
+    teacher: '庄老师',
+    grade: '9年级',
+    major: '语文',
+    studentNum: '20',
+    untilDate: '2021-12-02',
+  }
+])
+
+const pushData = () => {
+  for (let i = 10086; i < 10200; i++) {
+    var fakeData = {
+      id: i,
+      className: '智能中高考',
       teacher: '庄老师',
       grade: '9年级',
       major: '语文',
       studentNum: '20',
       untilDate: '2021-12-02',
     }
-])
-// const fakeData = reactive([{
-//   id: '12345',
-//   className: '智能中高考',
-//   teacher: '庄老师',
-//   grade: '9年级',
-//   major: '语文',
-//   studentNum: '20',
-//   untilDate: '2021-12-02',
-// }])
+    tableData.push(fakeData)
+  }
+}
+pushData()
+
+// const renderDom = () => {
+//   return (
+//     <div>
+//       {tableData.map(item => {
+//         return (<ElButton onClick={() => console.log(this, item)}></ElButton>)
+//       })}
+//     </div>
+//   )
+// }
 
 const tableColumns = reactive([
   {
@@ -52,7 +70,13 @@ const tableColumns = reactive([
     dataKey: 'className',
     key: 'className',
     title: '班级名称',
-    cellRenderer: ({ cellData: className}: any) => <ElButton onClick={() => console.log(this)} link type='primary'>{className}</ElButton>,
+    cellRenderer: (item: any) => {
+      return (
+        <div>
+          <ElButton link type='primary' onClick={() => clickDetail(item)}>{item.rowData.className}</ElButton>
+        </div>
+      )
+    },
     width: 150
   },
   {
@@ -88,44 +112,34 @@ const tableColumns = reactive([
   {
     key: 'option',
     title: '操作',
-    cellRenderer: () => (
-      <>
-        <el-button link type="primary">
-          移除
-        </el-button>
-      </>
-    ),
+    cellRenderer: (item: any) => {
+      return (
+        <div>
+          <ElButton link type='primary' onClick={() => editItem(item)}>编辑</ElButton>
+          <ElButton link type='primary' onClick={() => deleteItem(item)}>删除</ElButton>
+        </div>
+      )
+    },
     width: 150,
     fixed: 'right',
     align: 'center'
   }
 ])
-
-const pushData = () => {
-  for (let i = 10086; i < 10200; i++) {
-    var fakeData = {
-      id: i,
-      className: '智能中高考',
-      teacher: '庄老师',
-      grade: '9年级',
-      major: '语文',
-      studentNum: '20',
-      untilDate: '2021-12-02',
-    }
-    tableData.push(fakeData)
-  }
+const clickDetail = (props: { rowData: { id: string } }) => {
+  console.log(props);
+  router.push({ path: 'class-detail', query: { id: props.rowData.id } });
 }
-pushData()
 
-const clickDetail = (rowDataID: string) => {
-  console.log(rowDataID)
-  router.push({ path: 'class-detail', query: { id: rowDataID } })
+const editItem = (props:object) => { 
+  console.log(props);
 }
-const editItem = () => { }
-const deleteItem = () => { }
+
+const deleteItem = (props:object) => { 
+  console.log(props);
+}
 
 const refresh = () => {
-  console.log(items)
+  console.log(items);
 }
 </script>
 
@@ -137,34 +151,16 @@ const refresh = () => {
       </div>
       <div class="table-div">
         <el-button class="new-class-button">新建班级</el-button>
-
-        <!-- <el-table class="table-class-management" :data="tableData">
-        <el-table-column fixed prop="id" label="ID" />
-        <el-table-column prop="className" label="班级名称">
-          <template #default="scope">
-            <el-button link type="primary" @click="clickDetail(scope.row.id)">{{ scope.row.className }} </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column prop="teacher" label="负责老师" />
-        <el-table-column prop="grade" label="年级" />
-        <el-table-column prop="major" label="学科" />
-        <el-table-column prop="studentNum" label="班级学生数量" />
-        <el-table-column prop="untilDate" label="到期时间" />
-        <el-table-column fixed="right" label="操作" align="right">
-          <template #default>
-            <el-button link type="primary" size="small" @click="editItem()">编辑</el-button>
-            <el-button link type="primary" size="small" @click="deleteItem()">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table> -->
       </div>
     </TablePage>
   </div>
 </template>
 
 <style scoped lang="scss">
+$gap : 15px;
+
 .div-search-bar {
-  margin-top: 15px;
+  margin: $gap;
 }
 
 .div-class-management {
@@ -173,14 +169,10 @@ const refresh = () => {
 }
 
 .table-page {
-  width: calc($page-width - 30px);
-  margin-left: 15px;
-  margin-right: 15px;
+  width: calc($page-width - $gap);
 }
 
 .new-class-button {
-  margin-top: 15px;
-  margin-left: 15px;
-  max-height: 30px;
+  margin-left: $gap;
 }
 </style>

@@ -60,13 +60,13 @@ const tableColumns = [
   {
     key: 'option',
     title: '操作',
-    cellRenderer: () => (
-      <>
-        <el-button link type="primary">
-          移除
-        </el-button>
-      </>
-    ),
+    cellRenderer: (item: any) => {
+      return (
+        <div>
+          <ElButton link type='primary' onClick={() => deleteTeacher(item)}>移除</ElButton>
+        </div>
+      )
+    },
     width: 150,
     fixed: 'right',
     align: 'center'
@@ -106,6 +106,10 @@ const detailItem = reactive({
   teacherGroupName: '中考冲刺',
   groupLeader: 'Mr.庄',
 })
+
+const deleteTeacher =(props:object)=>{
+  console.log(props)
+}
 </script>
 
 <template>

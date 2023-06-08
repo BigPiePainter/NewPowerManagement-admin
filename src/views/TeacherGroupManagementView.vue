@@ -64,7 +64,13 @@ const tableColumns = reactive<any[]>([
     dataKey: 'teacherGroupName',
     key: 'teacherGroupName',
     title: '教研组名称',
-    cellRenderer: ({ cellData: teacherGroupName }:any) => <ElButton link type='primary'>{teacherGroupName}</ElButton>,
+    cellRenderer: (item: any) => {
+      return (
+        <div>
+          <ElButton link type='primary' onClick={() => clickDetail(item)}>{item.rowData.teacherGroupName}</ElButton>
+        </div>
+      )
+    },
     width: 150
   }, {
     dataKey: 'groupLeader',
@@ -85,25 +91,30 @@ const tableColumns = reactive<any[]>([
   {
     key: 'option',
     title: '操作',
-    cellRenderer: () => (
-      <>
-        <el-button link type="primary">
-          移除
-        </el-button>
-      </>
-    ),
+    cellRenderer: (item: any) => {
+      return (
+        <div>
+          <ElButton link type='primary' onClick={() => editTeacherGroup(item)}>编辑</ElButton>
+          <ElButton link type='primary' onClick={() => deleteTeacherGroup(item)}>删除</ElButton>
+        </div>
+      )
+    },
     width: 150,
     fixed: 'right',
     align: 'center'
   }
 ])
-
-const clickDetail = (rowData: string) => {
-  console.log(rowData)
-  router.push('teacher-group-detail')
+//将教研组id传参到教研组详情页面，用于获取this.教研组
+const clickDetail = (props: {rowData:{id:string}}) => {
+  console.log(props.rowData.id)
+  router.push({ path: 'teacher-group-detail', query: { id: props.rowData.id } })
 }
-const editItem = () => { }
-const deleteItem = () => { }
+const editTeacherGroup = (props: object) => {
+  console.log(props)
+}
+const deleteTeacherGroup = (props: object) => {
+  console.log(props)
+}
 
 const refresh = () => {
   console.log(items)
@@ -118,33 +129,16 @@ const refresh = () => {
       </div>
       <div class="table-div">
         <el-button class="new-teacher-group-button">新建教研组</el-button>
-
-        <!-- <el-table class="table-teacher-group-management" :data="tableData">
-        <el-table-column fixed prop="id" label="ID" />
-        <el-table-column prop="teacherGroupName" label="教研组名称">
-          <template #default="scope">
-            <el-button link type="primary" @click="clickDetail(scope.row.id)">{{ scope.row.teacherGroupName }}
-            </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column prop="groupLeader" label="教研组组长" />
-        <el-table-column prop="memberNum" label="成员人数" />
-        <el-table-column prop="createDate" label="创建时间" />
-        <el-table-column fixed="right" label="操作" align="right">
-          <template #default>
-            <el-button link type="primary" size="small" @click="editItem()">编辑</el-button>
-            <el-button link type="primary" size="small" @click="deleteItem()">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table> -->
       </div>
     </TablePage>
   </div>
 </template>
 
 <style scoped lang="scss">
+$gap : 15px;
+
 .div-search-bar {
-  margin-top: 15px;
+  margin: $gap;
 }
 
 .div-teacher-group-management {
@@ -152,15 +146,11 @@ const refresh = () => {
   flex-grow: 1;
 }
 
-.table-page{
-  width: calc($page-width - 30px);
-  margin-left: 15px;
-  margin-right: 15px;
+.table-page {
+  width: calc($page-width - $gap);
 }
 
 .new-teacher-group-button {
-  margin-top: 15px;
-  margin-left: 15px;
-  max-height: 30px;
+  margin-left: $gap;
 }
 </style>
