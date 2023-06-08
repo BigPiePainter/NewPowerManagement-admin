@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import SearchBar from '../components/SearchBar.vue'
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 const router = useRouter()
+
+import { useBreadcrumbStore } from '@/stores/breadcrumb'
+const breadcrumbStore = useBreadcrumbStore()
+breadcrumbStore.data = [{ name: '学校管理', path: '' }, { name: '班级管理', path: '/class-management' }]
 
 const items = reactive([
   { name: "班级名称", value: "", },
@@ -21,17 +25,18 @@ const fakeData = reactive([{
   studentNum: '20',
   untilDate: '2021-12-02',
 }])
+
 const pushData = () => {
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 10; i++) {
     tableData.push(fakeData[0])
   }
   console.log(tableData)
 }
 pushData()
 
-const clickDetail = (rowData:string) => {
-  console.log(rowData)
-  router.push('class-detail')
+const clickDetail = (rowDataID: string) => {
+  console.log(rowDataID)
+  router.push({ path: 'class-detail', query: {id: rowDataID} })
 }
 const editItem = () => { }
 const deleteItem = () => { }
@@ -77,10 +82,12 @@ const refresh = () => {
   margin-left: 17px;
   margin-right: 15px;
 }
-.div-class-management{
+
+.div-class-management {
   height: $page-height;
   flex-grow: 1;
 }
+
 .cell {
   margin-right: 10px;
 }

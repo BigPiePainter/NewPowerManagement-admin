@@ -74,13 +74,11 @@ const clickRefresh = () : void => {
 
     > .search-input {
       max-width: 300px;
-      max-height: 30px;
       margin-right: 12px;
     }
   }
 
   > .button {
-    max-height: 30px;
   }
 }
 </style>

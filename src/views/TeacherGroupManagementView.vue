@@ -4,6 +4,10 @@ import SearchBar from '../components/SearchBar.vue'
 import {useRouter} from 'vue-router'
 const router = useRouter()
 
+import { useBreadcrumbStore } from '@/stores/breadcrumb'
+const breadcrumbStore = useBreadcrumbStore()
+breadcrumbStore.data = [{ name: '学校管理', path: '' }, { name: '教研组管理', path: '/class-management' }]
+
 const items = reactive([
   { name: "教研组名称", value: "" },
   { name: "教研组组长", value: "" },
@@ -36,7 +40,7 @@ const fakeData = reactive([{
   createDate: '2021-12-02',
 }])
 const pushData = () => {
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 10; i++) {
     tableData.push(fakeData[0])
   }
   console.log(tableData)
