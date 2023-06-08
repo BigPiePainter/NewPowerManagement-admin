@@ -5,6 +5,7 @@ import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { react } from '@babel/types'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '题目管理', path: '' },
@@ -16,9 +17,12 @@ const items = reactive([
   { name: '年级', value: '', type:InputType.Select, label:"请选择"},
   { name: '状态', value: '', type:InputType.Select, label:"请选择"},
   { name: '学科', value: '', type:InputType.Select, label:"请选择"},
-
   { name: '标签', value:'', type:InputType.Select, label:"请选择"}
 ])
+
+
+const url =
+  'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
 
 const tableColumns = [
   {
@@ -31,9 +35,8 @@ const tableColumns = [
     dataKey: 'poster',
     key: 'poster',
     title: "商品",
-    
     width: 200,
-    cellRenderer: ({ cellData: poster }:any) => <ElButton link type='primary'>{poster}</ElButton>,
+   
   },
   {
     dataKey: 'questionAmount',
@@ -129,6 +132,11 @@ const refresh = () => {
 </script>
 
 <template  slot-scope="scope">
+    <div class="demo-image__preview">
+    <el-image
+
+    />
+  </div>
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
@@ -152,4 +160,10 @@ $gap: 15px;
 .div-search-bar {
   margin: $gap;
 }
+
+.displaypic{
+      width: 100px;
+       height: 100px;
+}
+
 </style>
