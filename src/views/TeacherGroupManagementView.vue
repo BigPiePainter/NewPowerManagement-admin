@@ -145,18 +145,17 @@ const refresh = () => {
 <style scoped lang="scss">
 .div-search-bar {
   margin-top: 15px;
-  margin-left: 15px;
-  margin-right: 15px;
 }
 
 .div-teacher-group-management {
-  width: calc($page-width - $page-gap - 15px);
+  height: $page-height;
   flex-grow: 1;
+}
 
-  >.table-page {
-    height: $page-height;
-    margin-left: 15px;
-  }
+.table-page{
+  width: calc($page-width - 30px);
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .new-teacher-group-button {

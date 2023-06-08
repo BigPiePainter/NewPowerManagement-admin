@@ -1,6 +1,8 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { ref, reactive } from 'vue';
+import { ElButton } from 'element-plus'
 import SearchBar from '../components/SearchBar.vue'
+import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
@@ -18,22 +20,100 @@ const items = reactive([
   { name: "学科", value: "" },
 ])
 
-const tableData = reactive<object[]>([])
-const fakeData = reactive([{
-  id: '12345',
-  className: '智能中高考',
-  teacher: '庄老师',
-  grade: '9年级',
-  major: '语文',
-  studentNum: '20',
-  untilDate: '2021-12-02',
-}])
+const tableData = reactive<object[]>([
+  {
+      id: 12345,
+      className: '666',
+      teacher: '庄老师',
+      grade: '9年级',
+      major: '语文',
+      studentNum: '20',
+      untilDate: '2021-12-02',
+    }
+])
+// const fakeData = reactive([{
+//   id: '12345',
+//   className: '智能中高考',
+//   teacher: '庄老师',
+//   grade: '9年级',
+//   major: '语文',
+//   studentNum: '20',
+//   untilDate: '2021-12-02',
+// }])
+
+const tableColumns = reactive([
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 150
+  },
+  {
+    dataKey: 'className',
+    key: 'className',
+    title: '班级名称',
+    cellRenderer: ({ cellData: className}: any) => <ElButton onClick={() => console.log(this)} link type='primary'>{className}</ElButton>,
+    width: 150
+  },
+  {
+    dataKey: 'teacher',
+    key: 'teacher',
+    title: '负责老师',
+    width: 150
+  },
+  {
+    dataKey: 'grade',
+    key: 'grade',
+    title: '年级',
+    width: 150
+  },
+  {
+    dataKey: 'major',
+    key: 'major',
+    title: '学科',
+    width: 150
+  },
+  {
+    dataKey: 'studentNum',
+    key: 'studentNum',
+    title: '班级学生数量',
+    width: 150
+  },
+  {
+    dataKey: 'untilDate',
+    key: 'untilDate',
+    title: '到期时间',
+    width: 150
+  },
+  {
+    key: 'option',
+    title: '操作',
+    cellRenderer: () => (
+      <>
+        <el-button link type="primary">
+          移除
+        </el-button>
+      </>
+    ),
+    width: 150,
+    fixed: 'right',
+    align: 'center'
+  }
+])
 
 const pushData = () => {
-  for (let i = 0; i < 10; i++) {
-    tableData.push(fakeData[0])
+  for (let i = 10086; i < 10200; i++) {
+    var fakeData = {
+      id: i,
+      className: '智能中高考',
+      teacher: '庄老师',
+      grade: '9年级',
+      major: '语文',
+      studentNum: '20',
+      untilDate: '2021-12-02',
+    }
+    tableData.push(fakeData)
   }
-  console.log(tableData)
 }
 pushData()
 
@@ -51,12 +131,14 @@ const refresh = () => {
 
 <template>
   <div class="div-class-management">
-    <div>
-      <SearchBar class="search-bar" :items="items" @change="refresh()" />
-    </div>
-    <div class="table-div">
-      <el-button class="new-class-button">新建班级</el-button>
-      <el-table class="table-class-management" :data="tableData">
+    <TablePage class="table-page" :columns="tableColumns" :data="tableData">
+      <div class="div-search-bar">
+        <SearchBar :items="items" @change="refresh()" />
+      </div>
+      <div class="table-div">
+        <el-button class="new-class-button">新建班级</el-button>
+
+        <!-- <el-table class="table-class-management" :data="tableData">
         <el-table-column fixed prop="id" label="ID" />
         <el-table-column prop="className" label="班级名称">
           <template #default="scope">
@@ -74,16 +156,15 @@ const refresh = () => {
             <el-button link type="primary" size="small" @click="deleteItem()">删除</el-button>
           </template>
         </el-table-column>
-      </el-table>
-    </div>
+      </el-table> -->
+      </div>
+    </TablePage>
   </div>
 </template>
 
 <style scoped lang="scss">
-.search-bar {
+.div-search-bar {
   margin-top: 15px;
-  margin-left: 17px;
-  margin-right: 15px;
 }
 
 .div-class-management {
@@ -91,16 +172,10 @@ const refresh = () => {
   flex-grow: 1;
 }
 
-.cell {
-  margin-right: 10px;
-}
-
-.table-class-management {
-  margin-top: 15px;
+.table-page {
+  width: calc($page-width - 30px);
   margin-left: 15px;
-  padding-bottom: 20px;
-  width: calc($page-width - 20px);
-  box-sizing: border-box;
+  margin-right: 15px;
 }
 
 .new-class-button {
