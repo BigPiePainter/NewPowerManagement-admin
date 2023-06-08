@@ -111,18 +111,15 @@ const route = useRoute()
 <template>
   <div class="sidebar">
     <div class="sidebar-header">管理后台</div>
-    <el-menu
-      :default-active="route.path"
-      router
-    >
+    <el-menu :default-active="route.path" router>
       <template v-for="item in items" :key="item.index">
         <template v-if="item.subs">
-          <el-sub-menu :index="item.index" :key="item.index">
+          <el-sub-menu :index="item.index" :key="item.index" class="sidebar-sub-menu">
             <template #title>
               <span>{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs" :key="subItem.title">
-              <el-menu-item :index="subItem.index">
+              <el-menu-item :index="subItem.index" class="sidebar-menu-item">
                 {{ subItem.title }}
               </el-menu-item>
             </template>
@@ -130,7 +127,7 @@ const route = useRoute()
         </template>
         <template v-else>
           <app-link :to="item.index">
-            <el-menu-item :index="item.index" :key="item.index">
+            <el-menu-item :index="item.index" :key="item.index" class="sidebar-menu-item">
               <template #title>{{ item.title }}</template>
             </el-menu-item>
           </app-link>
@@ -142,17 +139,19 @@ const route = useRoute()
 
 <style scoped lang="scss">
 .sidebar {
+  --el-menu-text-color: #fff;
+  --el-menu-bg-color: #{$sidebar-color};
+  --el-menu-hover-bg-color: #{$sidebar-hover-color};
+
   height: 100vh;
   width: $sidebar-width;
 
   box-sizing: border-box;
-  //color: white;
-
-  //background-color: $sidebar-color;
+  color: white;
+  background-color: $sidebar-color;
   > .sidebar-header {
     height: $header-height;
 
-    // color: #fff;
     font-size: 18px;
     display: flex;
     align-items: center;
@@ -170,9 +169,9 @@ const route = useRoute()
     //border-right: 3px #f0f2f5 solid;
     border-right: 1px #f0f2f5 solid;
 
-    // background-color: $sidebar-color;
-
     overflow: auto;
+
+    color: #fff;
   }
 }
 </style>
