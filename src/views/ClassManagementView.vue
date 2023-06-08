@@ -6,7 +6,10 @@ const router = useRouter()
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '学校管理', path: '' }, { name: '班级管理', path: '/class-management' }]
+breadcrumbStore.data = [
+  { name: '学校管理', path: '' },
+  { name: '班级管理', path: '/class-management' }
+]
 
 const items = reactive([
   { name: "班级名称", value: "", },
@@ -36,7 +39,7 @@ pushData()
 
 const clickDetail = (rowDataID: string) => {
   console.log(rowDataID)
-  router.push({ path: 'class-detail', query: {id: rowDataID} })
+  router.push({ path: 'class-detail', query: { id: rowDataID } })
 }
 const editItem = () => { }
 const deleteItem = () => { }

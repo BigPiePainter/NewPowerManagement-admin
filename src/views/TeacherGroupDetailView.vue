@@ -8,13 +8,16 @@ import { useRoute } from 'vue-router'
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '学校管理', path: '' }, { name: '教研组管理', path: '/class-management' }, { name: '教研组详情', path: '/teacher-group-detail' }]
-
+breadcrumbStore.data = [
+  { name: '学校管理', path: '' },
+  { name: '教研组管理', path: '/teacher-group-management' },
+  { name: '教研组详情', path: '/teacher-group-detail' }
+]
 
 const route = useRoute()
 
 const items = reactive([
-  { name: "姓名/用户名", value: "", type: InputType.Select },
+  { name: "姓名/用户名", value: "", },
 ])
 
 const tableColumns = [
@@ -25,15 +28,33 @@ const tableColumns = [
     width: 150
   },
   {
-    dataKey: 'studentName',
-    key: 'studentName',
-    title: '学生姓名',
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '教师姓名',
     width: 200
   },
   {
     dataKey: 'userName',
     key: 'userName',
     title: '用户名',
+    width: 200
+  },
+  {
+    dataKey: 'grade',
+    key: 'grade',
+    title: '年级',
+    width: 200
+  },
+  {
+    dataKey: 'major',
+    key: 'major',
+    title: '学科',
+    width: 200
+  },
+  {
+    dataKey: 'joinDate',
+    key: 'joinDate',
+    title: '加入时间',
     width: 200
   },
   {
@@ -52,11 +73,24 @@ const tableColumns = [
   }
 ]
 
-// const leftCardData: object = {}
 console.log(route.query.id)
-const tableData: object[] = [{ id: '1456', studentName: 'Nick', userName: 'Nick191518' }]
+const tableData: object[] = [{
+  id: '1456',
+  teacherName: 'Mr.庄',
+  userName: 'Nick191518',
+  grade: '高二',
+  major: '英语',
+  joinDate: '2022-10-10'
+}]
 
-const fakeData = { id: '123456', studentName: 'Nick', userName: 'Nick191518' }
+const fakeData = {
+  id: '500551',
+  teacherName: 'Mr.YuTaKa',
+  userName: 'Young191518',
+  grade: '高二',
+  major: '数学',
+  joinDate: '2022-10-10'
+}
 
 for (let index = 0; index < 100; index++) {
   let data = { ...fakeData }
@@ -64,18 +98,13 @@ for (let index = 0; index < 100; index++) {
   tableData.push(data)
 }
 
-
 const refresh = () => {
   console.log(items)
 }
 
 const detailItem = reactive({
-  className:'中考冲刺',
-  teacher:'Mr.庄',
-  major:'科学',
-  grade:'初三',
-  startDate:'2023-01-01',
-  endDate:'2023-06-01',
+  teacherGroupName: '中考冲刺',
+  groupLeader: 'Mr.庄',
 })
 </script>
 
@@ -91,27 +120,12 @@ const detailItem = reactive({
       <div class="div-card-left-detail">
         <div class="detail-info">
           <span class="span-detail">
-            班级名称：{{ detailItem.className }}
+            教研组名称：{{ detailItem.teacherGroupName }}
           </span>
           <span class="span-detail">
-            负责老师：{{ detailItem.teacher }}
-          </span>
-          <span class="span-detail">
-            学科：{{ detailItem.major }}
-          </span>
-          <span class="span-detail">
-            年级：{{ detailItem.grade }}
+            组长：{{ detailItem.groupLeader }}
           </span>
         </div>
-        <div class="detail-date">
-          <span class="span-detail">
-            起始日期：{{ detailItem.startDate }}
-          </span>
-          <span class="span-detail">
-            到期日期：{{ detailItem.endDate }}
-          </span>
-        </div>
-
       </div>
 
     </div>
