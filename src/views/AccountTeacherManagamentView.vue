@@ -29,10 +29,11 @@ const tableColumns = [
     width: 150
   },
   {
-    dataKey: 'studentName',
-    key: 'studentName',
+    dataKey: 'teacherName',
+    key: 'teacherName',
     title: '姓名',
-    width: 200
+    width: 200,
+    cellRenderer: ({ cellData: teacherName }:any) => <ElButton link type='primary'>{teacherName}</ElButton>,
   },
   {
     dataKey: 'userName',
@@ -90,7 +91,7 @@ const tableColumns = [
 const tableData: object[] = [
   {
     id: '1',
-    studentName: 'Aaron',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -99,7 +100,7 @@ const tableData: object[] = [
   },
   {
     id: '2',
-    studentName: 'Aaron',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -108,7 +109,7 @@ const tableData: object[] = [
   },
   {
     id: '3',
-    studentName: 'Aaron',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -116,8 +117,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '4',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -125,8 +126,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '5',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -135,8 +136,8 @@ const tableData: object[] = [
   },
 
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '6',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -144,8 +145,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '7',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -153,8 +154,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '8',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -162,8 +163,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '9',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -171,8 +172,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '10',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -180,8 +181,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '11',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -189,8 +190,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '12',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -198,8 +199,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '13',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -207,8 +208,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '14',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -216,8 +217,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '15',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -225,8 +226,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '16',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -234,8 +235,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '17',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -243,8 +244,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '18',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -252,8 +253,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '19',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -261,8 +262,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '20',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -270,8 +271,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '21',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -279,8 +280,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '22',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -288,8 +289,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '23',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -297,8 +298,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '24',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
@@ -306,8 +307,8 @@ const tableData: object[] = [
     loginTime: "2012-12-22 19:23"
   },
   {
-    id: '3',
-    studentName: 'Aaron',
+    id: '25',
+    teacherName: 'Aaron',
     userName: 'Aaron191518',
     teacherGrade: '9 year',
     teacherSubject: "数学",
