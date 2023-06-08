@@ -1,6 +1,8 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { ref, reactive } from 'vue';
+import { ElButton } from 'element-plus'
 import SearchBar from '../components/SearchBar.vue'
+import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
@@ -17,14 +19,14 @@ const items = reactive([
 ])
 
 const tableData = reactive<object[]>([{
-  id: '12345',
-  teacherGroupName: '英语组',
+  id: '123456',
+  teacherGroupName: '数学组',
   groupLeader: '庄老师',
   memberNum: '9',
   createDate: '2021-12-02',
 }, {
   id: '54321',
-  teacherGroupName: '英语组',
+  teacherGroupName: '语文组',
   groupLeader: '庄老师',
   memberNum: '9',
   createDate: '2021-12-02',
@@ -35,6 +37,7 @@ const tableData = reactive<object[]>([{
   memberNum: '9',
   createDate: '2021-12-02',
 }])
+
 const fakeData = reactive([{
   id: '12345',
   teacherGroupName: '英语组',
@@ -42,13 +45,58 @@ const fakeData = reactive([{
   memberNum: '9',
   createDate: '2021-12-02',
 }])
+
 const pushData = () => {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 100; i++) {
     tableData.push(fakeData[0])
   }
   console.log(tableData)
 }
 pushData()
+
+const tableColumns = reactive<any[]>([
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 150
+  }, {
+    dataKey: 'teacherGroupName',
+    key: 'teacherGroupName',
+    title: '教研组名称',
+    cellRenderer: ({ cellData: teacherGroupName }:any) => <ElButton link type='primary'>{teacherGroupName}</ElButton>,
+    width: 150
+  }, {
+    dataKey: 'groupLeader',
+    key: 'groupLeader',
+    title: '教研组组长',
+    width: 150
+  }, {
+    dataKey: 'memberNum',
+    key: 'memberNum',
+    title: '成员人数',
+    width: 150
+  }, {
+    dataKey: 'createDate',
+    key: 'createDate',
+    title: '创建时间',
+    width: 150
+  },
+  {
+    key: 'option',
+    title: '操作',
+    cellRenderer: () => (
+      <>
+        <el-button link type="primary">
+          移除
+        </el-button>
+      </>
+    ),
+    width: 150,
+    fixed: 'right',
+    align: 'center'
+  }
+])
 
 const clickDetail = (rowData: string) => {
   console.log(rowData)
@@ -64,12 +112,14 @@ const refresh = () => {
 
 <template>
   <div class="div-teacher-group-management">
-    <div>
-      <SearchBar class="search-bar" :items="items" @change="refresh()" />
-    </div>
-    <div class="table-div">
-      <el-button class="new-teacher-group-button">新建教研组</el-button>
-      <el-table class="table-teacher-group-management" :data="tableData">
+    <TablePage class="table-page" :columns="tableColumns" :data="tableData">
+      <div class="div-search-bar">
+        <SearchBar :items="items" @change="refresh()" />
+      </div>
+      <div class="table-div">
+        <el-button class="new-teacher-group-button">新建教研组</el-button>
+
+        <!-- <el-table class="table-teacher-group-management" :data="tableData">
         <el-table-column fixed prop="id" label="ID" />
         <el-table-column prop="teacherGroupName" label="教研组名称">
           <template #default="scope">
@@ -86,33 +136,32 @@ const refresh = () => {
             <el-button link type="primary" size="small" @click="deleteItem()">删除</el-button>
           </template>
         </el-table-column>
-      </el-table>
-    </div>
+      </el-table> -->
+      </div>
+    </TablePage>
   </div>
 </template>
 
 <style scoped lang="scss">
-.search-bar {
+.div-search-bar {
   margin-top: 15px;
-  margin-left: 17px;
+  margin-left: 15px;
   margin-right: 15px;
 }
 
 .div-teacher-group-management {
-  height: $page-height;
+  width: calc($page-width - $page-gap - 15px);
   flex-grow: 1;
-}
 
-.table-teacher-group-management {
-  margin-top: 15px;
-  margin-left: 15px;
-  padding-bottom: 20px;
-  width: calc($page-width - 20px);
-  box-sizing: border-box;
+  >.table-page {
+    height: $page-height;
+    margin-left: 15px;
+  }
 }
 
 .new-teacher-group-button {
   margin-top: 15px;
   margin-left: 15px;
   max-height: 30px;
-}</style>
+}
+</style>

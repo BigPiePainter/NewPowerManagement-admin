@@ -176,14 +176,8 @@ const detailItem = reactive({
         }
       }
 
-      >.detail-date {
-        display: flex;
-        flex-direction: column;
-        margin-top: 25px;
-
-        >.span-detail {
-          margin-top: 15px;
-        }
+      >.span-detail {
+        margin-top: 15px;
       }
     }
   }
