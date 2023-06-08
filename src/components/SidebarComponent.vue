@@ -145,10 +145,15 @@ const route = useRoute()
 
   height: 100vh;
   width: $sidebar-width;
+  min-width: $sidebar-width;
+  max-width: $sidebar-width;
 
   box-sizing: border-box;
   color: white;
   background-color: $sidebar-color;
+
+  border-right: 1px #f0f2f5 solid;
+
   > .sidebar-header {
     height: $header-height;
 
@@ -158,8 +163,9 @@ const route = useRoute()
 
     padding-left: 20px;
 
-    border-right: 1px #f0f2f5 solid;
-    border-bottom: 1px #f0f2f5 solid;
+    //border-right: 1px #f0f2f5 solid;
+    //border-bottom: 1px #f0f2f5 solid;
+    border-bottom: 1px #ffffff10 solid;
     //border-bottom: 3px #2c2c58 solid;
     box-sizing: border-box;
   }
@@ -167,11 +173,27 @@ const route = useRoute()
   > .el-menu {
     height: calc(100vh - $header-height);
     //border-right: 3px #f0f2f5 solid;
-    border-right: 1px #f0f2f5 solid;
-
+    //border-right: 1px #f0f2f5 solid;
+    //border-top: 1px #ffffff00 solid;
+    border-right: none;
     overflow: auto;
 
     color: #fff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    // height: 8px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #e40000;
+    border: none;
   }
 }
 </style>
