@@ -87,37 +87,25 @@ const refresh = () => {
 
 
 <template>
-    <div>
-<div class="div-search-bar ">
+
+  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+    <div class="div-search-bar ">
     <SearchBar :items="items" @change="refresh()"></SearchBar>
 </div>
-
-  </div>
-
-  <TablePage class="table" :columns="tableColumns" :data="tableData">
       </TablePage>
 </template>
 
 <style scoped lang="scss">
+$gap: 15px;
 
-  .table{
-height: 82.5vh;
-
-width: $page-width;
-
-  }
-
+.page-container {
+  width: calc($page-width - $gap);
+  height: $page-height;
+  margin-left: $gap;
+  //margin-right: $gap;
+}
 
 .div-search-bar {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  margin-right: 15px;
-
-  > .search-bar-button {
-    max-width: 70px;
-    max-height: 30px;
-    margin-left: 12px;
-  }
-
+  margin: $gap;
 }
 </style>

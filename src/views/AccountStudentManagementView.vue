@@ -118,7 +118,7 @@ let fakeData = {
   loginTime: "2012-12-22 19:23",
   studentGrade: "9",
   parentCellnumber: "1562342349800",
-  note:"这里是备注"
+  note: "这里是备注"
 
 }
 
@@ -143,37 +143,25 @@ const refresh = () => {
 
 
 <template>
-  <div class="div-search-bar ">
-    <SearchBar :items="items" @change="refresh()"></SearchBar>
-
-
-  </div>
-
-  <TablePage class="table-page table" :columns="tableColumns" :data="tableData">
+  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+    <div class="div-search-bar ">
+      <SearchBar :items="items" @change="refresh()"></SearchBar>
+    </div>
   </TablePage>
 </template>
 
 <style scoped lang="scss">
-.table {
-  // margin-left: 15px;
-  // margin-top: 15px;
+$gap: 15px;
 
-  width: $page-width;
-  height: 82.5vh;
+
+.page-container {
+  width: calc($page-width - $gap);
+  height: $page-height;
+  margin-left: $gap;
+  //margin-right: $gap;
 }
 
-
 .div-search-bar {
-  display: flex;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  margin-right: 15px;
-
-  >.search-bar-button {
-    max-width: 70px;
-    max-height: 30px;
-    margin-left: 12px;
-  }
-
+  margin: $gap;
 }
 </style>
