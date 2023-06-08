@@ -103,7 +103,7 @@ tableColumnsRejected.push(options)
 let fakeData = {
   id: '1',
   title: '完形填空突破1',
-  uploadUser: '张老师',
+  uploadUser: '张清宇',
   tag: '-',
   uploadTime: '2011-9-19 18:23'
 }

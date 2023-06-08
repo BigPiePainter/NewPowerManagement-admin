@@ -112,7 +112,6 @@ $gap: 15px;
   width: calc($page-width - $gap);
   height: $page-height;
   margin-left: $gap;
-  //margin-right: $gap;
 }
 
 .div-search-bar {
