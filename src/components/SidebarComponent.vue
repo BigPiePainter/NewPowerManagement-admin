@@ -139,7 +139,7 @@ const route = useRoute()
 
 <style scoped lang="scss">
 .sidebar {
-  --el-menu-text-color: #fff;
+  --el-menu-text-color: #ebebeb;
   --el-menu-bg-color: #{$sidebar-color};
   --el-menu-hover-bg-color: #{$sidebar-hover-color};
 
@@ -165,7 +165,7 @@ const route = useRoute()
 
     //border-right: 1px #f0f2f5 solid;
     //border-bottom: 1px #f0f2f5 solid;
-    border-bottom: 1px #20216910 solid;
+    border-bottom: 1px #ffffff10 solid;
     //border-bottom: 3px #2c2c58 solid;
     box-sizing: border-box;
   }

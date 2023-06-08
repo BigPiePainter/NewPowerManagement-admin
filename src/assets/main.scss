@@ -1,8 +1,12 @@
-@use "./base.scss" as *;
+@use './base.scss' as *;
 
 body {
   margin: 0;
   font-family: PingFangSC-Regular, sans-serif;
+}
+
+.el-table-v2 {
+  color: var(--el-table-text-color);;
 }
 
 ::-webkit-scrollbar {
