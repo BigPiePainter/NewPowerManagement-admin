@@ -8,8 +8,7 @@ import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
-  { name: '账号管理', path: '' },
-  { name: '临时学生管理', path: '/account-temoorary-student' },
+  { name: '实时课程', path: '' }
 ]
 
 const items = reactive([
@@ -66,7 +65,7 @@ const tableColumns = [
         <el-button link type="primary" class="">
           关闭
         </el-button>
-        <el-button link type="primary" class="">
+        <el-button link type="danger" class="">
           删除
         </el-button>
       </>

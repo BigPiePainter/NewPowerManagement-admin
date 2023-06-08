@@ -94,7 +94,43 @@ const items = [
      },
       {
         index: '/setting',
-        title: '设置'
+        title: '设置',
+        subs: [
+
+      {
+        index: '/student-points-management',
+        title: '分类管理'
+      },
+      {
+        index: '/points-detail',
+        title: '标签管理'
+      },
+      {
+        index: '/student-points-management',
+        title: '课程类目'
+      },
+      {
+        index: '/points-detail',
+        title: '考试资讯'
+      },
+      {
+        index: '/student-points-management',
+        title: '考试时间'
+      },
+      {
+        index: '/points-detail',
+        title: 'banner'
+      },
+      {
+        index: '/points-detail',
+        title: '消息中心'
+      },
+      {
+        index: '/points-detail',
+        title: '家长报告'
+      },
+      
+    ]
       },
       {
         index: '1',

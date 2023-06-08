@@ -53,7 +53,7 @@ const tableColumns = [
         <el-button link type="primary" class="">
           关闭
         </el-button>
-        <el-button link type="primary" class="">
+        <el-button link type="danger" class="">
           删除
         </el-button>
       </>

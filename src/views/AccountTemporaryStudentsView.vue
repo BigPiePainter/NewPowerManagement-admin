@@ -62,13 +62,13 @@ const tableColumns = [
         <el-button link type="primary" class="">
           重置密码
         </el-button>
-        <el-button link type="primary" class="">
+        <el-button link type="danger" class="">
           删除
         </el-button>
       </>
     ),
 
-    width: 300,
+    width: 270,
     fixed: 'right',
     align: 'left'
   }
