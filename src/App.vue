@@ -18,4 +18,8 @@ import zhCn from 'element-plus/lib/locale/lang/zh-cn'
   )
 );
 @use 'element-plus/theme-chalk/src/index.scss' as *;
+
+:root {
+
+}
 </style>

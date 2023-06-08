@@ -4,7 +4,12 @@ import { ElButton } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 
-
+import { useBreadcrumbStore } from '@/stores/breadcrumb'
+const breadcrumbStore = useBreadcrumbStore()
+breadcrumbStore.data = [
+  { name: '账号管理', path: '' },
+  { name: '角色管理', path: '/account-role-managment' },
+]
 
 const tableColumns = [
   {
@@ -12,12 +17,6 @@ const tableColumns = [
     key: 'id',
     title: 'ID',
     width: 150
-  },
-  {
-    dataKey: 'roleName',
-    key: 'roleName',
-    title: '姓名',
-    width: 200
   },
   {
     dataKey: 'userName',
@@ -61,14 +60,13 @@ const tableColumns = [
     ),
     width: 150,
     fixed: 'right',
-    align: 'center'
+    align: 'left'
   }
 ]
 
 const tableData: object[] = [
   {
     id: '1',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -76,7 +74,6 @@ const tableData: object[] = [
   },
   {
     id: '2',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -84,7 +81,6 @@ const tableData: object[] = [
   },
   {
     id: '3',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -92,7 +88,6 @@ const tableData: object[] = [
   },
   {
     id: '4',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -100,7 +95,6 @@ const tableData: object[] = [
   },
   {
     id: '5',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -108,7 +102,6 @@ const tableData: object[] = [
   },
   {
     id: '6',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -116,7 +109,6 @@ const tableData: object[] = [
   },
   {
     id: '7',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -124,7 +116,6 @@ const tableData: object[] = [
   },
   {
     id: '8',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -132,7 +123,6 @@ const tableData: object[] = [
   },
   {
     id: '9',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -140,7 +130,6 @@ const tableData: object[] = [
   },
   {
     id: '10',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -148,7 +137,6 @@ const tableData: object[] = [
   },
   {
     id: '11',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -156,7 +144,6 @@ const tableData: object[] = [
   },
   {
     id: '12',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -164,7 +151,6 @@ const tableData: object[] = [
   },
   {
     id: '13',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -172,7 +158,6 @@ const tableData: object[] = [
   },
   {
     id: '14',
-    roleName: 'Aaron',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
     status: "启用",
@@ -184,8 +169,10 @@ const tableData: object[] = [
 
 
 <template>
-      <el-button class="ARMbutton">新建学生</el-button>
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+    <div>
+      <el-button class="ARMbutton">新建学生</el-button>
+    </div>
 
   </TablePage>
 </template>
@@ -195,16 +182,15 @@ $gap: 15px;
 
 .page-container {
   width: calc($page-width - $gap);
-  height: $page-height;
+  height: calc($page-height);
   margin-left: $gap;
   //margin-right: $gap;
 }
 
-.ARMbutton{
-  margin-left:37.5px;
+.ARMbutton {
+  margin-left: 37.5px;
   margin-top: 15px;
   margin-bottom: 15px;
-  
-}
 
+}
 </style>

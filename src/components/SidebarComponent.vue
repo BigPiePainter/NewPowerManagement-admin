@@ -139,7 +139,7 @@ const route = useRoute()
 
 <style scoped lang="scss">
 .sidebar {
-  --el-menu-text-color: #fff;
+  --el-menu-text-color: #ebebeb;
   --el-menu-bg-color: #{$sidebar-color};
   --el-menu-hover-bg-color: #{$sidebar-hover-color};
 
@@ -172,19 +172,21 @@ const route = useRoute()
 
   > .el-menu {
     height: calc(100vh - $header-height);
-    //border-right: 3px #f0f2f5 solid;
-    //border-right: 1px #f0f2f5 solid;
-    //border-top: 1px #ffffff00 solid;
+    scrollbar-gutter: stable;
     border-right: none;
     overflow: auto;
 
     color: #fff;
   }
 
+  &:hover {
+    ::-webkit-scrollbar-thumb {
+      background-color: #d7d7d777;
+    }
+  }
   ::-webkit-scrollbar {
     width: 5px;
-    // height: 8px;
-    height: 10px;
+    opacity: 0.5;
   }
 
   ::-webkit-scrollbar-track {
@@ -192,8 +194,9 @@ const route = useRoute()
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #e40000;
+    background-color: #ffffff1f;
     border: none;
+    border-radius: 100px;
   }
 }
 </style>

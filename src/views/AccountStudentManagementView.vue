@@ -5,13 +5,16 @@ import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 
-
+import { useBreadcrumbStore } from '@/stores/breadcrumb'
+const breadcrumbStore = useBreadcrumbStore()
+breadcrumbStore.data = [
+  { name: '账号管理', path: '' },
+  { name: '学生管理', path: '/account-student-management' },
+]
 const items = reactive([
   { name: "用户名", value: "" },
-  { name: "姓名", value: "" },
-  { name: "手机号", value: "", label: "" },
-  { name: "年级", value: "", type: InputType.Select, label: "请选择" },
-  { name: "学科", value: "", type: InputType.Select, label: "请选择" },
+  { name: "姓名", value: "", },
+  { name: "电话", value: "" },
 
 ])
 
@@ -144,7 +147,7 @@ const refresh = () => {
 
 <template>
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
-    <div class="div-search-bar ">
+    <div class="div-search-bar">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
     </div>
   </TablePage>
@@ -164,4 +167,5 @@ $gap: 15px;
 .div-search-bar {
   margin: $gap;
 }
+
 </style>
