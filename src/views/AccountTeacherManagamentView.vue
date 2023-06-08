@@ -5,7 +5,12 @@ import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 
-
+import { useBreadcrumbStore } from '@/stores/breadcrumb'
+const breadcrumbStore = useBreadcrumbStore()
+breadcrumbStore.data = [
+  { name: '账号管理', path: '' },
+  { name: '老师管理', path: '/account-teacher-managament' },
+]
 const items = reactive([
   { name: "用户名", value: "" },
   { name: "姓名", value: "" },
