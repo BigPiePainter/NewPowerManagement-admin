@@ -163,8 +163,9 @@ const refresh = () => {
 </template>
 
 <style scoped lang="scss">
+$gap : 15px;
 .div-search-bar {
-  margin-top: 15px;
+  margin: $gap;
 }
 
 .div-class-management {
@@ -173,14 +174,10 @@ const refresh = () => {
 }
 
 .table-page {
-  width: calc($page-width - 30px);
-  margin-left: 15px;
-  margin-right: 15px;
+  width: calc($page-width - $gap);
 }
 
 .new-class-button {
-  margin-top: 15px;
-  margin-left: 15px;
-  max-height: 30px;
+  margin-left: $gap;
 }
 </style>
