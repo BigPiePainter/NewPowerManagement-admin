@@ -2,6 +2,10 @@
 import DisplayCard from '../components/DisplayCard.vue'
 import { ref, reactive } from 'vue'
 
+import { useBreadcrumbStore } from '@/stores/breadcrumb'
+const breadcrumbStore = useBreadcrumbStore()
+breadcrumbStore.data = [{ name: '工作台' }]
+
 const history = reactive([
   { title: '学生账号', amount: 1000000 },
   { title: '老师账号', amount: 200000 },
