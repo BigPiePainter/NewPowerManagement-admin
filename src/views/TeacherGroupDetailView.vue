@@ -5,6 +5,31 @@ import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useRoute } from 'vue-router'
+import type { FunctionalComponent } from 'vue'
+import type { CheckboxValueType, Column } from 'element-plus'
+import { ElCheckbox } from 'element-plus'
+
+//dialog中表格的选择勾选框----------------------------------------------------
+type SelectionCellProps = {
+  value: boolean
+  intermediate?: boolean
+  onChange: (value: CheckboxValueType) => void
+}
+
+const SelectionCell: FunctionalComponent<SelectionCellProps> = ({
+  value,
+  intermediate = false,
+  onChange,
+}) => {
+  return (
+    <ElCheckbox
+      onChange={onChange}
+      modelValue={value}
+      indeterminate={intermediate}
+    />
+  )
+}
+//----------------------------------------------------------------------------
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
@@ -16,9 +41,146 @@ breadcrumbStore.data = [
 
 const route = useRoute()
 
-const items = reactive([
+const searchBarItems = reactive([
   { name: "姓名/用户名", value: "", },
 ])
+const dialogSearchBarItems = reactive([
+  { name: "选择年级", value: "", label: "请选择", type: InputType.Select },
+  { name: "学科", value: "", label: "请选择", type: InputType.Select },
+  { name: "姓名/用户名/电话", value: "", },
+])
+
+const dialogTableColumns = [
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 150
+  },
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '教师姓名',
+    width: 200
+  },
+  {
+    dataKey: 'userName',
+    key: 'userName',
+    title: '用户名',
+    width: 200
+  },
+  {
+    dataKey: 'grade',
+    key: 'grade',
+    title: '年级',
+    width: 200
+  },
+  {
+    dataKey: 'major',
+    key: 'major',
+    title: '学科',
+    width: 200
+  },
+  {
+    dataKey: 'joinDate',
+    key: 'joinDate',
+    title: '加入时间',
+    width: 200
+  },
+]
+
+const dialogTableData: object[] = [
+  {
+    check: false,
+    id: '1456',
+    teacherName: 'Mr.庄',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+  {
+    check: false,
+    id: '25',
+    teacherName: 'Mr.ir',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+  {
+    check: false,
+    id: '457',
+    teacherName: 'Mr.空间',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+  {
+    check: false,
+    id: '22463',
+    teacherName: 'Mr.如图',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+  {
+    check: false,
+    id: '568769',
+    teacherName: 'Mr.是的',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+  {
+    check: false,
+    id: '23536',
+    teacherName: 'Mr.进方',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+  {
+    check: false,
+    id: '45684',
+    teacherName: 'Mr.搞定',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+  {
+    check: false,
+    id: '2467',
+    teacherName: 'Mr.三个',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+  {
+    check: false,
+    id: '97007',
+    teacherName: 'Mr.刷单',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+  {
+    check: false,
+    id: '59664',
+    teacherName: 'Mr.锕',
+    userName: 'Nick191518',
+    grade: '高二',
+    major: '英语',
+    joinDate: '2022-10-10'
+  },
+]
 
 const tableColumns = [
   {
@@ -98,8 +260,11 @@ for (let index = 0; index < 100; index++) {
   tableData.push(data)
 }
 
-const refresh = () => {
-  console.log(items)
+const searchBarRefresh = () => {
+  console.log(searchBarItems)
+}
+const dialogSearchBarRefresh = () => {
+  console.log(dialogSearchBarItems)
 }
 
 const detailItem = reactive({
@@ -107,9 +272,17 @@ const detailItem = reactive({
   groupLeader: 'Mr.庄',
 })
 
-const deleteTeacher =(props:object)=>{
+const deleteTeacher = (props: object) => {
   console.log(props)
 }
+
+const addTeacherDialogShow = ref(false);
+
+const addTeacher = () => {
+  addTeacherDialogShow.value = true;
+}
+const confirmNewTeacher = () => { }
+const cancelNewTeacher = () => { }
 </script>
 
 <template>
@@ -137,16 +310,31 @@ const deleteTeacher =(props:object)=>{
       <TablePage class="table-page" :columns="tableColumns" :data="tableData">
         <div class="div-search-bar">
 
-          <SearchBar :items="items" @change="refresh()"></SearchBar>
+          <SearchBar :items="searchBarItems" @change="searchBarRefresh()"></SearchBar>
 
           <div style="flex-grow: 1"></div>
 
-          <el-button class="search-bar-button">添加成员</el-button>
+          <el-button class="search-bar-button" @click="addTeacher()">添加成员</el-button>
         </div>
       </TablePage>
 
     </div>
   </div>
+
+  <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addTeacherDialogShow">
+    <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+      <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()"></SearchBar>
+    </TablePage>
+    <template #header>
+      <el-text>添加老师</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="confirmNewTeacher()">确定</el-button>
+      <el-button @click="cancelNewTeacher()">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -208,6 +396,36 @@ const deleteTeacher =(props:object)=>{
   >.search-bar-button {
     max-width: 70px;
     margin-left: 12px;
+  }
+}
+</style>
+
+<style lang="scss">
+.el-dialog__footer {
+  border-top: 1px solid $element-header-color;
+  height: 50px;
+}
+
+.dialog-table-page {
+  margin-bottom: 0 ;
+  .dialog-search-bar{
+    margin-right: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+.teacher-group-detail-dialog {
+  >.el-dialog__body {
+    height: 500px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 0;
+    padding-top: 10px;
+
+    >div {
+      width: fit-content;
+    }
   }
 }
 </style>
