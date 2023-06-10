@@ -87,6 +87,7 @@ onMounted(() => {
       this.xOff = random(0, 1000)
       this.yOff = random(0, 1000)
       // how quickly the noise/self similar random values step through time
+      //this.inc = 0.002
       this.inc = 0.002
 
       // PIXI.Graphics is used to draw 2d primitives (in this case a circle) to the canvas
@@ -140,13 +141,15 @@ onMounted(() => {
       this.x = map(xNoise, -1, 1, this.bounds['x'].min, this.bounds['x'].max)
       this.y = map(yNoise, -1, 1, this.bounds['y'].min, this.bounds['y'].max)
       // map scaleNoise (between -1 and 1) to a scale value somewhere between half of the orb's original size, and 100% of it's original size
+      console.log(scaleNoise)
       this.scale = map(scaleNoise, -1, 1, 0.5, 1)
+      console.log("scale", this.scale)
 
       // step through "time"
       this.xOff += this.inc
       this.yOff += this.inc
     }
-
+                                                                     
     render() {
       // update the PIXI.Graphics position and scale values
       this.graphics.x = this.x
@@ -185,31 +188,22 @@ onMounted(() => {
 
   for (let i = 0; i < 5; i++) {
     const orb = new Orb(colorPalette.randomColor())
-
     PIXIApp.stage.addChild(orb.graphics)
-
     orbs.push(orb)
   }
 
   // Animate!
   let count = 0
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    PIXIApp.ticker.add(() => {
-      console.log('ticker')
-      //if (count ++ != 5 ) return
-      count = 0
-      console.log('run')
-      orbs.forEach((orb) => {
-        orb.update()
-        orb.render()
-      })
-    })
-  } else {
+  PIXIApp.ticker.add(() => {
+    console.log('ticker')
+    if (count ++ != 10 ) return
+    count = 0
+    console.log('run')
     orbs.forEach((orb) => {
       orb.update()
       orb.render()
     })
-  }
+  })
 
   document.querySelector('.overlay__btn--colors').addEventListener('click', () => {
     colorPalette.setColors()
