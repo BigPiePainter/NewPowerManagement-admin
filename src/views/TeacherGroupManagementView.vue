@@ -19,8 +19,16 @@ const items = reactive([
 ])
 
 const newTeacherGroupDialogShow = ref(false);
+const newTeacherGroupData = reactive<{ teacherGroupName: string, groupLeader: string }>({ teacherGroupName: '', groupLeader: '' });
 const creatNewTeacherGroup = () => {
   newTeacherGroupDialogShow.value = true;
+}
+const confirmNewTeacherGroup = () => {
+  console.log(newTeacherGroupData)
+  newTeacherGroupDialogShow.value = false
+}
+const cancelNewTeacherGroup = () => {
+  newTeacherGroupDialogShow.value = false
 }
 
 const tableData = reactive<object[]>([{
@@ -116,34 +124,35 @@ const clickDetail = (props: { rowData: { id: string } }) => {
 }
 
 const editTeacherGroupDialogShow = ref(false);
-const editTeacherGroupName = ref<string>();
-const editTeacherGroupLeader = ref<string>();
+const editTeacherGroupData = reactive<{ teacherGroupName: string, groupLeader: string }>({ teacherGroupName: '', groupLeader: '' });
 const editTeacherGroup = (props: { rowData: { teacherGroupName: string, groupLeader: string } }) => {
   console.log(props)
   editTeacherGroupDialogShow.value = true;
-  editTeacherGroupName.value = props.rowData.teacherGroupName;
-  editTeacherGroupLeader.value = props.rowData.groupLeader
+  editTeacherGroupData.teacherGroupName = props.rowData.teacherGroupName
+  editTeacherGroupData.groupLeader = props.rowData.groupLeader
 }
 
 const deleteTeacherGroupDialogShow = ref(false);
-const deleteTeacherGroupData = reactive<{props: any}>({props: {}});
-const deleteTeacherGroup = (props:object) => {
+const deleteTeacherGroupData = reactive<{ teacherGroupName: string }>({ teacherGroupName: '' });
+const deleteTeacherGroup = (props: { rowData: { id: string, teacherGroupName: string } }) => {
   console.log(props)
   deleteTeacherGroupDialogShow.value = true;
-  deleteTeacherGroupData.props = props
+  deleteTeacherGroupData.teacherGroupName = props.rowData.teacherGroupName
 }
 
-const confirmEditDialog =()=>{
-
+const confirmEditDialog = () => {
+  console.log(editTeacherGroupData)
+  editTeacherGroupDialogShow.value = false;
 }
-const cancelEditDialog =()=>{
-  
+const cancelEditDialog = () => {
+  editTeacherGroupDialogShow.value = false;
 }
-const confirmDeleteDialog =()=>{
-  
+const confirmDeleteDialog = () => {
+  console.log(deleteTeacherGroupData)
+  deleteTeacherGroupDialogShow.value = false;
 }
-const cancelDeleteDialog =()=>{
-  
+const cancelDeleteDialog = () => {
+  deleteTeacherGroupDialogShow.value = false;
 }
 
 const refresh = () => {
@@ -169,16 +178,14 @@ const refresh = () => {
         <span class="dialog-span">
           *教研组名称：
         </span>
-        <el-input class="dialog-input" placeholder="请输入">
-
+        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherGroupData.teacherGroupName">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           *教研组长：
         </span>
-        <el-input class="dialog-input" placeholder="请输入">
-
+        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherGroupData.groupLeader">
         </el-input>
       </div>
     </div>
@@ -186,8 +193,8 @@ const refresh = () => {
       <el-text>新建教研组</el-text>
     </template>
     <template #footer>
-      <el-button type="primary">确定</el-button>
-      <el-button>
+      <el-button type="primary" @click="confirmNewTeacherGroup()">确定</el-button>
+      <el-button @click="cancelNewTeacherGroup()">
         取消
       </el-button>
     </template>
@@ -199,16 +206,14 @@ const refresh = () => {
         <span class="dialog-span">
           *教研组名称：
         </span>
-        <el-input class="dialog-input" :placeholder=editTeacherGroupName>
-
+        <el-input class="dialog-input" v-model="editTeacherGroupData.teacherGroupName">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           *教研组长：
         </span>
-        <el-input class="dialog-input" :placeholder=editTeacherGroupLeader>
-
+        <el-input class="dialog-input" v-model="editTeacherGroupData.groupLeader">
         </el-input>
       </div>
     </div>
@@ -228,7 +233,7 @@ const refresh = () => {
       <el-text>确定删除教研组</el-text>
     </template>
     <span>
-      {{ deleteTeacherGroupData.props.rowData.teacherGroupName }}
+      {{ deleteTeacherGroupData.teacherGroupName }}
     </span>
     <template #footer>
       <el-button type="danger" @click="confirmDeleteDialog()">确定</el-button>
