@@ -148,9 +148,11 @@ $gap : 15px;
 
 .table-page {
   width: calc($page-width - $gap);
+  margin-left: $gap;
 }
 
 .new-teacher-group-button {
   margin-left: $gap;
+  margin-bottom: $gap;
 }
 </style>
