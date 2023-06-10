@@ -21,6 +21,11 @@ const items = reactive([
   { name: "学科", value: "" },
 ])
 
+const dialogShow = ref(false);
+const creatNewClass = () => {
+  dialogShow.value = true;
+}
+
 const tableData = reactive<object[]>([
   {
     id: 12345,
@@ -48,16 +53,6 @@ const pushData = () => {
   }
 }
 pushData()
-
-// const renderDom = () => {
-//   return (
-//     <div>
-//       {tableData.map(item => {
-//         return (<ElButton onClick={() => console.log(this, item)}></ElButton>)
-//       })}
-//     </div>
-//   )
-// }
 
 const tableColumns = reactive([
   {
@@ -130,11 +125,11 @@ const clickDetail = (props: { rowData: { id: string } }) => {
   router.push({ path: 'class-detail', query: { id: props.rowData.id } });
 }
 
-const editItem = (props:object) => { 
+const editItem = (props: object) => {
   console.log(props);
 }
 
-const deleteItem = (props:object) => { 
+const deleteItem = (props: object) => {
   console.log(props);
 }
 
@@ -150,10 +145,72 @@ const refresh = () => {
         <SearchBar :items="items" @change="refresh()" />
       </div>
       <div class="table-div">
-        <el-button class="new-class-button">新建班级</el-button>
+        <el-button class="new-class-button" @click="creatNewClass()">新建班级</el-button>
       </div>
     </TablePage>
   </div>
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="dialogShow">
+    <div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *班级名称：
+        </span>
+        <el-input class="dialog-input" placeholder="请输入">
+
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *负责老师：
+        </span>
+        <el-input class="dialog-input" placeholder="请输入">
+
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *起始时间：
+        </span>
+        <el-input class="dialog-input" placeholder="请输入">
+
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *到期时间：
+        </span>
+        <el-input class="dialog-input" placeholder="请输入">
+
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          学科：
+        </span>
+        <el-input class="dialog-input" placeholder="请输入">
+
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          年级：
+        </span>
+        <el-input class="dialog-input" placeholder="请输入">
+
+        </el-input>
+      </div>
+    </div>
+    <template #header>
+      <el-text>新建班级</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary">确定</el-button>
+      <el-button>
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -176,5 +233,39 @@ $gap : 15px;
 .new-class-button {
   margin-left: $gap;
   margin-bottom: $gap;
+}
+</style>
+
+<style lang="scss">
+.el-dialog__footer {
+  border-top: 1px solid $element-header-color
+}
+
+.new-class-dialog {
+  >.el-dialog__body {
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    >div {
+      width: fit-content;
+
+      >.div-input-element {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        margin-bottom: 13px;
+
+        >.dialog-span {
+          margin-right: 10px;
+        }
+
+        >.dialog-input {
+          width: 200px;
+        }
+      }
+    }
+  }
 }
 </style>
