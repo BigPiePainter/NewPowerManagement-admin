@@ -247,7 +247,7 @@ onMounted(() => {
       return {
         x: {
           min: 0,
-          max: 600
+          max: 185
         },
         y: {
           min: 0,
