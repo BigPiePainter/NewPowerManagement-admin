@@ -400,7 +400,7 @@ onUnmounted(() => {
 
   box-sizing: border-box;
   color: white;
-  background-color: rgba($sidebar-color, 0.7);
+  background-color: rgba($sidebar-color, 0.75);
 
   border-right: 1px #f0f2f5 solid;
 
