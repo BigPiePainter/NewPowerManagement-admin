@@ -304,7 +304,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .sidebar-canvas {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   height: 100vh;
