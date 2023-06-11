@@ -225,7 +225,7 @@ const tableData: object[] = [
 <template>
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
     <div>
-      <el-button class="ARMbutton">新建学生</el-button>
+      <el-button class="ARMbutton" type="primary">新建学生</el-button>
     </div>
   </TablePage>
 </template>

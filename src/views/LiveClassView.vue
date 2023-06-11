@@ -105,7 +105,7 @@ const refresh = () => {
       <SearchBar :items="items" @change="refresh()"></SearchBar>
     </div>
     <div>
-      <el-button class="new-live-class-button">新建课堂</el-button>
+      <el-button class="new-live-class-button" type="primary">新建课堂</el-button>
     </div>
   </TablePage>
 </template>

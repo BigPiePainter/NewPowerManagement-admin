@@ -167,7 +167,7 @@ const refresh = () => {
         <SearchBar :items="items" @change="refresh()" />
       </div>
       <div class="table-div">
-        <el-button class="new-teacher-group-button" @click="creatNewTeacherGroup()">新建教研组</el-button>
+        <el-button class="new-teacher-group-button" type="primary" @click="creatNewTeacherGroup()">新建教研组</el-button>
       </div>
     </TablePage>
   </div>
