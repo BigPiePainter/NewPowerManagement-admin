@@ -2,5 +2,5 @@
 </script>
 
 <template>
-  BBBBBBBBBBBB
+  ERROR!!
 </template>
