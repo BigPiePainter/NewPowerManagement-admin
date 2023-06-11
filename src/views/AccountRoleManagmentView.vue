@@ -8,7 +8,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
-  { name: '角色管理', path: '/account-role-managment' },
+  { name: '角色管理', path: '/account-role-managment' }
 ]
 
 const tableColumns = [
@@ -69,167 +69,164 @@ const tableData: object[] = [
     id: '1',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '2',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '3',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '4',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '5',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '6',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '7',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '8',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '9',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '10',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '11',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '12',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '13',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '14',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '15',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '16',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '17',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '18',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '19',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '20',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '21',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
+    status: '启用',
+    Note: '这里是备注'
   },
   {
     id: '22',
     userName: 'Aaron191518',
     creatorName: '系统管理员',
-    status: "启用",
-    Note: "这里是备注"
-  },
+    status: '启用',
+    Note: '这里是备注'
+  }
 ]
-
 </script>
-
 
 <template>
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
     <div>
       <el-button class="ARMbutton">新建学生</el-button>
     </div>
-
   </TablePage>
 </template>
 
@@ -244,9 +241,8 @@ $gap: 15px;
 }
 
 .ARMbutton {
-  margin-left: 37.5px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-
+  margin-left: $gap;
+  margin-top: $gap;
+  margin-bottom: $gap;
 }
 </style>

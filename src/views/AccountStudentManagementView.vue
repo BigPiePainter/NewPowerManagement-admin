@@ -43,7 +43,7 @@ const tableColumns = [
     dataKey: 'expiryDate',
     key: 'expiryDate',
     title: '有效期',
-    width: 70
+    width: 100
   },
   {
     dataKey: 'studentGrade',
@@ -73,7 +73,7 @@ const tableColumns = [
     dataKey: 'createTime',
     key: 'createTime',
     title: '创建时间',
-    width: 160
+    width: 200
   },
   {
     dataKey: 'note',
@@ -121,7 +121,7 @@ let fakeData = {
   createTime: "2011-9-19 18:23",
   loginTime: "2012-12-22 19:23",
   studentGrade: "9",
-  parentCellnumber: "1562342349800",
+  parentCellnumber: "15623423498",
   note: "这里是备注"
 
 }

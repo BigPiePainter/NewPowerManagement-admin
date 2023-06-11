@@ -64,7 +64,6 @@ const tableColumnsPending = [
     ),
     width: 200,
     fixed: 'right',
-    align: 'left'
   }
 ]
 

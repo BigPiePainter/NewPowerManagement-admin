@@ -32,11 +32,10 @@ breadcrumbStore.data = [{ name: '工作台', path: '/' }]
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>Action 1</el-dropdown-item>
-          <el-dropdown-item>Action 2</el-dropdown-item>
-          <el-dropdown-item>Action 3</el-dropdown-item>
-          <el-dropdown-item disabled>Action 4</el-dropdown-item>
-          <el-dropdown-item divided>Action 5</el-dropdown-item>
+          <el-dropdown-item>阿巴阿巴</el-dropdown-item>
+          <el-dropdown-item>阿巴巴</el-dropdown-item>
+          <el-dropdown-item>阿巴巴巴</el-dropdown-item>
+          <el-dropdown-item divided>巴阿巴阿</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
