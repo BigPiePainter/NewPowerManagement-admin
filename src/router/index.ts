@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import WorkSpaceView from '@/views/WorkSpaceView.vue'
 import SchoolManagementView from '@/views/SchoolManagementView.vue'
@@ -23,8 +22,7 @@ import AccountTemporaryStudentsView from '@/views/AccountTemporaryStudentsView.v
 import MainLayout from '@/components/MainLayout.vue'
 import PointsDetailView from '@/views/PointsDetailView.vue'
 import StudentPointsView from '@/views//StudentPointsView.vue'
-import ViewA from '@/views/ViewA.vue'
-import ViewB from '@/views/ViewB.vue'
+import ErrorView from '@/views/ErrorView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,11 +38,6 @@ const router = createRouter({
       name: 'home',
       component: MainLayout,
       children: [
-        {
-          path: 'main',
-          name: 'main',
-          component: HomeView
-        },
         {
           path: 'work-space',
           name: 'work-space',
@@ -156,19 +149,9 @@ const router = createRouter({
           component: SettingView
         },
         {
-          path: 'viewa',
-          name: 'viewa',
-          component: ViewA
-        },
-        {
-          path: 'viewb',
-          name: 'viewb',
-          component: ViewB
-        },
-        {
           path: '*',
           name: 'Error',
-          component: HomeView
+          component: ErrorView
         }
       ]
     }

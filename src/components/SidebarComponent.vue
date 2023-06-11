@@ -15,10 +15,6 @@ import { onMounted, onUnmounted } from 'vue'
 
 const items = [
   {
-    index: '/main',
-    title: '系统首页'
-  },
-  {
     index: '/work-space',
     title: '工作台'
   },
@@ -106,20 +102,6 @@ const items = [
     index: '/setting',
     title: '设置'
   },
-  {
-    index: '1',
-    title: '展开栏',
-    subs: [
-      {
-        index: '/viewa',
-        title: 'A'
-      },
-      {
-        index: '/viewb',
-        title: 'B'
-      }
-    ]
-  }
 ]
 
 const route = useRoute()
