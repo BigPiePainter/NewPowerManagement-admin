@@ -4,7 +4,7 @@ import { KawaseBlurFilter } from 'https://cdn.skypack.dev/@pixi/filter-kawase-bl
 import SimplexNoise from 'https://cdn.skypack.dev/simplex-noise@3.0.0'
 import hsl from 'https://cdn.skypack.dev/hsl-to-hex'
 import debounce from 'https://cdn.skypack.dev/debounce'
-PIXI.utils.skipHello();
+PIXI.utils.skipHello()
 console.log('超炫酷无敌动画依赖import加载完毕')
 </script>
 
