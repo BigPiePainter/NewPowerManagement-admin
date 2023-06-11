@@ -1,10 +1,13 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
+import type { TabsPaneContext } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useRoute } from 'vue-router'
+import { ElCheckbox } from 'element-plus'
+import type { CheckboxValueType } from 'element-plus'
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
@@ -17,8 +20,163 @@ breadcrumbStore.data = [
 
 const route = useRoute()
 
-const items = reactive([
+const searchBarItems = reactive([
   { name: "姓名/用户名", value: "" },
+])
+const activeName = ref('officalStudent')
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+  console.log(tab, event)
+}
+const dialogSearchBarItems = reactive([
+  { name: "选择年级", value: "", label: "请选择", type: InputType.Select },
+  { name: "姓名/用户名/电话", value: "", },
+])
+
+const dialogTableColumns = reactive<any>([
+  {
+    key: 'selection',
+    width: 50,
+    cellRenderer: (item: any) => {
+      const onChange = (value: CheckboxValueType) => item.rowData.checked = value
+      return <ElCheckbox modelValue={item.rowData.checked} onChange={onChange} />
+    },
+    headerCellRenderer: () => {
+      const onChange = (value: CheckboxValueType) => {
+        dialogTableData.forEach((i: any) => i.checked = value);
+      }
+      return <ElCheckbox onChange={onChange} modelValue={dialogTableData.every((i: any) => i.checked)} indeterminate={!dialogTableData.every((i: any) => i.checked) && dialogTableData.some((i: any) => i.checked)} />
+    },
+    checked: false,
+  },
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 200
+  },
+  {
+    dataKey: 'studentName',
+    key: 'studentName',
+    title: '学生姓名',
+    width: 150
+  },
+  {
+    dataKey: 'userName',
+    key: 'userName',
+    title: '用户名',
+    width: 200
+  },
+  {
+    dataKey: 'grade',
+    key: 'grade',
+    title: '年级',
+    width: 150
+  },
+  {
+    dataKey: 'phoneNumber',
+    key: 'phoneNumber',
+    title: '电话',
+    width: 200
+  },
+  {
+    dataKey: 'joinDate',
+    key: 'joinDate',
+    title: '加入时间',
+    width: 200
+  },
+])
+
+const dialogTableData = reactive<any>([
+  {
+    checked: false,
+    id: '1456',
+    studentName: 'Mr.庄',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '13294715926',
+    joinDate: '2022-10-10'
+  },
+  {
+    checked: false,
+    id: '25',
+    studentName: 'Mr.ir',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '12365415926',
+    joinDate: '2022-10-10'
+  },
+  {
+    checked: false,
+    id: '457',
+    studentName: 'Mr.空间',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '13987415926',
+    joinDate: '2022-10-10'
+  },
+  {
+    checked: false,
+    id: '22463',
+    studentName: 'Mr.如图',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '15691415926',
+    joinDate: '2022-10-10'
+  },
+  {
+    checked: false,
+    id: '568769',
+    studentName: 'Mr.是的',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '13856495926',
+    joinDate: '2022-10-10'
+  },
+  {
+    checked: false,
+    id: '23536',
+    studentName: 'Mr.进方',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '13298989926',
+    joinDate: '2022-10-10'
+  },
+  {
+    checked: false,
+    id: '45684',
+    studentName: 'Mr.搞定',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '13291415926',
+    joinDate: '2022-10-10'
+  },
+  {
+    checked: false,
+    id: '2467',
+    studentName: 'Mr.三个',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '12391415926',
+    joinDate: '2022-10-10'
+  },
+  {
+    checked: false,
+    id: '97007',
+    studentName: 'Mr.刷单',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '1329355926',
+    joinDate: '2022-10-10'
+  },
+  {
+    checked: false,
+    id: '59664',
+    studentName: 'Mr.锕',
+    userName: 'Nick191518',
+    grade: '高二',
+    phoneNumber: '13291415926',
+    joinDate: '2022-10-10'
+  },
 ])
 
 const tableColumns = [
@@ -56,6 +214,15 @@ const tableColumns = [
   }
 ]
 
+const detailItem = reactive({
+  className: '中考冲刺',
+  teacher: 'Mr.庄',
+  major: '科学',
+  grade: '初三',
+  startDate: '2023-01-01',
+  endDate: '2023-06-01',
+})
+
 const deleteStudent = (props: object) => {
   console.log(props)
 }
@@ -72,50 +239,59 @@ for (let index = 0; index < 100; index++) {
 }
 
 const refresh = () => {
-  console.log(items)
+  console.log(searchBarItems)
 }
 
-const detailItem = reactive({
-  className: '中考冲刺',
-  teacher: 'Mr.庄',
-  major: '科学',
-  grade: '初三',
-  startDate: '2023-01-01',
-  endDate: '2023-06-01',
-})
+const addStudentDialogShow = ref(false);
+const addStudent = () => {
+  addStudentDialogShow.value = true;
+}
+const dialogSearchBarRefresh = () => {
+  console.log(dialogSearchBarItems)
+}
+const confirmNewStudent = () => {
+  let selectedRows = dialogTableData.filter((item: any) => item.checked)
+  console.log(selectedRows)
+  addStudentDialogShow.value = false
+  dialogTableData.forEach((i: any) => i.checked = false);
+}
+const cancelNewStudent = () => {
+  addStudentDialogShow.value = false;
+  dialogTableData.forEach((i: any) => i.checked = false);
+}
 </script>
 
 <template>
   <div class="div-class-detail">
     <div class="card-left">
       <div class="div-card-left-title">
-        <span style=";">
+        <el-text>
           基本信息
-        </span>
+        </el-text>
       </div>
 
       <div class="div-card-left-detail">
         <div class="detail-info">
-          <span class="span-detail">
+          <el-text class="el-text-detail">
             班级名称：{{ detailItem.className }}
-          </span>
-          <span class="span-detail">
+          </el-text>
+          <el-text class="el-text-detail">
             负责老师：{{ detailItem.teacher }}
-          </span>
-          <span class="span-detail">
+          </el-text>
+          <el-text class="el-text-detail">
             学科：{{ detailItem.major }}
-          </span>
-          <span class="span-detail">
+          </el-text>
+          <el-text class="el-text-detail">
             年级：{{ detailItem.grade }}
-          </span>
+          </el-text>
         </div>
         <div class="detail-date">
-          <span class="span-detail">
+          <el-text class="el-text-detail">
             起始日期：{{ detailItem.startDate }}
-          </span>
-          <span class="span-detail">
+          </el-text>
+          <el-text class="el-text-detail">
             到期日期：{{ detailItem.endDate }}
-          </span>
+          </el-text>
         </div>
 
       </div>
@@ -124,17 +300,39 @@ const detailItem = reactive({
     <div class="card-right">
       <TablePage class="table-page" :columns="tableColumns" :data="tableData">
         <div class="div-search-bar">
-
-          <SearchBar :items="items" @change="refresh()"></SearchBar>
-
+          <SearchBar :items="searchBarItems" @change="refresh()"></SearchBar>
           <div style="flex-grow: 1"></div>
-
-          <el-button class="search-bar-button">添加成员</el-button>
+          <el-button class="search-bar-button" type="primary" @click="addStudent()">添加成员</el-button>
         </div>
       </TablePage>
-
     </div>
   </div>
+
+  <el-dialog class="class-detail-dialog" width="850px" v-model="addStudentDialogShow">
+    <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick">
+      <el-tab-pane label="正式学生" name="officalStudent">
+        <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+          <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()">
+          </SearchBar>
+        </TablePage>
+      </el-tab-pane>
+      <el-tab-pane label="临时学生" name="inofficalStudent">
+        <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+          <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()">
+          </SearchBar>
+        </TablePage>
+      </el-tab-pane>
+    </el-tabs>
+    <template #header>
+      <el-text>添加学生</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="confirmNewStudent()">确定</el-button>
+      <el-button @click="cancelNewStudent()">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -162,20 +360,19 @@ const detailItem = reactive({
         display: flex;
         flex-direction: column;
         margin-top: 15px;
-
-        >.span-detail {
-          margin-top: 15px;
-        }
+        justify-content: left;
       }
 
       >.detail-date {
         display: flex;
         flex-direction: column;
         margin-top: 25px;
+      }
 
-        >.span-detail {
-          margin-top: 15px;
-        }
+      >.detail-info>.el-text-detail,
+      .detail-date>.el-text-detail {
+        margin-top: 15px;
+        align-self: flex-start;
       }
     }
   }
@@ -202,6 +399,47 @@ const detailItem = reactive({
   >.search-bar-button {
     max-width: 70px;
     margin-left: 12px;
+  }
+}
+</style>
+
+<style lang="scss">
+.el-dialog__footer {
+  border-top: 1px solid $element-header-color;
+  height: 50px;
+}
+
+.class-detail-dialog {
+  >.el-dialog__body {
+
+    .tabs-page {
+      height: 550px;
+      box-sizing: border-box;
+
+      .dialog-table-page {
+        height: calc(550px - 54px - 10px);
+        width: 850px - 15px - 15px;
+        margin-left: 0px;
+
+        .dialog-search-bar {
+          margin-left: 10px;
+          margin-right: 8px;
+          margin-bottom: 15px;
+        }
+      }
+    }
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+
+    >div {
+      width: fit-content;
+    }
   }
 }
 </style>
