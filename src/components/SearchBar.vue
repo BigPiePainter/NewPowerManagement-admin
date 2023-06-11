@@ -50,7 +50,7 @@ const clickRefresh = (): void => {
 
     <div style="flex-grow: 1"></div>
 
-    <el-button @click="clickSearch" class="button" type="primary" :icon="Search">搜索</el-button>
+    <el-button @click="clickSearch" class="button" :icon="Search" type="primary">搜索</el-button>
     <el-button @click="clickRefresh" class="button" :icon="Refresh">重置</el-button>
   </div>
 </template>
