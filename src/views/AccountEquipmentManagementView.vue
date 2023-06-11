@@ -76,35 +76,24 @@ const tableColumns = [
   }
 ]
 
-const tableData: object[] = [
-  {
-    id: '1456',
-    studentName: 'Aaron',
-    userName: 'Aaron191518',
-    eqipmentModel: 'Huawei mate 10',
-    systemModel: 'android',
-    tiedTime: '2011-9-19 18:23',
-    loginTime: '2012-12-22 19:23'
-  }
-]
+const tableData: object[] = []
 
 const fakeData = {
-  id: '123456',
-  studentName: 'Aaron',
+  id: '',
+  studentName: 'Zack',
   userName: 'Aaron191518',
   eqipmentModel: '苹果12',
   systemModel: 'iphone',
-  tiedTime: '2011-9-19 18:23',
-  loginTime: '2012-12-22 19:23'
+  tiedTime: '2023-9-19 18:23:33',
+  loginTime: '2012-12-22 19:23:22'
 }
 
-const generateData = (data: object[], fakeItem: object) => {
-  for (let i = 0; i < 1000; i++) {
-    data.push(fakeItem)
-  }
+for (let index = 0; index < 100; index++) {
+  let data = { ...fakeData }
+  data.id += index
+  tableData.push(data)
 }
 
-generateData(tableData, fakeData)
 console.log(tableData)
 
 const refresh = () => {

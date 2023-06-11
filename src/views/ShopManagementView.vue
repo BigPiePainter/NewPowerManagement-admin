@@ -7,22 +7,18 @@ import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { react } from '@babel/types'
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [
-  { name: '题目管理', path: '' },
-]
+breadcrumbStore.data = [{ name: '题目管理', path: '' }]
 
 const items = reactive([
-  { name: '商品名称', value:''},
-  { name: '类型', value: '', type:InputType.Select, label:"请选择"},
-  { name: '年级', value: '', type:InputType.Select, label:"请选择"},
-  { name: '状态', value: '', type:InputType.Select, label:"请选择"},
-  { name: '学科', value: '', type:InputType.Select, label:"请选择"},
-  { name: '标签', value:'', type:InputType.Select, label:"请选择"}
+  { name: '商品名称', value: '' },
+  { name: '类型', value: '', type: InputType.Select, label: '请选择' },
+  { name: '年级', value: '', type: InputType.Select, label: '请选择' },
+  { name: '状态', value: '', type: InputType.Select, label: '请选择' },
+  { name: '学科', value: '', type: InputType.Select, label: '请选择' },
+  { name: '标签', value: '', type: InputType.Select, label: '请选择' }
 ])
 
-
-const url =
-  'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
+const url = 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
 
 const tableColumns = [
   {
@@ -34,9 +30,8 @@ const tableColumns = [
   {
     dataKey: 'poster',
     key: 'poster',
-    title: "商品",
-    width: 200,
-   
+    title: '商品',
+    width: 200
   },
   {
     dataKey: 'questionAmount',
@@ -54,31 +49,31 @@ const tableColumns = [
     dataKey: 'studentSubject',
     key: 'studentSubject',
     title: '学科',
-    width: 100,
+    width: 100
   },
   {
     dataKey: 'questionDifficulty',
     key: 'questionDifficulty',
     title: '难度',
-    width: 100,
+    width: 100
   },
   {
     dataKey: 'questionTag',
     key: 'questionTag',
     title: '标签',
-    width: 100,
-  }, 
-   {
+    width: 100
+  },
+  {
     dataKey: 'questionCreatTime',
     key: 'questionCreatTime',
     title: '创建时间',
-    width: 200,
+    width: 200
   },
   {
     dataKey: 'lastChangeTime',
     key: 'lastChangeTime',
     title: '最后更新时间',
-    width: 200,
+    width: 200
   },
   {
     key: 'option',
@@ -109,9 +104,9 @@ let fakeData = {
   poster: '超级提高题',
   studentSubject: '数学',
   studentGrade: '9',
-  questionDifficulty:"★★★★",
+  questionDifficulty: '★★★★',
   questionAmount: '20',
-  lastChangeTime:'2019-8-17 20:082',
+  lastChangeTime: '2019-8-17 20:082',
   questionCreatTime: '2019-8-17 20:082',
   questionTag: '-'
 }
@@ -131,18 +126,13 @@ const refresh = () => {
 }
 </script>
 
-<template  slot-scope="scope">
-    <div class="demo-image__preview">
-    <el-image
-
-    />
-  </div>
+<template slot-scope="scope">
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
     </div>
     <div>
-      <el-button>新建商品</el-button>
+      <el-button class="new-poster-button">新建商品</el-button>
     </div>
   </TablePage>
 </template>
@@ -161,9 +151,13 @@ $gap: 15px;
   margin: $gap;
 }
 
-.displaypic{
-      width: 100px;
-       height: 100px;
+.new-poster-button{
+  margin-left: $gap;
+  margin-bottom: $gap;
 }
 
+.displaypic {
+  width: 100px;
+  height: 100px;
+}
 </style>
