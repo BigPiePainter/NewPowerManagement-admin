@@ -31,7 +31,7 @@ const tableColumns = [
     dataKey: 'classStartTime',
     key: 'classStartTime',
     title: '课程开始时间',
-    width: 120
+    width: 200
   },
   {
     dataKey: 'liveClassPeroid',
@@ -43,7 +43,7 @@ const tableColumns = [
     dataKey: 'acceptedStudents',
     key: 'acceptedStudents',
     title: '接受学生',
-    width: 100
+    width: 200
   },
   {
     dataKey: 'liveClassUrl',
