@@ -5,33 +5,11 @@ import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useRoute } from 'vue-router'
-import type { FunctionalComponent } from 'vue'
-import type { CheckboxValueType, Column } from 'element-plus'
 import { ElCheckbox } from 'element-plus'
-
-//dialog中表格的选择勾选框----------------------------------------------------
-type SelectionCellProps = {
-  value: boolean
-  intermediate?: boolean
-  onChange: (value: CheckboxValueType) => void
-}
-
-const SelectionCell: FunctionalComponent<SelectionCellProps> = ({
-  value,
-  intermediate = false,
-  onChange,
-}) => {
-  return (
-    <ElCheckbox
-      onChange={onChange}
-      modelValue={value}
-      indeterminate={intermediate}
-    />
-  )
-}
-//----------------------------------------------------------------------------
-
+import type { CheckboxValueType } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '学校管理', path: '' },
@@ -50,7 +28,37 @@ const dialogSearchBarItems = reactive([
   { name: "姓名/用户名/电话", value: "", },
 ])
 
-const dialogTableColumns = [
+
+// const selectedChange = (item: any, checked: CheckboxValueType) => {
+//   console.log(item, checked)
+// }
+//  <ElCheckbox onChange={(value: CheckboxValueType) => selectedChange(item, value)}
+//    modelValue={item.checked}
+//  />
+
+// const upload = () => {
+//   let targetDate = dialogTableData.filter(i => i.checked)
+// }
+
+
+
+
+const dialogTableColumns = reactive<any>([
+  {
+    key: 'selection',
+    width: 50,
+    cellRenderer: (item: any) => {
+      const onChange = (value: CheckboxValueType) => item.rowData.checked = value
+      return <ElCheckbox modelValue={item.rowData.checked} onChange={onChange} />
+    },
+    headerCellRenderer: () => {
+      const onChange = (value: CheckboxValueType) => {
+        dialogTableData.forEach((i: any) => i.checked = value);
+      }
+      return <ElCheckbox onChange={onChange} modelValue={dialogTableData.every((i: any) => i.checked)} indeterminate={!dialogTableData.every((i: any) => i.checked) && dialogTableData.some((i: any) => i.checked)} />
+    },
+    checked: false,
+  },
   {
     dataKey: 'id',
     key: 'id',
@@ -87,11 +95,11 @@ const dialogTableColumns = [
     title: '加入时间',
     width: 200
   },
-]
+])
 
-const dialogTableData: object[] = [
+const dialogTableData = reactive<any>([
   {
-    check: false,
+    checked: false,
     id: '1456',
     teacherName: 'Mr.庄',
     userName: 'Nick191518',
@@ -100,7 +108,7 @@ const dialogTableData: object[] = [
     joinDate: '2022-10-10'
   },
   {
-    check: false,
+    checked: false,
     id: '25',
     teacherName: 'Mr.ir',
     userName: 'Nick191518',
@@ -109,7 +117,7 @@ const dialogTableData: object[] = [
     joinDate: '2022-10-10'
   },
   {
-    check: false,
+    checked: false,
     id: '457',
     teacherName: 'Mr.空间',
     userName: 'Nick191518',
@@ -118,7 +126,7 @@ const dialogTableData: object[] = [
     joinDate: '2022-10-10'
   },
   {
-    check: false,
+    checked: false,
     id: '22463',
     teacherName: 'Mr.如图',
     userName: 'Nick191518',
@@ -127,7 +135,7 @@ const dialogTableData: object[] = [
     joinDate: '2022-10-10'
   },
   {
-    check: false,
+    checked: false,
     id: '568769',
     teacherName: 'Mr.是的',
     userName: 'Nick191518',
@@ -136,7 +144,7 @@ const dialogTableData: object[] = [
     joinDate: '2022-10-10'
   },
   {
-    check: false,
+    checked: false,
     id: '23536',
     teacherName: 'Mr.进方',
     userName: 'Nick191518',
@@ -145,7 +153,7 @@ const dialogTableData: object[] = [
     joinDate: '2022-10-10'
   },
   {
-    check: false,
+    checked: false,
     id: '45684',
     teacherName: 'Mr.搞定',
     userName: 'Nick191518',
@@ -154,7 +162,7 @@ const dialogTableData: object[] = [
     joinDate: '2022-10-10'
   },
   {
-    check: false,
+    checked: false,
     id: '2467',
     teacherName: 'Mr.三个',
     userName: 'Nick191518',
@@ -163,7 +171,7 @@ const dialogTableData: object[] = [
     joinDate: '2022-10-10'
   },
   {
-    check: false,
+    checked: false,
     id: '97007',
     teacherName: 'Mr.刷单',
     userName: 'Nick191518',
@@ -172,7 +180,7 @@ const dialogTableData: object[] = [
     joinDate: '2022-10-10'
   },
   {
-    check: false,
+    checked: false,
     id: '59664',
     teacherName: 'Mr.锕',
     userName: 'Nick191518',
@@ -180,9 +188,9 @@ const dialogTableData: object[] = [
     major: '英语',
     joinDate: '2022-10-10'
   },
-]
+])
 
-const tableColumns = [
+const tableColumns = reactive<any>([
   {
     dataKey: 'id',
     key: 'id',
@@ -233,26 +241,26 @@ const tableColumns = [
     fixed: 'right',
     align: 'center'
   }
-]
+])
 
 console.log(route.query.id)
-const tableData: object[] = [{
+const tableData = reactive<object[]>([{
   id: '1456',
   teacherName: 'Mr.庄',
   userName: 'Nick191518',
   grade: '高二',
   major: '英语',
   joinDate: '2022-10-10'
-}]
+}])
 
-const fakeData = {
+const fakeData = reactive<any>({
   id: '500551',
   teacherName: 'Mr.YuTaKa',
   userName: 'Young191518',
   grade: '高二',
   major: '数学',
   joinDate: '2022-10-10'
-}
+})
 
 for (let index = 0; index < 100; index++) {
   let data = { ...fakeData }
@@ -281,7 +289,11 @@ const addTeacherDialogShow = ref(false);
 const addTeacher = () => {
   addTeacherDialogShow.value = true;
 }
-const confirmNewTeacher = () => { }
+const confirmNewTeacher = () => {
+  console.log(dialogTableData)
+  let selectedRows = dialogTableData.filter((item: any) => item.checked)
+  console.log(selectedRows)
+}
 const cancelNewTeacher = () => { }
 </script>
 
@@ -407,8 +419,9 @@ const cancelNewTeacher = () => { }
 }
 
 .dialog-table-page {
-  margin-bottom: 0 ;
-  .dialog-search-bar{
+  margin-bottom: 0;
+
+  .dialog-search-bar {
     margin-right: 15px;
     margin-bottom: 15px;
   }
