@@ -314,7 +314,7 @@ const cancelNewTeacher = () => { }
 
           <div style="flex-grow: 1"></div>
 
-          <el-button class="search-bar-button" @click="addTeacher()">添加成员</el-button>
+          <el-button class="search-bar-button" type="primary" @click="addTeacher()">添加成员</el-button>
         </div>
       </TablePage>
 
