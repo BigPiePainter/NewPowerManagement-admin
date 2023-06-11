@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
+import type { TabsPaneContext } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
@@ -22,9 +23,12 @@ const route = useRoute()
 const searchBarItems = reactive([
   { name: "姓名/用户名", value: "" },
 ])
+const activeName = ref('officalStudent')
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+  console.log(tab, event)
+}
 const dialogSearchBarItems = reactive([
   { name: "选择年级", value: "", label: "请选择", type: InputType.Select },
-  { name: "学科", value: "", label: "请选择", type: InputType.Select },
   { name: "姓名/用户名/电话", value: "", },
 ])
 
@@ -48,13 +52,13 @@ const dialogTableColumns = reactive<any>([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 150
+    width: 200
   },
   {
-    dataKey: 'teacherName',
-    key: 'teacherName',
-    title: '教师姓名',
-    width: 200
+    dataKey: 'studentName',
+    key: 'studentName',
+    title: '学生姓名',
+    width: 150
   },
   {
     dataKey: 'userName',
@@ -66,12 +70,12 @@ const dialogTableColumns = reactive<any>([
     dataKey: 'grade',
     key: 'grade',
     title: '年级',
-    width: 200
+    width: 150
   },
   {
-    dataKey: 'major',
-    key: 'major',
-    title: '学科',
+    dataKey: 'phoneNumber',
+    key: 'phoneNumber',
+    title: '电话',
     width: 200
   },
   {
@@ -86,91 +90,91 @@ const dialogTableData = reactive<any>([
   {
     checked: false,
     id: '1456',
-    teacherName: 'Mr.庄',
+    studentName: 'Mr.庄',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '13294715926',
     joinDate: '2022-10-10'
   },
   {
     checked: false,
     id: '25',
-    teacherName: 'Mr.ir',
+    studentName: 'Mr.ir',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '12365415926',
     joinDate: '2022-10-10'
   },
   {
     checked: false,
     id: '457',
-    teacherName: 'Mr.空间',
+    studentName: 'Mr.空间',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '13987415926',
     joinDate: '2022-10-10'
   },
   {
     checked: false,
     id: '22463',
-    teacherName: 'Mr.如图',
+    studentName: 'Mr.如图',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '15691415926',
     joinDate: '2022-10-10'
   },
   {
     checked: false,
     id: '568769',
-    teacherName: 'Mr.是的',
+    studentName: 'Mr.是的',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '13856495926',
     joinDate: '2022-10-10'
   },
   {
     checked: false,
     id: '23536',
-    teacherName: 'Mr.进方',
+    studentName: 'Mr.进方',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '13298989926',
     joinDate: '2022-10-10'
   },
   {
     checked: false,
     id: '45684',
-    teacherName: 'Mr.搞定',
+    studentName: 'Mr.搞定',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '13291415926',
     joinDate: '2022-10-10'
   },
   {
     checked: false,
     id: '2467',
-    teacherName: 'Mr.三个',
+    studentName: 'Mr.三个',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '12391415926',
     joinDate: '2022-10-10'
   },
   {
     checked: false,
     id: '97007',
-    teacherName: 'Mr.刷单',
+    studentName: 'Mr.刷单',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '1329355926',
     joinDate: '2022-10-10'
   },
   {
     checked: false,
     id: '59664',
-    teacherName: 'Mr.锕',
+    studentName: 'Mr.锕',
     userName: 'Nick191518',
     grade: '高二',
-    major: '英语',
+    phoneNumber: '13291415926',
     joinDate: '2022-10-10'
   },
 ])
@@ -251,7 +255,7 @@ const confirmNewStudent = () => {
   addStudentDialogShow.value = false
   dialogTableData.forEach((i: any) => i.checked = false);
 }
-const cancelNewStudent = () => { 
+const cancelNewStudent = () => {
   addStudentDialogShow.value = false;
   dialogTableData.forEach((i: any) => i.checked = false);
 }
@@ -261,33 +265,33 @@ const cancelNewStudent = () => {
   <div class="div-class-detail">
     <div class="card-left">
       <div class="div-card-left-title">
-        <span style=";">
+        <el-text>
           基本信息
-        </span>
+        </el-text>
       </div>
 
       <div class="div-card-left-detail">
         <div class="detail-info">
-          <span class="span-detail">
+          <el-text class="el-text-detail">
             班级名称：{{ detailItem.className }}
-          </span>
-          <span class="span-detail">
+          </el-text>
+          <el-text class="el-text-detail">
             负责老师：{{ detailItem.teacher }}
-          </span>
-          <span class="span-detail">
+          </el-text>
+          <el-text class="el-text-detail">
             学科：{{ detailItem.major }}
-          </span>
-          <span class="span-detail">
+          </el-text>
+          <el-text class="el-text-detail">
             年级：{{ detailItem.grade }}
-          </span>
+          </el-text>
         </div>
         <div class="detail-date">
-          <span class="span-detail">
+          <el-text class="el-text-detail">
             起始日期：{{ detailItem.startDate }}
-          </span>
-          <span class="span-detail">
+          </el-text>
+          <el-text class="el-text-detail">
             到期日期：{{ detailItem.endDate }}
-          </span>
+          </el-text>
         </div>
 
       </div>
@@ -304,12 +308,23 @@ const cancelNewStudent = () => {
     </div>
   </div>
 
-  <el-dialog class="class-detail-dialog" width="900px" v-model="addStudentDialogShow">
-    <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
-      <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()"></SearchBar>
-    </TablePage>
+  <el-dialog class="class-detail-dialog" width="850px" v-model="addStudentDialogShow">
+    <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick">
+      <el-tab-pane label="正式学生" name="officalStudent">
+        <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+          <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()">
+          </SearchBar>
+        </TablePage>
+      </el-tab-pane>
+      <el-tab-pane label="临时学生" name="inofficalStudent">
+        <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+          <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()">
+          </SearchBar>
+        </TablePage>
+      </el-tab-pane>
+    </el-tabs>
     <template #header>
-      <el-text>添加老师</el-text>
+      <el-text>添加学生</el-text>
     </template>
     <template #footer>
       <el-button type="primary" @click="confirmNewStudent()">确定</el-button>
@@ -345,20 +360,19 @@ const cancelNewStudent = () => {
         display: flex;
         flex-direction: column;
         margin-top: 15px;
-
-        >.span-detail {
-          margin-top: 15px;
-        }
+        justify-content: left;
       }
 
       >.detail-date {
         display: flex;
         flex-direction: column;
         margin-top: 25px;
+      }
 
-        >.span-detail {
-          margin-top: 15px;
-        }
+      >.detail-info>.el-text-detail,
+      .detail-date>.el-text-detail {
+        margin-top: 15px;
+        align-self: flex-start;
       }
     }
   }
@@ -395,23 +409,33 @@ const cancelNewStudent = () => {
   height: 50px;
 }
 
-.dialog-table-page {
-  margin-bottom: 0;
-
-  .dialog-search-bar {
-    margin-right: 15px;
-    margin-bottom: 15px;
-  }
-}
-
 .class-detail-dialog {
   >.el-dialog__body {
-    height: 500px;
+
+    .tabs-page {
+      height: 550px;
+      box-sizing: border-box;
+
+      .dialog-table-page {
+        height: calc(550px - 54px - 10px);
+        width: 850px - 15px - 15px;
+        margin-left: 0px;
+
+        .dialog-search-bar {
+          margin-left: 10px;
+          margin-right: 8px;
+          margin-bottom: 15px;
+        }
+      }
+    }
     display: flex;
     align-items: center;
     flex-direction: column;
-    padding-bottom: 0;
-    padding-top: 10px;
+
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
 
     >div {
       width: fit-content;

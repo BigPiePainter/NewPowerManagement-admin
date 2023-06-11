@@ -304,19 +304,19 @@ const cancelNewTeacher = () => {
   <div class="div-class-detail">
     <div class="card-left">
       <div class="div-card-left-title">
-        <span style=";">
+        <el-text style=";">
           基本信息
-        </span>
+        </el-text>
       </div>
 
       <div class="div-card-left-detail">
         <div class="detail-info">
-          <span class="span-detail">
+          <el-text class="el-text-detail">
             教研组名称：{{ detailItem.teacherGroupName }}
-          </span>
-          <span class="span-detail">
+          </el-text>
+          <el-text class="el-text-detail">
             组长：{{ detailItem.groupLeader }}
-          </span>
+          </el-text>
         </div>
       </div>
 
@@ -377,15 +377,22 @@ const cancelNewTeacher = () => {
         display: flex;
         flex-direction: column;
         margin-top: 15px;
-
-        >.span-detail {
-          margin-top: 15px;
-        }
+        justify-content: left;
       }
 
-      >.span-detail {
+      >.detail-date {
+        display: flex;
+        flex-direction: column;
+        margin-top: 25px;
+      }
+
+      >.detail-info>.el-text-detail,
+      .detail-date>.el-text-detail {
         margin-top: 15px;
+        align-self: flex-start;
       }
+
+
     }
   }
 
@@ -425,8 +432,9 @@ const cancelNewTeacher = () => {
   margin-bottom: 0;
 
   .dialog-search-bar {
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
   }
 }
 
@@ -436,7 +444,9 @@ const cancelNewTeacher = () => {
     display: flex;
     align-items: center;
     flex-direction: column;
-    padding-bottom: 0;
+    padding-bottom: 0;    
+    padding-left: 10px;
+    padding-right: 5px;
     padding-top: 10px;
 
     >div {
