@@ -52,37 +52,37 @@ const dialogTableColumns = reactive<any>([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 100
   },
   {
     dataKey: 'studentName',
     key: 'studentName',
     title: '学生姓名',
-    width: 150
+    width: 100
   },
   {
     dataKey: 'userName',
     key: 'userName',
     title: '用户名',
-    width: 200
+    width: 150
   },
   {
     dataKey: 'grade',
     key: 'grade',
     title: '年级',
-    width: 150
+    width: 100
   },
   {
     dataKey: 'phoneNumber',
     key: 'phoneNumber',
     title: '电话',
-    width: 200
+    width: 150
   },
   {
     dataKey: 'joinDate',
     key: 'joinDate',
     title: '加入时间',
-    width: 200
+    width: 150
   },
 ])
 
