@@ -87,14 +87,14 @@ const order = reactive([
     flex-wrap: wrap;
     justify-content: flex-start;
 
-    width: calc(100vw - $sidebar-width - 40px);
+    width: calc($page-width - 40px);
   }
 
   > .card-container-divider {
     margin-bottom: 0px;
     margin-top: 7px;
     margin-left: 25px;
-    width: calc(100vw - $sidebar-width - 50px);
+    width: calc($page-width - 50px);
     justify-content: flex-start;
   }
 }
