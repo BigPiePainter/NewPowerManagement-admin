@@ -93,7 +93,6 @@ const router = createRouter({
           name: 'account-temoorary-student',
           component: AccountTemporaryStudentsView
         },
-        
 
         {
           path: 'live-class',
@@ -147,13 +146,17 @@ const router = createRouter({
           path: 'setting',
           name: 'setting',
           component: SettingView
-        },
-        {
-          path: '*',
-          name: 'Error',
-          component: ErrorView
         }
       ]
+    },
+    {
+      path: '/:pathMatch(.*)',
+      redirect: '/404'
+    },
+    {
+      path: '/404',
+      name: 'Error',
+      component: ErrorView
     }
     // {
     //   path: '/about',
