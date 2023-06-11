@@ -7,9 +7,8 @@ import { InputType } from '@/type'
 import { useRoute } from 'vue-router'
 import { ElCheckbox } from 'element-plus'
 import type { CheckboxValueType } from 'element-plus'
+
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-
-
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '学校管理', path: '' },
@@ -290,11 +289,15 @@ const addTeacher = () => {
   addTeacherDialogShow.value = true;
 }
 const confirmNewTeacher = () => {
-  console.log(dialogTableData)
   let selectedRows = dialogTableData.filter((item: any) => item.checked)
   console.log(selectedRows)
+  addTeacherDialogShow.value = false
+  dialogTableData.forEach((i: any) => i.checked = false);
 }
-const cancelNewTeacher = () => { }
+const cancelNewTeacher = () => { 
+  addTeacherDialogShow.value = false;
+  dialogTableData.forEach((i: any) => i.checked = false);
+}
 </script>
 
 <template>
