@@ -22,7 +22,7 @@ import AccountTeacherManagamentView from '@/views/AccountTeacherManagamentView.v
 import AccountTemporaryStudentsView from '@/views/AccountTemporaryStudentsView.vue'
 import MainLayout from '@/components/MainLayout.vue'
 import PointsDetailView from '@/views/PointsDetailView.vue'
-import StudentPointsView from '@/views//StudentPointsView.vue'
+import StudentPointsView from '@/views/StudentPointsView.vue'
 import ViewA from '@/views/ViewA.vue'
 import ViewB from '@/views/ViewB.vue'
 

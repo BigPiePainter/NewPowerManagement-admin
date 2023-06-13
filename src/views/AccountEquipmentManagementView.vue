@@ -64,13 +64,14 @@ const tableColumns = [
     {
         key: 'option',
         title: '操作',
-        cellRenderer: () => (
-            <>
-                <el-button link type="primary" class="">
-                    解绑
-                </el-button>
-            </>
-        ),
+        cellRenderer: (item: any) => {
+      return (
+        <div>
+          <el-button link type="primary" onClick={() => console.log(item)}>
+            解绑
+          </el-button>
+        </div>
+        )},
         width: 60,
         fixed: 'right',
         align: 'center'
