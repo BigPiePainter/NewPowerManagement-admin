@@ -1,5 +1,7 @@
 @use './base.scss' as *;
 
+
+
 body {
   margin: 0;
   font-family: PingFangSC-Regular, sans-serif;
@@ -8,13 +10,19 @@ body {
 .el-table-v2 {
   color: var(--el-table-text-color);
 
-  $header-color: rgb(234, 238, 246);
   .el-table-v2__header {
-    background-color: $header-color;
+    background-color: $element-header-color;
   }
+
   .el-table-v2__header-cell {
-    background-color: $header-color;
+    background-color: $element-header-color;
   }
+}
+
+
+.el-dialog__header {
+  margin-right: 0px !important;
+  background-color: $element-header-color;
 }
 
 ::-webkit-scrollbar {

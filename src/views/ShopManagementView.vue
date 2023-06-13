@@ -10,9 +10,7 @@ import { ElTag, ElImage } from 'element-plus'
 import type { styleType } from 'element-plus/es/components/table-v2/src/common'
 import { findLastIndex } from 'lodash'
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [
-  { name: '题目管理', path: '' },
-]
+breadcrumbStore.data = [{ name: '题目管理', path: '' }]
 
 const items = reactive([
   { name: '商品名称', value: '' },
@@ -35,21 +33,28 @@ const tableColumns = [
   },
 
   {
-    dataKey: 'image',
-    key: 'image',
-    title: '海报',
-    width: 200,
-    cellRenderer: () => (
-      <>
-        <div><el-image src={url} ></el-image></div>
-      </>
-    ),
+    dataKey: 'poster',
+    key: 'poster',
+    title: '商品',
+    width: 200
   },
   {
-    dataKey: 'shoppingName',
-    key: 'shoppingName',
-    title: "商品",
-    width: 100,
+    dataKey: 'questionAmount',
+    key: 'questionAmount',
+    title: '好题数量',
+    width: 150
+  },
+  {
+    dataKey: 'studentGrade',
+    key: 'studentGrade',
+    title: '年级',
+    width: 100
+  },
+  {
+    dataKey: 'studentSubject',
+    key: 'studentSubject',
+    title: '学科',
+    width: 100
   },
   {
     dataKey: 'grade',
@@ -73,19 +78,29 @@ const tableColumns = [
     dataKey: 'classfiction',
     key: 'classfiction',
     title: '难度',
-    width: 100,
+    width: 100
   },
   {
     dataKey: 'tag',
     key: 'tag',
     title: '标签',
-    width: 100,
+    width: 100
   },
   {
-    dataKey: 'version',
-    key: 'version',
-    title: '版本',
-    width: 200,
+    dataKey: 'questionCreatTime',
+    key: 'questionCreatTime',
+    title: '创建时间',
+    width: 200
+  },
+  {
+    dataKey: 'lastChangeTime',
+    key: 'lastChangeTime',
+    title: '最后更新时间',
+    width: 200
+  },
+  {
+    key: 'option',
+    title: '操作',
 
   },
   {
@@ -132,15 +147,14 @@ const tableColumns = [
 
 let fakeData = {
   id: '1',
-  shoppingName: '超级提高题',
-  Price: '数学',
-  categories: '9',
-  classfiction: "★★★★",
-  grade: '20',
+  poster: '超级提高题',
+  studentSubject: '数学',
+  studentGrade: '9',
+  questionDifficulty: '★★★★',
+  questionAmount: '20',
   lastChangeTime: '2019-8-17 20:082',
-  version: '201-8-17 20:082',
-  tag: '-'
-
+  questionCreatTime: '2019-8-17 20:082',
+  questionTag: '-'
 }
 
 const tableData: object[] = []
@@ -159,13 +173,13 @@ const refresh = () => {
 
 </script>
 
-<template>
+<template slot-scope="scope">
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
     </div>
     <div>
-      <el-button>新建商品</el-button>
+      <el-button class="new-poster-button" type="primary">新建商品</el-button>
     </div>
   </TablePage>
 </template>
@@ -181,5 +195,15 @@ $gap: 15px;
 
 .div-search-bar {
   margin: $gap;
+}
+
+.new-poster-button{
+  margin-left: $gap;
+  margin-bottom: $gap;
+}
+
+.displaypic {
+  width: 100px;
+  height: 100px;
 }
 </style>

@@ -7,9 +7,7 @@ import { InputType } from '@/type'
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [
-  { name: '实时课程', path: '' }
-]
+breadcrumbStore.data = [{ name: '实时课程', path: '' }]
 
 const items = reactive([
   { name: '姓名', value: '' },
@@ -21,7 +19,7 @@ const tableColumns = [
     dataKey: 'liveClassName',
     key: 'liveClassName',
     title: '课堂名称',
-    width: 120 
+    width: 120
   },
   {
     dataKey: 'classTeacherName',
@@ -33,7 +31,7 @@ const tableColumns = [
     dataKey: 'classStartTime',
     key: 'classStartTime',
     title: '课程开始时间',
-    width: 120
+    width: 200
   },
   {
     dataKey: 'liveClassPeroid',
@@ -45,18 +43,18 @@ const tableColumns = [
     dataKey: 'acceptedStudents',
     key: 'acceptedStudents',
     title: '接受学生',
-    width: 100,
+    width: 200
   },
   {
     dataKey: 'liveClassUrl',
     key: 'liveClassUrl',
     title: '课程地址',
-    width: 500,
+    width: 500
   },
   {
     key: 'option',
     title: '操作',
-    
+
     cellRenderer: () => (
       <>
         <el-button link type="primary" class="">
@@ -105,9 +103,9 @@ const refresh = () => {
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
-      </div>
-      <div>
-      <el-button>新建课堂</el-button>
+    </div>
+    <div>
+      <el-button class="new-live-class-button" type="primary">新建课堂</el-button>
     </div>
   </TablePage>
 </template>
@@ -120,9 +118,13 @@ $gap: 15px;
   height: $page-height;
   margin-left: $gap;
   //margin-right: $gap;
-}
+  > .div-search-bar {
+    margin: $gap;
+  }
 
-.div-search-bar {
-  margin: $gap;
+  .new-live-class-button {
+    margin-bottom: $gap;
+    margin-left: $gap;
+  }
 }
 </style>

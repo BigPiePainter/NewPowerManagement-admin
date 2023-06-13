@@ -7,15 +7,13 @@ import { InputType } from '@/type'
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [
-  { name: '题目管理', path: '' },
-]
+breadcrumbStore.data = [{ name: '题目管理', path: '' }]
 
 const items = reactive([
-  { name: '年级', value: '', type:InputType.Select, label:"请选择"},
-  { name: '学科', value: '', type:InputType.Select, label:"请选择"},
-  { name: '难度', value: '', type:InputType.Select, label:"请选择"},
-  { name: '好题名称', value:''}
+  { name: '年级', value: '', type: InputType.Select, label: '请选择' },
+  { name: '学科', value: '', type: InputType.Select, label: '请选择' },
+  { name: '难度', value: '', type: InputType.Select, label: '请选择' },
+  { name: '好题名称', value: '' }
 ])
 
 const tableColumns = [
@@ -30,7 +28,11 @@ const tableColumns = [
     key: 'questionName',
     title: '好题名称',
     width: 200,
-    cellRenderer: ({ cellData: questionName }:any) => <ElButton link type='primary'>{questionName}</ElButton>,
+    cellRenderer: ({ cellData: questionName }: any) => (
+      <ElButton link type="primary">
+        {questionName}
+      </ElButton>
+    )
   },
   {
     dataKey: 'questionAmount',
@@ -48,31 +50,31 @@ const tableColumns = [
     dataKey: 'studentSubject',
     key: 'studentSubject',
     title: '学科',
-    width: 100,
+    width: 100
   },
   {
     dataKey: 'questionDifficulty',
     key: 'questionDifficulty',
     title: '难度',
-    width: 100,
+    width: 100
   },
   {
     dataKey: 'questionTag',
     key: 'questionTag',
     title: '标签',
-    width: 100,
-  }, 
-   {
+    width: 100
+  },
+  {
     dataKey: 'questionCreatTime',
     key: 'questionCreatTime',
     title: '创建时间',
-    width: 200,
+    width: 200
   },
   {
     dataKey: 'lastChangeTime',
     key: 'lastChangeTime',
     title: '最后更新时间',
-    width: 200,
+    width: 200
   },
   {
     key: 'option',
@@ -103,9 +105,9 @@ let fakeData = {
   questionName: '超级提高题',
   studentSubject: '数学',
   studentGrade: '9',
-  questionDifficulty:"★★★★",
+  questionDifficulty: '★★★★',
   questionAmount: '20',
-  lastChangeTime:'2019-8-17 20:082',
+  lastChangeTime: '2019-8-17 20:082',
   questionCreatTime: '2019-8-17 20:082',
   questionTag: '-'
 }
@@ -131,7 +133,7 @@ const refresh = () => {
       <SearchBar :items="items" @change="refresh()"></SearchBar>
     </div>
     <div>
-      <el-button>新建好题</el-button>
+      <el-button class="new-button" type="primary">新建好题</el-button>
     </div>
   </TablePage>
 </template>
@@ -144,6 +146,11 @@ $gap: 15px;
   height: $page-height;
   margin-left: $gap;
   //margin-right: $gap;
+
+  .new-button {
+    margin-left: $gap;
+    margin-bottom: $gap;
+  }
 }
 
 .div-search-bar {
