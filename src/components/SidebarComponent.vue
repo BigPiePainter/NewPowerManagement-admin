@@ -100,7 +100,21 @@ const items = [
   },
   {
     index: '/setting',
-    title: '设置'
+    title: '设置',
+    subs: [
+      {
+        index: '/category-management',
+        title: '分类管理'
+      },
+      {
+        index: '/tag-management',
+        title: '标签管理'
+      },
+      {
+        index: '/course-category',
+        title: '课程管理'
+      }
+    ]
   },
 ]
 

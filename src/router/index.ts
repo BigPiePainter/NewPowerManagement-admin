@@ -16,6 +16,9 @@ import QuestionBankManagementView from '@/views/QuestionBankManagementView.vue'
 import PointsManagementView from '@/views/PointsManagementView.vue'
 import OrderManagementView from '@/views/OrderManagementView.vue'
 import SettingView from '@/views/SettingView.vue'
+import CategoryManagementView from '@/views/CategoryManagementView.vue'
+import TagManagementView from '@/views/TagManagementView.vue'
+import CourseCategoryView from '@/views/CourseCategoryView.vue'
 import AccountStudentManagementView from '@/views/AccountStudentManagementView.vue'
 import AccountTeacherManagamentView from '@/views/AccountTeacherManagamentView.vue'
 import AccountTemporaryStudentsView from '@/views/AccountTemporaryStudentsView.vue'
@@ -146,6 +149,21 @@ const router = createRouter({
           path: 'setting',
           name: 'setting',
           component: SettingView
+        },
+        {
+          path: 'category-management',
+          name: 'category-management',
+          component: CategoryManagementView
+        },
+        {
+          path: 'tag-management',
+          name: 'tag-management',
+          component: TagManagementView
+        },
+        {
+          path: 'course-category',
+          name: 'course-category',
+          component: CourseCategoryView
         }
       ]
     },
