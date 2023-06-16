@@ -69,19 +69,20 @@ const tableColumns = [
   {
     key: 'option',
     title: '操作',
-    cellRenderer: () => (
-      <>
-        <el-button link type="primary" class="">
-          编辑
-        </el-button>
-        <el-button link type="primary" class="">
-          重置密码
-        </el-button>
-        <el-button link type="danger" class="">
-          删除
-        </el-button>
-      </>
-    ),
+    cellRenderer: (item: any) => {
+      return (
+        <div>
+          <el-button link type="primary" onClick={() => console.log(item)}>
+            编辑
+          </el-button>
+          <el-button link type="primary" onClick={() => console.log(item)}>
+            重置密码
+          </el-button>
+          <el-button link type="primary" onClick={() => console.log(item)}>
+            删除
+          </el-button>
+        </div>
+        )},
     width: 170,
     fixed: 'right',
     align: 'left'

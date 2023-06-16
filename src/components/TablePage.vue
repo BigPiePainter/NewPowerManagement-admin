@@ -2,6 +2,7 @@
 type Props = {
   columns: object[]
   data: object[]
+  rowHeight?: number
 }
 const props = defineProps<Props>()
 </script>
@@ -12,22 +13,15 @@ const props = defineProps<Props>()
     <div class="page-table-auto-resizer">
       <el-auto-resizer>
         <template #default="{ height, width }">
-          <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" :row-height="39">
+          <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" :row-height="rowHeight || 39">
           </el-table-v2>
         </template>
       </el-auto-resizer>
     </div>
     <div class="page-table-pagination">
-      <el-pagination
-        :current-page="4"
-        :page-size="100"
-        :page-sizes="[100, 200, 300, 400]"
-        :small="false"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
-        @size-change="() => {}"
-        @current-change="() => {}"
-      />
+      <el-pagination :current-page="4" :page-size="100" :page-sizes="[100, 200, 300, 400]" :small="false"
+        layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="() => { }"
+        @current-change="() => { }" />
     </div>
   </div>
 </template>
@@ -39,7 +33,7 @@ const props = defineProps<Props>()
   width: 100%;
   height: 100%;
 
-  > .page-table-auto-resizer {
+  >.page-table-auto-resizer {
     width: 100%;
     flex-grow: 1;
     min-height: 0px;
@@ -48,7 +42,7 @@ const props = defineProps<Props>()
     //border: 1px #f0f2f5 solid;
   }
 
-  > .page-table-pagination {
+  >.page-table-pagination {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
