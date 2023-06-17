@@ -28,6 +28,7 @@ import PointsDetailView from '@/views/PointsDetailView.vue'
 import StudentPointsView from '@/views//StudentPointsView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 import AccountTeacherDetail from '@/views/AccountTeacherDetail.vue'
+import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -97,6 +98,11 @@ const router = createRouter({
           path: 'account-student-management',
           name: 'account-student-management',
           component: AccountStudentManagementView
+        },
+        {
+          path: 'student-detail-management',
+          name: 'student-detail-management',
+          component: AccountStudentDetail
         },
         {
           path: 'account-temoorary-student',

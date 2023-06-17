@@ -4,12 +4,21 @@ import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
-
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { useRouter } from 'vue-router'
+
+
+const router = useRouter()
+
+const studentName = (props: any) => {
+  console.log(props)
+  router.push({ path: 'student-detail-management', query: { id: props.rowData.id } })
+}
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '学生管理', path: '/account-student-management' },
+  { name: '学生详情', path: '/student-detail-management' }
 ]
 const items = reactive([
   { name: "用户名", value: "" },
@@ -31,7 +40,7 @@ const tableColumns = [
     key: 'studentName',
     title: '姓名',
     width: 80,
-    cellRenderer: ({ cellData: studentName }:any) => <ElButton link type='primary'>{studentName}</ElButton>,
+    cellRenderer: (cellData: any) => <ElButton link type='primary' onclick={() => studentName(cellData)}>{cellData.cellData}</ElButton>,
   },
   {
     dataKey: 'userName',
