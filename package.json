@@ -15,6 +15,7 @@
     "element-plus": "^2.3.6",
     "pinia": "^2.0.36",
     "sass": "^1.62.1",
+    "screenfull": "^6.0.2",
     "vue": "^3.3.2",
     "vue-router": "^4.2.0"
   },

@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { ArrowDown } from '@element-plus/icons-vue'
 import { ArrowRight } from '@element-plus/icons-vue'
+import { FullScreen } from '@element-plus/icons-vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import screenfull from 'screenfull'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '工作台', path: '/' }]
+
+const fullScreen = () => {
+  if (screenfull.isEnabled) {
+    screenfull.request()
+  }
+}
 </script>
 
 <template>
@@ -22,6 +30,9 @@ breadcrumbStore.data = [{ name: '工作台', path: '/' }]
       <el-breadcrumb-item>我分析</el-breadcrumb-item> -->
     </el-breadcrumb>
     <div class="space"></div>
+    <div class="full-screen">
+      <el-icon @click="fullScreen" class="full-screen-icon"><FullScreen /></el-icon>
+    </div>
     <div class="user-avatar"></div>
     <el-dropdown class="user-action">
       <span>
@@ -57,6 +68,20 @@ breadcrumbStore.data = [{ name: '工作台', path: '/' }]
   }
   > .space {
     flex-grow: 1;
+  }
+
+  > .full-screen {
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    > .full-screen-icon {
+      transition: all 0.5s ease;
+
+      &:hover {
+        font-size: 150%;
+      }
+    }
   }
   > .user-avatar {
     width: 33px;
