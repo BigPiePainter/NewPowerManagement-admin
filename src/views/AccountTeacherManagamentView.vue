@@ -1,24 +1,42 @@
 <script setup lang="tsx">
+
+
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
-
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { useRouter } from 'vue-router'
+
+
+const router = useRouter()
+
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '老师管理', path: '/account-teacher-managament' },
+  { name: '老师详情', path: '/teacher-detail-managament' },
 ]
+
+
+
 const items = reactive([
   { name: "用户名", value: "" },
   { name: "姓名", value: "" },
   { name: "手机号", value: "", label: "" },
   { name: "年级", value: "", type: InputType.Select, label: "请选择" },
   { name: "学科", value: "", type: InputType.Select, label: "请选择" },
-
 ])
+
+
+const clickName = (props: any) => {
+  console.log(props)
+  router.push({ path: 'teacher-detail-managament', query: { id: props.rowData.id } })
+}
+
+
 
 
 const tableColumns = [
@@ -33,7 +51,7 @@ const tableColumns = [
     key: 'teacherName',
     title: '姓名',
     width: 200,
-    cellRenderer: ({ cellData: teacherName }:any) => <ElButton link type='primary'>{teacherName}</ElButton>,
+    cellRenderer: (cellData: any) => <ElButton link type='primary' onclick={() => clickName(cellData)} class="detailed">{cellData.cellData}</ElButton>,
   },
   {
     dataKey: 'userName',
@@ -52,7 +70,7 @@ const tableColumns = [
     key: 'teacherSubject',
     title: '学科',
     width: 100
-  },  
+  },
   {
     dataKey: 'teacherCellnumber',
     key: 'teacherCellnumber',
@@ -82,7 +100,8 @@ const tableColumns = [
             删除
           </el-button>
         </div>
-        )},
+      )
+    },
     width: 170,
     fixed: 'right',
     align: 'left'
@@ -327,6 +346,9 @@ const refresh = () => {
   console.log(items)
 }
 
+
+
+
 </script>
 
 
@@ -353,4 +375,8 @@ $gap: 15px;
 .div-search-bar {
   margin: $gap;
 }
+
+
+
+.detailed {}
 </style>

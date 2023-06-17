@@ -23,6 +23,7 @@ import MainLayout from '@/components/MainLayout.vue'
 import PointsDetailView from '@/views/PointsDetailView.vue'
 import StudentPointsView from '@/views//StudentPointsView.vue'
 import ErrorView from '@/views/ErrorView.vue'
+import AccountTeacherDetail from '@/views/AccountTeacherDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,6 +83,11 @@ const router = createRouter({
           path: 'account-teacher-managament',
           name: 'account-teacher-managament',
           component: AccountTeacherManagamentView
+        },
+        {
+          path: 'teacher-detail-managament',
+          name: 'teacher-detail-managament',
+          component: AccountTeacherDetail
         },
         {
           path: 'account-student-management',
