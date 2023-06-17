@@ -12,6 +12,7 @@ import CourseApprovalView from '@/views/CourseApprovalView.vue'
 import AccountEquipmentManagementView from '@/views/AccountEquipmentManagementView.vue'
 import CourseManagementView from '@/views/CourseManagementView.vue'
 import ShopManagementView from '@/views/ShopManagementView.vue'
+import NewProductView from '@/views/NewProductView.vue'
 import QuestionBankManagementView from '@/views/QuestionBankManagementView.vue'
 import PointsManagementView from '@/views/PointsManagementView.vue'
 import OrderManagementView from '@/views/OrderManagementView.vue'
@@ -120,10 +121,17 @@ const router = createRouter({
           name: 'course-management',
           component: CourseManagementView
         },
+        //商城管理
         {
           path: 'shop-management',
           name: 'shop-management',
           component: ShopManagementView
+        },
+        //新增商品
+        {
+          path: 'new-product',
+          name: 'new-product',
+          component: NewProductView
         },
         {
           path: 'question-bank-management',
