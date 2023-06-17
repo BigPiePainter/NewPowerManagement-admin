@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ElIcon } from 'element-plus';
 
 type Props = {
     picture: string
@@ -8,16 +9,18 @@ type Props = {
 }
 const props = defineProps<Props>()
 
+
 </script>
 
 <template>
     <div class="displayvideocard">
         <div class="displayvideocard-picture">
-            <div class="img"><el-image></el-image></div>
+            <div class="img">
+                <el-icon><VideoPlay/></el-icon></div>
             <div>{{ picture }}</div>
             <div class="time">{{ videoduration }}</div>
         </div>
-
+        <el-icon><VideoPlay/></el-icon>
         <div class="displayvideocard-title">
             <el-text>{{ title }}</el-text>
         </div>
@@ -59,8 +62,6 @@ $scale: 0.88;
     flex-grow: 1;
     margin-left: 15px * $scale;
     font-size: 15px * $scale;
-
-
 }
 
 
@@ -80,14 +81,14 @@ $scale: 0.88;
     position: absolute;
     bottom: 6px * $scale;
     left: 6px * $scale;
-
 }
 
 .img {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%)
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 9999;
 }
 
 
@@ -101,9 +102,6 @@ $scale: 0.88;
     background-color: #A5A5A5;
     align-self: center;
     position: relative;
-
-
-
 }
 </style>
   
