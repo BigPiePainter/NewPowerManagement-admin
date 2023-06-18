@@ -1,14 +1,10 @@
 <script setup lang="tsx">
-import { ref, reactive, pushScopeId } from 'vue'
+import { ref, reactive, } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { functionExpression, react } from '@babel/types'
-import { ElTag, ElImage } from 'element-plus'
-import type { styleType } from 'element-plus/es/components/table-v2/src/common'
-import { divide, findLastIndex } from 'lodash'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
@@ -37,10 +33,11 @@ const tableColumns = [
     key: 'poster',
     title: '海报',
     width: 150,
-    cellRenderer: (item: any) => (
+    cellRenderer: (item:any) => (
       <el-image
         fit="scale-down"
-        src="/1.jpg"
+        src={item.rowData.poster}
+        //onClick={()=>console.log(item)}
         className="shop-Preview"
         preview-src-list={['/1.jpg']}
         preview-teleported
@@ -135,6 +132,7 @@ const tableColumns = [
 
 let fakeData = {
   id: '1',
+  poster: '/1.jpg',
   shopName: '超级提高题',
   tag: '数学',
   grade: '9',
