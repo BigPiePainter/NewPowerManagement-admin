@@ -3,7 +3,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
-const studyState = { 高中:['高一','高二', '高三'], 初中:['初一','初二', '初三'] }
+const studyState: any = { 高中: ['高一', '高二', '高三'], 初中: ['初一', '初二', '初三'] }
 </script>
 
 <template>
@@ -16,8 +16,11 @@ const studyState = { 高中:['高一','高二', '高三'], 初中:['初一','初
         <el-text link type="primary">新增一级</el-text>
       </div>
 
-      <div v-for="item in Object.keys(studyState)" :key="item">
-      <el-text>{{ item }}</el-text>  
+      <div v-for="key in Object.keys(studyState)" :key="key">
+        {{ key }}
+        <div v-for="item in studyState[key]" :key="item">
+          {{ item }}
+        </div>
       </div>
     </div>
     <div class="card-right">
