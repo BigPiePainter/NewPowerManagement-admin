@@ -4,9 +4,10 @@ import { ElButton } from 'element-plus'
 import SearchBar from '../components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
+import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const router = useRouter()
 
-import { useBreadcrumbStore } from '@/stores/breadcrumb'
+
 const breadcrumbStore = useBreadcrumbStore()
 
 breadcrumbStore.data = [

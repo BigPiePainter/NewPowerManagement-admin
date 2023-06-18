@@ -24,36 +24,42 @@ const tableColumns = [
     title: 'ID',
     width: 150
   },
+
   {
     dataKey: 'studentName',
     key: 'studentName',
     title: '姓名',
     width: 200
   },
+
   {
     dataKey: 'userName',
     key: 'userName',
     title: '用户名',
     width: 200
   },
+
   {
     dataKey: 'eqipmentModel',
     key: 'eqipmentModel',
     title: '设备型号',
     width: 200
   },
+
   {
     dataKey: 'systemModel',
     key: 'eqipmentModel',
     title: '系统版本号',
     width: 200
   },
+
   {
     dataKey: 'tiedTime',
     key: 'iedTime',
     title: '绑定时间',
     width: 200
   },
+  
   {
     dataKey: 'loginTime',
     key: 'loginTime',

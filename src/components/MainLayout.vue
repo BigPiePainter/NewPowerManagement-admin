@@ -10,7 +10,9 @@ import SidebarComponent from './SidebarComponent.vue'
       <HeaderComponent />
       <div class="content-box">
         <div class="router-view">
-          <router-view />
+          <transition name="fade">
+            <router-view />
+          </transition>
         </div>
       </div>
     </div>

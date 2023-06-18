@@ -9,16 +9,18 @@ import { functionExpression, react } from '@babel/types'
 import { ElTag, ElImage } from 'element-plus'
 import type { styleType } from 'element-plus/es/components/table-v2/src/common'
 import { divide, findLastIndex } from 'lodash'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '题目管理', path: '' }]
 
 const items = reactive([
   { name: '商品名称', value: '' },
-  { name: '类型', value: '', type: InputType.Select, label: "请选择" },
-  { name: '状态', value: '', type: InputType.Select, label: "请选择" },
-  { name: '年级', value: '', type: InputType.Select, label: "请选择" },
-  { name: '学科', value: '', type: InputType.Select, label: "请选择" },
-  { name: '标签', value: '', type: InputType.Select, label: "请选择" }
+  { name: '类型', value: '', type: InputType.Select, label: '请选择' },
+  { name: '状态', value: '', type: InputType.Select, label: '请选择' },
+  { name: '年级', value: '', type: InputType.Select, label: '请选择' },
+  { name: '学科', value: '', type: InputType.Select, label: '请选择' },
+  { name: '标签', value: '', type: InputType.Select, label: '请选择' }
 ])
 
 const url = '/1.jpg'
@@ -28,27 +30,34 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 100,
+    width: 100
   },
   {
     dataKey: 'poster',
     key: 'poster',
     title: '海报',
-    width: 150, 
-    cellRenderer: (item: any) => <el-image fit="scale-down" src="/1.jpg" className='shop-Preview' preview-src-list={['/1.jpg']} preview-teleported />
+    width: 150,
+    cellRenderer: (item: any) => (
+      <el-image
+        fit="scale-down"
+        src="/1.jpg"
+        className="shop-Preview"
+        preview-src-list={['/1.jpg']}
+        preview-teleported
+      />
+    )
   },
   {
     dataKey: 'shopName',
     key: 'shopName',
     title: '名称',
     width: 120
-
   },
   {
     dataKey: 'grade',
     key: 'grade',
     title: '年级',
-    width: 80,
+    width: 80
   },
   {
     dataKey: 'className',
@@ -85,7 +94,7 @@ const tableColumns = [
     dataKey: 'sold',
     key: 'sold',
     title: '已售',
-    width: 60,
+    width: 60
   },
   {
     dataKey: 'shopStatue',
@@ -115,18 +124,13 @@ const tableColumns = [
             删除
           </el-button>
         </>
-
       )
     },
     width: 370,
     fixed: 'right',
     align: 'center',
     height: 500
-
-  },
-
-
-
+  }
 ]
 
 let fakeData = {
@@ -138,7 +142,7 @@ let fakeData = {
   categories: '数学',
   version: '提高版',
   sold: '2112',
-  shopStatue: '在售中',
+  shopStatue: '在售中'
 }
 
 const tableData: object[] = []
@@ -154,7 +158,6 @@ console.log(tableData)
 const refresh = () => {
   console.log(items)
 }
-
 </script>
 
 <template slot-scope="scope">
@@ -163,7 +166,12 @@ const refresh = () => {
       <SearchBar :items="items" @change="refresh()"></SearchBar>
     </div>
     <div>
-      <el-button class="new-poster-button" type="primary">新建商品</el-button>
+      <el-button
+        @click="router.push({ path: 'new-product' })"
+        class="new-poster-button"
+        type="primary"
+        >新建商品</el-button
+      >
     </div>
   </TablePage>
 </template>

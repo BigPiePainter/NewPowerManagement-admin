@@ -12,6 +12,7 @@ import CourseApprovalView from '@/views/CourseApprovalView.vue'
 import AccountEquipmentManagementView from '@/views/AccountEquipmentManagementView.vue'
 import CourseManagementView from '@/views/CourseManagementView.vue'
 import ShopManagementView from '@/views/ShopManagementView.vue'
+import NewProductView from '@/views/NewProductView.vue'
 import QuestionBankManagementView from '@/views/QuestionBankManagementView.vue'
 import PointsManagementView from '@/views/PointsManagementView.vue'
 import OrderManagementView from '@/views/OrderManagementView.vue'
@@ -31,6 +32,8 @@ import MainLayout from '@/components/MainLayout.vue'
 import PointsDetailView from '@/views/PointsDetailView.vue'
 import StudentPointsView from '@/views//StudentPointsView.vue'
 import ErrorView from '@/views/ErrorView.vue'
+import AccountTeacherDetail from '@/views/AccountTeacherDetail.vue'
+import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -92,9 +95,19 @@ const router = createRouter({
           component: AccountTeacherManagamentView
         },
         {
+          path: 'teacher-detail-managament',
+          name: 'teacher-detail-managament',
+          component: AccountTeacherDetail
+        },
+        {
           path: 'account-student-management',
           name: 'account-student-management',
           component: AccountStudentManagementView
+        },
+        {
+          path: 'student-detail-management',
+          name: 'student-detail-management',
+          component: AccountStudentDetail
         },
         {
           path: 'account-temoorary-student',
@@ -119,10 +132,17 @@ const router = createRouter({
           name: 'course-management',
           component: CourseManagementView
         },
+        //商城管理
         {
           path: 'shop-management',
           name: 'shop-management',
           component: ShopManagementView
+        },
+        //新增商品
+        {
+          path: 'new-product',
+          name: 'new-product',
+          component: NewProductView
         },
         {
           path: 'question-bank-management',
