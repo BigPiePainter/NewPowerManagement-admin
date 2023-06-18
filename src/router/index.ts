@@ -17,11 +17,11 @@ import QuestionBankManagementView from '@/views/QuestionBankManagementView.vue'
 import PointsManagementView from '@/views/PointsManagementView.vue'
 import OrderManagementView from '@/views/OrderManagementView.vue'
 import SettingView from '@/views/SettingView.vue'
-// import ExamInfoView from '@/views/ExamInfoView.vue'
-// import ExamDateView from '@/views/ExamDateView.vue'
-// import BannerView from '@/views/BannerView.vue'
-// import InfoCenterView from '@/views/InfoCenterView.vue'
-// import FamilyReportView from '@/views/FamilyReportView.vue'
+import ExamInfoView from '@/views/ExamInfoView.vue'
+import ExamDateView from '@/views/ExamDateView.vue'
+import BannerView from '@/views/BannerView.vue'
+import InfoCenterView from '@/views/InfoCenterView.vue'
+import FamilyReportView from '@/views/FamilyReportView.vue'
 import CategoryManagementView from '@/views/CategoryManagementView.vue'
 import TagManagementView from '@/views/TagManagementView.vue'
 import CourseCategoryView from '@/views/CourseCategoryView.vue'
@@ -190,31 +190,31 @@ const router = createRouter({
           name: 'course-category',
           component: CourseCategoryView
         },
-        // {
-        //   path: 'exam-info',
-        //   name: 'exam-info',
-        //   component: ExamInfoView
-        // },
-        // {
-        //   path: 'exam-date',
-        //   name: 'exam-date',
-        //   component: ExamDateView
-        // },
-        // {
-        //   path: 'banner',
-        //   name: 'banner',
-        //   component: BannerView
-        // },
-        // {
-        //   path: 'info-center',
-        //   name: 'info-center',
-        //   component: InfoCenterView
-        // },
-        // {
-        //   path: 'family-report',
-        //   name: 'family-report',
-        //   component: FamilyReportView
-        // }
+        {
+          path: 'exam-info',
+          name: 'exam-info',
+          component: ExamInfoView
+        },
+        {
+          path: 'exam-date',
+          name: 'exam-date',
+          component: ExamDateView
+        },
+        {
+          path: 'banner',
+          name: 'banner',
+          component: BannerView
+        },
+        {
+          path: 'info-center',
+          name: 'info-center',
+          component: InfoCenterView
+        },
+        {
+          path: 'family-report',
+          name: 'family-report',
+          component: FamilyReportView
+        }
       ]
     },
     {

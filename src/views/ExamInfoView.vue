@@ -6,42 +6,14 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '设置', path: '' },{name:'课程类目'}]
+breadcrumbStore.data = [{ name: '设置', path: '' },{name:'考试咨询'}]
 
 const tableColumns = [
   {
-    dataKey: 'id',
-    key: 'id',
-    title: 'ID',
-    width: 100
-  },
-  {
-    dataKey: 'poster',
-    key: 'poster',
-    title: '海报',
-    width: 150,
-    cellRenderer: (item: any) => (
-      <el-image
-        fit="scale-down"
-        src={item.rowData.poster}
-        //onClick={()=>console.log(item)}
-        className="shop-Preview"
-        preview-src-list={['/1.jpg']}
-        preview-teleported
-      />
-    )
-  },
-  {
-    dataKey: 'courseCategory',
-    key: 'courseCategory',
-    title: '课程类目',
-    width: 120
-  },
-  {
-    dataKey: 'studyState',
-    key: 'studyState',
-    title: '学习阶段',
-    width: 80
+    dataKey: 'context',
+    key: 'context',
+    title: '咨询内容（最长25字）',
+    width: 500
   },
   {
     key: 'option',
@@ -67,9 +39,7 @@ const tableColumns = [
 
 let fakeData = {
   id: '1',
-  poster: '/1.jpg',
-  courseCategory: '超级提高题',
-  studyState: '9',
+  context: 'hhhoddly轮廓考六级类目利口酒立刻没离开4旅客零开局3老娘们课件3零空间',
 }
 
 const tableData: object[] = []
@@ -84,33 +54,25 @@ console.log(tableData)
 </script>
 
 <template>
-  <TablePage class="course-category-table" :columns="tableColumns" :data="tableData" :row-height="59">
+  <TablePage class="info-table" :columns="tableColumns" :data="tableData">
     <div>
-      <el-button @click="router.push({ path: 'new-product' })" class="new-poster-button" type="primary">新增</el-button>
+      <el-button @click="router.push({ path: 'new-product' })" class="new-info-button" type="primary">新增</el-button>
     </div>
   </TablePage>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $gap: 15px;
 
-.course-category-table {
+.info-table {
   width: calc($page-width - $gap);
   height: $page-height;
   margin-left: $gap;
   margin-top: $gap;
 
-  .new-poster-button {
+  .new-info-button {
     margin-left: $gap;
     margin-bottom: $gap;
   }
 }
-.displaypic {
-    width: 100px;
-    height: 100px;
-  }
-
-  .el-image {
-    width: 59px;
-  }
 </style>

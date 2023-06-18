@@ -6,42 +6,26 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '设置', path: '' },{name:'课程类目'}]
+breadcrumbStore.data = [{ name: '设置', path: '' },{name:'考试时间'}]
 
 const tableColumns = [
-  {
-    dataKey: 'id',
-    key: 'id',
-    title: 'ID',
-    width: 100
-  },
-  {
-    dataKey: 'poster',
-    key: 'poster',
-    title: '海报',
-    width: 150,
-    cellRenderer: (item: any) => (
-      <el-image
-        fit="scale-down"
-        src={item.rowData.poster}
-        //onClick={()=>console.log(item)}
-        className="shop-Preview"
-        preview-src-list={['/1.jpg']}
-        preview-teleported
-      />
-    )
-  },
-  {
-    dataKey: 'courseCategory',
-    key: 'courseCategory',
-    title: '课程类目',
-    width: 120
-  },
   {
     dataKey: 'studyState',
     key: 'studyState',
     title: '学习阶段',
     width: 80
+  },
+  {
+    dataKey: 'title',
+    key: 'title',
+    title: '标题',
+    width: 300
+  },  
+  {
+    dataKey: 'date',
+    key: 'date',
+    title: '时间',
+    width: 120
   },
   {
     key: 'option',
@@ -66,17 +50,15 @@ const tableColumns = [
 ]
 
 let fakeData = {
-  id: '1',
-  poster: '/1.jpg',
-  courseCategory: '超级提高题',
-  studyState: '9',
+  studyState: '初中',
+  title: '距离中考时间',
+  date: '287天',
 }
 
 const tableData: object[] = []
 
 for (let index = 0; index < 2; index++) {
   let data = { ...fakeData }
-  data.id += index
   tableData.push(data)
 }
 
@@ -84,33 +66,17 @@ console.log(tableData)
 </script>
 
 <template>
-  <TablePage class="course-category-table" :columns="tableColumns" :data="tableData" :row-height="59">
-    <div>
-      <el-button @click="router.push({ path: 'new-product' })" class="new-poster-button" type="primary">新增</el-button>
-    </div>
+  <TablePage class="exam-date-table" :columns="tableColumns" :data="tableData">
   </TablePage>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $gap: 15px;
 
-.course-category-table {
+.exam-date-table {
   width: calc($page-width - $gap);
   height: $page-height;
   margin-left: $gap;
   margin-top: $gap;
-
-  .new-poster-button {
-    margin-left: $gap;
-    margin-bottom: $gap;
-  }
 }
-.displaypic {
-    width: 100px;
-    height: 100px;
-  }
-
-  .el-image {
-    width: 59px;
-  }
 </style>

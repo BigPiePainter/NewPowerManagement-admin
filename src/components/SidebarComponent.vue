@@ -114,26 +114,26 @@ const items = [
         index: '/course-category',
         title: '课程类目'
       },
-      // {
-      //   index: '/exam-info',
-      //   title: '考试咨询'
-      // },
-      // {
-      //   index: '/exam-date',
-      //   title: '考试时间'
-      // },
-      // {
-      //   index: '/banner',
-      //   title: 'banner'
-      // },
-      // {
-      //   index: '/info-center',
-      //   title: '消息中心'
-      // },
-      // {
-      //   index: '/family-report',
-      //   title: '家长报告'
-      // }
+      {
+        index: '/exam-info',
+        title: '考试咨询'
+      },
+      {
+        index: '/exam-date',
+        title: '考试时间'
+      },
+      {
+        index: '/banner',
+        title: 'banner'
+      },
+      {
+        index: '/info-center',
+        title: '消息中心'
+      },
+      {
+        index: '/family-report',
+        title: '家长报告'
+      }
     ]
   },
 ]

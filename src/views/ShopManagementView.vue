@@ -33,7 +33,7 @@ const tableColumns = [
     key: 'poster',
     title: '海报',
     width: 150,
-    cellRenderer: (item:any) => (
+    cellRenderer: (item: any) => (
       <el-image
         fit="scale-down"
         src={item.rowData.poster}
@@ -158,46 +158,41 @@ const refresh = () => {
 }
 </script>
 
-<template slot-scope="scope">
+<template>
   <TablePage class="page-container" :columns="tableColumns" :data="tableData" :row-height="59">
     <div class="div-search-bar">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
     </div>
     <div>
-      <el-button
-        @click="router.push({ path: 'new-product' })"
-        class="new-poster-button"
-        type="primary"
-        >新建商品</el-button
-      >
+      <el-button @click="router.push({ path: 'new-product' })" class="new-poster-button" type="primary">新建商品</el-button>
     </div>
   </TablePage>
 </template>
 
-<style lang="scss">
+<style lang="scss" scop>
 $gap: 15px;
 
 .page-container {
   width: calc($page-width - $gap);
   height: $page-height;
   margin-left: $gap;
-}
 
-.div-search-bar {
-  margin: $gap;
-}
+  .div-search-bar {
+    margin: $gap;
+  }
 
-.new-poster-button {
-  margin-left: $gap;
-  margin-bottom: $gap;
-}
+  .new-poster-button {
+    margin-left: $gap;
+    margin-bottom: $gap;
+  }
 
-.displaypic {
-  width: 100px;
-  height: 100px;
-}
+  .displaypic {
+    width: 100px;
+    height: 100px;
+  }
 
-.el-image {
-  width: 59px;
+  .el-image {
+    width: 59px;
+  }
 }
 </style>

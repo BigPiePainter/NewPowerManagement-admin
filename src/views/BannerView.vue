@@ -6,15 +6,9 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '设置', path: '' },{name:'课程类目'}]
+breadcrumbStore.data = [{ name: '设置', path: '' },{name:'banner'}]
 
 const tableColumns = [
-  {
-    dataKey: 'id',
-    key: 'id',
-    title: 'ID',
-    width: 100
-  },
   {
     dataKey: 'poster',
     key: 'poster',
@@ -32,15 +26,15 @@ const tableColumns = [
     )
   },
   {
-    dataKey: 'courseCategory',
-    key: 'courseCategory',
-    title: '课程类目',
-    width: 120
+    dataKey: 'title',
+    key: 'title',
+    title: '标题',
+    width: 300
   },
   {
-    dataKey: 'studyState',
-    key: 'studyState',
-    title: '学习阶段',
+    dataKey: 'jump',
+    key: 'jump',
+    title: '跳转',
     width: 80
   },
   {
@@ -66,17 +60,15 @@ const tableColumns = [
 ]
 
 let fakeData = {
-  id: '1',
   poster: '/1.jpg',
-  courseCategory: '超级提高题',
-  studyState: '9',
+  title: '超级提高题',
+  jump: '是',
 }
 
 const tableData: object[] = []
 
 for (let index = 0; index < 2; index++) {
   let data = { ...fakeData }
-  data.id += index
   tableData.push(data)
 }
 
@@ -84,9 +76,9 @@ console.log(tableData)
 </script>
 
 <template>
-  <TablePage class="course-category-table" :columns="tableColumns" :data="tableData" :row-height="59">
+  <TablePage class="banner-table" :columns="tableColumns" :data="tableData" :row-height="59">
     <div>
-      <el-button @click="router.push({ path: 'new-product' })" class="new-poster-button" type="primary">新增</el-button>
+      <el-button @click="router.push({ path: 'new-product' })" class="new-banner-button" type="primary">新增</el-button>
     </div>
   </TablePage>
 </template>
@@ -94,13 +86,13 @@ console.log(tableData)
 <style lang="scss">
 $gap: 15px;
 
-.course-category-table {
+.banner-table {
   width: calc($page-width - $gap);
   height: $page-height;
   margin-left: $gap;
   margin-top: $gap;
 
-  .new-poster-button {
+  .new-banner-button {
     margin-left: $gap;
     margin-bottom: $gap;
   }
