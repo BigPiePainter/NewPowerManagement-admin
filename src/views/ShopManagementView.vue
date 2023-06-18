@@ -39,7 +39,7 @@ const tableColumns = [
         src={item.rowData.poster}
         //onClick={()=>console.log(item)}
         className="shop-Preview"
-        preview-src-list={['/1.jpg']}
+        preview-src-list={[item.rowData.poster]}
         preview-teleported
       />
     )
