@@ -9,12 +9,17 @@ const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' },{ name: '家长报告', path: '' }]
 
+const clickDetail = (props: { rowData: { id: string } }) => {
+  console.log(props);
+  router.push({ path: 'student-report', query: { id: props.rowData.id } });
+}
+
 const items = reactive([
   { name: 'AI课名称', value: '' },
 ])
 
-const tableColumns = [
-  {
+const tableColumns = reactive<any>([
+    {
     dataKey: 'id',
     key: 'id',
     title: 'ID',
@@ -62,7 +67,7 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <>
-          <el-button link type="primary" onClick={() => console.log(item)}>
+          <el-button link type="primary" onClick={() => clickDetail(item)}>
             查看学习报告
           </el-button>
         </>
@@ -73,7 +78,7 @@ const tableColumns = [
     align: 'center',
     height: 500
   }
-]
+])
 
 let fakeData = {
   id: '1',

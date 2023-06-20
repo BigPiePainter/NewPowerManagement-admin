@@ -22,6 +22,7 @@ import ExamDateView from '@/views/ExamDateView.vue'
 import BannerView from '@/views/BannerView.vue'
 import InfoCenterView from '@/views/InfoCenterView.vue'
 import FamilyReportView from '@/views/FamilyReportView.vue'
+import StudentReport from '@/views/StudentReport.vue'
 import CategoryManagementView from '@/views/CategoryManagementView.vue'
 import TagManagementView from '@/views/TagManagementView.vue'
 import CourseCategoryView from '@/views/CourseCategoryView.vue'
@@ -214,6 +215,11 @@ const router = createRouter({
           path: 'family-report',
           name: 'family-report',
           component: FamilyReportView
+        },
+        {
+          path: 'student-report',
+          name: 'student-report',
+          component: StudentReport
         }
       ]
     },
