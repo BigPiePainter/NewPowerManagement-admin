@@ -3,6 +3,8 @@ import DisplayQuestionCard from '@/components/DisplayQuestionCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import type { TabsPaneContext } from 'element-plus'
+import HomeworkQuestionDisplayCard from '@/components/HomeworkQuestionDisplayCard.vue'
+
 
 const input = ref('')
 const breadcrumbStore = useBreadcrumbStore()
@@ -11,6 +13,10 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)
 }
 
+const activeName = ref('first')
+
+
+
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '学生管理', path: '/account-student-managament' },
@@ -18,15 +24,26 @@ breadcrumbStore.data = [
 ]
 
 
-const question = reactive([
-  { title: '【第一讲】九年级物理超级提高课受窘实际上', picture: 'question', tag: '好题', time: 1000, classfiction: '普通课',time2: 2000 },
-  { title: '【第一讲】九年级物理超级提高课', picture: 'question', tag: '好题', time: 1666, classfiction: 'AI课',time2: 2000 },
-  { title: '【第一讲】九年级物理超级提高课', picture: 'question', tag: '好题', time: 2000, classfiction: 'AI课',time2: 2000 },
-  { title: '【第一讲】九年级物理超级提高课', picture: 'question', tag: '好题', time: 1234, classfiction: 'AI课',time2: 2000 },
-  { title: '【第一讲】九年级物理超级提高课', picture: 'question', tag: '好题', time: 1888, classfiction: 'AI课',time2: 2000 },
+const lessons = reactive([
+  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 1000, classfiction: '普通课',time2: 2000 },
+  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 1666, classfiction: 'AI课',time2: 2000 },
+  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 2000, classfiction: 'AI课',time2: 2000 },
+  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 1234, classfiction: 'AI课',time2: 2000 },
+  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 1888, classfiction: 'AI课',time2: 2000 },
 ])
 
+const question = reactive([
+  { title: '高考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
+  { title: '中考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
+  { title: '中考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
+  { title: '中考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
+  { title: '中考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
+])
 
+const homeWork = reactive([
+  { title: '作业-5月24日', title2: '老师：小陈老师', title3:'已做/未作' },
+  { title: '作业-5月24日', title2: '老师：小陈老师', title3:'已做/未作' },
+])
 // question.forEach((i) => {
 //     i.convertedTime = convert(i.time)
 // })
@@ -85,30 +102,40 @@ const question = reactive([
 
     <div class="downpart">
 
+<div>
+      <el-tabs  v-model="activeName" class="tabs-page" @tab-click="handleClick" type="card">
 
-      <el-tabs class="tabs-page" @tab-click="handleClick" type="card">
       <el-tab-pane label="课程" name="courses">
         <div class="botPart1-2">
-      <DisplayQuestionCard class="postion" v-for="item in question" :key="item.title" :title="item.title" :picture="item.picture"
+      <DisplayQuestionCard class="postion" v-for="item in lessons" :key="item.title" :title="item.title" :picture="item.picture"
         :tag="item.tag" :classfiction="item.classfiction" :time="item.time" :time2="item.time2">     
-      </DisplayQuestionCard>    
-      <el-tab-pane label="好题演练" name="questions"
-        ><TablePage
-        >sssss</TablePage
-      ></el-tab-pane>
-      <el-tab-pane label="作业巩固" name="homework"
-        ><TablePage
-        >sss</TablePage
-      ></el-tab-pane>
-    </div>
+      </DisplayQuestionCard>  
+      </div>
+   
     </el-tab-pane>
+      <el-tab-pane label="好题演练" name="questions">
+        <div class="botPart1-2">
+        <HomeworkQuestionDisplayCard
+    v-for="item in question" :key="item.title" :title="item.title" :title2="item.title2" :title3="item.title3">
+    </HomeworkQuestionDisplayCard>
+    </div>
+      </el-tab-pane>
+      
+      <el-tab-pane label="作业巩固" name="homework"> 
+        <div class="botPart1-2">
+        <HomeworkQuestionDisplayCard
+    v-for="item in homeWork" :key="item.title" :title="item.title" :title2="item.title2" :title3="item.title3">
+    </HomeworkQuestionDisplayCard>
+    </div>
+      </el-tab-pane>
+
     </el-tabs>
+
 
 
     
     </div>
-
-
+</div>
 
 </template>
 

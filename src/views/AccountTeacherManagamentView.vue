@@ -51,7 +51,7 @@ const tableColumns = [
     key: 'teacherName',
     title: '姓名',
     width: 200,
-    cellRenderer: (cellData: any) => <ElButton link type='primary' onclick={() => clickName(cellData)} class="detailed">{cellData.cellData}</ElButton>,
+    cellRenderer: (cellData: any) => <ElButton link type='primary' onClick={() => clickName(cellData)} class="detailed">{cellData.cellData}</ElButton>,
   },
   {
     dataKey: 'userName',

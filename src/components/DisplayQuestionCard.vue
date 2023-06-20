@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ElDivider } from 'element-plus';
 
+
 const convert = (time: number) => {
     let a: number | string = ~~(time / 3600);
     let b: number | string = ~~(time / 60) - a * 60;
@@ -17,9 +18,11 @@ const convert = (time: number) => {
     }
 }
 
+
 // const playbar = (time: number, time2: number) => {
 //     let d = (time / time2)
 // }
+
 
 type Props = {
     title: string,
@@ -30,7 +33,6 @@ type Props = {
     tag: string,
 }
 const props = defineProps<Props>();
-
 
 
 </script>
@@ -55,8 +57,12 @@ const props = defineProps<Props>();
     </div>
 </template>
 
+
 <style scoped lang="scss">
+
+
 $scale: 0.66;
+
 
 .DisplayQuestionCard {
     display: flex;
@@ -69,7 +75,9 @@ $scale: 0.66;
     margin-top: 20px*$scale ;
     z-index: 1;
 
+
 }
+
 
 .picture {
     display: flex;
@@ -80,6 +88,7 @@ $scale: 0.66;
     margin-left: 10px*$scale ;
     margin-top: 10px*$scale ;
     z-index: 2;
+
 
 }
 
@@ -96,12 +105,17 @@ $scale: 0.66;
 
 }
 
+
 .title-word {
     align-items: center;
     justify-self: center;
     justify-content: center;
     align-self: center;
     z-index: 2;
+    padding-left: 6px*$scale;
+    height: 40px;
+
+
 }
 
 .midpart {
@@ -111,32 +125,41 @@ $scale: 0.66;
     height: 50px*$scale ;
     padding-left: 5px*$scale ;
 
+
+
 }
 
 .classfiction {
     display: flex;
     font-size: 25px*$scale ;
-    justify-content: flex-end;
-    align-items: center;
+    justify-self: flex-end;
+    padding-right: 15px*$scale;
+    height: 33px;
+
+
 }
 
 .tag {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 260px*$scale;
+    width: 250px*$scale;
     font-size: 16px*$scale ;
+    padding-left: 7px*$scale;
 
 
 }
+
 
 .time {
     width: 350px*$scale;
     display: flex;
     flex-direction: row;
-
     justify-content: center;
+
+
 }
+
 
 .playbar1 {
     display: flex;
@@ -151,6 +174,7 @@ $scale: 0.66;
 
 }
 
+
 .playbar2 {
     position: absolute;
     height: 4px;
@@ -159,9 +183,12 @@ $scale: 0.66;
     background-color: rgb(255, 255, 255);
 }
 
+
 .duration {
     margin-top: 13px;
     margin-left: 8px;
     font-size: 12px;
 }
+
+
 </style>
