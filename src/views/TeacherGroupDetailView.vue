@@ -27,21 +27,6 @@ const dialogSearchBarItems = reactive([
   { name: "姓名/用户名/电话", value: "", },
 ])
 
-
-// const selectedChange = (item: any, checked: CheckboxValueType) => {
-//   console.log(item, checked)
-// }
-//  <ElCheckbox onChange={(value: CheckboxValueType) => selectedChange(item, value)}
-//    modelValue={item.checked}
-//  />
-
-// const upload = () => {
-//   let targetDate = dialogTableData.filter(i => i.checked)
-// }
-
-
-
-
 const dialogTableColumns = reactive<any>([
   {
     key: 'selection',
@@ -301,7 +286,8 @@ const cancelNewTeacher = () => {
 </script>
 
 <template>
-  <div class="div-class-detail">
+
+  <div class="div-teacher-group-detail">
     <div class="card-left">
       <div class="div-card-left-title">
         <el-text style=";">
@@ -319,8 +305,8 @@ const cancelNewTeacher = () => {
           </el-text>
         </div>
       </div>
-
     </div>
+
     <div class="card-right">
       <TablePage class="table-page" :columns="tableColumns" :data="tableData">
         <div class="div-search-bar">
@@ -332,8 +318,8 @@ const cancelNewTeacher = () => {
           <el-button class="search-bar-button" type="primary" @click="addTeacher()">添加成员</el-button>
         </div>
       </TablePage>
-
     </div>
+
   </div>
 
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addTeacherDialogShow">
@@ -350,10 +336,11 @@ const cancelNewTeacher = () => {
       </el-button>
     </template>
   </el-dialog>
+
 </template>
 
 <style scoped lang="scss">
-.div-class-detail {
+.div-teacher-group-detail {
   $card-left-width: 350px;
   height: $page-height;
   display: flex;

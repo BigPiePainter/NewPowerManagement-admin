@@ -6,7 +6,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '设置', path: '' },{name:'banner'}]
+breadcrumbStore.data = [{ name: '设置', path: '' }, { name: 'banner' }]
 
 const tableColumns = [
   {
@@ -73,22 +73,88 @@ for (let index = 0; index < 2; index++) {
 }
 
 console.log(tableData)
+
+const newBannerContext = reactive({
+  poster: '', title: '', link: ''
+})
+
+const newBannerDialogShow = ref(false)
+const newBanner = () => {
+  newBannerDialogShow.value = true
+}
+
+const confirmNewBanner = () => {
+  console.log(newBannerContext)
+  newBannerDialogShow.value = false
+  newBannerContext.poster = ''
+  newBannerContext.title = ''
+  newBannerContext.link = ''
+}
+
+const cancelNewBanner = () => {
+  newBannerDialogShow.value = false
+  newBannerContext.poster = ''
+  newBannerContext.title = ''
+  newBannerContext.link = ''
+}
 </script>
 
 <template>
-  <TablePage class="banner-table" :columns="tableColumns" :data="tableData" :row-height="59">
-    <div>
-      <el-button @click="router.push({ path: 'new-product' })" class="new-banner-button" type="primary">新增</el-button>
-    </div>
-  </TablePage>
+  <div>
+    <TablePage class="banner-table" :columns="tableColumns" :data="tableData" :row-height="59">
+      <div>
+        <el-button @click="newBanner" class="new-banner-button" type="primary">新增</el-button>
+      </div>
+    </TablePage>
+
+    <el-dialog class="new-class-dialog" width="370px" v-model="newBannerDialogShow">
+      <div>
+        <div>
+          <span>
+            *海报：
+          </span>
+        </div>
+
+        <div style="text-align: center;width: 300px;height: 300px;background-color: #BEC2CB;margin-bottom: 15px">
+          <img id="img" src="" />
+          <text style="white-space: nowrap;pointer-events: none">点击此处或拖拽上传</text>
+          <input style="width: 100%;height: 100%;opacity: 0" type="file" ref="img" />
+        </div>
+
+        <div class="div-input-element">
+          <span class="dialog-span">
+            *标题：
+          </span>
+          <el-input class="dialog-input" v-model="newBannerContext.title">
+          </el-input>
+        </div>
+        <div class="div-input-element">
+          <span class="dialog-span">
+            *跳转链接：
+          </span>
+          <el-input class="dialog-input" v-model="newBannerContext.link">
+          </el-input>
+        </div>
+      </div>
+      <template #header>
+        <el-text>编辑班级</el-text>
+      </template>
+      <template #footer>
+        <el-button type="primary" @click="confirmNewBanner">确定</el-button>
+        <el-button @click="cancelNewBanner">
+          取消
+        </el-button>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $gap: 15px;
 
 .banner-table {
-  width: calc($page-width - $gap);
-  height: $page-height;
+  width: calc($page-width - $gap - 15px);
+  height: calc($page-height - $gap);
   margin-left: $gap;
   margin-top: $gap;
 
@@ -97,12 +163,28 @@ $gap: 15px;
     margin-bottom: $gap;
   }
 }
+
 .displaypic {
-    width: 100px;
-    height: 100px;
+  width: 100px;
+  height: 100px;
+}
+
+.el-image {
+  width: 59px;
+}
+
+.div-input-element {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-bottom: 13px;
+
+  >.dialog-span {
+    margin-right: 10px;
   }
 
-  .el-image {
-    width: 59px;
+  >.dialog-input {
+    width: 200px;
   }
+}
 </style>

@@ -25,8 +25,6 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
           </div>
         </el-scrollbar>
       </div>
-
-
     </div>
 
     <div class="card-right">
@@ -76,8 +74,6 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
         }
       }
     }
-
-
   }
 
   >.card-right {
