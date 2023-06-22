@@ -172,10 +172,12 @@ watch(newBannerDialogShow, () => {
         <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
           @dragleave="mouseLeave">
           <img class="show-img" id="show_img" src="" />
-          <text
-            style="white-space: nowrap;pointer-events: none;position: absolute;top: 210px;width: 300px;">点击此处或拖拽上传海报</text>
-          <text style="white-space: nowrap;pointer-events: none;position: absolute;top: 225px;width: 300px;">只接受 *.png
-            *.jpg *.jpeg</text>
+          <div class="upload-file-area-text">
+            <div>icon</div>
+            <el-text>点击此处或拖拽上传海报</el-text>
+            <el-text>只接受 *.png *.jpg *.jpeg</el-text>
+          </div>
+
           <input id="img_input" class="upload-file-input" ref="img" type="file" accept="image/png, image/jpeg, image/jpg"
             @change="handleFileChange" />
         </div>
@@ -196,7 +198,7 @@ watch(newBannerDialogShow, () => {
         </div>
       </div>
       <template #header>
-        <el-text>编辑班级</el-text>
+        <el-text>新建 banner</el-text>
       </template>
       <template #footer>
         <el-button type="primary" @click="confirmNewBanner">确定</el-button>
@@ -212,34 +214,61 @@ watch(newBannerDialogShow, () => {
 $gap: 15px;
 
 .upload-file-area {
-  text-align: center;
+  // text-align: center;
   width: 300px;
-  height: 300px;
+  min-height: 200px;
+  //height: 300px;
   background-color: v-bind(bgc);
   margin-bottom: 15px;
   //border-radius: 5px;
+  position: relative;
+  display: flex;
+  align-items: center;
 
   // &:hover{
   //   background-color: green;
   // }
   >.show-img {
-    height: 300px;
+    //height: 300px;
     width: 300px;
+    height: auto;
     //border-radius: 5px;
     pointer-events: none;
+    //position: absolute;
+    //top: 80px;
+    z-index: 3;
+  }
+
+  >.upload-file-area-text {
     position: absolute;
-    top: 80px;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   >.upload-file-input {
-    width: 100%;
-    height: 100%;
+    // width: 100%;
+    // height: 100%;
+    // height: 300px;
+    // width: 300px;
+    //border-radius: 5px;
+    position: absolute;
     opacity: 0;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
   }
 }
 
 .banner-table {
-  width: calc($page-width - $gap - 15px);
+  width: calc($page-width - $gap);
   height: calc($page-height - $gap);
   margin-left: $gap;
   margin-top: $gap;
