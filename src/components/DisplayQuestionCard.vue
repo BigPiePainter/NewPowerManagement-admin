@@ -46,7 +46,7 @@ const props = defineProps<Props>();
         </div>
         <div class="midpart">
             <div class="tag">{{ tag }}</div>
-            <div class="classfiction">{{ classfiction }}</div>
+            <div class="classfiction"><div class="classf">{{ classfiction }}</div></div>
         </div>
         <div class="time">
             <div class="playbar1">
@@ -131,14 +131,19 @@ $scale: 0.66;
 
 .classfiction {
     display: flex;
-    font-size: 25px*$scale ;
-    justify-self: flex-end;
+    font-size: 23px*$scale ;
+    justify-content:flex-end;
     padding-right: 15px*$scale;
     height: 33px;
+    flex-grow: 1;
 
 
 }
 
+.classf{
+    display: flex;
+    justify-content:flex-end;;
+}
 .tag {
     display: flex;
     flex-direction: row;
