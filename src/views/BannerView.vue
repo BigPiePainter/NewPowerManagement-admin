@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref, reactive, } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { ElButton } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
@@ -75,7 +75,7 @@ for (let index = 0; index < 2; index++) {
 console.log(tableData)
 
 const newBannerContext = reactive({
-  poster: '', title: '', link: ''
+  poster: {}, title: '', link: ''
 })
 
 const newBannerDialogShow = ref(false)
@@ -86,17 +86,76 @@ const newBanner = () => {
 const confirmNewBanner = () => {
   console.log(newBannerContext)
   newBannerDialogShow.value = false
-  newBannerContext.poster = ''
-  newBannerContext.title = ''
-  newBannerContext.link = ''
 }
 
 const cancelNewBanner = () => {
   newBannerDialogShow.value = false
+}
+
+const bgc = ref('#e2e5ec')
+const mouseEnter = () => {
+  bgc.value = '#BEC2CB'
+}
+const mouseLeave = () => {
+  bgc.value = '#e2e5ec'
+}
+
+// const showImgSrc: any = ref('')
+const handleFileChange = (e: Event) => {
+  const currentTarget = e.target as HTMLInputElement;
+  if (currentTarget.files) {
+    // 将input身上的files对象转换为数组类型
+    const files = Array.from(currentTarget.files);
+    const fileShow = currentTarget.files
+    newBannerContext.poster = files
+    console.log(newBannerContext)
+    console.log(currentTarget.files)
+    var reader = new FileReader();
+    reader.readAsDataURL(fileShow[0]);
+    reader.onload = () => {
+      var image: any = document.getElementById("show_img");
+      console.log(image)
+      image.src = reader.result;
+      // showImgSrc.value = reader.result;
+    }
+  }
+}
+// const MouseMovement=()=>{
+// 	// 定义默认的宽高
+// 	const movement = reactive({w:window.pageXOffset,h:window.pageYOffset});
+// 	onMounted(()=>{
+// 		// 当窗口发生变化时候更新宽高
+// 		window.addEventListener("dragenter",function(event){
+// 			movement.w = event.pageX;
+// 			movement.h = event.pageY;
+//       console.log(movement.w + ',' + movement.h)
+// 		})
+// 	})
+// 	// 返回size
+// 	return movement;
+// }
+// MouseMovement()
+watch(newBannerDialogShow, () => {
   newBannerContext.poster = ''
   newBannerContext.title = ''
   newBannerContext.link = ''
-}
+
+  var input: any = document.getElementById('img_input');
+
+  var image: any = document.getElementById("show_img");
+  if (image) {
+    image.src = "";
+  }
+
+  // if (showImgSrc.value) {
+  //   showImgSrc.value = ''
+  // }
+
+  if (input) {
+    input.value = '';
+  }
+
+})
 </script>
 
 <template>
@@ -109,16 +168,16 @@ const cancelNewBanner = () => {
 
     <el-dialog class="new-class-dialog" width="370px" v-model="newBannerDialogShow">
       <div>
-        <div>
-          <span>
-            *海报：
-          </span>
-        </div>
 
-        <div style="text-align: center;width: 300px;height: 300px;background-color: #BEC2CB;margin-bottom: 15px">
-          <img id="img" src="" />
-          <text style="white-space: nowrap;pointer-events: none">点击此处或拖拽上传</text>
-          <input style="width: 100%;height: 100%;opacity: 0" type="file" ref="img" />
+        <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
+          @dragleave="mouseLeave">
+          <img class="show-img" id="show_img" src="" />
+          <text
+            style="white-space: nowrap;pointer-events: none;position: absolute;top: 210px;width: 300px;">点击此处或拖拽上传海报</text>
+          <text style="white-space: nowrap;pointer-events: none;position: absolute;top: 225px;width: 300px;">只接受 *.png
+            *.jpg *.jpeg</text>
+          <input id="img_input" class="upload-file-input" ref="img" type="file" accept="image/png, image/jpeg, image/jpg"
+            @change="handleFileChange" />
         </div>
 
         <div class="div-input-element">
@@ -151,6 +210,33 @@ const cancelNewBanner = () => {
 
 <style lang="scss" scoped>
 $gap: 15px;
+
+.upload-file-area {
+  text-align: center;
+  width: 300px;
+  height: 300px;
+  background-color: v-bind(bgc);
+  margin-bottom: 15px;
+  //border-radius: 5px;
+
+  // &:hover{
+  //   background-color: green;
+  // }
+  >.show-img {
+    height: 300px;
+    width: 300px;
+    //border-radius: 5px;
+    pointer-events: none;
+    position: absolute;
+    top: 80px;
+  }
+
+  >.upload-file-input {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+}
 
 .banner-table {
   width: calc($page-width - $gap - 15px);
