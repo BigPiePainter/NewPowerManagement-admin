@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import RichTextEditor from '@/components/RichTextEditor.vue';
 import { ref, reactive, } from 'vue'
 import { ElButton } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
@@ -7,6 +8,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: '消息中心' }]
+
 
 const tableColumns = [
   {
@@ -79,7 +81,7 @@ const confirmSendMsg = () => {
   msgContext.title = ''
   msgContext.recievers = ''
   msgContext.richText = ''
-}  
+}
 
 const cancelSendMsg = () => {
   sendMsgDialogShow.value = false
@@ -96,7 +98,7 @@ const cancelSendMsg = () => {
     </div>
   </TablePage>
 
-  <el-dialog class="send-msg-dialog" width="370px" v-model="sendMsgDialogShow">
+  <el-dialog class="send-msg-dialog" width="1000px" v-model="sendMsgDialogShow">
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
@@ -112,12 +114,13 @@ const cancelSendMsg = () => {
         <el-input class="dialog-input" placeholder="请选择消息接收对象" v-model="msgContext.recievers">
         </el-input>
       </div>
-      <div class="div-input-element">
+      <div>
         <span class="dialog-span">
           *消息内容：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="msgContext.richText">
-        </el-input>
+        <RichTextEditor></RichTextEditor>
+        <!-- <el-input class="dialog-input" placeholder="请输入" v-model="msgContext.richText">
+        </el-input> -->
       </div>
     </div>
     <template #header>
@@ -162,7 +165,7 @@ $gap: 15px;
       >.div-input-element {
         display: flex;
         align-items: center;
-        justify-content: right;
+        justify-content: left;
         margin-bottom: 13px;
 
         >.dialog-span {

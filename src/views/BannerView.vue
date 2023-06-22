@@ -1,6 +1,6 @@
 <script setup lang="tsx">
-import { ref, reactive, watch } from 'vue'
-import { ElButton } from 'element-plus'
+import { ref, reactive, watch, h } from 'vue'
+import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
@@ -65,7 +65,7 @@ let fakeData = {
   jump: '是',
 }
 
-const tableData: object[] = []
+const tableData: object[] = reactive([])
 
 for (let index = 0; index < 2; index++) {
   let data = { ...fakeData }
@@ -75,16 +75,27 @@ for (let index = 0; index < 2; index++) {
 console.log(tableData)
 
 const newBannerContext = reactive({
-  poster: {}, title: '', link: ''
+  title: '', link: ''
 })
-
 const newBannerDialogShow = ref(false)
+const showImgSrc = ref<string>('')
+const imageFile = reactive<{ file: Blob | null }>({ file: null })
+
+
 const newBanner = () => {
   newBannerDialogShow.value = true
+  imageFile.file = null
+  newBannerContext.title = ''
+  newBannerContext.link = ''
+  showImgSrc.value = ''
 }
 
 const confirmNewBanner = () => {
   console.log(newBannerContext)
+  ElNotification({
+    title: 'Title',
+    message: h('i', { style: 'color: teal' }, 'This is a reminder'),
+  })
   newBannerDialogShow.value = false
 }
 
@@ -100,23 +111,17 @@ const mouseLeave = () => {
   bgc.value = '#e2e5ec'
 }
 
-// const showImgSrc: any = ref('')
+
+
 const handleFileChange = (e: Event) => {
   const currentTarget = e.target as HTMLInputElement;
   if (currentTarget.files) {
-    // 将input身上的files对象转换为数组类型
-    const files = Array.from(currentTarget.files);
-    const fileShow = currentTarget.files
-    newBannerContext.poster = files
-    console.log(newBannerContext)
-    console.log(currentTarget.files)
+    imageFile.file = currentTarget.files[0]
+    console.log(imageFile.file)
     var reader = new FileReader();
-    reader.readAsDataURL(fileShow[0]);
+    reader.readAsDataURL(imageFile.file);
     reader.onload = () => {
-      var image: any = document.getElementById("show_img");
-      console.log(image)
-      image.src = reader.result;
-      // showImgSrc.value = reader.result;
+      showImgSrc.value = reader.result as string;
     }
   }
 }
@@ -135,27 +140,7 @@ const handleFileChange = (e: Event) => {
 // 	return movement;
 // }
 // MouseMovement()
-watch(newBannerDialogShow, () => {
-  newBannerContext.poster = ''
-  newBannerContext.title = ''
-  newBannerContext.link = ''
 
-  var input: any = document.getElementById('img_input');
-
-  var image: any = document.getElementById("show_img");
-  if (image) {
-    image.src = "";
-  }
-
-  // if (showImgSrc.value) {
-  //   showImgSrc.value = ''
-  // }
-
-  if (input) {
-    input.value = '';
-  }
-
-})
 </script>
 
 <template>
@@ -171,14 +156,14 @@ watch(newBannerDialogShow, () => {
 
         <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
           @dragleave="mouseLeave">
-          <img class="show-img" id="show_img" src="" />
+          <img class="show-img" id="show_img" :src="showImgSrc" />
           <div class="upload-file-area-text">
             <div>icon</div>
             <el-text>点击此处或拖拽上传海报</el-text>
             <el-text>只接受 *.png *.jpg *.jpeg</el-text>
           </div>
 
-          <input id="img_input" class="upload-file-input" ref="img" type="file" accept="image/png, image/jpeg, image/jpg"
+          <input class="upload-file-input" type="file" accept="image/png, image/jpeg, image/jpg"
             @change="handleFileChange" />
         </div>
 
