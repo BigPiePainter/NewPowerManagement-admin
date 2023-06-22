@@ -73,11 +73,16 @@ const video = reactive([
       </div>
     </div>
     <div class="botPart1-2">
+
       <DisplayVideoCard v-for="item in video" :key="item.title" :title="item.title" :time="item.time"
         :picture="item.picture" :videoduration="item.videoduration">
+
       </DisplayVideoCard>
+
     </div>
+
   </div>
+  
 </template>
 
 <style scoped lang="scss">

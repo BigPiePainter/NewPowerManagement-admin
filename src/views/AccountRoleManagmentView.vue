@@ -3,14 +3,21 @@ import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
-
+import { useRouter } from 'vue-router'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+
 const breadcrumbStore = useBreadcrumbStore()
+
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '角色管理', path: '/account-role-managment' }
 ]
 
+
+const router = useRouter()
+
+const roleDetail = () => {router.push({path: '/role-detail-managment'})
+}
 const tableColumns = [
   {
     dataKey: 'id',
@@ -198,27 +205,6 @@ const tableData: object[] = [
     creatorName: '系统管理员',
     status: '启用',
     Note: '这里是备注'
-  },
-  {
-    id: '20',
-    userName: 'Aaron191518',
-    creatorName: '系统管理员',
-    status: '启用',
-    Note: '这里是备注'
-  },
-  {
-    id: '21',
-    userName: 'Aaron191518',
-    creatorName: '系统管理员',
-    status: '启用',
-    Note: '这里是备注'
-  },
-  {
-    id: '22',
-    userName: 'Aaron191518',
-    creatorName: '系统管理员',
-    status: '启用',
-    Note: '这里是备注'
   }
 ]
 </script>
@@ -227,7 +213,7 @@ const tableData: object[] = [
 
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
     <div>
-      <el-button class="ARMbutton" type="primary">新建学生</el-button>
+      <el-button class="ARMbutton" type="primary" @click="roleDetail">新建角色</el-button>
     </div>
   </TablePage>
 </template>

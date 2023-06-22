@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton } from 'element-plus'
+import { ElButton, ElInput } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
@@ -41,7 +41,7 @@ const tableColumns = [
     key: 'studentName',
     title: '姓名',
     width: 80,
-    cellRenderer: (cellData: any) => <ElButton link type='primary' onclick={() => studentName(cellData)}>{cellData.cellData}</ElButton>,
+    cellRenderer: (cellData: any) => <ElButton link type='primary' onClick={() => studentName(cellData)}>{cellData.cellData}</ElButton>,
   },
   {
     dataKey: 'userName',
@@ -114,7 +114,8 @@ const tableColumns = [
             删除
           </el-button>
         </div>
-        )},
+      )
+    },
     width: 170,
     fixed: 'right',
     align: 'left'
@@ -145,7 +146,17 @@ for (let index = 0; index < 100; index++) {
   tableData.push(data)
 }
 
+const showDialog = ref(false)
 
+const createStudent = () => {
+  showDialog.value = true
+}
+const confrom = () => {
+  showDialog.value = false
+}
+const cancel = () => {
+  showDialog.value = false
+}
 
 
 console.log(tableData)
@@ -159,16 +170,62 @@ const refresh = () => {
 
 <template>
   <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+    
     <div class="div-search-bar">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
+      <el-button class="ARMbutton" type="primary" @click="createStudent">新建学生</el-button>
     </div>
+   
   </TablePage>
+
+
+
+  <el-dialog v-model="showDialog" width="370px">
+    <template #header>
+      <el-text>新建学生</el-text>
+    </template>
+    <div style="height: 300px;">
+
+      <div class="input">
+        <div class="input-word">*用户名:</div>
+        <ElInput class="input-input" placeholder="请输入" />
+      </div>
+      <div class="input">
+        <div class="input-word">*姓名:</div>
+        <ElInput class="input-input" placeholder="请输入"/>
+      </div>
+      <div class="input">
+        <div class="input-word">*密码:</div>
+        <ElInput class="input-input" placeholder="6-20位,建议包含数字与字母"/>
+      </div>
+      <div class="input">
+        <div class="input-word">年级:</div>
+        <ElInput class="input-input" placeholder="请输入"/>
+      </div>
+      <div class="input">
+        <div class="input-word">学科:</div>
+        <ElInput class="input-input" placeholder="请输入"/>
+      </div>
+      <div class="input">
+        <div class="input-word">手机号码:</div>
+        <ElInput class="input-input" placeholder="请输入"/>
+      </div>
+    </div>
+    <template #footer>
+      <ElButton @click="confrom">取消</ElButton>
+
+      <ElButton type="primary" @click="cancel">确认</ElButton>
+
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
 $gap: 15px;
 
-
+.ARMbutton {
+  margin-top: $gap;
+}
 .page-container {
   width: calc($page-width - $gap);
   height: $page-height;
@@ -179,5 +236,33 @@ $gap: 15px;
 .div-search-bar {
   margin: $gap;
 }
+
+.input {
+  display: flex;
+  flex-direction: row;
+  width: 320px;
+  margin-bottom: 10px;
+  
+
+}
+
+.input-word{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width :80px;
+  padding-right: 10px;
+  
+
+}
+
+.input-input{
+  display: flex;
+  justify-content: flex-start;
+  width: 200px;
+  height: 32px;
+}
+
+
 
 </style>
