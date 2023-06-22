@@ -117,7 +117,6 @@ const handleFileChange = (e: Event) => {
       console.log(image)
       image.src = reader.result;
       // showImgSrc.value = reader.result;
-
     }
   }
 }
@@ -140,10 +139,22 @@ watch(newBannerDialogShow, () => {
   newBannerContext.poster = ''
   newBannerContext.title = ''
   newBannerContext.link = ''
+
+  var input: any = document.getElementById('img_input');
+
   var image: any = document.getElementById("show_img");
   if (image) {
     image.src = "";
   }
+
+  // if (showImgSrc.value) {
+  //   showImgSrc.value = ''
+  // }
+
+  if (input) {
+    input.value = '';
+  }
+
 })
 </script>
 
@@ -165,7 +176,7 @@ watch(newBannerDialogShow, () => {
             style="white-space: nowrap;pointer-events: none;position: absolute;top: 210px;width: 300px;">点击此处或拖拽上传海报</text>
           <text style="white-space: nowrap;pointer-events: none;position: absolute;top: 225px;width: 300px;">只接受 *.png
             *.jpg *.jpeg</text>
-          <input class="upload-file-input" ref="img" type="file" accept="image/png, image/jpeg, image/jpg"
+          <input id="img_input" class="upload-file-input" ref="img" type="file" accept="image/png, image/jpeg, image/jpg"
             @change="handleFileChange" />
         </div>
 
@@ -206,7 +217,7 @@ $gap: 15px;
   height: 300px;
   background-color: v-bind(bgc);
   margin-bottom: 15px;
-  border-radius: 5px;
+  //border-radius: 5px;
 
   // &:hover{
   //   background-color: green;
@@ -214,6 +225,7 @@ $gap: 15px;
   >.show-img {
     height: 300px;
     width: 300px;
+    //border-radius: 5px;
     pointer-events: none;
     position: absolute;
     top: 80px;
