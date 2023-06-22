@@ -12,6 +12,7 @@ const fullScreen = () => {
     screenfull.request()
   }
 }
+
 </script>
 
 <template>
@@ -54,6 +55,7 @@ const fullScreen = () => {
 </template>
 
 <style scoped lang="scss">
+
 .header {
   display: flex;
   align-items: center;

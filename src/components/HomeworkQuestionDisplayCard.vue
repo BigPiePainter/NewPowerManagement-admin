@@ -37,7 +37,7 @@ const props = defineProps<Props>()
 
 width: 260px;
 height: 130px;
-background-color: gray;
+background-color: lightgrey;
 border-radius: 15px;
 display: flex;
 flex-direction: column;

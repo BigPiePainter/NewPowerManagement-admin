@@ -14,11 +14,12 @@ const studentName = (props: any) => {
   console.log(props)
   router.push({ path: 'student-detail-management', query: { id: props.rowData.id } })
 }
+
 const breadcrumbStore = useBreadcrumbStore()
+
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '学生管理', path: '/account-student-management' },
-  { name: '学生详情', path: '/student-detail-management' }
 ]
 const items = reactive([
   { name: "用户名", value: "" },

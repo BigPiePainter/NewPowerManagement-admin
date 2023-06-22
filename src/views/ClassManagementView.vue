@@ -22,6 +22,7 @@ const items = reactive([
 ])
 
 const newClassDialogShow = ref(false);
+
 const newClassData = reactive<{
   className: string,
   teacher: string,
@@ -29,21 +30,27 @@ const newClassData = reactive<{
   endDate: string,
   major: string,
   grade: string,
+
 }>({
+
   className: '',
   teacher: '',
   startDate: '',
   endDate: '',
   major: '',
   grade: '',
+  
 });
+
 const creatNewClass = () => {
   newClassDialogShow.value = true;
 }
+
 const confirmNewClass = () => {
   console.log(newClassData)
   newClassDialogShow.value = false
 }
+
 const cancelNewClass = () => {
   newClassDialogShow.value = false
 }
@@ -60,6 +67,7 @@ const tableData = reactive<object[]>([
   }
 ])
 
+
 const pushData = () => {
   for (let i = 10086; i < 10200; i++) {
     var fakeData = {
@@ -74,7 +82,10 @@ const pushData = () => {
     tableData.push(fakeData)
   }
 }
+
 pushData()
+
+
 
 const tableColumns = reactive([
   {
@@ -148,6 +159,7 @@ const clickDetail = (props: { rowData: { id: string } }) => {
 }
 
 const editClassDialogShow = ref(false);
+
 const editClassData = reactive<{
   className: string,
   teacher: string,
@@ -162,6 +174,7 @@ const editClassData = reactive<{
   endDate: '',
   major: '',
   grade: '',
+  
 });
 const editClass = (props: {
   rowData: {
@@ -268,6 +281,7 @@ const refresh = () => {
         </el-input>
       </div>
     </div>
+    
     <template #header>
       <el-text>新建班级</el-text>
     </template>
@@ -327,6 +341,7 @@ const refresh = () => {
     <template #header>
       <el-text>编辑班级</el-text>
     </template>
+
     <template #footer>
       <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
       <el-button @click="cancelEditDialog()">

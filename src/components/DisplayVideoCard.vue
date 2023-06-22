@@ -27,7 +27,6 @@ const props = defineProps<Props>()
         <div class="displayvideocard-time">
             <div>{{ time }}</div>
         </div>
-
     </div>
 </template>
   
