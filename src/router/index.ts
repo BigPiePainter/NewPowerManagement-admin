@@ -36,7 +36,7 @@ import ErrorView from '@/views/ErrorView.vue'
 import AccountTeacherDetail from '@/views/AccountTeacherDetail.vue'
 import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 import AccountRoleDetail from '@/views/AccountRoleDetail.vue'
-import CourseManagementDetail from '@/views/CourseManagementDetail.vue'
+import CourseDetailView from '@/views/CourseDetailView.vue'
 import CourseCreateView from '@/views/CourseCreateView.vue'
 
 const router = createRouter({
@@ -143,14 +143,14 @@ const router = createRouter({
           component: CourseManagementView
         },
         {
-          path: 'course-management-create',
-          name: 'course-management-create',
+          path: 'course-create',
+          name: 'course-create',
           component: CourseCreateView
         },
         {
-          path: 'course-management-detail',
-          name: 'course-management-detail',
-          component: CourseManagementDetail
+          path: 'course-detail',
+          name: 'course-detail',
+          component: CourseDetailView
         },
         //商城管理
         {

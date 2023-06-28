@@ -238,11 +238,6 @@ $gap: 15px;
   }
 
   >.upload-file-input {
-    // width: 100%;
-    // height: 100%;
-    // height: 300px;
-    // width: 300px;
-    //border-radius: 5px;
     position: absolute;
     opacity: 0;
     top: 0px;

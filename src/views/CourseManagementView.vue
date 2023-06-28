@@ -25,10 +25,10 @@ const items = reactive([
 const router = useRouter()
 
 
-const courseCreat = () => {router.push({path: '/course-management-create'})
+const courseCreat = () => {router.push({path: '/course-create'})
 }
 
-const couseDetail = () => {router.push({path: '/course-management-detail'})
+const couseDetail = () => {router.push({path: '/course-detail'})
 }
 
 const tableColumns = [
