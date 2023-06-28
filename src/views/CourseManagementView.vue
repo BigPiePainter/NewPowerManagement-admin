@@ -43,7 +43,7 @@ const tableColumns = [
     key: 'courseName',
     title: '课程名称',
     width: 200,
-    cellRenderer: (cellData: any) => <ElButton link type='primary' onClick={() => couseDetail(cellData)} class="detailed">{cellData.cellData}</ElButton>
+    cellRenderer: (cellData: any) => <ElButton link type='primary' onClick={() => couseDetail()} class="detailed">{cellData.cellData}</ElButton>
   },
   {
     dataKey: 'courseAmount',
