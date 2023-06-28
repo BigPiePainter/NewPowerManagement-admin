@@ -36,6 +36,8 @@ import ErrorView from '@/views/ErrorView.vue'
 import AccountTeacherDetail from '@/views/AccountTeacherDetail.vue'
 import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 import AccountRoleDetail from '@/views/AccountRoleDetail.vue'
+import CourseManagementDetail from '@/views/CourseManagementDetail.vue'
+import CourseCreateView from '@/views/CourseCreateView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -139,6 +141,16 @@ const router = createRouter({
           path: 'course-management',
           name: 'course-management',
           component: CourseManagementView
+        },
+        {
+          path: 'course-management-create',
+          name: 'course-management-create',
+          component: CourseCreateView
+        },
+        {
+          path: 'course-management-detail',
+          name: 'course-management-detail',
+          component: CourseManagementDetail
         },
         //商城管理
         {
