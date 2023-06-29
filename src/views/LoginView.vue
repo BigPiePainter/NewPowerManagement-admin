@@ -1,3 +1,6 @@
+
+
+
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 </script>
@@ -6,13 +9,20 @@ import { RouterLink } from 'vue-router'
 
 
 <template>
+
+
   <div class="login">
-    <div style="width:">
-     <el-text>账号：</el-text> <el-input/>
-     <el-text>密码：</el-text> <el-input/>
+    <el-text class="title">锦鲤项目</el-text>
+    <div class="account">
+      <el-text class="word">账号：</el-text> <el-input />
     </div>
-    <RouterLink to="/work-space">登陆！！</RouterLink>
+    <div class="account">
+    <el-text class="word">密码：</el-text> <el-input /></div>
+    <el-button type="primary"><RouterLink to="/work-space">登陆</RouterLink></el-button>
   </div>
+  
+
+
 </template>
 
 <style scoped lang="scss">
@@ -24,5 +34,23 @@ import { RouterLink } from 'vue-router'
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+
+.account {
+  width: 400px;
+  display: flex;
+  margin: 8px;
+  flex-direction: row;
+}
+
+
+.word{
+  display: flex;
+  flex-direction: row;
+}
+
+.title{
+  font-size: 22px;
 }
 </style>
