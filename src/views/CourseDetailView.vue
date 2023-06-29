@@ -141,37 +141,32 @@ const tableData: object[] = [
     <div class="whole">
         <div class="topPart">
             <div class="topPart1">
-                <div class="topPart1-1">
-                    <div class="top-Part1-1-1"><el-text>老师信息</el-text></div>
+                <div>
+                    <el-image class="image"></el-image>
                 </div>
-                <div class="topPart1-2">
-                    <div class="top-Part1-2-1">Aaron</div>
-                    <div class="top-Part1-2-2">
-                        <div><el-text>年级:9年级</el-text></div>
-                        <div><el-text>学科:语文</el-text></div>
-                        <div><el-text>电话:15536996997</el-text></div>
+                <div class="topPart1-3">
+                    <div class="topPart1-3-2">
+                    <div class="topPart1-3-2"><el-text style="font-size: 20px;">这里是课程名称</el-text></div>
+                    <div class="topPart1-3-2"><el-text>年级：三年级</el-text></div>
+                    <div class="topPart1-3-2"><el-text>学科：语文</el-text></div>
+                    <div class="topPart1-3-2"><el-text>标签：难度系数很高</el-text></div>
+                    <div class="topPart1-3-2"><el-text>老师：庄老师</el-text></div>
                     </div>
                 </div>
 
-                <div class="topPart1-3">
-                    <div><el-text>创建时间:2022-2-13 13:00</el-text></div>
-                    <div class="topPart1-3-2"><el-text>最后登录:2023-6-5 12:00</el-text></div>
-                </div>
-
-                <el-image></el-image>
+             
             </div>
 
 
 
             <div class="topPart1">
-                <div class="topPart1-1"><el-text>所带班级：</el-text></div>
-                <div class="topPart2-2"><el-text>三年级二班</el-text></div>
+                <div class="topPart1-1"><el-text></el-text></div>
+                <div class="topPart2-2"><el-text></el-text></div>
             </div>
 
 
             <div class="topPart1">
-                <div class="topPart1-1"><el-text>所在教研组</el-text></div>
-                <div class="topPart2-2"><el-text>庄老师教研组</el-text></div>
+                <div class="topPart1-1"><el-button type="primary">编辑</el-button> <el-button>下发课程</el-button></div>
             </div>
         </div>
         <el-divider class="row-divider"></el-divider>
@@ -207,6 +202,7 @@ $gap: 15px;
   height: calc($page-height);
 }
 
+
 .topPart {
     display: flex;
     flex-direction: row;
@@ -215,7 +211,7 @@ $gap: 15px;
 
 .topPart1 {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-grow: 1;
 }
 
@@ -223,7 +219,8 @@ $gap: 15px;
     display: flex;
     height: 40px * $scale;
     margin-top: 15px * $scale;
-    margin-left: 15px;
+    justify-content: flex-end;
+
 }
 
 .topPart2-2 {
@@ -239,6 +236,12 @@ $gap: 15px;
     justify-content: center;
     width: 60%;
 
+}
+.image{
+display: flex;
+flex-direction: row;
+width:193.6px;
+height:193.6px;
 }
 
 .row-divider {
@@ -275,7 +278,7 @@ $gap: 15px;
 
 
 .topPart1-3-2 {
-    margin-top: 20px * $scale;
+    margin: 10px;
 
 }
 
