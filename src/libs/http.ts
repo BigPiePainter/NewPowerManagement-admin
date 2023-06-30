@@ -50,16 +50,12 @@ class Http {
 
     instance.interceptors.response.use(
       (res) => {
-        // const { data, status } = res
-        // if (!data || data.msg !== 'success') {
-        //   this._errorHandle(data, data.code)
-        //   return Promise.reject(res)
-        // }
-        // this._errorHandle(data, status)
-
-        // return data
-
-        return res
+        const { data } = res
+        if (!data) {
+          this._errorHandle(res)
+          return Promise.reject(res)
+        }
+        return data
       },
       (error) => {
         const response = error.response
@@ -77,10 +73,11 @@ class Http {
     return instance(options)
   }
 
-  _errorHandle(data: any) {
-    if (data.constructor.name == 'AxiosError') {
-      //
-    }
+  _errorHandle(res: any) {
+    console.log(res)
+    // if (data.constructor.name == 'AxiosError') {
+    //   //
+    // }
   }
 }
 
