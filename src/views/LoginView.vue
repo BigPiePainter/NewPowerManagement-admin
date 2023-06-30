@@ -1,28 +1,52 @@
-
-
-
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { userLogin } from '@/apis/user'
+import { ref, reactive } from 'vue'
+import { rejects } from 'assert';
+import { defineComponent } from 'vue';
+
+
+const account = ref("")
+const password = ref("")
+
+
+const pars = {
+  "account": account.value,
+  "password": password.value,
+  "device": {
+    "deviceId": navigator.userAgent,
+    "deviceModel": "Web",
+    "deviceName": navigator.userAgent,
+    "version": 1
+  },
+}
+
+const login = () => {
+  userLogin(pars).then((res) => {
+    console.log('success', res)
+  }).catch((err) => {
+    console.log(err)
+  })
+  console.log(2)
+
+}
+
 </script>
 
 
 
 
 <template>
-
-
   <div class="login">
     <el-text class="title">锦鲤项目</el-text>
     <div class="account">
-      <el-text class="word">账号：</el-text> <el-input />
+      <el-text class="word">账号：</el-text> <el-input v-model="account" />
     </div>
     <div class="account">
-    <el-text class="word">密码：</el-text> <el-input /></div>
-    <el-button type="primary"><RouterLink to="/work-space">登陆</RouterLink></el-button>
+      <el-text class="word">密码：</el-text> <el-input v-model="password" />
+    </div>
+    <el-button type="primary" @click="login">登陆</el-button>
   </div>
-  
-
-
 </template>
 
 <style scoped lang="scss">
@@ -35,6 +59,8 @@ import { RouterLink } from 'vue-router'
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  background-color: rgb(82, 50, 156);
 }
 
 .account {
@@ -45,12 +71,14 @@ import { RouterLink } from 'vue-router'
 }
 
 
-.word{
+.word {
   display: flex;
   flex-direction: row;
+  width: 40px;
 }
 
-.title{
+.title {
   font-size: 22px;
+  margin: 10px;
 }
 </style>
