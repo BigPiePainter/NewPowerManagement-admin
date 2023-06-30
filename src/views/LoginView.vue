@@ -4,7 +4,7 @@ import { userLogin } from '@/apis/user'
 import { ref, reactive, pushScopeId } from 'vue'
 import { rejects } from 'assert';
 import router from '@/router';
-import { ElMessage } from 'element-plus'
+import { ElNotification } from 'element-plus'
 
 
 
@@ -26,40 +26,49 @@ const pars = reactive({
 const enterHome=()=>{
   router.push({ path: 'work-space'})
 }
+const open1 = () => {
+  ElNotification({
+    title: 'Success',
+    message: 'This is a success message',
+    type: 'success',
+  })
+}
+
+const open2 = () => {
+  ElNotification({
+    title: 'Warning',
+    message: '密码错误',
+    type: 'warning',
+  })
+}
 
 
-const alert = ref(false)
-
+const open3 = () => {
+  ElNotification({
+    title: '网络不佳',
+    message: '无法与服务器建立通讯',
+    type: 'Info',
+  })
+}
 
 const login = () => {
   
   userLogin(pars).then((res) => {
-    if (res.data.code == 20000) ElMessage.success()
+    if (res.data.token == 20000) {open2()
+}
     else{
       enterHome()
       }
     }
-  ).catch((err) => {
-    console.log(err)
-  })
-  console.log(2)
+  ).catch(() => {
+open3()
+
+
 
 }
 
-const open1 = () => {
-  ElMessage('this is a message.')
-}
-const open2 = () => {
-  ElMessage({
-    message: '登陆成功',
-    type: 'success',
-  })
-}
-const open3 = () => {
-  ElMessage({
-    message: '登陆失败',
-    type: 'warning',
-  })
+
+  )
 }
 
 
@@ -69,8 +78,6 @@ const open3 = () => {
 
 
 <template>
-    <ElMessage v-model="open2"></ElMessage>
-  <ElMessage v-model="open3"></ElMessage>
   <div class="login">
     <el-text class="title">锦鲤项目</el-text>
     <div class="account">
