@@ -5,6 +5,8 @@ import { ref, reactive, pushScopeId } from 'vue'
 import { rejects } from 'assert';
 import router from '@/router';
 import { ElNotification } from 'element-plus'
+import { text } from 'stream/consumers'
+import Cookies from 'js-cookie'
 
 
 
@@ -16,20 +18,27 @@ const pars = reactive({
   "account": account.value,
   "password": password.value,
   "device": {
-    "deviceId":  "Web",
+    "deviceId": "Web",
     "deviceModel": "Web",
     "deviceName": "Web",
     "version": 1
   },
 })
 
-const enterHome=()=>{
-  router.push({ path: 'work-space'})
+const enterAccount =()=>{
+  pars.account = "15824136350"
+  pars.password = "482c811da5d5b4bc6d497ffa98491e38"
+}
+
+
+const enterHome = () => {
+  router.push({ path: 'work-space' })
+
 }
 const open1 = () => {
   ElNotification({
     title: 'Success',
-    message: 'This is a success message',
+    message: '登陆成功',
     type: 'success',
   })
 }
@@ -37,7 +46,7 @@ const open1 = () => {
 const open2 = () => {
   ElNotification({
     title: 'Warning',
-    message: '密码错误',
+    message: '登入信息错误',
     type: 'warning',
   })
 }
@@ -45,29 +54,31 @@ const open2 = () => {
 
 const open3 = () => {
   ElNotification({
-    title: '网络不佳',
+    title: 'Erro',
     message: '无法与服务器建立通讯',
     type: 'Info',
   })
 }
 
 const login = () => {
-  
+
   userLogin(pars).then((res) => {
-    if (res.data.token == 20000) {open2()
-}
-    else{
-      enterHome()
-      }
+    if (res.data.code == 20000 ) {
+      open2()
+      return;
     }
+
+    else {
+      localStorage.token = res.data.token
+      open1()
+      enterHome()
+      console.log(localStorage.token)
+    }
+  }
+  
   ).catch(() => {
-open3()
-
-
-
-}
-
-
+    open2()
+  }
   )
 }
 
@@ -81,24 +92,21 @@ open3()
   <div class="login">
     <el-text class="title">锦鲤项目</el-text>
     <div class="account">
-      <el-text class="word">账号：</el-text> <el-input v-model='pars.account' />
+      <el-text class="word">账号：</el-text> <el-input placeholder="" v-model='pars.account' />
     </div>
     <div class="account">
-      <el-text class="word">密码：</el-text> <el-input v-model='pars.password' />
+      <el-text class="word">密码：</el-text> <el-input placeholder="" v-model='pars.password' show-password />
     </div>
     <el-button type="primary" @click="login">登陆</el-button>
-    <el-button style="margin-top: 10px;" type="primary" @click="enterHome">烦人，立马登录</el-button>
+    <el-button style="margin-top: 10px;" type="primary" @click="enterAccount">烦人，立马登录</el-button>
 
 
 
 
   </div>
- 
 </template>
 
 <style scoped lang="scss">
-
-
 .login {
   width: 100vw;
   height: 100vh;
@@ -130,6 +138,4 @@ open3()
   font-size: 22px;
   margin: 10px;
 }
-
-
 </style>
