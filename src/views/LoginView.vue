@@ -10,7 +10,7 @@ const account = ref("")
 const password = ref("")
 
 
-const pars = {
+const pars = reactive({
   "account": account.value,
   "password": password.value,
   "device": {
@@ -19,17 +19,23 @@ const pars = {
     "deviceName": navigator.userAgent,
     "version": 1
   },
-}
+})
+
 
 const login = () => {
+  console.log(pars)
+  console.log(account)
+  console.log(password)
   userLogin(pars).then((res) => {
     console.log('success', res)
+    
   }).catch((err) => {
     console.log(err)
   })
   console.log(2)
 
 }
+
 
 </script>
 
@@ -40,10 +46,10 @@ const login = () => {
   <div class="login">
     <el-text class="title">锦鲤项目</el-text>
     <div class="account">
-      <el-text class="word">账号：</el-text> <el-input v-model="account" />
+      <el-text class="word">账号：</el-text> <el-input v-model='pars.account' />
     </div>
     <div class="account">
-      <el-text class="word">密码：</el-text> <el-input v-model="password" />
+      <el-text class="word">密码：</el-text> <el-input v-model='pars.password' />
     </div>
     <el-button type="primary" @click="login">登陆</el-button>
   </div>
