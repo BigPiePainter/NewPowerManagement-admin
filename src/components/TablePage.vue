@@ -1,10 +1,34 @@
 <script lang="ts" setup>
+import { ref, reactive, watch } from 'vue'
+
 type Props = {
   columns: object[]
   data: object[]
   rowHeight?: number
+  msg?: Number
 }
 const props = defineProps<Props>()
+
+const emit = defineEmits(['paginationChange'])
+
+// const totalPage = ref<Number>(400)
+const paginationInfo = reactive({
+  currentPage:1,
+  pageSize: 20,
+})
+const handleSizeChange = (val: number) => { 
+  console.log(`${val} items per page`)
+  paginationInfo.pageSize = val
+  // console.log(paginationInfo)
+  emit('paginationChange', paginationInfo)
+}
+const handleCurrentChange = (val: number) => { 
+  console.log(`current page: ${val}`)
+  paginationInfo.currentPage = val
+  // console.log(paginationInfo)
+  emit('paginationChange', paginationInfo)
+}
+
 </script>
 
 <template>
@@ -19,9 +43,9 @@ const props = defineProps<Props>()
       </el-auto-resizer>
     </div>
     <div class="page-table-pagination">
-      <el-pagination :current-page="4" :page-size="100" :page-sizes="[100, 200, 300, 400]" :small="false"
-        layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="() => { }"
-        @current-change="() => { }" />
+      <el-pagination v-model:current-page="paginationInfo.currentPage" v-model:page-size="paginationInfo.pageSize" :page-sizes="[20, 40, 60]"
+        :small="false" layout="total, sizes, prev, pager, next, jumper" :total="props.msg" @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
     </div>
   </div>
 </template>

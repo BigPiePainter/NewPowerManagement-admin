@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 
-
+import { getTeachers } from '@/apis/accountTeacherManagement'
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
@@ -37,8 +37,6 @@ breadcrumbStore.data = [
   { name: '老师管理', path: '/account-teacher-managament' },
 ]
 
-
-
 const items = reactive([
   { name: "用户名", value: "" },
   { name: "姓名", value: "" },
@@ -47,14 +45,10 @@ const items = reactive([
   { name: "学科", value: "", type: InputType.Select, label: "请选择" },
 ])
 
-
 const clickName = (props: any) => {
   console.log(props)
   router.push({ path: 'teacher-detail-managament', query: { id: props.rowData.id } })
 }
-
-
-
 
 const tableColumns = [
   {
@@ -125,201 +119,15 @@ const tableColumns = [
   }
 ]
 
-const tableData: object[] = [
-  {
-    id: '1',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '2',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '3',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '4',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '5',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-
-  {
-    id: '6',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '7',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '8',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '9',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '10',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '11',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '12',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '13',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '14',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '15',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '16',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '17',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '18',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '19',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '20',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  },
-  {
-    id: '21',
-    teacherName: 'Aaron',
-    userName: 'Aaron191518',
-    teacherGrade: '9 year',
-    teacherSubject: "数学",
-    teacherCellnumber: 18636666666,
-    loginTime: "2012-12-22 19:23"
-  }
-
-]
-
-
+const tableData = reactive([{
+  id: '21',
+  teacherName: 'Aaron',
+  userName: 'Aaron191518',
+  teacherGrade: '9 year',
+  teacherSubject: "数学",
+  teacherCellnumber: '18636666666',
+  loginTime: "2012-12-22 19:23"
+}])
 
 console.log(tableData)
 
@@ -344,21 +152,65 @@ const conformTeacher = () => {
 
 }
 
-//<AbcAbc> == <abc-abc>
-//
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20,
+})
+
+const dataCompute = (items: any) => {
+  tableData.length = 0
+  items.data.records.forEach((item: any) => {
+    var dataSample = {
+      id: '',
+      teacherName: '',
+      userName: '',
+      teacherGrade: '',
+      teacherSubject: '',
+      teacherCellnumber: '',
+      loginTime: ''
+    }
+    dataSample.id = item.id
+    dataSample.teacherName = item.name
+    dataSample.userName = item.account
+    dataSample.teacherGrade = item.grade
+    dataSample.teacherSubject = item.subject
+    dataSample.teacherCellnumber = item.phoneNamber
+    dataSample.loginTime = item.lastLoginTime
+
+    tableData.push(dataSample)
+  });
+  console.log(tableData)
+}
+
+const totalLength = ref<Number>()
+const loadPageData = (prop: any) => {
+  paginationInfo.currentPage = prop.currentPage
+  paginationInfo.pageSize = prop.pageSize
+  var args = { pageNum: paginationInfo.currentPage, pageSize: paginationInfo.pageSize }
+  getTeachers(args).then((res) => {
+    console.log(res)
+    dataCompute(res)
+    totalLength.value = res.data.records.length
+  })
+    .catch(() => {
+
+    });
+  console.log(prop)
+}
+loadPageData(paginationInfo)
 
 </script>
 
 
 <template>
-  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadPageData" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar ">
       <SearchBar :items="items" @change="refresh()"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createTeacher">新建老师</el-button>
     </div>
   </TablePage>
 
-  <el-dialog v-model="showDialog" width="370px"  class="new-class-dialog">
+  <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">
 
     <div>
       <div class="div-input-element">
@@ -404,16 +256,16 @@ const conformTeacher = () => {
         </el-input>
       </div>
     </div>
-    <template #header >
+    <template #header>
       <el-text>新建老师</el-text>
 
-      </template>
+    </template>
 
 
     <template #footer>
 
 
-       <el-button @click='conformTeacher' type="primary">确认</el-button>
+      <el-button @click='conformTeacher' type="primary">确认</el-button>
       <el-button @click="deleteTeacher">取消</el-button>
     </template>
   </el-dialog>
@@ -442,8 +294,8 @@ $gap: 15px;
   margin-top: $gap;
 }
 
-.header{
-height: 50px;
+.header {
+  height: 50px;
 }
 
 .new-class-dialog {
