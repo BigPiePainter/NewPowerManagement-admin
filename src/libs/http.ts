@@ -4,8 +4,8 @@ class Http {
   baseUrl: string
 
   constructor() {
-    console.log('后端网址', process.env.API_URL)
-    this.baseUrl = 'http://' + process.env.API_URL
+    console.log('后端网址', import.meta.env.VITE_API_URL)
+    this.baseUrl = 'http://' + import.meta.env.VITE_API_URL
   }
 
   request(options: any) {

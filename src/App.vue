@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+
+console.log('后端网址', import.meta.env.VITE_API_URL)
 </script>
 
 <template>
