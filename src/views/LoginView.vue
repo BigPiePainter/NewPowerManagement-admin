@@ -14,9 +14,9 @@ const pars = reactive({
   "account": account.value,
   "password": password.value,
   "device": {
-    "deviceId": navigator.userAgent,
+    "deviceId":  "Web",
     "deviceModel": "Web",
-    "deviceName": navigator.userAgent,
+    "deviceName": "Web",
     "version": 1
   },
 })
