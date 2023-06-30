@@ -11,24 +11,23 @@ export const userLogin = (data: any) => {
     return http.request(args)
 }
 
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  data() {
-    return {
-      deviceInfo: {
-        userAgent: '',
-        platform: '',
-        vendor: '',
-        language: '',
-      },
-    };
-  },
-  mounted() {
-    this.deviceInfo.userAgent = navigator.userAgent;
-    this.deviceInfo.platform = navigator.platform;
-    this.deviceInfo.vendor = navigator.vendor;
-    this.deviceInfo.language = navigator.language;
-  },
-});
+
+// import { defineComponent } from 'vue';
+
+// export default defineComponent({
+//   data() {
+//     return {
+//       deviceInfo: {
+//         userAgent: '',
+//         language: '',
+//       },
+//     };
+//   },
+
+//   mounted() {
+//     this.deviceInfo.userAgent = navigator.userAgent;
+//     this.deviceInfo.language = navigator.language;
+//   },
+// });
 
