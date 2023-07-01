@@ -37,12 +37,12 @@ breadcrumbStore.data = [
   { name: '老师管理', path: '/account-teacher-managament' },
 ]
 
-const items = reactive([
+const searchBarItems = reactive([
   { name: "用户名", value: "" },
   { name: "姓名", value: "" },
   { name: "手机号", value: "", label: "" },
-  { name: "年级", value: "", type: InputType.Select, label: "请选择" },
-  { name: "学科", value: "", type: InputType.Select, label: "请选择" },
+  { name: "年级", value: 1, type: InputType.Select, label: "请选择" },
+  { name: "学科", value: 1, type: InputType.Select, label: "请选择" },
 ])
 
 const clickName = (props: any) => {
@@ -132,7 +132,7 @@ const tableData = reactive([{
 console.log(tableData)
 
 const refresh = () => {
-  console.log(items)
+  console.log(searchBarItems)
 }
 
 const showDialog = ref(false)
@@ -205,7 +205,7 @@ loadPageData(paginationInfo)
 <template>
   <TablePage class="page-container" :msg="totalLength" @paginationChange="loadPageData" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar ">
-      <SearchBar :items="items" @change="refresh()"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="refresh()"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createTeacher">新建老师</el-button>
     </div>
   </TablePage>
