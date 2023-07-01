@@ -6,7 +6,7 @@ import { rejects } from 'assert';
 import router from '@/router';
 import { ElNotification } from 'element-plus'
 import { text } from 'stream/consumers'
-import Cookies from 'js-cookie'
+import { userInfo } from '@/apis/user';
 
 
 
@@ -25,7 +25,9 @@ const pars = reactive({
   },
 })
 
-const enterAccount =()=>{
+
+
+const enterAccount = () => {
   pars.account = "15824136350"
   pars.password = "482c811da5d5b4bc6d497ffa98491e38"
 }
@@ -49,21 +51,21 @@ const open2 = () => {
     message: '登入信息错误',
     type: 'warning',
   })
+
+  
+}
+const check = () => {
+userInfo().then((res)=>{
+  console.log(res)
+}).catch()
 }
 
-
-const open3 = () => {
-  ElNotification({
-    title: 'Erro',
-    message: '无法与服务器建立通讯',
-    type: 'Info',
-  })
-}
+check()
 
 const login = () => {
 
   userLogin(pars).then((res) => {
-    if (res.data.code == 20000 ) {
+    if (res.data.code == 20000) {
       open2()
       return;
     }
@@ -71,18 +73,16 @@ const login = () => {
     else {
       localStorage.token = res.data.token
       open1()
+      check()
       enterHome()
-      console.log(localStorage.token)
     }
   }
-  
+
   ).catch(() => {
     open2()
   }
   )
 }
-
-
 </script>
 
 

@@ -11,6 +11,43 @@ export const userLogin = (data: any) => {
     return http.request(args)
 }
 
+export const userInfo = () => {
+  const args = {
+      url: '/api/management/login/info',
+      method: 'GET',
+
+  }
+  return http.request(args)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // import { defineComponent } from 'vue';

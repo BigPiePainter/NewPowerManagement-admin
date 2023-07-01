@@ -38,6 +38,13 @@ import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 import AccountRoleDetail from '@/views/AccountRoleDetail.vue'
 import CourseDetailView from '@/views/CourseDetailView.vue'
 import CourseCreateView from '@/views/CourseCreateView.vue'
+import {userInfo} from '@/apis/user'
+
+
+
+
+
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,7 +52,8 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+        
     },
     {
       path: '/',
@@ -56,189 +64,225 @@ const router = createRouter({
         {
           path: 'work-space',
           name: 'work-space',
-          component: WorkSpaceView
+          component: WorkSpaceView,
+           meta: {Protected: true}
         },
         {
           path: 'school-management',
           name: 'school-management',
-          component: SchoolManagementView
+          component: SchoolManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'class-management',
           name: 'class-management',
-          component: ClassManagementView
+          component: ClassManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'class-detail',
           name: 'class-detail',
-          component: ClassDetailView
+          component: ClassDetailView,
+           meta: {Protected: true}
         },
         {
           path: 'teacher-group-management',
           name: 'teacher-group-management',
-          component: TeacherGroupManagementView
+          component: TeacherGroupManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'teacher-group-detail',
           name: 'teacher-group-detail',
-          component: TeacherGroupDetailView
+          component: TeacherGroupDetailView,
+           meta: {Protected: true}
         },
         {
           path: 'account-role-managment',
           name: 'account-role-managment',
-          component: AccountRoleManagmentView
+          component: AccountRoleManagmentView,
+           meta: {Protected: true}
         },
         {
           path: 'role-detail-managment',
           name: 'role-detail-managment',
-          component: AccountRoleDetail
+          component: AccountRoleDetail,
+           meta: {Protected: true}
         },
 
         {
           path: 'acount-equipment-management',
           name: 'acount-equipment-management',
-          component: AccountEquipmentManagementView
+          component: AccountEquipmentManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'account-teacher-managament',
           name: 'account-teacher-managament',
-          component: AccountTeacherManagamentView
+          component: AccountTeacherManagamentView,
+           meta: {Protected: true}
         },
         {
           path: 'teacher-detail-managament',
           name: 'teacher-detail-managament',
-          component: AccountTeacherDetail
+          component: AccountTeacherDetail,
+           meta: {Protected: true}
         },
         {
           path: 'account-student-management',
           name: 'account-student-management',
-          component: AccountStudentManagementView
+          component: AccountStudentManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'student-detail-management',
           name: 'student-detail-management',
-          component: AccountStudentDetail
+          component: AccountStudentDetail,
+           meta: {Protected: true}
         },
         {
           path: 'account-temoorary-student',
           name: 'account-temoorary-student',
-          component: AccountTemporaryStudentsView
+          component: AccountTemporaryStudentsView,
+           meta: {Protected: true}
         },
 
         {
           path: 'live-class',
           name: 'live-class',
-          component: LiveClassView
+          component: LiveClassView,
+           meta: {Protected: true}
         },
         //课程管理-课程审核
         {
           path: 'course-approval',
           name: 'course-approval',
-          component: CourseApprovalView
+          component: CourseApprovalView,
+           meta: {Protected: true}
         },
         //课程管理-课程管理
         {
           path: 'course-management',
           name: 'course-management',
-          component: CourseManagementView
+          component: CourseManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'course-create',
           name: 'course-create',
-          component: CourseCreateView
+          component: CourseCreateView,
+           meta: {Protected: true}
         },
         {
           path: 'course-detail',
           name: 'course-detail',
-          component: CourseDetailView
+          component: CourseDetailView,
+           meta: {Protected: true}
         },
         //商城管理
         {
           path: 'shop-management',
           name: 'shop-management',
-          component: ShopManagementView
+          component: ShopManagementView,
+           meta: {Protected: true}
         },
         //新增商品
         {
           path: 'new-product',
           name: 'new-product',
-          component: NewProductView
+          component: NewProductView,
+           meta: {Protected: true}
         },
         {
           path: 'question-bank-management',
           name: 'question-bank-management',
-          component: QuestionBankManagementView
+          component: QuestionBankManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'points-management',
           name: 'points-management',
-          component: PointsManagementView
+          component: PointsManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'student-points-management',
           name: 'student-points-management',
-          component: StudentPointsView
+          component: StudentPointsView,
+           meta: {Protected: true}
         },
         {
           path: 'points-detail',
           name: 'points-detail',
-          component: PointsDetailView
+          component: PointsDetailView,
+           meta: {Protected: true}
         },
 
         {
           path: 'order-management',
           name: 'order-management',
-          component: OrderManagementView
+          component: OrderManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'setting',
           name: 'setting',
-          component: SettingView
+          component: SettingView,
+           meta: {Protected: true}
         },
         {
           path: 'category-management',
           name: 'category-management',
-          component: CategoryManagementView
+          component: CategoryManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'tag-management',
           name: 'tag-management',
-          component: TagManagementView
+          component: TagManagementView,
+           meta: {Protected: true}
         },
         {
           path: 'course-category',
           name: 'course-category',
-          component: CourseCategoryView
+          component: CourseCategoryView,
+           meta: {Protected: true}
         },
         {
           path: 'exam-info',
           name: 'exam-info',
-          component: ExamInfoView
+          component: ExamInfoView,
+           meta: {Protected: true}
         },
         {
           path: 'exam-date',
           name: 'exam-date',
-          component: ExamDateView
+          component: ExamDateView,
+           meta: {Protected: true}
         },
         {
           path: 'banner',
           name: 'banner',
-          component: BannerView
+          component: BannerView,
+           meta: {Protected: true}
         },
         {
           path: 'info-center',
           name: 'info-center',
-          component: InfoCenterView
+          component: InfoCenterView,
+           meta: {Protected: true}
         },
         {
           path: 'family-report',
           name: 'family-report',
-          component: FamilyReportView
+          component: FamilyReportView,
+           meta: {Protected: true}
         },
         {
           path: 'student-report',
           name: 'student-report',
-          component: StudentReport
+          component: StudentReport,
+           meta: {Protected: true}
         }
       ]
     },
@@ -259,4 +303,18 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  if (to.meta.Protected) {
+    if (localStorage) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+
+    next()
+  }
+})
+
 export default router
+
