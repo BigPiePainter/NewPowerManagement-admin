@@ -1,7 +1,7 @@
 <script lang="ts">
 interface searchElement {
   name: string
-  value: string
+  value: any
   label?: string
   type?: InputType
 }

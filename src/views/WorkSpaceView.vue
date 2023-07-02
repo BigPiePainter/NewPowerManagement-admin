@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import DisplayCard from '../components/DisplayCard.vue'
 import { ref, reactive } from 'vue'
-
+import { userInfo } from '@/apis/user';
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '工作台' }]
+
+const check = () => {
+userInfo().then((res)=>{
+  console.log(res)
+}).catch()
+}
+
+check()
 
 const history = reactive([
   { title: '学生账号', amount: 1000000 },
