@@ -25,7 +25,7 @@ class Http {
     if (options.token) {
       instance.defaults.headers.Authorization = 'Bearer ' + options.token
     } else if (localStorage.token) {
-      instance.defaults.headers.Authorization = 'Bearer ' + localStorage.Authorization
+      instance.defaults.headers.Authorization = 'Bearer ' + localStorage.token
     }
 
     if (options.onUploadProgress) {
