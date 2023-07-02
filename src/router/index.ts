@@ -303,18 +303,28 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.Protected) {
-    if (localStorage) {
-      next()
-    } else {
-      next('/login')
-    }
-  } else {
-
-    next()
+const check = () => {
+  userInfo().then((res)=>{
+    console.log(res)
+    router.beforeEach((to, from, next) => {
+      if (to.meta.Protected) {
+        if (res.data.code !== 20000) {
+          next()
+        } else {
+          next('/login')
+        }
+      } else {
+    
+        next()
+      }
+    })
+    return res
+  }).catch()
   }
-})
+  check()
+
+
+
 
 export default router
 

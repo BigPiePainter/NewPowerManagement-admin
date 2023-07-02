@@ -13,9 +13,8 @@ export const userLogin = (data: any) => {
 
 export const userInfo = () => {
   const args = {
-      url: '/api/management/login/info',
+      url: '/api/management/manager/info',
       method: 'GET',
-
   }
   return http.request(args)
 }

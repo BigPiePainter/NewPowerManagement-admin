@@ -68,6 +68,7 @@ const login = () => {
     if (res.data.code == 20000) {
       open2()
       return;
+      
     }
 
     else {
