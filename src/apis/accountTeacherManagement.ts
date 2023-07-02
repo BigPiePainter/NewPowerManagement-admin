@@ -1,10 +1,10 @@
 import http from '@/libs/http'
 
-export const getTeachers = (data: any) => {
+export const getTeachers = (data: object) => {
     const args = {
         url: '/api/management/teacher/page',
         method: 'GET',
-        data
+        params: data
     }
     return http.request(args)
 }

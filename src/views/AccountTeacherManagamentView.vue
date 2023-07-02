@@ -41,8 +41,8 @@ const searchBarItems = reactive([
   { name: "用户名", value: "" },
   { name: "姓名", value: "" },
   { name: "手机号", value: "", label: "" },
-  { name: "年级", value: 1, type: InputType.Select, label: "请选择" },
-  { name: "学科", value: 1, type: InputType.Select, label: "请选择" },
+  { name: "年级", value: "", type: InputType.Select, label: "请选择" },
+  { name: "学科", value: "", type: InputType.Select, label: "请选择" },
 ])
 
 const clickName = (props: any) => {
@@ -119,21 +119,21 @@ const tableColumns = [
   }
 ]
 
-const tableData = reactive([{
-  id: '21',
-  teacherName: 'Aaron',
-  userName: 'Aaron191518',
-  teacherGrade: '9 year',
-  teacherSubject: "数学",
-  teacherCellnumber: '18636666666',
-  loginTime: "2012-12-22 19:23"
-}])
+const tableData = reactive<any>([])
 
 console.log(tableData)
 
-const refresh = () => {
-  console.log(searchBarItems)
-}
+// const searchRequirements = reactive({
+//   account: '',
+//   name: '',
+//   phoneNumber: '',
+//   grade: '',
+//   subject: ''
+// })
+// const refresh = (prop:any) => {
+//   console.log(prop)
+  
+// }
 
 const showDialog = ref(false)
 
@@ -172,9 +172,9 @@ const dataCompute = (items: any) => {
     dataSample.id = item.id
     dataSample.teacherName = item.name
     dataSample.userName = item.account
-    dataSample.teacherGrade = item.grade
-    dataSample.teacherSubject = item.subject
-    dataSample.teacherCellnumber = item.phoneNamber
+    dataSample.teacherGrade = item.gradeName
+    dataSample.teacherSubject = item.subjectName
+    dataSample.teacherCellnumber = item.phoneNumber
     dataSample.loginTime = item.lastLoginTime
 
     tableData.push(dataSample)
@@ -183,10 +183,13 @@ const dataCompute = (items: any) => {
 }
 
 const totalLength = ref<Number>()
+
 const loadPageData = (prop: any) => {
+  console.log(prop)
   paginationInfo.currentPage = prop.currentPage
   paginationInfo.pageSize = prop.pageSize
-  var args = { pageNum: paginationInfo.currentPage, pageSize: paginationInfo.pageSize }
+  var args = { pageNum: paginationInfo.currentPage, pageSize: paginationInfo.pageSize, name: searchBarItems[1].value }
+  console.log(args)
   getTeachers(args).then((res) => {
     console.log(res)
     dataCompute(res)
@@ -195,7 +198,6 @@ const loadPageData = (prop: any) => {
     .catch(() => {
 
     });
-  console.log(prop)
 }
 loadPageData(paginationInfo)
 
@@ -205,7 +207,7 @@ loadPageData(paginationInfo)
 <template>
   <TablePage class="page-container" :msg="totalLength" @paginationChange="loadPageData" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar ">
-      <SearchBar :items="searchBarItems" @change="refresh()"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="loadPageData"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createTeacher">新建老师</el-button>
     </div>
   </TablePage>
