@@ -38,13 +38,7 @@ import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 import AccountRoleDetail from '@/views/AccountRoleDetail.vue'
 import CourseDetailView from '@/views/CourseDetailView.vue'
 import CourseCreateView from '@/views/CourseCreateView.vue'
-import {userInfo} from '@/apis/user'
-
-
-
-
-
-
+import { userInfo } from '@/apis/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,8 +46,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView,
-        
+      component: LoginView
     },
     {
       path: '/',
@@ -65,224 +58,224 @@ const router = createRouter({
           path: 'work-space',
           name: 'work-space',
           component: WorkSpaceView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'school-management',
           name: 'school-management',
           component: SchoolManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'class-management',
           name: 'class-management',
           component: ClassManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'class-detail',
           name: 'class-detail',
           component: ClassDetailView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'teacher-group-management',
           name: 'teacher-group-management',
           component: TeacherGroupManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'teacher-group-detail',
           name: 'teacher-group-detail',
           component: TeacherGroupDetailView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'account-role-managment',
           name: 'account-role-managment',
           component: AccountRoleManagmentView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'role-detail-managment',
           name: 'role-detail-managment',
           component: AccountRoleDetail,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
 
         {
           path: 'acount-equipment-management',
           name: 'acount-equipment-management',
           component: AccountEquipmentManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'account-teacher-managament',
           name: 'account-teacher-managament',
           component: AccountTeacherManagamentView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'teacher-detail-managament',
           name: 'teacher-detail-managament',
           component: AccountTeacherDetail,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'account-student-management',
           name: 'account-student-management',
           component: AccountStudentManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'student-detail-management',
           name: 'student-detail-management',
           component: AccountStudentDetail,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'account-temoorary-student',
           name: 'account-temoorary-student',
           component: AccountTemporaryStudentsView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
 
         {
           path: 'live-class',
           name: 'live-class',
           component: LiveClassView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         //课程管理-课程审核
         {
           path: 'course-approval',
           name: 'course-approval',
           component: CourseApprovalView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         //课程管理-课程管理
         {
           path: 'course-management',
           name: 'course-management',
           component: CourseManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'course-create',
           name: 'course-create',
           component: CourseCreateView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'course-detail',
           name: 'course-detail',
           component: CourseDetailView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         //商城管理
         {
           path: 'shop-management',
           name: 'shop-management',
           component: ShopManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         //新增商品
         {
           path: 'new-product',
           name: 'new-product',
           component: NewProductView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'question-bank-management',
           name: 'question-bank-management',
           component: QuestionBankManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'points-management',
           name: 'points-management',
           component: PointsManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'student-points-management',
           name: 'student-points-management',
           component: StudentPointsView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'points-detail',
           name: 'points-detail',
           component: PointsDetailView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
 
         {
           path: 'order-management',
           name: 'order-management',
           component: OrderManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'setting',
           name: 'setting',
           component: SettingView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'category-management',
           name: 'category-management',
           component: CategoryManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'tag-management',
           name: 'tag-management',
           component: TagManagementView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'course-category',
           name: 'course-category',
           component: CourseCategoryView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'exam-info',
           name: 'exam-info',
           component: ExamInfoView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'exam-date',
           name: 'exam-date',
           component: ExamDateView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'banner',
           name: 'banner',
           component: BannerView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'info-center',
           name: 'info-center',
           component: InfoCenterView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'family-report',
           name: 'family-report',
           component: FamilyReportView,
-           meta: {Protected: true}
+          meta: { Protected: true }
         },
         {
           path: 'student-report',
           name: 'student-report',
           component: StudentReport,
-           meta: {Protected: true}
+          meta: { Protected: true }
         }
       ]
     },
@@ -303,28 +296,18 @@ const router = createRouter({
   ]
 })
 
-const check = () => {
-  userInfo().then((res)=>{
-    console.log(res)
-    router.beforeEach((to, from, next) => {
-      if (to.meta.Protected) {
-        if (res.data.code !== 20000) {
+router.beforeEach((to, from, next) => {
+  if (to.meta.Protected) {
+    userInfo()
+      .then((res) => {
+        if (res.data.code != 20000) {
           next()
         } else {
           next('/login')
         }
-      } else {
-    
-        next()
-      }
-    })
-    return res
-  }).catch()
-  }
-  check()
-
-
-
+      })
+      .catch(() => next('/login'))
+  } else next()
+})
 
 export default router
-

@@ -37,50 +37,41 @@ const enterHome = () => {
   router.push({ path: 'work-space' })
 
 }
-const open1 = () => {
-  ElNotification({
-    title: 'Success',
-    message: '登陆成功',
-    type: 'success',
-  })
-}
-
-const open2 = () => {
-  ElNotification({
-    title: 'Warning',
-    message: '登入信息错误',
-    type: 'warning',
-  })
-
-  
-}
-const check = () => {
-userInfo().then((res)=>{
-  console.log(res)
-}).catch()
-}
-
-check()
 
 const login = () => {
-
   userLogin(pars).then((res) => {
     if (res.data.code == 20000) {
-      open2()
-      return;
-      
+      {
+        ElNotification({
+          title: 'Warning',
+          message: '登入信息错误',
+          type: 'warning',
+        })
+        return;
+      }
     }
-
     else {
       localStorage.token = res.data.token
-      open1()
-      check()
+      {
+        ElNotification({
+          title: 'Success',
+          message: '登陆成功',
+          type: 'success',
+        })
+      }
       enterHome()
     }
   }
 
   ).catch(() => {
-    open2()
+  {
+        ElNotification({
+          title: 'Warning',
+          message: '网络不佳',
+          type: 'warning',
+        })
+  }
+  
   }
   )
 }
