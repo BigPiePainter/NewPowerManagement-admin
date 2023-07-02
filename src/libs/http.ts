@@ -22,12 +22,12 @@ class Http {
       instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
     }
 
-    if (localStorage.token) {
-      instance.defaults.headers.token = localStorage.token
-    }
     if (options.token) {
-      instance.defaults.headers.token = options.token
+      instance.defaults.headers.Authorization = 'Bearer ' + options.token
+    } else if (localStorage.token) {
+      instance.defaults.headers.Authorization = 'Bearer ' + localStorage.Authorization
     }
+
     if (options.onUploadProgress) {
       instance.defaults.onUploadProgress = options.onUploadProgress
     }
