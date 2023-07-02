@@ -299,9 +299,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.Protected) {
     userInfo()
-      .then((res) => {
-        if (res.data.code != 20000) {
+      .then((res: any) => {
+        console.log(to, from, res)
+        if (res.code == 20000) {
           next()
+
+
         } else {
           next('/login')
         }

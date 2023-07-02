@@ -6,6 +6,7 @@ import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
+import { getStudent } from '@/apis/studentManagement'
 
 
 const router = useRouter()
@@ -68,22 +69,16 @@ const tableColumns = [
     width: 150
   },
   {
-    dataKey: 'parentCellnumber',
-    key: 'parentCellnumber',
-    title: '手机号码',
-    width: 160
-  },
-  {
     dataKey: 'gender',
     key: 'gender',
     title: '性别',
     width: 70
   },
   {
-    dataKey: 'createTime',
-    key: 'createTime',
-    title: '创建时间',
-    width: 200
+    dataKey: 'parentCellnumber',
+    key: 'parentCellnumber',
+    title: '家长手机号码',
+    width: 160
   },
   {
     dataKey: 'note',
@@ -91,6 +86,13 @@ const tableColumns = [
     title: '备注',
     width: 120
   },
+  {
+    dataKey: 'createTime',
+    key: 'createTime',
+    title: '创建时间',
+    width: 200
+  },
+
   {
     dataKey: 'loginTime',
     key: 'loginTime',
@@ -123,28 +125,8 @@ const tableColumns = [
 ]
 
 
-let fakeData = {
-  id: '1',
-  studentName: 'Aaron',
-  expiryDate: '9y',
-  userName: 'Aaron191518',
-  studentCellnumber: "15536996997",
-  gender: 'male',
-  createTime: "2023-9-19 18:23",
-  loginTime: "2012-12-22 19:23",
-  studentGrade: "9",
-  parentCellnumber: "15623423498",
-  note: "这里是备注"
 
-}
-
-const tableData: object[] = []
-
-for (let index = 0; index < 100; index++) {
-  let data = { ...fakeData }
-  data.id += index;
-  tableData.push(data)
-}
+const tableData = reactive([{}])
 
 const showDialog = ref(false)
 
@@ -159,23 +141,74 @@ const cancel = () => {
 }
 
 
-console.log(tableData)
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20,
+})
 
 const refresh = () => {
   console.log(items)
 }
 
+
+const dataCompute = (items: any) => {
+  tableData.length = 0
+  items.data.records.forEach((item: any) => {
+    var dataSample = {
+      id: '',
+      studentName: '',
+      userName: '',
+      studentCellnumber: '',
+      note: '',
+      gender: '',
+      expiryDate: '',
+      parentCellnumber: '',
+      studentGrade: '',
+
+    }
+    dataSample.id = item.id
+    dataSample.studentName = item.name
+    dataSample.userName = item.account
+    dataSample.studentCellnumber = item.phoneNumber
+    dataSample.note = item.remark
+    dataSample.gender = item.sex
+    dataSample.expiryDate = item.expiration
+    dataSample.parentCellnumber = item.phoneNumberOfParent
+    dataSample.studentGrade = item.grade
+
+    tableData.push(dataSample)
+
+  });
+  console.log(tableData)
+}
+
+const totalLength = ref<Number>()
+const loadPageData = (prop: any) => {
+  paginationInfo.currentPage = prop.currentPage
+  paginationInfo.pageSize = prop.pageSize
+  var args = { pageNum: paginationInfo.currentPage, pageSize: paginationInfo.pageSize }
+  getStudent(args).then((res) => {
+    dataCompute(res)
+    totalLength.value = res.data.records.length
+    console.log(args)
+  })
+    .catch(() => {
+
+    });
+}
+loadPageData(paginationInfo)
+
 </script>
 
 
 <template>
-  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
-    
+  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadPageData" :columns="tableColumns"
+    :data="tableData">
     <div class="div-search-bar">
-      <SearchBar :items="items" @change="refresh()"></SearchBar>
+      <SearchBar :items="items" @paginationChange="loadPageData"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createStudent">新建学生</el-button>
     </div>
-   
+
   </TablePage>
 
 
@@ -192,23 +225,23 @@ const refresh = () => {
       </div>
       <div class="input">
         <div class="input-word">*姓名:</div>
-        <ElInput class="input-input" placeholder="请输入"/>
+        <ElInput class="input-input" placeholder="请输入" />
       </div>
       <div class="input">
         <div class="input-word">*密码:</div>
-        <ElInput class="input-input" placeholder="6-20位,建议包含数字与字母"/>
+        <ElInput class="input-input" placeholder="6-20位,建议包含数字与字母" />
       </div>
       <div class="input">
         <div class="input-word">年级:</div>
-        <ElInput class="input-input" placeholder="请输入"/>
+        <ElInput class="input-input" placeholder="请输入" />
       </div>
       <div class="input">
         <div class="input-word">学科:</div>
-        <ElInput class="input-input" placeholder="请输入"/>
+        <ElInput class="input-input" placeholder="请输入" />
       </div>
       <div class="input">
         <div class="input-word">手机号码:</div>
-        <ElInput class="input-input" placeholder="请输入"/>
+        <ElInput class="input-input" placeholder="请输入" />
       </div>
     </div>
     <template #footer>
@@ -226,6 +259,7 @@ $gap: 15px;
 .ARMbutton {
   margin-top: $gap;
 }
+
 .page-container {
   width: calc($page-width - $gap);
   height: $page-height;
@@ -242,27 +276,25 @@ $gap: 15px;
   flex-direction: row;
   width: 320px;
   margin-bottom: 10px;
-  
+
 
 }
 
-.input-word{
+.input-word {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  width :80px;
+  width: 80px;
   padding-right: 10px;
-  
+
 
 }
 
-.input-input{
+.input-input {
   display: flex;
   justify-content: flex-start;
   width: 200px;
   height: 32px;
 }
-
-
-
 </style>
+@/apis/accountStudentManagement
