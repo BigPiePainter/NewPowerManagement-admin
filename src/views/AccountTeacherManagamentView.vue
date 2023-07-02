@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 
 import { getTeachers } from '@/apis/accountTeacherManagement'
+import { getGrades } from '@/apis/getGrades'
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
@@ -37,12 +38,13 @@ breadcrumbStore.data = [
   { name: '老师管理', path: '/account-teacher-managament' },
 ]
 
+const selectOptionGrades = reactive<any>([])
 const searchBarItems = reactive([
   { name: "用户名", value: "" },
   { name: "姓名", value: "" },
   { name: "手机号", value: "", label: "" },
-  { name: "年级", value: "", type: InputType.Select, label: "请选择" },
-  { name: "学科", value: "", type: InputType.Select, label: "请选择" },
+  { name: "年级", value: "", type: InputType.Select, label: "请选择", options: selectOptionGrades},
+  { name: "学科", value: "", type: InputType.Select, label: "请选择", options: '' },
 ])
 
 const clickName = (props: any) => {
@@ -123,17 +125,22 @@ const tableData = reactive<any>([])
 
 console.log(tableData)
 
-// const searchRequirements = reactive({
-//   account: '',
-//   name: '',
-//   phoneNumber: '',
-//   grade: '',
-//   subject: ''
-// })
-// const refresh = (prop:any) => {
-//   console.log(prop)
-  
-// }
+const searchRequirements = reactive({
+  account: '',
+  name: '',
+  phoneNumber: '',
+  grade: '',
+  subject: ''
+})
+const refresh = (prop:any) => {
+  console.log(prop)
+  searchRequirements.account = prop[0].value,
+  searchRequirements.name = prop[1].value,
+  searchRequirements.phoneNumber = prop[2].value,
+  searchRequirements.grade = prop[3].value,
+  searchRequirements.subject = prop[4].value
+  loadPageData(paginationInfo)
+}
 
 const showDialog = ref(false)
 
@@ -161,22 +168,14 @@ const dataCompute = (items: any) => {
   tableData.length = 0
   items.data.records.forEach((item: any) => {
     var dataSample = {
-      id: '',
-      teacherName: '',
-      userName: '',
-      teacherGrade: '',
-      teacherSubject: '',
-      teacherCellnumber: '',
-      loginTime: ''
+      id: item.id,
+      teacherName: item.name,
+      userName: item.account,
+      teacherGrade: item.gradeName,
+      teacherSubject: item.subjectName,
+      teacherCellnumber: item.phoneNumber,
+      loginTime: item.lastLoginTime
     }
-    dataSample.id = item.id
-    dataSample.teacherName = item.name
-    dataSample.userName = item.account
-    dataSample.teacherGrade = item.gradeName
-    dataSample.teacherSubject = item.subjectName
-    dataSample.teacherCellnumber = item.phoneNumber
-    dataSample.loginTime = item.lastLoginTime
-
     tableData.push(dataSample)
   });
   console.log(tableData)
@@ -184,11 +183,46 @@ const dataCompute = (items: any) => {
 
 const totalLength = ref<Number>()
 
+const loadSelectOption = () => {
+  getGrades()
+    .then((res) => {
+      selectOptionGrades.length = 0
+      res.data.forEach((item: any) => {
+        // var dataSample = {
+        //   id: item.id,
+        //   level: item.level,
+        //   name: item.name
+        // }
+        // selectOptionGrades.push(dataSample)
+
+        item.subset.forEach((item: any) => {
+          var dataSample = {
+            id: item.id,
+            level: item.level,
+            name: item.name
+          }
+          selectOptionGrades.push(dataSample)
+        })
+      })
+      console.log(selectOptionGrades)
+    })
+    .catch()
+}
+loadSelectOption()
+
 const loadPageData = (prop: any) => {
   console.log(prop)
   paginationInfo.currentPage = prop.currentPage
   paginationInfo.pageSize = prop.pageSize
-  var args = { pageNum: paginationInfo.currentPage, pageSize: paginationInfo.pageSize, name: searchBarItems[1].value }
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    account: searchBarItems[0].value,
+    name: searchBarItems[1].value,
+    phoneNumber: searchBarItems[2].value,
+    gradeId: searchBarItems[3].value,
+    subjectId: searchBarItems[4].value
+  }
   console.log(args)
   getTeachers(args).then((res) => {
     console.log(res)
@@ -200,14 +234,14 @@ const loadPageData = (prop: any) => {
     });
 }
 loadPageData(paginationInfo)
-
 </script>
 
 
 <template>
-  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadPageData" :columns="tableColumns" :data="tableData">
+  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadPageData" :columns="tableColumns"
+    :data="tableData">
     <div class="div-search-bar ">
-      <SearchBar :items="searchBarItems" @change="loadPageData"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createTeacher">新建老师</el-button>
     </div>
   </TablePage>

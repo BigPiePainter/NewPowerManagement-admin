@@ -4,6 +4,7 @@ interface searchElement {
   value: any
   label?: string
   type?: InputType
+  options?: any
 }
 </script>
 
@@ -14,8 +15,10 @@ import { Search, Refresh } from '@element-plus/icons-vue'
 const emit = defineEmits(['change'])
 
 const props = defineProps<{
-  items: searchElement[]
+  items: searchElement[],
 }>()
+
+console.log(props.items)
 
 const clickSearch = (): void => {
   emit('change', props.items)
@@ -31,11 +34,11 @@ const defaultLabel = () => {
 defaultLabel()
 
 const clickRefresh = (): void => {
-  emit('change', props.items)
   props.items.forEach((item) => {
     console.log(item)
     item.value = ''
   })
+  emit('change', props.items)
 }
 </script>
 
@@ -43,8 +46,9 @@ const clickRefresh = (): void => {
   <div class="search-bar-element">
     <div class="search-element" v-for="item in items" :key="item.name">
       <el-text class="search-title">{{ item.name }}</el-text>
-      <el-select v-if="item.type == InputType.Select" class="search-input" :placeholder="item.label"
-        v-model="item.value" />
+      <el-select v-if="item.type == InputType.Select" class="search-input" :placeholder="item.label" v-model="item.value">
+        <el-option v-for="option in item.options" :key="option.id" :label="option.name" :value="option.id" />
+      </el-select>
       <el-input v-else class="search-input" :placeholder="item.label" v-model="item.value" />
     </div>
 
