@@ -8,3 +8,12 @@ export const getStudent = (data: any) => {
     }
     return http.request(args)
 }
+
+//--------------只返回有效学生数量--------------------
+export const getStudentAmount = () => {
+    const args = {
+        url: '/api/management/student/count',
+        method: 'GET',
+    }
+    return http.request(args)
+}
