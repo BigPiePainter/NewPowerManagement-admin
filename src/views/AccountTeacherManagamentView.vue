@@ -125,20 +125,21 @@ const tableData = reactive<any>([])
 
 console.log(tableData)
 
-const searchRequirements = reactive({
-  account: '',
-  name: '',
-  phoneNumber: '',
-  grade: '',
-  subject: ''
-})
+// const searchRequirements = reactive({
+//   account: '',
+//   name: '',
+//   phoneNumber: '',
+//   grade: '',
+//   subject: ''
+// })
+
 const refresh = (prop:any) => {
   console.log(prop)
-  searchRequirements.account = prop[0].value,
-  searchRequirements.name = prop[1].value,
-  searchRequirements.phoneNumber = prop[2].value,
-  searchRequirements.grade = prop[3].value,
-  searchRequirements.subject = prop[4].value
+  // searchRequirements.account = prop[0].value,
+  // searchRequirements.name = prop[1].value,
+  // searchRequirements.phoneNumber = prop[2].value,
+  // searchRequirements.grade = prop[3].value,
+  // searchRequirements.subject = prop[4].value
   loadPageData(paginationInfo)
 }
 

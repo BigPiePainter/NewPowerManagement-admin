@@ -1,5 +1,6 @@
 import http from '@/libs/http'
 
+//必要参数：页码(pageNum)，页容量(pageSize)，学生类型(type)
 export const getStudent = (data: any) => {
     const args = {
         url: '/api/management/student/page',
