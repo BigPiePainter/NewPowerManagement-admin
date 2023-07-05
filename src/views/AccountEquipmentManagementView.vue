@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { getEquipments } from '@/apis/equipmentsManagement'
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
@@ -12,9 +13,11 @@ breadcrumbStore.data = [
   { name: '账号设备管理', path: '/acount-equipment-management' }
 ]
 
-const items = reactive([
-  { name: '学生', value: '', label: '学生', type: InputType.Select },
-  { name: '姓名/用户名', value: '' }
+const searchBarItems = reactive([
+  { name: '姓名', value: '' },
+  { name: '用户名', value: '' },
+  { name: '手机号', value: '' },
+  { name: '设备型号', value: '' }
 ])
 
 const tableColumns = [
@@ -22,20 +25,26 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 150
+    width: 50
   },
 
   {
     dataKey: 'studentName',
     key: 'studentName',
     title: '姓名',
-    width: 200
+    width: 100
   },
 
   {
     dataKey: 'userName',
     key: 'userName',
     title: '用户名',
+    width: 150
+  },
+  {
+    dataKey: 'phoneNumber',
+    key: 'phoneNumber',
+    title: '手机号',
     width: 200
   },
 
@@ -43,23 +52,23 @@ const tableColumns = [
     dataKey: 'eqipmentModel',
     key: 'eqipmentModel',
     title: '设备型号',
-    width: 200
+    width: 150
   },
 
   {
     dataKey: 'systemModel',
-    key: 'eqipmentModel',
+    key: 'systemModel',
     title: '系统版本号',
-    width: 200
+    width: 150
   },
 
   {
     dataKey: 'tiedTime',
-    key: 'iedTime',
+    key: 'tiedTime',
     title: '绑定时间',
     width: 200
   },
-  
+
   {
     dataKey: 'loginTime',
     key: 'loginTime',
@@ -82,35 +91,64 @@ const tableColumns = [
   }
 ]
 
-const tableData: object[] = []
+const tableData = reactive<any>([])
 
-const fakeData = {
-  id: '',
-  studentName: 'Zack',
-  userName: 'Aaron191518',
-  eqipmentModel: '苹果12',
-  systemModel: 'iphone',
-  tiedTime: '2023-9-19 18:23:33',
-  loginTime: '2012-12-22 19:23:22'
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20,
+})
+
+const dataCompute = (items: any) => {
+  tableData.length = 0
+  items.data.records.forEach((item: any) => {
+    var dataSample = {
+      id: item.userId,
+      studentName: item.name,
+      userName: item.account,
+      phoneNumber: item.phoneNumber,
+      eqipmentModel: item.deviceModel,
+      systemModel: item.version,
+      tiedTime: item.boundAt,
+      loginTime: item.lastLoginTime,
+    }
+    tableData.push(dataSample)
+  });
+  console.log(tableData)
 }
 
-for (let index = 0; index < 100; index++) {
-  let data = { ...fakeData }
-  data.id += index
-  tableData.push(data)
-}
-
-console.log(tableData)
+const totalLength = ref<Number>()
 
 const refresh = () => {
-  console.log(items)
+  console.log(searchBarItems)
+  loadData(paginationInfo)
 }
+
+const loadData = (prop: any) => {
+  var args = {
+    pageNum: prop.currentPage,
+    pageSize: prop.pageSize,
+    name: searchBarItems[0].value,
+    account: searchBarItems[1].value,
+    phoneNumber: searchBarItems[2].value,
+    deviceModel: searchBarItems[3].value
+  }
+  console.log(args)
+  getEquipments(args)
+    .then((res) => {
+      dataCompute(res)
+      totalLength.value = res.data.records.length
+    })
+    .catch()
+}
+loadData(paginationInfo)
+
 </script>
 
 <template>
-  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
+    :data="tableData">
     <div class="div-search-bar">
-      <SearchBar :items="items" @change="refresh()"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>
     </div>
   </TablePage>
 </template>

@@ -2,10 +2,8 @@
 import { getStudent } from '@/apis/studentManagement'
 import { getGrades } from '@/apis/getGrades'
 import { ref, reactive } from 'vue'
-import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
-import { InputType } from '@/type'
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
@@ -78,21 +76,9 @@ const tableColumns = reactive([
   }
 ])
 
-// let fakeData = {
-//   id: '1',
-//   studentName: 'Aaron',
-//   school: '上虞中学',
-//   phoneNumber: '155799928891',
-//   loginTime: '2023-9-19 18:23'
-// }
 
 const tableData = reactive<any>([])
 
-// for (let index = 0; index < 100; index++) {
-//   let data = { ...fakeData }
-//   data.id += index
-//   tableData.push(data)
-// }
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20,
@@ -154,7 +140,6 @@ const loadData = (prop: any) => {
   }
 
   getStudent(args).then((res) => {
-
     dataCompute(res)
     totalLength.value = res.data.records.length
   })
@@ -171,7 +156,8 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns" :data="tableData">
+  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
+    :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>
     </div>
