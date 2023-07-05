@@ -122,9 +122,9 @@ const loadSelectOption = () => {
       selectOptionGrades.length = 0
       res.data.forEach((item: any) => {
         // var dataSample = {
-        //   id: item.id,
+        //   id: it                                                                                                                                                                                                     em.id,
         //   level: item.level,
-        //   name: item.name
+        //   name: item.name                                                                           
         // }
         // selectOptionGrades.push(dataSample)
 
@@ -152,9 +152,9 @@ const loadData = (prop: any) => {
     name: searchBarItems[0].value,
     phoneNumber: searchBarItems[1].value,
   }
-  console.log(args)
+
   getStudent(args).then((res) => {
-    console.log(res)
+
     dataCompute(res)
     totalLength.value = res.data.records.length
   })

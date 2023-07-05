@@ -22,7 +22,7 @@ breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '学生管理', path: '/account-student-management' },
 ]
-const items = reactive([
+const searchBarItemsitems = reactive([
   { name: "用户名", value: "" },
   { name: "姓名", value: "", },
   { name: "电话", value: "" },
@@ -48,13 +48,13 @@ const tableColumns = [
     dataKey: 'userName',
     key: 'userName',
     title: '用户名',
-    width: 160
+    width: 170
   },
   {
     dataKey: 'expiryDate',
     key: 'expiryDate',
     title: '有效期',
-    width: 100
+    width: 140
   },
   {
     dataKey: 'studentGrade',
@@ -66,7 +66,7 @@ const tableColumns = [
     dataKey: 'studentCellnumber',
     key: 'studentCellnumber',
     title: '手机号码',
-    width: 150
+    width: 200
   },
   {
     dataKey: 'gender',
@@ -78,7 +78,7 @@ const tableColumns = [
     dataKey: 'parentCellnumber',
     key: 'parentCellnumber',
     title: '家长手机号码',
-    width: 160
+    width: 180
   },
   {
     dataKey: 'note',
@@ -139,16 +139,20 @@ const confrom = () => {
 const cancel = () => {
   showDialog.value = false
 }
+const selectOptionGrades = reactive<any>([])
 
+const searchBarItems = reactive([
+  { name: "用户名", value: "" },
+  { name: "姓名", value: "" },
+  { name: "手机号", value: "", label: "" },
+])
 
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20,
+  type: 1
 })
 
-const refresh = () => {
-  console.log(items)
-}
 
 
 const dataCompute = (items: any) => {
@@ -181,31 +185,43 @@ const dataCompute = (items: any) => {
   });
   console.log(tableData)
 }
+  
+
 
 const totalLength = ref<Number>()
-const loadPageData = (prop: any) => {
+
+const loadData = (prop: any) => {
   paginationInfo.currentPage = prop.currentPage
   paginationInfo.pageSize = prop.pageSize
-  var args = { pageNum: paginationInfo.currentPage, pageSize: paginationInfo.pageSize }
+
+  var args = { 
+    pageNum: paginationInfo.currentPage,
+     pageSize: paginationInfo.pageSize, 
+     account: searchBarItems[2].value,
+     name: searchBarItems[0].value,
+    phoneNumber: searchBarItems[1].value
+  }
   getStudent(args).then((res) => {
     dataCompute(res)
     totalLength.value = res.data.records.length
-    console.log(args)
   })
-    .catch(() => {
-
-    });
+    .catch();
 }
-loadPageData(paginationInfo)
 
+loadData(paginationInfo)
+
+const refresh = () => {
+  console.log(searchBarItems)
+  loadData(paginationInfo)
+}
 </script>
 
 
 <template>
-  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadPageData" :columns="tableColumns"
+  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar">
-      <SearchBar :items="items" @paginationChange="loadPageData"></SearchBar>
+      <SearchBar :items="searchBarItems" :selectOptions="selectOptionGrades" @change="refresh"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createStudent">新建学生</el-button>
     </div>
 
