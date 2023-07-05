@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+import { getStudent } from '@/apis/studentManagement'
+import { getGrades } from '@/apis/getGrades'
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
@@ -12,12 +14,13 @@ breadcrumbStore.data = [
   { name: '临时学生管理', path: '/account-temoorary-student' },
 ]
 
-const items = reactive([
-  { name: '姓名', value: '' },
-  { name: '手机', value: '' }
+const selectOptionGrades = reactive<any>([])
+const searchBarItems = reactive([
+  { name: "姓名", value: "" },
+  { name: "手机号", value: "", label: "" },
 ])
 
-const tableColumns = [
+const tableColumns = reactive([
   {
     dataKey: 'id',
     key: 'id',
@@ -56,7 +59,7 @@ const tableColumns = [
         <div>
           <el-button link type="primary" onClick={() => console.log(item)}>
             编辑
-          </el-button>          
+          </el-button>
           <el-button link type="primary" onClick={() => console.log(item)}>
             转为正式学生
           </el-button>
@@ -67,40 +70,110 @@ const tableColumns = [
             删除
           </el-button>
         </div>
-        )},
+      )
+    },
     width: 300,
     fixed: 'right',
     align: 'left'
   }
-]
+])
 
-let fakeData = {
-  id: '1',
-  studentName: 'Aaron',
-  school: '上虞中学',
-  phoneNumber: '155799928891',
-  loginTime: '2023-9-19 18:23'
+// let fakeData = {
+//   id: '1',
+//   studentName: 'Aaron',
+//   school: '上虞中学',
+//   phoneNumber: '155799928891',
+//   loginTime: '2023-9-19 18:23'
+// }
+
+const tableData = reactive<any>([])
+
+// for (let index = 0; index < 100; index++) {
+//   let data = { ...fakeData }
+//   data.id += index
+//   tableData.push(data)
+// }
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20,
+  type: 2 //临时学生type为2
+})
+
+const dataCompute = (items: any) => {
+  tableData.length = 0
+  items.data.records.forEach((item: any) => {
+    var dataSample = {
+      id: item.id,
+      studentName: item.name,
+      phoneNumber: item.phoneNumber,
+      school: item.school,
+      loginTime: item.lastLoginTime
+    }
+    tableData.push(dataSample)
+  });
+  console.log(tableData)
 }
 
-const tableData: object[] = []
+const totalLength = ref<Number>()
 
-for (let index = 0; index < 100; index++) {
-  let data = { ...fakeData }
-  data.id += index
-  tableData.push(data)
+const loadSelectOption = () => {
+  getGrades()
+    .then((res) => {
+      selectOptionGrades.length = 0
+      res.data.forEach((item: any) => {
+        // var dataSample = {
+        //   id: item.id,
+        //   level: item.level,
+        //   name: item.name
+        // }
+        // selectOptionGrades.push(dataSample)
+
+        item.subset.forEach((item: any) => {
+          var dataSample = {
+            id: item.id,
+            level: item.level,
+            name: item.name
+          }
+          selectOptionGrades.push(dataSample)
+        })
+      })
+      console.log(selectOptionGrades)
+    })
+    .catch()
 }
+loadSelectOption()
+
+const loadData = (prop: any) => {
+  paginationInfo.currentPage = prop.currentPage
+  paginationInfo.pageSize = prop.pageSize
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    name: searchBarItems[0].value,
+    phoneNumber: searchBarItems[1].value,
+  }
+  console.log(args)
+  getStudent(args).then((res) => {
+    console.log(res)
+    dataCompute(res)
+    totalLength.value = res.data.records.length
+  })
+    .catch()
+}
+loadData(paginationInfo)
 
 console.log(tableData)
 
 const refresh = () => {
-  console.log(items)
+  console.log(searchBarItems)
+  loadData(paginationInfo)
 }
 </script>
 
 <template>
-  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
-      <SearchBar :items="items" @change="refresh()"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>
     </div>
   </TablePage>
 </template>

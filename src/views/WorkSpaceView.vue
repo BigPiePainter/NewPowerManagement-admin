@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {getStudentAmount} from '@/apis/studentManagement'
 import DisplayCard from '../components/DisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { userInfo } from '@/apis/user';
@@ -11,11 +12,12 @@ userInfo().then((res)=>{
   console.log(res)
 }).catch()
 }
-
 check()
 
+const studentAmount = ref()
+
 const history = reactive([
-  { title: '学生账号', amount: 1000000 },
+  { title: '学生账号', amount: studentAmount },
   { title: '老师账号', amount: 200000 },
   { title: '用户积分总额', amount: 12 },
   { title: 'TB总额', amount: 15 },
@@ -30,6 +32,16 @@ const order = reactive([
   { title: '7日内订单数量', amount: 22 },
   { title: '7日内订单收入', amount: 22 }
 ])
+
+const loadData = () =>{
+  getStudentAmount()
+  .then((res)=>{
+    console.log(res)
+    studentAmount.value = res.data
+  })
+  .catch()
+}
+loadData()
 </script>
 
 <template>
