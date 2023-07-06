@@ -18,17 +18,17 @@ const history = reactive([
   { title: '学生账号', amount: studentAmount },
   { title: '老师账号', amount: TeacherAmount },
   { title: '用户积分总额', amount: PointAmount },
-  { title: 'TB总额', amount: 15 },
-  { title: '老师上传微课数', amount: 13 },
-  { title: '班级数量', amount: 13 },
-  { title: '教研组数量', amount: 15 }
+  { title: 'TB总额', amount: null },
+  { title: '老师上传微课数', amount: null },
+  { title: '班级数量', amount: null },
+  { title: '教研组数量', amount: null }
 ])
 
 const order = reactive([
-  { title: '今日订单收入', amount: 22 },
-  { title: '今日订单数量', amount: 22 },
-  { title: '7日内订单数量', amount: 22 },
-  { title: '7日内订单收入', amount: 22 }
+  { title: '今日订单收入', amount: null},
+  { title: '今日订单数量', amount: null },
+  { title: '7日内订单数量', amount: null },
+  { title: '7日内订单收入', amount: null}
 ])
 
 const loadData = () => {
