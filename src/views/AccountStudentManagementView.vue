@@ -154,7 +154,6 @@ const paginationInfo = reactive({
 })
 
 
-
 const dataCompute = (items: any) => {
   tableData.length = 0
   items.data.records.forEach((item: any) => {
@@ -170,22 +169,36 @@ const dataCompute = (items: any) => {
       studentGrade: '',
 
     }
+
+
     dataSample.id = item.id
     dataSample.studentName = item.name
     dataSample.userName = item.account
     dataSample.studentCellnumber = item.phoneNumber
     dataSample.note = item.remark
+    
+
+    if (item.sex == 1) {
+      item.sex = '男'
+    }
+    else {
+      item.sex = '女'
+    }
+    //1为男生 2为女生 
+
     dataSample.gender = item.sex
+
+
     dataSample.expiryDate = item.expiration
     dataSample.parentCellnumber = item.phoneNumberOfParent
     dataSample.studentGrade = item.grade
 
-    tableData.push(dataSample)
 
+    tableData.push(dataSample)
   });
   console.log(tableData)
 }
-  
+
 
 
 const totalLength = ref<Number>()
@@ -194,11 +207,11 @@ const loadData = (prop: any) => {
   paginationInfo.currentPage = prop.currentPage
   paginationInfo.pageSize = prop.pageSize
 
-  var args = { 
+  var args = {
     pageNum: paginationInfo.currentPage,
-     pageSize: paginationInfo.pageSize, 
-     account: searchBarItems[2].value,
-     name: searchBarItems[0].value,
+    pageSize: paginationInfo.pageSize,
+    account: searchBarItems[2].value,
+    name: searchBarItems[0].value,
     phoneNumber: searchBarItems[1].value
   }
   getStudent(args).then((res) => {
