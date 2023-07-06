@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import {getStudentAmount} from '@/apis/studentManagement'
+import { getStudentAmount } from '@/apis/studentManagement'
+import { getTeachersCount } from '@/apis/accountTeacherManagement'
+import { loadPoint } from '@/apis/workspace'
 import DisplayCard from '../components/DisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { userInfo } from '@/apis/user';
@@ -7,19 +9,15 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '工作台' }]
 
-const check = () => {
-userInfo().then((res)=>{
-  console.log(res)
-}).catch()
-}
-check()
 
 const studentAmount = ref()
+const TeacherAmount = ref()
+const PointAmount = ref()
 
 const history = reactive([
   { title: '学生账号', amount: studentAmount },
-  { title: '老师账号', amount: 200000 },
-  { title: '用户积分总额', amount: 12 },
+  { title: '老师账号', amount: TeacherAmount },
+  { title: '用户积分总额', amount: PointAmount },
   { title: 'TB总额', amount: 15 },
   { title: '老师上传微课数', amount: 13 },
   { title: '班级数量', amount: 13 },
@@ -33,15 +31,29 @@ const order = reactive([
   { title: '7日内订单收入', amount: 22 }
 ])
 
-const loadData = () =>{
+const loadData = () => {
   getStudentAmount()
-  .then((res)=>{
-    console.log(res)
-    studentAmount.value = res.data
-  })
-  .catch()
+    .then((res) => {
+      studentAmount.value = res.data
+    })
+    .catch()
 }
 loadData()
+
+const loadTeacher = () => {
+  getTeachersCount().then((res) => {
+    TeacherAmount.value = res.data
+  }).catch
+}
+loadTeacher()
+
+const loadMark = () => {
+  loadPoint().then((res)=>{
+    PointAmount.value=res.data
+  }).catch()
+}
+loadMark()
+
 </script>
 
 <template>
@@ -53,12 +65,7 @@ loadData()
 
     <el-divider border-style="dashed" class="card-container-divider" />
     <div class="card-container">
-      <DisplayCard
-        v-for="item in history"
-        :key="item.title"
-        :title="item.title"
-        :amount="item.amount"
-      >
+      <DisplayCard v-for="item in history" :key="item.title" :title="item.title" :amount="item.amount">
       </DisplayCard>
     </div>
 
@@ -68,19 +75,14 @@ loadData()
     </div>
     <el-divider border-style="dashed" class="card-container-divider" />
     <div class="card-container">
-      <DisplayCard
-        v-for="item in order"
-        :key="item.title"
-        :title="item.title"
-        :amount="item.amount"
-      >
+      <DisplayCard v-for="item in order" :key="item.title" :title="item.title" :amount="item.amount">
       </DisplayCard>
     </div>
   </div>
 </template>
 <style scoped lang="scss">
 .page {
-  > .card-container-header {
+  >.card-container-header {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -91,18 +93,20 @@ loadData()
     &.partA {
       margin-top: 33px;
     }
+
     &.partB {
       margin-top: 48px;
     }
 
-    > .divider {
+    >.divider {
       border-left: 4px #404040 solid;
       height: 15px;
       margin-right: 14px;
       margin-left: 8px;
     }
   }
-  > .card-container {
+
+  >.card-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -111,7 +115,7 @@ loadData()
     width: calc($page-width - 40px);
   }
 
-  > .card-container-divider {
+  >.card-container-divider {
     margin-bottom: 0px;
     margin-top: 7px;
     margin-left: 25px;

@@ -8,3 +8,11 @@ export const getTeachers = (data: object) => {
     }
     return http.request(args)
 }
+
+export const getTeachersCount = () => {
+    const args = {
+        url: '/api/management/teacher/count-all-teachers',
+        method: 'GET'
+    }
+    return http.request(args)
+}

@@ -321,7 +321,6 @@ router.beforeEach((to, from, next) => {
 
         if (res.code == 20000) {
           next()
-
         } else {
           next('/login')
         }
