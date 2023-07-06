@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { getStudentAmount } from '@/apis/studentManagement'
 import { getTeachersCount } from '@/apis/accountTeacherManagement'
+import { loadTcoins } from '@/apis/workspace'
 import { loadPoint } from '@/apis/workspace'
+
+
 import DisplayCard from '../components/DisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { userInfo } from '@/apis/user';
@@ -13,12 +16,13 @@ breadcrumbStore.data = [{ name: '工作台' }]
 const studentAmount = ref()
 const TeacherAmount = ref()
 const PointAmount = ref()
+const CoinsAmount = ref()
 
 const history = reactive([
   { title: '学生账号', amount: studentAmount },
   { title: '老师账号', amount: TeacherAmount },
   { title: '用户积分总额', amount: PointAmount },
-  { title: 'TB总额', amount: null },
+  { title: 'TB总额', amount: CoinsAmount },
   { title: '老师上传微课数', amount: null },
   { title: '班级数量', amount: null },
   { title: '教研组数量', amount: null }
@@ -53,6 +57,13 @@ const loadMark = () => {
   }).catch()
 }
 loadMark()
+
+const LoadCoins = () => {
+  loadTcoins().then((res)=>{
+    CoinsAmount.value=res.data
+  }).then()
+}
+LoadCoins()
 
 </script>
 
