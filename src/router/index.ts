@@ -297,40 +297,35 @@ const router = createRouter({
   ]
 })
 
+// router.beforeEach((to, from, next) => {
+//   if (to.meta.Unprotected) {
+//     userInfo()
+//       .then((res: any) => {
+
+//         if (res.code == 20000) {
+
+//           next('work-space')
+
+//         }
+//         else{next()}
+//       })
+
+//       .catch(() => next('/login'))
+//   } else next()
+// })
+
 router.beforeEach((to, from, next) => {
-  if (to.meta.Unprotected) {
-    userInfo()
-      .then((res: any) => {
-
-        if (res.code == 20000) {
-
-          next('work-space')
-
-        }
-        else{next()} 
-      })
-      
-      .catch(() => next('/login'))
-  } else next()
+  console.log(to, from)
+  userInfo()
+    .then((res: any) => {
+      console.log(res)
+      if (res.code == 20000) {
+        to.meta.Unprotected ? next("/work-space") : next()
+      } else {
+        to.meta.Unprotected ? next() : next("/login")
+      }
+    })
+    .catch(() => next('/login'))
 })
-
-router.beforeEach((to, from, next) => {
-  if (to.meta.Protected) {
-    userInfo()
-      .then((res: any) => {
-
-        if (res.code == 20000) {
-          next()
-        } else {
-          next('/login')
-        }
-      })
-
-      .catch(() => next('/login'))
-  } else next()
-})
- 
-
-
 
 export default router
