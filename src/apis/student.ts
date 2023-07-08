@@ -48,8 +48,8 @@ export const getStudentAmount = () => {
     return http.request(args)
 }
 
-//--------------修改学生密码--------------------
-export const editStudentPsw = (data:any) => {
+//--------------重置学生密码为666666--------------------
+export const restStudentPsw = (data:any) => {
     const args = {
         url: '/api/management/student/reset-student-password',
         method: 'POST',
