@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { getEquipments } from '@/apis/equipmentsManagement'
+import { cancelEquipments, getEquipments } from '@/apis/equipmentsManagement'
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
@@ -78,18 +78,49 @@ const tableColumns = [
   {
     key: 'option',
     title: '操作',
-    cellRenderer: () => (
-      <>
-        <el-button link type="primary" class="">
+    cellRenderer: (cellData:any) => ( 
+        <el-button link type="primary" onclick={()=>{
+          cancelEquipments(cellData.rowData.id).then((res)=>{
+            console.log(res)
+            console.log(cellData.rowData.id)
+          }).catch}
+        }>
           解绑
         </el-button>
-      </>
+      
     ),
     width: 60,
     fixed: 'right',
     align: 'center'
   }
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const tableData = reactive<any>([])
 
