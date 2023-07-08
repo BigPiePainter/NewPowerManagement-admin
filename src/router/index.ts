@@ -38,7 +38,7 @@ import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 import AccountRoleDetail from '@/views/AccountRoleDetail.vue'
 import CourseDetailView from '@/views/CourseDetailView.vue'
 import CourseCreateView from '@/views/CourseCreateView.vue'
-import { userInfo } from '@/apis/user'
+import { userInfo } from '@/apis/manager'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

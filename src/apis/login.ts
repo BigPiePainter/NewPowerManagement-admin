@@ -1,6 +1,5 @@
 import http from '@/libs/http'
 
-
 export const userLogin = (data: any) => {
     const args = {
         url: '/api/management/login/login',
@@ -9,14 +8,6 @@ export const userLogin = (data: any) => {
         mode: "json"
     }
     return http.request(args)
-}
-
-export const userInfo = () => {
-  const args = {
-      url: '/api/management/manager/info',
-      method: 'GET',
-  }
-  return http.request(args)
 }
 
 

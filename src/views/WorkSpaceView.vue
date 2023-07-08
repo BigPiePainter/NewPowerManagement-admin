@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { getStudentAmount } from '@/apis/studentManagement'
-import { getTeachersCount } from '@/apis/accountTeacherManagement'
-import { loadTcoins } from '@/apis/workspace'
-import { loadPoint } from '@/apis/workspace'
+import { getTeachersCount } from '@/apis/teacher'
+import { loadTcoins, loadPoint, getStudentAmount} from '@/apis/student'
 
 
 import DisplayCard from '../components/DisplayCard.vue'
 import { ref, reactive } from 'vue'
-import { userInfo } from '@/apis/user';
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '工作台' }]
@@ -23,16 +20,16 @@ const history = reactive([
   { title: '老师账号', amount: TeacherAmount },
   { title: '用户积分总额', amount: PointAmount },
   { title: 'TB总额', amount: CoinsAmount },
-  { title: '老师上传微课数', amount: null },
-  { title: '班级数量', amount: null },
-  { title: '教研组数量', amount: null }
+  { title: '老师上传微课数', amount: 0 },
+  { title: '班级数量', amount: 0 },
+  { title: '教研组数量', amount: 0 }
 ])
 
 const order = reactive([
-  { title: '今日订单收入', amount: null},
-  { title: '今日订单数量', amount: null },
-  { title: '7日内订单数量', amount: null },
-  { title: '7日内订单收入', amount: null}
+  { title: '今日订单收入', amount: 0},
+  { title: '今日订单数量', amount: 0 },
+  { title: '7日内订单数量', amount: 0 },
+  { title: '7日内订单收入', amount: 0}
 ])
 
 const loadData = () => {
@@ -135,3 +132,4 @@ LoadCoins()
   }
 }
 </style>
+@/apis/student@/apis/login@/apis/teacher

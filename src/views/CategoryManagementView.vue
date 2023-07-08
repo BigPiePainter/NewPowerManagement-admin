@@ -191,4 +191,4 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
 
     }
   }
-}</style>
+}</style>@/apis/grade

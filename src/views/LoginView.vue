@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { userLogin } from '@/apis/user'
+import { userLogin } from '@/apis/login'
 import { ref, reactive, pushScopeId } from 'vue'
 import { rejects } from 'assert';
 import router from '@/router';
 import { ElNotification } from 'element-plus'
 import { text } from 'stream/consumers'
-import { userInfo } from '@/apis/user';
+import { userInfo } from '@/apis/manager';
 
 
 
@@ -131,3 +131,4 @@ const login = () => {
   margin: 10px;
 }
 </style>
+@/apis/login@/apis/login

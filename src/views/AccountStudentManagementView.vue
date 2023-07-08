@@ -6,7 +6,7 @@ import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
-import { getStudent } from '@/apis/studentManagement'
+import { getStudent } from '@/apis/student'
 
 const router = useRouter()
 
@@ -280,3 +280,4 @@ $gap: 15px;
 }
 </style>
 @/apis/accountStudentManagement
+@/apis/student

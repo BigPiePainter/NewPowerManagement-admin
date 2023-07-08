@@ -1,6 +1,6 @@
 <script setup lang="tsx">
-import { getStudent } from '@/apis/studentManagement'
-import { getGrades } from '@/apis/getGrades'
+import { getStudent } from '@/apis/student'
+import { getGrades } from '@/apis/grade'
 import { ref, reactive } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
@@ -177,3 +177,4 @@ $gap: 15px;
   margin: $gap;
 }
 </style>
+@/apis/student@/apis/grade
