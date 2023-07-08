@@ -2,6 +2,7 @@
 
 import { getTeachers } from '@/apis/teacher'
 import { getGrades } from '@/apis/grade'
+import { getSubjects } from '@/apis/subject'
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
@@ -24,38 +25,31 @@ const newTeacherData = reactive<{
   subjectId: number
 
 }>({
-
   account: '',
   name: '',
   password: '',
   phoneNumber: 0,
   gradeId: 0,
   subjectId: 0
-
-
 });
 
-
-
-
 const conformCreate = () => {
-  createTeacher(newTeacherData).then((res:any) => {
+  createTeacher(newTeacherData).then((res: any) => {
     if (res.code == 20000) {
       open1()
     }
     else {
-        ElNotification({
-          title: 'Warning',
-          message: res.msg,
-          type: 'warning',
-        })
-      }
-    }).catch()
-    
+      ElNotification({
+        title: 'Warning',
+        message: res.msg,
+        type: 'warning',
+      })
+    }
+  }).catch()
+
   console.log(newTeacherData)
   showDialog.value = false
 }
-
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -64,12 +58,13 @@ breadcrumbStore.data = [
 ]
 
 const selectOptionGrades = reactive<any>([])
+const selectOptionSubjects = reactive<any>([])
 const searchBarItems = reactive([
   { name: "用户名", value: "" },
   { name: "姓名", value: "" },
   { name: "手机号", value: "", label: "" },
   { name: "年级", value: "", type: InputType.Select, label: "请选择", options: selectOptionGrades },
-  { name: "学科", value: "", type: InputType.Select, label: "请选择", options: '' },
+  { name: "学科", value: "", type: InputType.Select, label: "请选择", options: selectOptionSubjects },
 ])
 
 const clickName = (props: any) => {
@@ -160,11 +155,6 @@ console.log(tableData)
 
 const refresh = (prop: any) => {
   console.log(prop)
-  // searchRequirements.account = prop[0].value,
-  // searchRequirements.name = prop[1].value,
-  // searchRequirements.phoneNumber = prop[2].value,
-  // searchRequirements.grade = prop[3].value,
-  // searchRequirements.subject = prop[4].value
   loadPageData(paginationInfo)
 }
 
@@ -179,7 +169,6 @@ const deleteTeacher = () => {
   showDialog.value = false
 
 }
-
 
 const paginationInfo = reactive({
   currentPage: 1,
@@ -196,8 +185,6 @@ const dataCompute = (items: any) => {
 
 const totalLength = ref<Number>()
 
-
-
 const open1 = () => {
   ElNotification({
     title: '成功',
@@ -205,15 +192,6 @@ const open1 = () => {
     type: 'success',
   })
 }
-
-
-
-
-
-
-
-
-
 
 const loadSelectOption = () => {
   getGrades()
@@ -232,13 +210,26 @@ const loadSelectOption = () => {
       console.log(selectOptionGrades)
     })
     .catch()
+
+  getSubjects()
+    .then((res) => {
+      console.log(res)
+      selectOptionSubjects.length = 0
+      res.data.forEach((item: any) => {
+        var dataSample = {
+          id: item.id,
+          name: item.name
+        }
+        selectOptionSubjects.push(dataSample)
+      })
+      console.log(selectOptionSubjects)
+    })
+    .catch()
 }
 loadSelectOption()
+
 const loadPageData = (prop: any) => {
   console.log(prop)
-
-
-
   paginationInfo.currentPage = prop.currentPage
   paginationInfo.pageSize = prop.pageSize
   var args = {
@@ -247,8 +238,8 @@ const loadPageData = (prop: any) => {
     account: searchBarItems[0].value,
     name: searchBarItems[1].value,
     phoneNumber: searchBarItems[2].value,
-    gradeId: searchBarItems[3].value,
-    subjectId: searchBarItems[4].value
+    gradeIds: searchBarItems[3].value,
+    subjectIds: searchBarItems[4].value
   }
   console.log(args)
   getTeachers(args).then((res) => {
@@ -265,10 +256,10 @@ loadPageData(paginationInfo)
 
 
 <template>
-  <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadPageData" :columns="tableColumns"
-    :data="tableData">
+  <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadPageData"
+    :columns="tableColumns" :data="tableData">
     <div class="div-search-bar ">
-      <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createteachers">新建老师</el-button>
     </div>
   </TablePage>
@@ -301,7 +292,7 @@ loadPageData(paginationInfo)
         <span class="dialog-span">
           *学习阶段：
         </span>
-        <el-select class="dialog-input" placeholder="请输入" v-model="newTeacherData.gradeId" type: InputType.Select>
+        <el-select class="dialog-input" placeholder="请选择" v-model="newTeacherData.gradeId" type: InputType.Select>
           <el-input v-for="index in selectOptionGrades" :key="index" />
         </el-select>
       </div>
@@ -309,8 +300,9 @@ loadPageData(paginationInfo)
         <span class="dialog-span">
           *学科：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.subjectId">
-        </el-input>
+        <el-select class="dialog-input" placeholder="请选择" v-model="newTeacherData.subjectId" type: InputType.Select>
+          <el-input v-for="index in selectOptionSubjects" :key="index" />
+        </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
@@ -322,13 +314,9 @@ loadPageData(paginationInfo)
     </div>
     <template #header>
       <el-text>新建老师</el-text>
-
     </template>
 
-
     <template #footer>
-
-
       <el-button @click='conformCreate' type="primary">确认</el-button>
       <el-button @click="deleteTeacher">取消</el-button>
     </template>
