@@ -166,22 +166,6 @@ const cancelEvent = () => {
 
 <template>
 
-
-<el-popconfirm
-    confirm-button-text="Yes"
-    cancel-button-text="No"
-    icon-color="#626AEF"
-    title="Are you sure to delete this?"
-    @confirm="confirmEvent"
-    @cancel="cancelEvent"
-  >
-    <template  #reference>
-      <el-button >Delete</el-button>
-    
-    
-    </template>
-  </el-popconfirm>
-
   <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar">

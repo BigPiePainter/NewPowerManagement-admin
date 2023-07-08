@@ -265,7 +265,7 @@ loadPageData(paginationInfo)
 
 
 <template>
-  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadPageData" :columns="tableColumns"
+  <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadPageData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar ">
       <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>
