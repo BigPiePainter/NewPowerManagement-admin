@@ -11,60 +11,39 @@ breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
 
 
-const mainState = reactive<any>([])
-const studyState = reactive<any>([])
-const middleState = reactive<any>([])
-const heighState = reactive<any>([])
+const grades = ref<any[]>([])
 
 const loadSelectOption = () => {
+  getGrades().then((res: any) => {
+    grades.value = res.data
+console.log(res)
+    // console.log(res)
+    // for (var i in res.data) {
+    //   console.log(res.data[i].name)
 
-  getGrades()
-    .then((res) => {
-      res.data.forEach((item: any) => {
-        console.log(res)
-        mainState.push(item.name)
-        console.log(mainState)
+    //   mainState.push(res.data[i].name)
 
-        item.subset.forEach((item: any) => {
-          studyState.push(item.name)
-        })
-      })
-      console.log(studyState)
-    })
-    .catch()
+    //   for (var j in res.data[i].subset)
+
+    //     console.log(res.data[i].subset[j].name)
+
+    // }
+
+    // console.log(mainState)
+    // console.log(studyState)
+  }).catch()
+
 }
+
+
 loadSelectOption()
 
-
-const middleGrade = () => {
-  studyState.forEach((item: any) => {
-    for (let i = 0; i < studyState.length; i++)
-      if (item.name == '初')
-      heighState.push(item.name)
-      
-    
-  });
-}
-
-const heigrade = () => {
-  studyState.forEach((item: any) => {
-    for (let i = 0; i < studyState.length; i++)
-      if (item.name == '高')
-      middleState.push(item.name)
-      
-    
-  });
-}
-
-
-middleGrade()
-
-heigrade()
 
 
 
 
 const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史']
+
 </script>
 
 <template>
@@ -77,15 +56,16 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
         <el-text link type="primary">新增一级</el-text>
       </div>
 
-      <div v-for="supTitle in mainState" :key="supTitle" class="subtitle">
-        <div>{{ supTitle }}</div>
 
+      
+
+
+      <div v-for="(value, key) in grades" :key="key" class="subtitle">
+        <div>{{ value.name }}</div>
+        <div v-for="(innervalue, innerKey) in value.subset" :key="innerKey" class="subtitle">
+          <div>{{ innervalue.name }}</div>
+        </div>
         <div class="subtitle">
-          <div v-for="subTitle in studyState" :key="subTitle" class="subtitle">
-            <div class='subtitle-word'>
-              <div>{{ subTitle }}</div>
-            </div>
-          </div>
           <el-button link type="primary" class="">添加</el-button>
         </div>
       </div>
@@ -107,7 +87,7 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
 
       <div class="card-body">
         <div class="div-major-items">
-          <el-text class="major-item" v-for="item in major" :key="item">{{ item }}</el-text>
+          <el-text class="major-item" v-for=" item  in  major " :key="item">{{ item }}</el-text>
         </div>
 
       </div>
