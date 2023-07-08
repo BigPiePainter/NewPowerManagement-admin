@@ -1,12 +1,11 @@
 <script setup lang="tsx">
-import { ref, reactive } from 'vue'
-import { ElButton, ElInput } from 'element-plus'
+import { ref, reactive, h } from 'vue'
+import { ElButton, ElInput, ElNotification, ElPopconfirm } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
-import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
-import { getStudent } from '@/apis/student'
+import { getStudent, restStudentPsw } from '@/apis/student'
 
 const router = useRouter()
 
@@ -100,18 +99,23 @@ const tableColumns = [
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
+
+      const slots = {
+        reference: () => <el-button link type="primary">重置密码</el-button>
+      }
+
       return (
         <div>
           <el-button link type="primary" onClick={() => console.log(item)}>
             编辑
           </el-button>
-          <el-button link type="primary" onClick={() => console.log(item)}>
-            重置密码
-          </el-button>
-          <el-button link type="danger" onClick={() => console.log(item)}>
+
+          <el-popconfirm hide-after='0' width='170' title={`重置${item.rowData.name}密码`} onConfirm={() => restPsw(item)} v-slots={slots} />
+
+          <el-button link type="danger">
             删除
           </el-button>
-        </div>
+        </div >
       )
     },
     width: 170,
@@ -119,6 +123,21 @@ const tableColumns = [
     align: 'left'
   }
 ]
+
+const restPsw = (item: any) => {
+  var args = { student: item.rowData.id }
+  restStudentPsw(args)
+    .then((res: any) => {
+      if (res.msg == 'success') {
+        ElNotification({
+          title: '重置成功',
+          message: item.rowData.name + ' 密码已重置为 666666',
+          type: 'success',
+        })
+      }
+    })
+    .catch()
+}
 
 const tableData = ref<object[]>([])
 
@@ -164,7 +183,7 @@ const loadData = (prop: any) => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     account: searchBarItems[2].value,
-    name: searchBarItems[0].value,                
+    name: searchBarItems[0].value,
     phoneNumber: searchBarItems[1].value
   }
   getStudent(args)
@@ -184,19 +203,15 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage
-    class="page-container"
-    :msg="totalLength"
-    @paginationChange="loadData"
-    :columns="tableColumns"
-    :data="tableData"
-  >
+  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
+    :data="tableData">
+    <el-popconfirm title="Are you sure to delete this?">
+      <template v-slot:reference>
+        <el-button>Delete</el-button>
+      </template>
+    </el-popconfirm>
     <div class="div-search-bar">
-      <SearchBar
-        :items="searchBarItems"
-        :selectOptions="selectOptionGrades"
-        @change="refresh"
-      ></SearchBar>
+      <SearchBar :items="searchBarItems" :selectOptions="selectOptionGrades" @change="refresh"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createStudent">新建学生</el-button>
     </div>
   </TablePage>
