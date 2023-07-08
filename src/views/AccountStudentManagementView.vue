@@ -99,6 +99,11 @@ const tableColumns = [
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
+
+      const slots = {
+        reference: () => <el-button link type="primary">重置密码</el-button>
+      }
+
       return (
         <div>
           <el-button link type="primary" onClick={() => console.log(item)}>
@@ -134,7 +139,7 @@ const restPsw = (item: any) => {
     .catch()
 }
 
-
+const tableData = ref<object[]>([])
 
 const showDialog = ref(false)
 
@@ -160,7 +165,6 @@ const paginationInfo = reactive({
   pageSize: 20,
   type: 1
 })
-const tableData = ref<object[]>([])
 
 const dataCompute = (items: any) => {
   items.forEach((i: any) => {
