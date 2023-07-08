@@ -24,8 +24,8 @@ const tableColumns = [
   {
     dataKey: 'id',
     key: 'id',
-    title: 'ID',
-    width: 50
+    title: '设备信息ID',
+    width: 200
   },
 
   {
@@ -102,7 +102,7 @@ const dataCompute = (items: any) => {
   tableData.length = 0
   items.data.records.forEach((item: any) => {
     var dataSample = {
-      id: item.userId,
+      id: item.id,
       studentName: item.name,
       userName: item.account,
       phoneNumber: item.phoneNumber,

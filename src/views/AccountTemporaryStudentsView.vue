@@ -23,13 +23,13 @@ const tableColumns = reactive([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 50
   },
   {
     dataKey: 'studentName',
     key: 'studentName',
     title: '姓名',
-    width: 200
+    width: 100
   },
   {
     dataKey: 'phoneNumber',

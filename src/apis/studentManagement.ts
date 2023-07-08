@@ -18,3 +18,14 @@ export const getStudentAmount = () => {
     }
     return http.request(args)
 }
+
+//--------------修改学生密码--------------------
+export const editStudentPsw = (data:any) => {
+    const args = {
+        url: '/api/management/student/reset-student-password',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
