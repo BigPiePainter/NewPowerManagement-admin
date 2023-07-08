@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { ref, reactive } from 'vue'
-import { getGrades } from '@/apis/getGrades'
+import { getGrades } from '@/apis/grade'
 
 
 
@@ -185,10 +185,10 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
           line-height: 2;
           white-space: nowrap;
           margin-right: 20px;
+
         }
       }
-
-
     }
   }
-}</style>@/apis/grade
+}
+</style>

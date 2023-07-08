@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { getTeachersCount } from '@/apis/teacher'
 import { loadTcoins, loadPoint, getStudentAmount} from '@/apis/student'
-
-
 import DisplayCard from '../components/DisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
