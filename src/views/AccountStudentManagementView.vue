@@ -279,5 +279,3 @@ $gap: 15px;
   height: 32px;
 }
 </style>
-@/apis/accountStudentManagement
-@/apis/student

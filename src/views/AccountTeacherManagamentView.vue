@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 
-import { getTeachers } from '@/apis/accountTeacherManagement'
-import { getGrades } from '@/apis/getGrades'
+import { getTeachers } from '@/apis/teacher'
+import { getGrades } from '@/apis/grade'
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
