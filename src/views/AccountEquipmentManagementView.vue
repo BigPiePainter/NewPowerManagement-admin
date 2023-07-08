@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { cancelEquipments, getEquipments } from '@/apis/clientDevice'
 import { ref, reactive } from 'vue'
-import { ElButton, popconfirmEmits } from 'element-plus'
+import { ElButton, ElPopconfirm, ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
@@ -12,7 +12,6 @@ breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '账号设备管理', path: '/acount-equipment-management' }
 ]
-
 
 const searchBarItems = reactive([
   { name: '姓名', value: '' },
@@ -79,13 +78,26 @@ const tableColumns = [
   {
     key: 'option',
     title: '操作',
-    cellRenderer: (cellData: any) => (
-      <el-button  link type="primary" onClick={() =>  {cancelEquip (cellData.rowData.id) }}>
-        解绑
-      </el-button>
-    ),
+    cellRenderer: (cellData: any) => {
+      const slots = {
+        reference: () =>
+          <el-button link type="primary">
+            删除
+          </el-button>
+      }
+      return (
+        <ElPopconfirm
+          title="是否解绑此设备？"
+          v-slots={slots}
+          onConfirm={() => cancelEquip(cellData.rowData.id)}>
+        </ElPopconfirm>
+
+
+      )
+    },
+
     width: 60,
-    fixed: 'right', 
+    fixed: 'right',
     align: 'center'
   }
 ]
@@ -93,10 +105,20 @@ const tableColumns = [
 
 const cancelEquip = (id: number) => {
   cancelEquipments({ id }).then(() => {
+    open1()
+
+    loadData()
   }).catch
 }
 
+const open1 = () => {
+  ElNotification({
+    title: '成功',
+    message: '已成功解绑',
+    type: 'success',
 
+  })
+}
 
 const tableData = reactive<any>([])
 
@@ -127,13 +149,13 @@ const totalLength = ref<Number>()
 
 const refresh = () => {
   console.log(searchBarItems)
-  loadData(paginationInfo)
+  loadData()
 }
 
-const loadData = (prop: any) => {
+const loadData = () => {
   var args = {
-    pageNum: prop.currentPage,
-    pageSize: prop.pageSize,
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
     name: searchBarItems[0].value,
     account: searchBarItems[1].value,
     phoneNumber: searchBarItems[2].value,
@@ -147,15 +169,7 @@ const loadData = (prop: any) => {
     })
     .catch()
 }
-loadData(paginationInfo)
-
-const confirmEvent = () => {
-  console.log('confirm!')
-}
-const cancelEvent = () => {
-  console.log('cancel!')
-}
-
+loadData()
 
 </script>
 
@@ -165,7 +179,6 @@ const cancelEvent = () => {
 
 
 <template>
-
   <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar">
