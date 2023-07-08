@@ -169,12 +169,11 @@ const loadData = (prop: any) => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     account: searchBarItems[2].value,
-    name: searchBarItems[0].value,
+    name: searchBarItems[0].value,                
     phoneNumber: searchBarItems[1].value
   }
   getStudent(args)
     .then((res) => {
-      console.log('原始返回', res)
       dataCompute(res.data.records)
       totalLength.value = res.data.records.length
     })
