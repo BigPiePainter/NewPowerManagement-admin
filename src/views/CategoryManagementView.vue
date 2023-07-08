@@ -1,10 +1,70 @@
 <script setup lang="tsx">
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { ref, reactive } from 'vue'
+import { getGrades } from '@/apis/getGrades'
+
+
+
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
-const studyState: any = { 高中: ['高一', '高二', '高三', '高二', '高三', '高二', '高三', '高二', '高三', '高二', '高三', '高二', '高三', '高二', '高三', '高二', '高三', '高二', '高三'], 初中: ['初一', '初二', '初三'] }
-const major:any = ['语文','数学','英语','历史','数学','英语','历史','数学','英语','历史','数学','英语','历史','数学','英语','历史','数学','英语','历史','数学','英语','历史','数学','英语','历史']
+
+
+const mainState = reactive<any>([])
+const studyState = reactive<any>([])
+const middleState = reactive<any>([])
+const heighState = reactive<any>([])
+
+const loadSelectOption = () => {
+
+  getGrades()
+    .then((res) => {
+      res.data.forEach((item: any) => {
+        console.log(res)
+        mainState.push(item.name)
+        console.log(mainState)
+
+        item.subset.forEach((item: any) => {
+          studyState.push(item.name)
+        })
+      })
+      console.log(studyState)
+    })
+    .catch()
+}
+loadSelectOption()
+
+
+const middleGrade = () => {
+  studyState.forEach((item: any) => {
+    for (let i = 0; i < studyState.length; i++)
+      if (item.name == '初')
+      heighState.push(item.name)
+      
+    
+  });
+}
+
+const heigrade = () => {
+  studyState.forEach((item: any) => {
+    for (let i = 0; i < studyState.length; i++)
+      if (item.name == '高')
+      middleState.push(item.name)
+      
+    
+  });
+}
+
+
+middleGrade()
+
+heigrade()
+
+
+
+
+const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史']
 </script>
 
 <template>
@@ -17,20 +77,24 @@ const major:any = ['语文','数学','英语','历史','数学','英语','历史
         <el-text link type="primary">新增一级</el-text>
       </div>
 
-      <div class="card-body" v-for="key in Object.keys(studyState)" :key="key">
+      <div v-for="supTitle in mainState" :key="supTitle" class="subtitle">
+        <div>{{ supTitle }}</div>
 
-        <div class="sub-title">
-          <el-text>{{ key }}</el-text>
-          <div style="flex-grow: 1;"></div>
-          <el-button link type="primary">添加</el-button>
+        <div class="subtitle">
+          <div v-for="subTitle in studyState" :key="subTitle" class="subtitle">
+            <div class='subtitle-word'>
+              <div>{{ subTitle }}</div>
+            </div>
+          </div>
+          <el-button link type="primary" class="">添加</el-button>
         </div>
-
-        <div class="div-category-items">
-          <el-text class="category-item" v-for="item in studyState[key]" :key="item">{{ item }}</el-text>
+      </div>
+      <div class="sub-title">
+        <div style="flex-grow: 1;">
         </div>
-
       </div>
     </div>
+
 
     <div class="card-right">
 
@@ -86,6 +150,17 @@ const major:any = ['语文','数学','英语','历史','数学','英语','历史
           margin-right: 20px;
         }
       }
+    }
+  }
+
+  .subtitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: $gap;
+
+    >.subtitle-word {
+      margin: 10px;
 
 
     }
@@ -116,5 +191,4 @@ const major:any = ['语文','数学','英语','历史','数学','英语','历史
 
     }
   }
-}
-</style>
+}</style>
