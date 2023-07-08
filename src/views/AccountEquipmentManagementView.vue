@@ -20,6 +20,8 @@ const searchBarItems = reactive([
   { name: '设备型号', value: '' }
 ])
 
+const loading = ref()
+
 const tableColumns = [
   {
     dataKey: 'id',
@@ -29,15 +31,15 @@ const tableColumns = [
   },
 
   {
-    dataKey: 'studentName',
-    key: 'studentName',
+    dataKey: 'name',
+    key: 'name',
     title: '姓名',
     width: 100
   },
 
   {
-    dataKey: 'userName',
-    key: 'userName',
+    dataKey: 'account',
+    key: 'account',
     title: '用户名',
     width: 150
   },
@@ -49,29 +51,29 @@ const tableColumns = [
   },
 
   {
-    dataKey: 'eqipmentModel',
-    key: 'eqipmentModel',
+    dataKey: 'deviceModel',
+    key: 'deviceModel',
     title: '设备型号',
     width: 150
   },
 
   {
-    dataKey: 'systemModel',
-    key: 'systemModel',
+    dataKey: 'version',
+    key: 'version',
     title: '系统版本号',
     width: 150
   },
 
   {
-    dataKey: 'tiedTime',
-    key: 'tiedTime',
+    dataKey: 'boundAt',
+    key: 'boundAt',
     title: '绑定时间',
     width: 200
   },
 
   {
-    dataKey: 'loginTime',
-    key: 'loginTime',
+    dataKey: 'lastLoginTime',
+    key: 'lastLoginTime',
     title: '最后登录时间',
     width: 200
   },
@@ -91,22 +93,17 @@ const tableColumns = [
           v-slots={slots}
           onConfirm={() => cancelEquip(cellData.rowData.id)}>
         </ElPopconfirm>
-
-
       )
     },
-
     width: 60,
     fixed: 'right',
     align: 'center'
   }
 ]
 
-
 const cancelEquip = (id: number) => {
   cancelEquipments({ id }).then(() => {
     open1()
-
     loadData()
   }).catch
 }
@@ -130,17 +127,7 @@ const paginationInfo = reactive({
 const dataCompute = (items: any) => {
   tableData.length = 0
   items.data.records.forEach((item: any) => {
-    var dataSample = {
-      id: item.id,
-      studentName: item.name,
-      userName: item.account,
-      phoneNumber: item.phoneNumber,
-      eqipmentModel: item.deviceModel,
-      systemModel: item.version,
-      tiedTime: item.boundAt,
-      loginTime: item.lastLoginTime,
-    }
-    tableData.push(dataSample)
+    tableData.push(item)
   });
   console.log(tableData)
 }
@@ -153,6 +140,7 @@ const refresh = () => {
 }
 
 const loadData = () => {
+  loading.value = true
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
@@ -165,21 +153,16 @@ const loadData = () => {
   getEquipments(args)
     .then((res) => {
       dataCompute(res)
+      loading.value = false
       totalLength.value = res.data.records.length
     })
     .catch()
 }
 loadData()
-
 </script>
 
-
-
-
-
-
 <template>
-  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
+  <TablePage :loadingUI="loading" class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>

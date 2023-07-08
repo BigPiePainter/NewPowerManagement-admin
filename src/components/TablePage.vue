@@ -6,6 +6,7 @@ type Props = {
   data: object[]
   rowHeight?: number
   itemsTotalLength?: Number
+  loadingUI: boolean
 }
 const props = defineProps<Props>()
 
@@ -37,7 +38,7 @@ const handleCurrentChange = (val: number) => {
     <div class="page-table-auto-resizer">
       <el-auto-resizer>
         <template #default="{ height, width }">
-          <el-table-v2 :columns="columns" :data="data" :width="width" :height="height" :row-height="rowHeight || 39">
+          <el-table-v2 v-loading="loadingUI" element-loading-text="加载中..." :columns="columns" :data="data" :width="width" :height="height" :row-height="rowHeight || 39">
           </el-table-v2>
         </template>
       </el-auto-resizer>

@@ -16,6 +16,7 @@ import { ElNotification } from 'element-plus'
 
 const router = useRouter()
 
+const loading = ref()
 const newTeacherData = reactive<{
   account: string,
   name: string,
@@ -229,6 +230,7 @@ const loadSelectOption = () => {
 loadSelectOption()
 
 const loadPageData = (prop: any) => {
+  loading.value = true
   console.log(prop)
   paginationInfo.currentPage = prop.currentPage
   paginationInfo.pageSize = prop.pageSize
@@ -245,6 +247,7 @@ const loadPageData = (prop: any) => {
   getTeachers(args).then((res) => {
     console.log(res)
     dataCompute(res)
+    loading.value = false
     totalLength.value = res.data.records.length
   })
     .catch(() => {
@@ -256,7 +259,7 @@ loadPageData(paginationInfo)
 
 
 <template>
-  <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadPageData"
+  <TablePage :loadingUI="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadPageData"
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar ">
       <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>

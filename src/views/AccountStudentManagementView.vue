@@ -23,6 +23,8 @@ breadcrumbStore.data = [
   { name: '学生管理', path: '/account-student-management' }
 ]
 
+const loading = ref()
+
 const tableColumns = [
   {
     dataKey: 'id',
@@ -179,6 +181,7 @@ const dataCompute = (items: any) => {
 const totalLength = ref<Number>()
 
 const loadData = (prop: any) => {
+  loading.value = true
   paginationInfo.currentPage = prop.currentPage
   paginationInfo.pageSize = prop.pageSize
 
@@ -193,6 +196,7 @@ const loadData = (prop: any) => {
   getStudent(args)
     .then((res) => {
       dataCompute(res.data.records)
+      loading.value = false
       totalLength.value = res.data.records.length
     })
     .catch()
@@ -226,7 +230,7 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
+  <TablePage :loadingUI="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>

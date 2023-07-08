@@ -18,6 +18,7 @@ const searchBarItems = reactive([
   { name: "手机号", value: "", label: "" },
 ])
 
+const loading = ref()
 const tableColumns = reactive([
   {
     dataKey: 'id',
@@ -26,8 +27,8 @@ const tableColumns = reactive([
     width: 50
   },
   {
-    dataKey: 'studentName',
-    key: 'studentName',
+    dataKey: 'name',
+    key: 'name',
     title: '姓名',
     width: 100
   },
@@ -44,8 +45,8 @@ const tableColumns = reactive([
     width: 200
   },
   {
-    dataKey: 'loginTime',
-    key: 'loginTime',
+    dataKey: 'lastLoginTime',
+    key: 'lastLoginTime',
     title: '最后登陆时间',
     width: 200,
   },
@@ -88,14 +89,7 @@ const paginationInfo = reactive({
 const dataCompute = (items: any) => {
   tableData.length = 0
   items.data.records.forEach((item: any) => {
-    var dataSample = {
-      id: item.id,
-      studentName: item.name,
-      phoneNumber: item.phoneNumber,
-      school: item.school,
-      loginTime: item.lastLoginTime
-    }
-    tableData.push(dataSample)
+    tableData.push(item)
   });
   console.log(tableData)
 }
@@ -130,6 +124,7 @@ const loadSelectOption = () => {
 loadSelectOption()
 
 const loadData = (prop: any) => {
+  loading.value = true
   paginationInfo.currentPage = prop.currentPage
   paginationInfo.pageSize = prop.pageSize
   var args = {
@@ -141,6 +136,7 @@ const loadData = (prop: any) => {
 
   getStudent(args).then((res) => {
     dataCompute(res)
+    loading.value = false
     totalLength.value = res.data.records.length
   })
     .catch()
@@ -156,7 +152,7 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
+  <TablePage :loadingUI="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>
