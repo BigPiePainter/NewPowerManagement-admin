@@ -21,11 +21,6 @@ breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '学生管理', path: '/account-student-management' }
 ]
-const searchBarItemsitems = reactive([
-  { name: '用户名', value: '' },
-  { name: '姓名', value: '' },
-  { name: '电话', value: '' }
-])
 
 const tableColumns = [
   {
