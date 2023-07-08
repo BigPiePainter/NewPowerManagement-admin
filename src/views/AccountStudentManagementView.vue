@@ -1,7 +1,9 @@
 <script setup lang="tsx">
+import { getGrades } from '@/apis/grade'
 import { ref, reactive, h } from 'vue'
 import { ElButton, ElInput, ElNotification, ElPopconfirm } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
+import { InputType } from '@/type'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
@@ -152,12 +154,13 @@ const confrom = () => {
 const cancel = () => {
   showDialog.value = false
 }
-const selectOptionGrades = reactive<any>([])
 
+const selectOptionGrades = reactive<any>([])
 const searchBarItems = reactive([
   { name: '用户名', value: '' },
   { name: '姓名', value: '' },
-  { name: '手机号', value: '', label: '' }
+  { name: '手机号', value: '', label: '' },
+  { name: '学习阶段', value: '', type: InputType.Select, label: '请选择', options: selectOptionGrades }
 ])
 
 const paginationInfo = reactive({
@@ -184,7 +187,8 @@ const loadData = (prop: any) => {
     pageSize: paginationInfo.pageSize,
     account: searchBarItems[2].value,
     name: searchBarItems[0].value,
-    phoneNumber: searchBarItems[1].value
+    phoneNumber: searchBarItems[1].value,
+    gradeIds: searchBarItems[3].value
   }
   getStudent(args)
     .then((res) => {
@@ -193,8 +197,27 @@ const loadData = (prop: any) => {
     })
     .catch()
 }
-
 loadData(paginationInfo)
+
+const loadSelectOption = () => {
+  getGrades()
+    .then((res) => {
+      selectOptionGrades.length = 0
+      res.data.forEach((item: any) => {
+        item.subset.forEach((item: any) => {
+          var dataSample = {
+            id: item.id,
+            level: item.level,
+            name: item.name
+          }
+          selectOptionGrades.push(dataSample)
+        })
+      })
+      console.log(selectOptionGrades)
+    })
+    .catch()
+}
+loadSelectOption()
 
 const refresh = () => {
   console.log(searchBarItems)
@@ -206,7 +229,7 @@ const refresh = () => {
   <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar">
-      <SearchBar :items="searchBarItems" :selectOptions="selectOptionGrades" @change="refresh"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createStudent">新建学生</el-button>
     </div>
   </TablePage>
