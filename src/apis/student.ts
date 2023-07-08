@@ -58,3 +58,14 @@ export const restStudentPsw = (data:any) => {
     }
     return http.request(args)
 }
+
+//----------------------删除学生-------------------------
+export const deleteStudent = (data:any) => {
+    const args = {
+        url: '/api/management/student/delete-student',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}

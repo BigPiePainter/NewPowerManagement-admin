@@ -7,7 +7,7 @@ import { InputType } from '@/type'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
-import { getStudent, restStudentPsw } from '@/apis/student'
+import { getStudent, restStudentPsw, deleteStudent } from '@/apis/student'
 
 const router = useRouter()
 
@@ -104,8 +104,12 @@ const tableColumns = [
     title: '操作',
     cellRenderer: (item: any) => {
 
-      const slots = {
+      const resetPswSlot = {
         reference: () => <el-button link type="primary">重置密码</el-button>
+      }
+
+      const deleteSlot = {
+        reference: () => <el-button link type="danger">删除</el-button>
       }
 
       return (
@@ -114,11 +118,9 @@ const tableColumns = [
             编辑
           </el-button>
 
-          <el-popconfirm hide-after='0' width='170' title={`重置${item.rowData.name}密码`} onConfirm={() => restPsw(item)} v-slots={slots} />
+          <el-popconfirm hide-after={0} width='170' title={`重置${item.rowData.name}密码`} onConfirm={() => restPsw(item)} v-slots={resetPswSlot} />
 
-          <el-button link type="danger">
-            删除
-          </el-button>
+          <el-popconfirm hide-after={0} width='170' title={`删除学生${item.rowData.name}`} onConfirm={() => deleteStu(item)} v-slots={deleteSlot} />
         </div >
       )
     },
@@ -129,7 +131,7 @@ const tableColumns = [
 ]
 
 const restPsw = (item: any) => {
-  var args = { student: item.rowData.id }
+  var args = { studentId: item.rowData.id }
   restStudentPsw(args)
     .then((res: any) => {
       if (res.msg == 'success') {
@@ -138,9 +140,47 @@ const restPsw = (item: any) => {
           message: item.rowData.name + ' 密码已重置为 666666',
           type: 'success',
         })
+      } else {
+        ElNotification({
+          title: '重置失败',
+          type: 'error',
+        })
       }
     })
-    .catch()
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        type: 'error',
+      })
+    })
+}
+
+const deleteStu = (item: any) => {
+  var args = { studentId: item.rowData.id }
+  console.log(args)
+  deleteStudent(args)
+    .then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: item.rowData.name + '学生删除成功',
+          type: 'success',
+        })
+      } else {
+        ElNotification({
+          title: '删除失败',
+          type: 'error',
+        })
+      }
+      loadData(paginationInfo)
+    })
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        message:"学生未成功删除",
+        type: 'error',
+      })
+    })
 }
 
 const tableData = ref<object[]>([])
@@ -188,6 +228,7 @@ const loadData = (prop: any) => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
+    type: paginationInfo.type,
     account: searchBarItems[2].value,
     name: searchBarItems[0].value,
     phoneNumber: searchBarItems[1].value,
@@ -219,7 +260,13 @@ const loadSelectOption = () => {
       })
       console.log(selectOptionGrades)
     })
-    .catch()
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        message:"搜索框选项未成功加载",
+        type: 'error',
+      })
+    })
 }
 loadSelectOption()
 
@@ -230,8 +277,8 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage :loadingUI="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
-    :data="tableData">
+  <TablePage :loadingUI="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+    :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createStudent">新建学生</el-button>

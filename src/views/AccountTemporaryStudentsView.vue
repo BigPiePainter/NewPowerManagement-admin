@@ -130,6 +130,7 @@ const loadData = (prop: any) => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
+    type: paginationInfo.type,
     name: searchBarItems[0].value,
     phoneNumber: searchBarItems[1].value,
   }

@@ -102,19 +102,15 @@ const tableColumns = [
 ]
 
 const cancelEquip = (id: number) => {
-  cancelEquipments({ id }).then(() => {
-    open1()
-    loadData()
-  }).catch
-}
-
-const open1 = () => {
-  ElNotification({
-    title: '成功',
-    message: '已成功解绑',
-    type: 'success',
-
-  })
+  cancelEquipments({ id })
+    .then(() => {
+      ElNotification({
+        title: '成功',
+        message: '已成功解绑',
+        type: 'success',
+      })
+      loadData()
+    }).catch
 }
 
 const tableData = reactive<any>([])
@@ -156,14 +152,20 @@ const loadData = () => {
       loading.value = false
       totalLength.value = res.data.records.length
     })
-    .catch()
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        message:"页面未成功加载",
+        type: 'error',
+      })
+    })
 }
 loadData()
 </script>
 
 <template>
-  <TablePage :loadingUI="loading" class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
-    :data="tableData">
+  <TablePage :loadingUI="loading" class="page-container" :msg="totalLength" @paginationChange="loadData"
+    :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>
     </div>
