@@ -5,7 +5,7 @@ type Props = {
   columns: object[]
   data: object[]
   rowHeight?: number
-  msg?: Number
+  itemsTotalLength?: Number
 }
 const props = defineProps<Props>()
 
@@ -44,7 +44,7 @@ const handleCurrentChange = (val: number) => {
     </div>
     <div class="page-table-pagination">
       <el-pagination v-model:current-page="paginationInfo.currentPage" v-model:page-size="paginationInfo.pageSize" :page-sizes="[20, 40, 60]"
-        :small="false" layout="total, sizes, prev, pager, next, jumper" :total="props.msg" @size-change="handleSizeChange"
+        :small="false" layout="total, sizes, prev, pager, next, jumper" :total="props.itemsTotalLength" @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
   </div>
