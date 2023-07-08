@@ -38,7 +38,6 @@ class Http {
 
     instance.defaults.transformRequest = [
       (data) => {
-        console.log('transformRequest', data)
         if (options.mode == 'json' && typeof data == 'object') return JSON.stringify(data)
         return data
       }
@@ -74,12 +73,12 @@ class Http {
       }
     )
 
-    console.log(options)
+    console.log("请求后端接口", options)
     return instance(options)
   }
 
   _errorHandle(res: any) {
-    console.log(res)
+    console.log("Handle ERROR", res)
     // if (data.constructor.name == 'AxiosError') {
     //   //
     // }
