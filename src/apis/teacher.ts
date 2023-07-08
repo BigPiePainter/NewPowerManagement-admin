@@ -1,5 +1,16 @@
 import http from '@/libs/http'
 
+export const createTeacher = (data:any) => {
+    const args = {
+        url: '/api/management/teacher/create',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
+
+
 export const getTeachers = (data: object) => {
     const args = {
         url: '/api/management/teacher/page-teachers',

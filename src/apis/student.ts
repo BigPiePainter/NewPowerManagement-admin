@@ -11,6 +11,18 @@ export const getStudent = (data: any) => {
 }
 
 
+export const createStudent = (data:any) => {
+    const args = {
+        url: '/api/management/student/create',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
+
+
+
 export const loadPoint = () => {
     const args = {
         url: '/api/management/student/get-total-points',

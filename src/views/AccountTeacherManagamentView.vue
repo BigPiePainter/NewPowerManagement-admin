@@ -9,28 +9,53 @@ import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
+import { createTeacher } from '@/apis/teacher'
+import { ElNotification } from 'element-plus'
 
 
 const router = useRouter()
 
-const newClassData = reactive<{
-  className: string,
-  teacher: string,
-  startDate: string,
-  endDate: string,
-  major: string,
-  grade: string,
+const newTeacherData = reactive<{
+  account: string,
+  name: string,
+  password: string,
+  phoneNumber: number,
+  gradeId: number,
+  subjectId: number
 
 }>({
 
-  className: '',
-  teacher: '',
-  startDate: '',
-  endDate: '',
-  major: '',
-  grade: '',
+  account: '',
+  name: '',
+  password: '',
+  phoneNumber: 0,
+  gradeId: 0,
+  subjectId: 0
+
 
 });
+
+
+
+
+const conformCreate = () => {
+  createTeacher(newTeacherData).then((res:any) => {
+    if (res.code == 20000) {
+      open1()
+    }
+    else {
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning',
+        })
+      }
+    }).catch()
+    
+  console.log(newTeacherData)
+  showDialog.value = false
+}
+
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -43,7 +68,7 @@ const searchBarItems = reactive([
   { name: "用户名", value: "" },
   { name: "姓名", value: "" },
   { name: "手机号", value: "", label: "" },
-  { name: "年级", value: "", type: InputType.Select, label: "请选择", options: selectOptionGrades},
+  { name: "年级", value: "", type: InputType.Select, label: "请选择", options: selectOptionGrades },
   { name: "学科", value: "", type: InputType.Select, label: "请选择", options: '' },
 ])
 
@@ -60,39 +85,39 @@ const tableColumns = [
     width: 150
   },
   {
-    dataKey: 'teacherName',
-    key: 'teacherName',
+    dataKey: 'name',
+    key: 'name',
     title: '姓名',
     width: 200,
     cellRenderer: (cellData: any) => <ElButton link type='primary' onClick={() => clickName(cellData)} class="detailed">{cellData.cellData}</ElButton>,
   },
   {
-    dataKey: 'userName',
-    key: 'userName',
+    dataKey: 'account',
+    key: 'account',
     title: '用户名',
     width: 200
   },
   {
-    dataKey: 'teacherGrade',
-    key: 'teacherGrade',
-    title: '年级',
+    dataKey: 'gradeName',
+    key: 'gradeName',
+    title: '学习阶段',
     width: 100
   },
   {
-    dataKey: 'teacherSubject',
-    key: 'teacherSubject',
+    dataKey: 'subjectName',
+    key: 'subjectName',
     title: '学科',
     width: 100
   },
   {
-    dataKey: 'teacherCellnumber',
-    key: 'teacherCellnumber',
+    dataKey: 'phoneNumber',
+    key: 'phoneNumber',
     title: '手机号码',
     width: 200
   },
   {
-    dataKey: 'loginTime',
-    key: 'loginTime',
+    dataKey: 'lastLoginTime',
+    key: 'lastLoginTime',
     title: '最后登录时间',
     width: 300,
   },
@@ -133,7 +158,7 @@ console.log(tableData)
 //   subject: ''
 // })
 
-const refresh = (prop:any) => {
+const refresh = (prop: any) => {
   console.log(prop)
   // searchRequirements.account = prop[0].value,
   // searchRequirements.name = prop[1].value,
@@ -145,7 +170,7 @@ const refresh = (prop:any) => {
 
 const showDialog = ref(false)
 
-const createTeacher = () => {
+const createteachers = () => {
   showDialog.value = true
 
 }
@@ -155,10 +180,6 @@ const deleteTeacher = () => {
 
 }
 
-const conformTeacher = () => {
-  showDialog.value = false
-
-}
 
 const paginationInfo = reactive({
   currentPage: 1,
@@ -168,34 +189,37 @@ const paginationInfo = reactive({
 const dataCompute = (items: any) => {
   tableData.length = 0
   items.data.records.forEach((item: any) => {
-    var dataSample = {
-      id: item.id,
-      teacherName: item.name,
-      userName: item.account,
-      teacherGrade: item.gradeName,
-      teacherSubject: item.subjectName,
-      teacherCellnumber: item.phoneNumber,
-      loginTime: item.lastLoginTime
-    }
-    tableData.push(dataSample)
+    tableData.push(item)
   });
   console.log(tableData)
 }
 
 const totalLength = ref<Number>()
 
+
+
+const open1 = () => {
+  ElNotification({
+    title: '成功',
+    message: '已成功创建',
+    type: 'success',
+  })
+}
+
+
+
+
+
+
+
+
+
+
 const loadSelectOption = () => {
   getGrades()
     .then((res) => {
       selectOptionGrades.length = 0
       res.data.forEach((item: any) => {
-        // var dataSample = {
-        //   id: item.id,
-        //   level: item.level,
-        //   name: item.name
-        // }
-        // selectOptionGrades.push(dataSample)
-
         item.subset.forEach((item: any) => {
           var dataSample = {
             id: item.id,
@@ -210,9 +234,11 @@ const loadSelectOption = () => {
     .catch()
 }
 loadSelectOption()
-
 const loadPageData = (prop: any) => {
   console.log(prop)
+
+
+
   paginationInfo.currentPage = prop.currentPage
   paginationInfo.pageSize = prop.pageSize
   var args = {
@@ -243,7 +269,7 @@ loadPageData(paginationInfo)
     :data="tableData">
     <div class="div-search-bar ">
       <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>
-      <el-button class="ARMbutton" type="primary" @click="createTeacher">新建老师</el-button>
+      <el-button class="ARMbutton" type="primary" @click="createteachers">新建老师</el-button>
     </div>
   </TablePage>
 
@@ -254,42 +280,43 @@ loadPageData(paginationInfo)
         <span class="dialog-span">
           *用户名：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.className">
+        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.account">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           *姓名：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.teacher">
+        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.name">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           *密码：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.startDate">
+        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.password">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          年级：
+          *学习阶段：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.endDate">
+        <el-select class="dialog-input" placeholder="请输入" v-model="newTeacherData.gradeId" type: InputType.Select>
+          <el-input v-for="index in selectOptionGrades" :key="index" />
+        </el-select>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *学科：
+        </span>
+        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.subjectId">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          学科：
+          *手机号码：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.major">
-        </el-input>
-      </div>
-      <div class="div-input-element">
-        <span class="dialog-span">
-          手机号码：
-        </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.grade">
+        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.phoneNumber">
         </el-input>
       </div>
     </div>
@@ -302,7 +329,7 @@ loadPageData(paginationInfo)
     <template #footer>
 
 
-      <el-button @click='conformTeacher' type="primary">确认</el-button>
+      <el-button @click='conformCreate' type="primary">确认</el-button>
       <el-button @click="deleteTeacher">取消</el-button>
     </template>
   </el-dialog>

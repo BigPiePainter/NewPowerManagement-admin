@@ -120,7 +120,7 @@ const tableColumns = [
   }
 ]
 
-const tableData = ref<object[]>([])
+
 
 const showDialog = ref(false)
 
@@ -146,6 +146,7 @@ const paginationInfo = reactive({
   pageSize: 20,
   type: 1
 })
+const tableData = ref<object[]>([])
 
 const dataCompute = (items: any) => {
   items.forEach((i: any) => {
@@ -279,3 +280,5 @@ $gap: 15px;
   height: 32px;
 }
 </style>
+@/apis/accountStudentManagement
+@/apis/student

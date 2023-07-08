@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { cancelEquipments, getEquipments } from '@/apis/clientDevice'
 import { ref, reactive } from 'vue'
-import { ElButton } from 'element-plus'
+import { ElButton, popconfirmEmits } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
@@ -12,6 +12,7 @@ breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '账号设备管理', path: '/acount-equipment-management' }
 ]
+
 
 const searchBarItems = reactive([
   { name: '姓名', value: '' },
@@ -79,29 +80,21 @@ const tableColumns = [
     key: 'option',
     title: '操作',
     cellRenderer: (cellData: any) => (
-      <el-button link type="primary" onClick={() => cancelEquip(cellData.rowData.id)}>
+      <el-button  link type="primary" onClick={() =>  {cancelEquip (cellData.rowData.id) }}>
         解绑
       </el-button>
     ),
     width: 60,
-    fixed: 'right',
+    fixed: 'right', 
     align: 'center'
   }
 ]
 
 
-
 const cancelEquip = (id: number) => {
-  console.log(id)
   cancelEquipments({ id }).then(() => {
   }).catch
 }
-
-
-
-
-
-
 
 
 
@@ -156,9 +149,39 @@ const loadData = (prop: any) => {
 }
 loadData(paginationInfo)
 
+const confirmEvent = () => {
+  console.log('confirm!')
+}
+const cancelEvent = () => {
+  console.log('cancel!')
+}
+
+
 </script>
 
+
+
+
+
+
 <template>
+
+
+<el-popconfirm
+    confirm-button-text="Yes"
+    cancel-button-text="No"
+    icon-color="#626AEF"
+    title="Are you sure to delete this?"
+    @confirm="confirmEvent"
+    @cancel="cancelEvent"
+  >
+    <template  #reference>
+      <el-button >Delete</el-button>
+    
+    
+    </template>
+  </el-popconfirm>
+
   <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar">
