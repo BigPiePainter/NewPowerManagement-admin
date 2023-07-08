@@ -1,3 +1,4 @@
+import qs from 'qs'
 import axios from 'axios'
 
 class Http {
@@ -18,6 +19,9 @@ class Http {
       instance.defaults.headers.put['Content-Type'] = 'application/json'
     } else if (options.mode == 'file') {
       instance.defaults.headers.post['Content-Type'] = 'multipart/form-data'
+      if (options.onUploadProgress) {
+        instance.defaults.onUploadProgress = options.onUploadProgress
+      }
     } else {
       instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
     }
@@ -28,12 +32,13 @@ class Http {
       instance.defaults.headers.Authorization = 'Bearer ' + localStorage.token
     }
 
-    if (options.onUploadProgress) {
-      instance.defaults.onUploadProgress = options.onUploadProgress
+    if (options.params) {
+      options.paramsSerializer = (params: any) => qs.stringify(params)
     }
 
     instance.defaults.transformRequest = [
       (data) => {
+        console.log('transformRequest', data)
         if (options.mode == 'json' && typeof data == 'object') return JSON.stringify(data)
         return data
       }
