@@ -205,11 +205,6 @@ const refresh = () => {
 <template>
   <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
-    <el-popconfirm title="Are you sure to delete this?">
-      <template v-slot:reference>
-        <el-button>Delete</el-button>
-      </template>
-    </el-popconfirm>
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" :selectOptions="selectOptionGrades" @change="refresh"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createStudent">新建学生</el-button>
