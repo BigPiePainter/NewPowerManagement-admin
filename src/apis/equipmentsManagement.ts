@@ -8,3 +8,13 @@ export const getEquipments = (data: any) => {
     }
     return http.request(args)
 }
+
+export const cancelEquipments = (data: any) => {
+    const args = {
+        url: '/api/management/client-device/unbind-device',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
