@@ -203,7 +203,7 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
+  <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <el-popconfirm title="Are you sure to delete this?">
       <template v-slot:reference>

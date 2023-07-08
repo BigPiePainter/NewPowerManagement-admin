@@ -156,7 +156,7 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage class="page-container" :msg="totalLength" @paginationChange="loadData" :columns="tableColumns"
+  <TablePage class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
     :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>
