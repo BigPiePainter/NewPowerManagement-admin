@@ -23,7 +23,7 @@ breadcrumbStore.data = [
   { name: '学生管理', path: '/account-student-management' }
 ]
 
-const loading = ref()
+const loading = ref(true)
 
 const tableColumns = [
   {
@@ -298,7 +298,7 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage :loadingUI="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>

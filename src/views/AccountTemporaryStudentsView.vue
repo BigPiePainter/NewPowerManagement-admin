@@ -19,7 +19,8 @@ const searchBarItems = reactive([
   { name: "手机号", value: "", label: "" },
 ])
 
-const loading = ref()
+const loading = ref(true)
+
 const tableColumns = reactive([
   {
     dataKey: 'id',
@@ -265,7 +266,7 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage :loadingUI="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>

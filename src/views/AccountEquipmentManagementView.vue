@@ -20,7 +20,7 @@ const searchBarItems = reactive([
   { name: '设备型号', value: '' }
 ])
 
-const loading = ref()
+const loading = ref(true)
 
 const tableColumns = [
   {
@@ -164,7 +164,7 @@ loadData()
 </script>
 
 <template>
-  <TablePage :loadingUI="loading" class="page-container" :msg="totalLength" @paginationChange="loadData"
+  <TablePage :loading="loading" class="page-container" :msg="totalLength" @paginationChange="loadData"
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>
