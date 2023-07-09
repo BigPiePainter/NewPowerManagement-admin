@@ -120,7 +120,7 @@ const tableColumns = [
 
           <el-popconfirm hide-after={0} width='170' title={`重置${item.rowData.name}密码`} onConfirm={() => restPsw(item)} v-slots={resetPswSlot} />
 
-          <el-popconfirm hide-after={0} width='170' title={`删除学生${item.rowData.name}`} onConfirm={() => deleteStu(item)} v-slots={deleteSlot} />
+          <el-popconfirm hide-after={0} width='170' title={`删除学生${item.rowData.name}`} onConfirm={() => preDeleteStu(item)} v-slots={deleteSlot} />
         </div >
       )
     },
@@ -129,6 +129,8 @@ const tableColumns = [
     align: 'left'
   }
 ]
+
+const tableData = ref<object[]>([])
 
 const restPsw = (item: any) => {
   var args = { studentId: item.rowData.id }
@@ -155,10 +157,30 @@ const restPsw = (item: any) => {
     })
 }
 
-const deleteStu = (item: any) => {
-  var args = { studentId: item.rowData.id }
-  console.log(args)
-  deleteStudent(args)
+const preDeleteStu = (item: any) => {
+  tableData.value.forEach((i: any) => {
+    if (i.id == item.rowData.id) {
+      tableData.value.splice(tableData.value.indexOf(i), 1)
+    }
+    return
+  })
+  var note: any = ElNotification({
+    title: '点击撤回',
+    message: `撤回删除学生 ${item.rowData.name}`,
+    duration: 5000,
+    onClick: () => { calcelDeleteStu(item), note.close() },
+    onClose: () => deleteStu(item),
+    type: 'warning',
+  })
+}
+
+const calcelDeleteStu = (item:any) => {
+  item.rowData.id = null
+}
+
+const deleteStu = (item:any) => {
+  setTimeout(console.log, 0)
+  deleteStudent({ studentId: item.rowData.id })
     .then((res: any) => {
       if (res.code == '20000') {
         ElNotification({
@@ -169,6 +191,7 @@ const deleteStu = (item: any) => {
       } else {
         ElNotification({
           title: '删除失败',
+          message: '请求错误或删除被撤回',
           type: 'error',
         })
       }
@@ -182,8 +205,6 @@ const deleteStu = (item: any) => {
       })
     })
 }
-
-const tableData = ref<object[]>([])
 
 const showDialog = ref(false)
 
