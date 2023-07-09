@@ -1,7 +1,8 @@
 <script setup lang="tsx">
-import { getStudent } from '@/apis/student'
+import { getStudent, restStudentPsw, deleteStudent, toNormalStudent } from '@/apis/student'
 import { getGrades } from '@/apis/grade'
 import { ref, reactive } from 'vue'
+import { ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 
@@ -54,20 +55,28 @@ const tableColumns = reactive([
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
+
+      const resetPswSlot = {
+        reference: () => <el-button link type="primary">重置密码</el-button>
+      }
+
+      const deleteSlot = {
+        reference: () => <el-button link type="danger">删除</el-button>
+      }
+
+      const toNormalSlot = {
+        reference: () => <el-button link type="primary">转正</el-button>
+      }
       return (
         <div>
           <el-button link type="primary" onClick={() => console.log(item)}>
             编辑
           </el-button>
-          <el-button link type="primary" onClick={() => console.log(item)}>
-            转为正式学生
-          </el-button>
-          <el-button link type="primary" onClick={() => console.log(item)}>
-            重置密码
-          </el-button>
-          <el-button link type="danger" onClick={() => console.log(item)}>
-            删除
-          </el-button>
+          <el-popconfirm hide-after={0} width='170' title={`将${item.rowData.name}转正`} onConfirm={() => toNormalStu(item)} v-slots={toNormalSlot} />
+
+          <el-popconfirm hide-after={0} width='170' title={`重置${item.rowData.name}密码`} onConfirm={() => restPsw(item)} v-slots={resetPswSlot} />
+
+          <el-popconfirm hide-after={0} width='170' title={`删除学生${item.rowData.name}`} onConfirm={() => deleteStu(item)} v-slots={deleteSlot} />
         </div>
       )
     },
@@ -77,6 +86,86 @@ const tableColumns = reactive([
   }
 ])
 
+const restPsw = (item: any) => {
+  var args = { studentId: item.rowData.id }
+  restStudentPsw(args)
+    .then((res: any) => {
+      if (res.msg == 'success') {
+        ElNotification({
+          title: '重置成功',
+          message: item.rowData.name + ' 密码已重置为 666666',
+          type: 'success',
+        })
+      } else {
+        ElNotification({
+          title: '重置失败',
+          type: 'error',
+        })
+      }
+    })
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        type: 'error',
+      })
+    })
+}
+
+const deleteStu = (item: any) => {
+  var args = { studentId: item.rowData.id }
+  console.log(args)
+  deleteStudent(args)
+    .then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: item.rowData.name + '学生删除成功',
+          type: 'success',
+        })
+      } else {
+        ElNotification({
+          title: '删除失败',
+          type: 'error',
+        })
+      }
+      loadData(paginationInfo)
+    })
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        message: "学生未成功删除",
+        type: 'error',
+      })
+    })
+}
+
+const toNormalStu =(item: any)=>{
+  var args = { studentId: item.rowData.id }
+  console.log(args)
+  toNormalStudent(args)
+    .then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: item.rowData.name + '学生转正成功',
+          type: 'success',
+        })
+      } else {
+        ElNotification({
+          title: '转正失败',
+          type: 'error',
+        })
+      }
+      loadData(paginationInfo)
+    })
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        message: "学生未成功转正",
+        type: 'error',
+      })
+    })
+}
 
 const tableData = reactive<any>([])
 
@@ -153,8 +242,8 @@ const refresh = () => {
 </script>
 
 <template>
-  <TablePage :loadingUI="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData" :columns="tableColumns"
-    :data="tableData">
+  <TablePage :loadingUI="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+    :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh" :selectOptions="selectOptionGrades"></SearchBar>
     </div>

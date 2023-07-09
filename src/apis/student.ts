@@ -69,3 +69,14 @@ export const deleteStudent = (data:any) => {
     }
     return http.request(args)
 }
+
+//----------------------临时学生转正-------------------------
+export const toNormalStudent = (data:any) => {
+    const args = {
+        url: '/api/management/student/temporary-to-normal',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}

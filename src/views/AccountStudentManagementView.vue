@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { getGrades } from '@/apis/grade'
-import { ref, reactive, h } from 'vue'
-import { ElButton, ElInput, ElNotification, ElPopconfirm } from 'element-plus'
+import { ref, reactive } from 'vue'
+import { ElButton, ElInput, ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import { InputType } from '@/type'
 import TablePage from '@/components/TablePage.vue'
@@ -177,7 +177,7 @@ const deleteStu = (item: any) => {
     .catch(() => {
       ElNotification({
         title: '未知错误',
-        message:"学生未成功删除",
+        message: "学生未成功删除",
         type: 'error',
       })
     })
@@ -263,7 +263,7 @@ const loadSelectOption = () => {
     .catch(() => {
       ElNotification({
         title: '未知错误',
-        message:"搜索框选项未成功加载",
+        message: "搜索框选项未成功加载",
         type: 'error',
       })
     })
