@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 
-import { getTeachers } from '@/apis/teacher'
+import { getTeachers, deleteTeacher, resetTeacherPsw } from '@/apis/teacher'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 import { ref, reactive } from 'vue'
@@ -122,17 +122,24 @@ const tableColumns = [
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
+
+      const resetPswSlot = {
+        reference: () => <el-button link type="primary">重置密码</el-button>
+      }
+
+      const deleteSlot = {
+        reference: () => <el-button link type="danger">删除</el-button>
+      }
+
       return (
         <div>
           <el-button link type="primary" onClick={() => console.log(item)}>
             编辑
           </el-button>
-          <el-button link type="primary" onClick={() => console.log(item)}>
-            重置密码
-          </el-button>
-          <el-button link type="primary" onClick={() => console.log(item)}>
-            删除
-          </el-button>
+
+          <el-popconfirm hide-after={0} width='170' title={`重置${item.rowData.name}密码`} onConfirm={() => restPsw(item)} v-slots={resetPswSlot} />
+
+          <el-popconfirm hide-after={0} width='170' title={`删除老师${item.rowData.name}`} onConfirm={() => preDeleteTea(item)} v-slots={deleteSlot} />
         </div>
       )
     },
@@ -144,15 +151,80 @@ const tableColumns = [
 
 const tableData = reactive<any>([])
 
-console.log(tableData)
+const restPsw = (item: any) => {
+  var args = { teacherId: item.rowData.id }
+  resetTeacherPsw(args)
+    .then((res: any) => {
+      if (res.msg == 'success') {
+        ElNotification({
+          title: '重置成功',
+          message: item.rowData.name + ' 密码已重置为 888888',
+          type: 'success',
+        })
+      } else {
+        ElNotification({
+          title: '重置失败',
+          type: 'error',
+        })
+      }
+    })
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        type: 'error',
+      })
+    })
+}
 
-// const searchRequirements = reactive({
-//   account: '',
-//   name: '',
-//   phoneNumber: '',
-//   grade: '',
-//   subject: ''
-// })
+const preDeleteTea = (item: any) => {
+  tableData.forEach((i: any) => {
+    if (i.id == item.rowData.id) {
+      tableData.splice(tableData.indexOf(i), 1)
+    }
+    return
+  })
+  var note: any = ElNotification({
+    title: '点击撤回',
+    message: `撤回删除老师 ${item.rowData.name}`,
+    duration: 5000,
+    onClick: () => { calcelDeleteTea(item), note.close() },
+    onClose: () => deleteTea(item),
+    type: 'warning',
+  })
+}
+
+const calcelDeleteTea = (item:any) => {
+  item.rowData.id = null
+}
+
+const deleteTea = (item:any) => {
+  setTimeout(console.log, 0)
+  deleteTeacher({ teacherId: item.rowData.id })
+    .then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: item.rowData.name + '老师删除成功',
+          type: 'success',
+        })
+      } else {
+        ElNotification({
+          title: '删除失败',
+          message: '请求错误或删除被撤回',
+          type: 'error',
+        })
+      }
+      loadPageData(paginationInfo)
+    })
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        message: "学生未成功删除",
+        type: 'error',
+      })
+    })
+}
+
 
 const refresh = (prop: any) => {
   console.log(prop)
@@ -163,11 +235,6 @@ const showDialog = ref(false)
 
 const createteachers = () => {
   showDialog.value = true
-
-}
-
-const deleteTeacher = () => {
-  showDialog.value = false
 
 }
 
@@ -321,7 +388,7 @@ loadPageData(paginationInfo)
 
     <template #footer>
       <el-button @click='conformCreate' type="primary">确认</el-button>
-      <el-button @click="deleteTeacher">取消</el-button>
+      <el-button>取消</el-button>
     </template>
   </el-dialog>
 </template>
