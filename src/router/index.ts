@@ -14,7 +14,6 @@ import CourseManagementView from '@/views/CourseManagementView.vue'
 import ShopManagementView from '@/views/ShopManagementView.vue'
 import NewProductView from '@/views/NewProductView.vue'
 import QuestionBankManagementView from '@/views/QuestionBankManagementView.vue'
-import PointsManagementView from '@/views/PointsManagementView.vue'
 import OrderManagementView from '@/views/OrderManagementView.vue'
 import SettingView from '@/views/SettingView.vue'
 import ExamInfoView from '@/views/ExamInfoView.vue'
@@ -31,7 +30,9 @@ import AccountTeacherManagamentView from '@/views/AccountTeacherManagamentView.v
 import AccountTemporaryStudentsView from '@/views/AccountTemporaryStudentsView.vue'
 import MainLayout from '@/components/MainLayout.vue'
 import PointsDetailView from '@/views/PointsDetailView.vue'
-import StudentPointsView from '@/views//StudentPointsView.vue'
+import StudentPointsView from '@/views/StudentPointsView.vue'
+import TcoinDetailView from '@/views/TcoinDetailView.vue'
+import StudentTcoinView from '@/views/StudentTcoinView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 import AccountTeacherDetail from '@/views/AccountTeacherDetail.vue'
 import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
@@ -194,12 +195,6 @@ const router = createRouter({
           meta: { Protected: true }
         },
         {
-          path: 'points-management',
-          name: 'points-management',
-          component: PointsManagementView,
-          meta: { Protected: true }
-        },
-        {
           path: 'student-points-management',
           name: 'student-points-management',
           component: StudentPointsView,
@@ -209,6 +204,18 @@ const router = createRouter({
           path: 'points-detail',
           name: 'points-detail',
           component: PointsDetailView,
+          meta: { Protected: true }
+        },
+        {
+          path: 'student-tcoin-management',
+          name: 'student-tcoin-management',
+          component: StudentTcoinView,
+          meta: { Protected: true }
+        },
+        {
+          path: 'tcoin-detail',
+          name: 'tcoin-detail',
+          component: TcoinDetailView,
           meta: { Protected: true }
         },
 

@@ -9,7 +9,6 @@ console.log('超炫酷无敌动画依赖import加载完毕')
 </script>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { onMounted, onUnmounted } from 'vue'
 
@@ -85,8 +84,8 @@ const items = [
     title: '题库管理'
   },
   {
-    index: '/points-management',
-    title: '积分管理',
+    index: '/student-points-management',
+    title: '消费管理',
     subs: [
       {
         index: '/student-points-management',
@@ -95,6 +94,14 @@ const items = [
       {
         index: '/points-detail',
         title: '积分明细'
+      },
+      {
+        index: '/student-tcoin-management',
+        title: '学生T币'
+      },
+      {
+        index: '/tcoin-detail',
+        title: 'T币明细'
       }
     ]
   },
