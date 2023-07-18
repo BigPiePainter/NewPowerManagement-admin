@@ -20,7 +20,7 @@ const searchBarItems = reactive([
   { name: '设备型号', value: '' }
 ])
 
-const loading = ref()
+const loading = ref(true)
 
 const tableColumns = [
   {
@@ -82,17 +82,18 @@ const tableColumns = [
     title: '操作',
     cellRenderer: (cellData: any) => {
       const slots = {
-        reference: () =>
+        reference: () => (
           <el-button link type="primary">
             删除
           </el-button>
+        )
       }
       return (
         <ElPopconfirm
           title="是否解绑此设备？"
           v-slots={slots}
-          onConfirm={() => cancelEquip(cellData.rowData.id)}>
-        </ElPopconfirm>
+          onConfirm={() => cancelEquip(cellData.rowData.id)}
+        ></ElPopconfirm>
       )
     },
     width: 60,
@@ -102,38 +103,24 @@ const tableColumns = [
 ]
 
 const cancelEquip = (id: number) => {
-  cancelEquipments({ id })
-    .then(() => {
-      ElNotification({
-        title: '成功',
-        message: '已成功解绑',
-        type: 'success',
-      })
-      loadData()
-    }).catch
+  cancelEquipments({ id }).then(() => {
+    ElNotification({
+      title: '成功',
+      message: '已成功解绑',
+      type: 'success'
+    })
+    loadData()
+  }).catch
 }
 
-const tableData = reactive<any>([])
+const tableData = ref<any>([])
 
 const paginationInfo = reactive({
   currentPage: 1,
-  pageSize: 20,
+  pageSize: 20
 })
 
-const dataCompute = (items: any) => {
-  tableData.length = 0
-  items.data.records.forEach((item: any) => {
-    tableData.push(item)
-  });
-  console.log(tableData)
-}
-
 const totalLength = ref<Number>()
-
-const refresh = () => {
-  console.log(searchBarItems)
-  loadData()
-}
 
 const loadData = () => {
   loading.value = true
@@ -145,29 +132,36 @@ const loadData = () => {
     phoneNumber: searchBarItems[2].value,
     deviceModel: searchBarItems[3].value
   }
-  console.log(args)
   getEquipments(args)
     .then((res) => {
-      dataCompute(res)
-      loading.value = false
+      tableData.value = res.data.records
       totalLength.value = res.data.records.length
     })
     .catch(() => {
       ElNotification({
         title: '未知错误',
-        message:"页面未成功加载",
-        type: 'error',
+        message: '页面未成功加载',
+        type: 'error'
       })
+    })
+    .finally(() => {
+      loading.value = false
     })
 }
 loadData()
 </script>
 
 <template>
-  <TablePage :loadingUI="loading" class="page-container" :msg="totalLength" @paginationChange="loadData"
-    :columns="tableColumns" :data="tableData">
+  <TablePage
+    :loading="loading"
+    class="page-container"
+    :itemsTotalLength="totalLength"
+    @paginationChange="loadData"
+    :columns="tableColumns"
+    :data="tableData"
+  >
     <div class="div-search-bar">
-      <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
     </div>
   </TablePage>
 </template>

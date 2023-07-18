@@ -48,6 +48,7 @@ class Http {
         return config
       },
       (error) => {
+        console.log("REQUEST ERROR", error)
         return Promise.reject(error)
       }
     )
@@ -55,6 +56,7 @@ class Http {
     instance.interceptors.response.use(
       (res) => {
         const { data } = res
+        console.log("接口返回", data)
         if (!data) {
           this._errorHandle(res)
           return Promise.reject(res)
@@ -62,6 +64,7 @@ class Http {
         return data
       },
       (error) => {
+        console.log("RESPONSE ERROR", error)
         const response = error.response
         if (response) {
           this._errorHandle(error)
