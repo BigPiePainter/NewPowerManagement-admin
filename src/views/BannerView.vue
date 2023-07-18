@@ -1,5 +1,6 @@
 <script setup lang="tsx">
-import { ref, reactive, watch, h } from 'vue'
+import { getBanners, createBanner, deleteBanner } from '@/apis/banner'
+import { ref, reactive, h } from 'vue'
 import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
@@ -9,6 +10,12 @@ const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: 'banner' }]
 
 const tableColumns = [
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 200
+  },
   {
     dataKey: 'poster',
     key: 'poster',
@@ -32,75 +39,105 @@ const tableColumns = [
     width: 300
   },
   {
-    dataKey: 'jump',
-    key: 'jump',
-    title: '跳转',
-    width: 80
+    dataKey: 'url',
+    key: 'url',
+    title: '链接',
+    width: 500
   },
   {
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
+      const deleteSlot = {
+        reference: () => <el-button link type="danger">删除</el-button>
+      }
       return (
         <>
           <el-button link type="primary" onClick={() => console.log(item)}>
             编辑
           </el-button>
-          <el-button link type="danger" onClick={() => console.log(item)}>
-            删除
-          </el-button>
+
+          <el-popconfirm hide-after={0} width='170' title={`删除banner ${item.rowData.title}`} onConfirm={() => bannerDelete(item)} v-slots={deleteSlot} />
         </>
       )
     },
-    width: 150,
+    width: 100,
     fixed: 'right',
     align: 'center',
     height: 500
   }
 ]
-
-let fakeData = {
-  poster: '/1.jpg',
-  title: '超级提高题',
-  jump: '是',
-}
-
 const tableData: object[] = reactive([])
 
-for (let index = 0; index < 2; index++) {
-  let data = { ...fakeData }
-  tableData.push(data)
-}
-
-console.log(tableData)
-
 const newBannerContext = reactive({
-  title: '', link: ''
+  title: '', url: ''
 })
 const newBannerDialogShow = ref(false)
 const showImgSrc = ref<string>('')
 const imageFile = reactive<{ file: Blob | null }>({ file: null })
 
-
 const newBanner = () => {
   newBannerDialogShow.value = true
   imageFile.file = null
   newBannerContext.title = ''
-  newBannerContext.link = ''
-  showImgSrc.value = ''
+  newBannerContext.url = ''
+  showImgSrc.value = 'test'
 }
 
 const confirmNewBanner = () => {
   console.log(newBannerContext)
-  ElNotification({
-    title: 'Title',
-    message: h('i', { style: 'color: teal' }, 'This is a reminder'),
-  })
+
+  var args = {
+    title: newBannerContext.title,
+    url: newBannerContext.url,
+    poster: showImgSrc.value
+  }
+  createBanner(args)
+    .then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: 'banner已上传',
+          type: 'success',
+        })
+      } else {
+        ElNotification({
+          title: '上传失败',
+          type: 'error',
+        })
+      }
+      loadData()
+    })
+    .catch()
+
   newBannerDialogShow.value = false
 }
 
 const cancelNewBanner = () => {
   newBannerDialogShow.value = false
+}
+
+const bannerDelete = (item: any) => {
+  var args = {
+    id: item.rowData.id
+  }
+  deleteBanner(args)
+    .then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: `banner ${item.rowData.title} 已删除`,
+          type: 'success',
+        })
+      } else {
+        ElNotification({
+          title: '删除失败',
+          type: 'error',
+        })
+      }
+      loadData()
+    })
+    .catch()
 }
 
 const bgc = ref('#e2e5ec')
@@ -110,8 +147,6 @@ const mouseEnter = () => {
 const mouseLeave = () => {
   bgc.value = '#e2e5ec'
 }
-
-
 
 const handleFileChange = (e: Event) => {
   const currentTarget = e.target as HTMLInputElement;
@@ -125,21 +160,22 @@ const handleFileChange = (e: Event) => {
     }
   }
 }
-// const MouseMovement=()=>{
-// 	// 定义默认的宽高
-// 	const movement = reactive({w:window.pageXOffset,h:window.pageYOffset});
-// 	onMounted(()=>{
-// 		// 当窗口发生变化时候更新宽高
-// 		window.addEventListener("dragenter",function(event){
-// 			movement.w = event.pageX;
-// 			movement.h = event.pageY;
-//       console.log(movement.w + ',' + movement.h)
-// 		})
-// 	})
-// 	// 返回size
-// 	return movement;
-// }
-// MouseMovement()
+
+const dataCompute = (data: any) => {
+  tableData.length = 0
+  data.data.forEach((item: any) => {
+    tableData.push(item)
+  });
+}
+
+const loadData = () => {
+  getBanners()
+    .then((res) => {
+      dataCompute(res)
+    })
+    .catch()
+}
+loadData()
 
 </script>
 
@@ -158,7 +194,6 @@ const handleFileChange = (e: Event) => {
           @dragleave="mouseLeave">
           <img class="show-img" id="show_img" :src="showImgSrc" />
           <div class="upload-file-area-text">
-            <div>icon</div>
             <el-text>点击此处或拖拽上传海报</el-text>
             <el-text>只接受 *.png *.jpg *.jpeg</el-text>
           </div>
@@ -178,7 +213,7 @@ const handleFileChange = (e: Event) => {
           <span class="dialog-span">
             *跳转链接：
           </span>
-          <el-input class="dialog-input" v-model="newBannerContext.link">
+          <el-input class="dialog-input" v-model="newBannerContext.url">
           </el-input>
         </div>
       </div>
