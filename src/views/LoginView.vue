@@ -24,7 +24,7 @@ const pars = reactive({
 
 const enterAccount = () => {
   pars.account = '15824136350'
-  pars.password = '482c811da5d5b4bc6d497ffa98491e38'
+  pars.password = '888888'
 }
 
 const enterHome = () => {
