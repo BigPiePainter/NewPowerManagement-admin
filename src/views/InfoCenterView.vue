@@ -4,6 +4,8 @@ import { getMessages } from '@/apis/message';
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
+import SearchBar from '@/components/SearchBar.vue'
+import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -16,6 +18,22 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
+const receiverType = reactive([
+  {id:'1', name:'学生'},
+  {id:'2', name:'老师'},
+  {id:'3', name:'后台'},
+])
+const searchBarItems = reactive([
+  { name: '发送者', value: '' },
+  { name: '标题', value: '' },
+  {
+    name: '接收者类型',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options: receiverType
+  }
+])
 
 const tableColumns = [
   {
@@ -47,6 +65,12 @@ const tableColumns = [
     key: 'unread',
     title: '未读',
     width: 50
+  },
+  {
+    dataKey: 'type',
+    key: 'type',
+    title: '接收者类型',
+    width: 100
   },
   {
     dataKey: 'reciver',
@@ -119,6 +143,9 @@ const loadData = () => {
 <template>
   <TablePage class="msg-table" :loading="loading" :itemsTotalLength="totalLength" @paginationChange="loadData"
     :columns="tableColumns" :data="tableData">
+    <div class="div-search-bar">
+      <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
+    </div>
     <div>
       <el-button @click="sendMsg" class="new-msg-button" type="primary">发消息</el-button>
     </div>
