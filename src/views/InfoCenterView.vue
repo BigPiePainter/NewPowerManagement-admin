@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import RichTextEditor from '@/components/RichTextEditor.vue';
-import { ref, reactive, } from 'vue'
+import { getMessages } from '@/apis/message';
+import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
@@ -9,31 +10,49 @@ const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: '消息中心' }]
 
+const loading = ref(true)
+const totalLength = ref<Number>()
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
 
 const tableColumns = [
   {
     dataKey: 'id',
     key: 'id',
-    title: '序号',
-    width: 60
+    title: 'ID',
+    width: 50
   },
   {
     dataKey: 'title',
     key: 'title',
     title: '标题',
-    width: 300
+    width: 250
   },
   {
-    dataKey: 'context',
-    key: 'context',
+    dataKey: 'content',
+    key: 'content',
     title: '内容',
-    width: 800
+    width: 550
+  },
+  {
+    dataKey: 'read',
+    key: 'read',
+    title: '已读',
+    width: 50
+  },
+  {
+    dataKey: 'unread',
+    key: 'unread',
+    title: '未读',
+    width: 50
   },
   {
     dataKey: 'reciver',
     key: 'reciver',
     title: '接收对象',
-    width: 100
+    width: 80
   },
   {
     key: 'option',
@@ -47,52 +66,59 @@ const tableColumns = [
         </>
       )
     },
-    width: 70,
+    width: 50,
     fixed: 'right',
     align: 'center',
   }
 ]
 
-let fakeData = {
-  id: '1',
-  title: '超级提高题',
-  context: '超级打折超级打折超级打折超级打折超级打折超级打折',
-  reciver: 'nick,mike'
-}
-
 const tableData: object[] = []
-
-for (let index = 0; index < 2; index++) {
-  let data = { ...fakeData }
-  data.id += index
-  tableData.push(data)
-}
-
-console.log(tableData)
 
 const sendMsgDialogShow = ref(false)
 const sendMsg = () => {
   sendMsgDialogShow.value = true
 }
 
-const msgContext = reactive({ title: '', recievers: '', richText: '' })
+const msgContent = reactive({ title: '', recievers: '', richText: '' })
 const confirmSendMsg = () => {
-  console.log(msgContext)
-  msgContext.title = ''
-  msgContext.recievers = ''
-  msgContext.richText = ''
+  console.log(msgContent)
+  msgContent.title = ''
+  msgContent.recievers = ''
+  msgContent.richText = ''
 }
 
 const cancelSendMsg = () => {
   sendMsgDialogShow.value = false
-  msgContext.title = ''
-  msgContext.recievers = ''
-  msgContext.richText = ''
+  msgContent.title = ''
+  msgContent.recievers = ''
+  msgContent.richText = ''
+}
+
+const dataCompute = (data: any) => {
+  console.log(data)
+}
+
+const loadData = () => {
+  loading.value = true
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+  }
+  getMessages(args)
+    .then((res) => {
+      totalLength.value = res.data.records.totalLength
+      dataCompute(res)
+    })
+    .catch()
+    .finally(() => {
+      loading.value = false
+    })
 }
 </script>
 
 <template>
-  <TablePage class="msg-table" :columns="tableColumns" :data="tableData">
+  <TablePage class="msg-table" :loading="loading" :itemsTotalLength="totalLength" @paginationChange="loadData"
+    :columns="tableColumns" :data="tableData">
     <div>
       <el-button @click="sendMsg" class="new-msg-button" type="primary">发消息</el-button>
     </div>
@@ -104,14 +130,14 @@ const cancelSendMsg = () => {
         <span class="dialog-span">
           *消息标题：
         </span>
-        <el-input class="dialog-input" placeholder="输入消息标题" v-model="msgContext.title">
+        <el-input class="dialog-input" placeholder="输入消息标题" v-model="msgContent.title">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           *接收对象：
         </span>
-        <el-input class="dialog-input" placeholder="请选择消息接收对象" v-model="msgContext.recievers">
+        <el-input class="dialog-input" placeholder="请选择消息接收对象" v-model="msgContent.recievers">
         </el-input>
       </div>
       <div>
@@ -119,7 +145,7 @@ const cancelSendMsg = () => {
           *消息内容：
         </span>
         <RichTextEditor></RichTextEditor>
-        <!-- <el-input class="dialog-input" placeholder="请输入" v-model="msgContext.richText">
+        <!-- <el-input class="dialog-input" placeholder="请输入" v-model="msgContent.richText">
         </el-input> -->
       </div>
     </div>

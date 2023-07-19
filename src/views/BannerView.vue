@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: 'banner' }]
-
+const loading = ref(true)
 const tableColumns = [
   {
     dataKey: 'id',
@@ -169,11 +169,15 @@ const dataCompute = (data: any) => {
 }
 
 const loadData = () => {
+  loading.value = true
   getBanners()
     .then((res) => {
       dataCompute(res)
     })
     .catch()
+    .finally(()=>{
+      loading.value = false
+    })
 }
 loadData()
 
@@ -181,7 +185,12 @@ loadData()
 
 <template>
   <div>
-    <TablePage class="banner-table" :columns="tableColumns" :data="tableData" :row-height="59">
+    <TablePage 
+    class="banner-table" 
+    :loading="loading" 
+    :columns="tableColumns" 
+    :data="tableData" 
+    :row-height="59">
       <div>
         <el-button @click="newBanner" class="new-banner-button" type="primary">新增</el-button>
       </div>
