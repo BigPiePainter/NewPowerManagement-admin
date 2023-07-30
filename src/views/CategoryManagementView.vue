@@ -53,6 +53,7 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
       <div class="card-title-bar">
         <el-text class="card-title-text">学习阶段</el-text>
         <div style="flex-grow: 1;"></div>
+        
         <el-text link type="primary">新增一级</el-text>
       </div>
 

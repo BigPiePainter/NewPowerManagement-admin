@@ -1,15 +1,23 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton } from 'element-plus'
+import { ClickOutside, ElButton } from 'element-plus'
 import type { TabsPaneContext } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
+import { getGrades } from '@/apis/grade'
 import { useRoute } from 'vue-router'
-import { ElCheckbox } from 'element-plus'
+import { ElNotification, ElCheckbox } from 'element-plus'
 import type { CheckboxValueType } from 'element-plus'
-
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { getStudent} from '@/apis/student'
+import { getClassesStudent, deleteClassStudent } from '@/apis/classStudent'
+
+
+
+
+
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '学校管理', path: '' },
@@ -20,18 +28,58 @@ breadcrumbStore.data = [
 
 const route = useRoute()
 
+const 班级名称 = ref<any>([])
+
+const 负责老师 = ref<any>([])
+
+const 学科 = ref<any>([])
+
+const 年级 = ref<any>([])
+
+const 起始日期 = ref<any>([])
+
+const 到期日期 = ref<any>([])
+
+const allGrades = ref<any>([])
+
+  const loadSelectOption = () => {
+  getGrades()
+    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()()))
+    .catch()
+}
+loadSelectOption()
+
 const searchBarItems = reactive([
-  { name: "姓名/用户名", value: "" },
+{ name: "选择年级",
+    value: "", 
+    label: "请选择",
+    type: InputType.Select,
+    Option: allGrades
+    },
+  { name: "姓名/用户名/电话", value: "", },
 ])
+
 const activeName = ref('officalStudent')
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)
 }
-const dialogSearchBarItems = reactive([
-  { name: "选择年级", value: "", label: "请选择", type: InputType.Select },
+
+
+
+
+
+
+
+
+const normalDialogSearchBarItems = reactive([
+  { name: "选择年级",
+    value: "", 
+    label: "请选择",
+    type: InputType.Select,
+    Option: allGrades
+    },
   { name: "姓名/用户名/电话", value: "", },
 ])
-
 const dialogTableColumns = reactive<any>([
   {
     key: 'selection',
@@ -42,9 +90,9 @@ const dialogTableColumns = reactive<any>([
     },
     headerCellRenderer: () => {
       const onChange = (value: CheckboxValueType) => {
-        dialogTableData.forEach((i: any) => i.checked = value);
+        dialogTableData.value.forEach((i: any) => i.checked = value);
       }
-      return <ElCheckbox onChange={onChange} modelValue={dialogTableData.every((i: any) => i.checked)} indeterminate={!dialogTableData.every((i: any) => i.checked) && dialogTableData.some((i: any) => i.checked)} />
+      return <ElCheckbox onChange={onChange} modelValue={dialogTableData.value.every((i: any) => i.checked)} indeterminate={!dialogTableData.value.every((i: any) => i.checked) && dialogTableData.value.some((i: any) => i.checked)} />
     },
     checked: false,
   },
@@ -55,20 +103,20 @@ const dialogTableColumns = reactive<any>([
     width: 100
   },
   {
-    dataKey: 'studentName',
-    key: 'studentName',
+    dataKey: 'name',
+    key: 'name',
     title: '学生姓名',
     width: 100
   },
   {
-    dataKey: 'userName',
-    key: 'userName',
+    dataKey: 'account',
+    key: 'account',
     title: '用户名',
     width: 150
   },
   {
-    dataKey: 'grade',
-    key: 'grade',
+    dataKey: 'gradeName',
+    key: 'gradeName',
     title: '年级',
     width: 100
   },
@@ -79,105 +127,67 @@ const dialogTableColumns = reactive<any>([
     width: 150
   },
   {
-    dataKey: 'joinDate',
-    key: 'joinDate',
+    dataKey: 'createdAt',
+    key: 'createdAt',
     title: '加入时间',
     width: 150
   },
 ])
 
-const dialogTableData = reactive<any>([
-  {
-    checked: false,
-    id: '1456',
-    studentName: 'Mr.庄',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '13294715926',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '25',
-    studentName: 'Mr.ir',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '12365415926',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '457',
-    studentName: 'Mr.空间',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '13987415926',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '22463',
-    studentName: 'Mr.如图',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '15691415926',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '568769',
-    studentName: 'Mr.是的',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '13856495926',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '23536',
-    studentName: 'Mr.进方',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '13298989926',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '45684',
-    studentName: 'Mr.搞定',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '13291415926',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '2467',
-    studentName: 'Mr.三个',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '12391415926',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '97007',
-    studentName: 'Mr.刷单',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '1329355926',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '59664',
-    studentName: 'Mr.锕',
-    userName: 'Nick191518',
-    grade: '高二',
-    phoneNumber: '13291415926',
-    joinDate: '2022-10-10'
-  },
-])
+const preDeleteStu = (item: any) => {
+  tableData.value.forEach((i: any) => {
+    if (i.id == item.rowData.id) {
+      tableData.value.splice(tableData.value.indexOf(i), 1)
+    }
+    return
+  })
+  var note: any = ElNotification({
+    title: '点击撤回',
+    message: `撤回移除学生 ${item.rowData.name}`,
+    duration: 5000,
+    onClick: () => {
+      calcelDeleteTea(item)
+      note.close()
+    },
+    onClose: () => deleteCS(item),
+    type: 'warning'
+  })
+}
+
+
+const deleteCS = (item: any) => {
+  setTimeout(console.log, 0)
+  deleteClassStudent({ id: item.rowData.id })
+    .then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: item.rowData.id + '学生删除成功',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: '删除失败',
+          message: '请求错误或删除被撤回',
+          type: 'error'
+        })
+      }
+      loadData()
+    })
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        message: '学生未成功删除',
+        type: 'error'
+      })
+    })
+}
+
+const calcelDeleteTea = (item: any) => {
+  item.rowData.id = null
+}
+
+const dialogTableData = ref<any>([])
 
 const tableColumns = [
   {
@@ -193,8 +203,8 @@ const tableColumns = [
     width: 200
   },
   {
-    dataKey: 'userName',
-    key: 'userName',
+    dataKey: 'studentId',
+    key: 'studentId',
     title: '用户名',
     width: 200
   },
@@ -204,8 +214,21 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <div>
-          <ElButton link type='primary' onClick={() => deleteStudent(item)}>移除</ElButton>
+          <el-popconfirm
+            hide-after={0}
+            width="170"
+            title={`移除学生${item.rowData.id}`}
+            onConfirm={() => preDeleteStu(item)}
+            v-slots={{
+              reference: () => (
+                <el-button link type="primary">
+                  移除
+                </el-button>
+              )
+            }}
+          />
         </div>
+        
       )
     },
     width: 150,
@@ -223,42 +246,108 @@ const detailItem = reactive({
   endDate: '2023-06-01',
 })
 
-const deleteStudent = (props: object) => {
-  console.log(props)
-}
-// const leftCardData: object = {}
-console.log(route.query.id)
-const tableData: object[] = [{ id: '1456', studentName: 'Nick', userName: 'Nick191518' }]
 
-const fakeData = { id: '123456', studentName: 'Nick', userName: 'Nick191518' }
 
-for (let index = 0; index < 100; index++) {
-  let data = { ...fakeData }
-  data.id += index;
-  tableData.push(data)
-}
 
-const refresh = () => {
-  console.log(searchBarItems)
-}
+
+const tableData = ref<any>([])
 
 const addStudentDialogShow = ref(false);
+
 const addStudent = () => {
   addStudentDialogShow.value = true;
 }
+
 const dialogSearchBarRefresh = () => {
-  console.log(dialogSearchBarItems)
+  loadSelectOption()
 }
+
 const confirmNewStudent = () => {
-  let selectedRows = dialogTableData.filter((item: any) => item.checked)
+  let selectedRows = dialogTableData.value.filter((item: any) => item.checked)
   console.log(selectedRows)
   addStudentDialogShow.value = false
-  dialogTableData.forEach((i: any) => i.checked = false);
+  dialogTableData.value.forEach((i: any) => i.checked = false);
 }
 const cancelNewStudent = () => {
   addStudentDialogShow.value = false;
-  dialogTableData.forEach((i: any) => i.checked = false);
+  dialogTableData.value.forEach((i: any) => i.checked = false);
 }
+
+const loading = ref(true)
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+
+const totalLength = ref<Number>()
+const studentType = ref<number>()
+const handleTabClick =(tab:any)=>{
+
+  if(tab.props.name == 'officalStudent'){
+    studentType.value = 1
+    loadData()
+  }
+ else studentType.value = 2
+    loadData()
+}
+
+
+
+
+const loadDialogData = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    type: studentType.value,
+    gradeIds: normalDialogSearchBarItems[0].value,
+    studentId:normalDialogSearchBarItems[1].value,
+    name:normalDialogSearchBarItems[1].value,
+    phoneNumber:normalDialogSearchBarItems[1].value,
+  }
+  console.log(args)
+
+  getStudent(args)
+    .then((res) => {
+      dialogTableData.value = res.data.records
+      totalLength.value = res.data.records.length
+      loading.value = false
+    })
+    .catch(() => {})
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+const loadData = () => {
+  loading.value = true
+  loadDialogData()
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    classId: route.query.id,
+    studentId:searchBarItems[0].value,
+  }
+  getClassesStudent(args)
+    .then((res) => {
+      tableData.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => {})
+    .finally(() => {
+      loading.value = false
+    })
+}
+loadData()
+
+
+
+
+
+
+
 </script>
 
 <template>
@@ -298,27 +387,34 @@ const cancelNewStudent = () => {
 
     </div>
     <div class="card-right">
-      <TablePage class="table-page" :columns="tableColumns" :data="tableData">
+      <TablePage 
+      class="table-page" 
+      :itemsTotalLength="totalLength"
+      :loading="loading"
+      :columns="tableColumns" 
+      @paginationChange="loadData"
+      :data="tableData"
+      >
         <div class="div-search-bar">
-          <SearchBar :items="searchBarItems" @change="refresh()"></SearchBar>
+          <SearchBar :items="searchBarItems" @change="dialogSearchBarRefresh()"></SearchBar>
           <div style="flex-grow: 1"></div>
-          <el-button class="search-bar-button" type="primary" @click="addStudent()">添加成员</el-button>
+          <el-button class="search-bar-button" type="primary" @click="addStudent(), studentType=1">添加成员</el-button>
         </div>
       </TablePage>
     </div>
   </div>
 
   <el-dialog class="class-detail-dialog" width="850px" v-model="addStudentDialogShow">
-    <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick">
+    <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleTabClick">
       <el-tab-pane label="正式学生" name="officalStudent">
         <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
-          <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()">
+          <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="dialogSearchBarRefresh()" >
           </SearchBar>
         </TablePage>
       </el-tab-pane>
       <el-tab-pane label="临时学生" name="inofficalStudent">
         <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
-          <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()">
+          <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="dialogSearchBarRefresh()">
           </SearchBar>
         </TablePage>
       </el-tab-pane>
