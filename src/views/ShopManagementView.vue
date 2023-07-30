@@ -8,7 +8,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '题目管理', path: '' }]
+breadcrumbStore.data = [{ name: '商城管理', path: '' }]
 
 const items = reactive([
   { name: '商品名称', value: '' },

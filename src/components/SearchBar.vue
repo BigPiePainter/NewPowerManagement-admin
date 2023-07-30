@@ -47,7 +47,7 @@ const clickRefresh = (): void => {
   <div class="search-bar-element">
     <div class="search-element" v-for="item in items" :key="item.name">
       <el-text class="search-title">{{ item.name }}</el-text>
-      <el-select :multiple = "item.single ? false : true" v-if="item.type == InputType.Select" class="search-input" :placeholder="item.label" v-model="item.value">
+      <el-select filterable :multiple = "item.single ? false : true" v-if="item.type == InputType.Select" class="search-input" :placeholder="item.label" v-model="item.value">
         <el-option v-for="option in item.options" :key="option.id" :label="option.name" :value="option.id" />
       </el-select>
       <el-input v-else class="search-input" :placeholder="item.label" v-model="item.value" />

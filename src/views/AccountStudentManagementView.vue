@@ -8,6 +8,8 @@ import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 import { getStudent, restStudentPsw, deleteStudent } from '@/apis/student'
+import { createStudent } from '@/apis/student'
+import { getSubjects } from '@/apis/subject'
 
 const router = useRouter()
 
@@ -132,6 +134,47 @@ const tableColumns = [
 
 const tableData = ref<object[]>([])
 
+
+const newStudentData = reactive<{
+  account: string,
+  expiration: string,
+  name: string,
+  password: string,
+  phoneNumber: number,
+  gradeId: number,
+  subjectId: number,
+  sex: number,
+  phoneNumberOfParent: string,
+  remark: string
+
+}>({
+
+  account: '',
+  name: '',
+  expiration: '',
+  password: '',
+  phoneNumber: 0,
+  gradeId: 0,
+  subjectId: 0,
+  sex: 0,
+  phoneNumberOfParent: '',
+  remark: '',
+
+
+});
+
+const allGrades = ref<any>([])
+const allSubjects = ref<any>([])
+
+const loadSelectOptionDialog = () => {
+
+  getSubjects()
+    .then((res) => (allSubjects.value = res.data))
+    .catch()
+}
+
+loadSelectOptionDialog()
+
 const restPsw = (item: any) => {
   var args = { studentId: item.rowData.id }
   restStudentPsw(args)
@@ -174,11 +217,11 @@ const preDeleteStu = (item: any) => {
   })
 }
 
-const calcelDeleteStu = (item:any) => {
+const calcelDeleteStu = (item: any) => {
   item.rowData.id = null
 }
 
-const deleteStu = (item:any) => {
+const deleteStu = (item: any) => {
   setTimeout(console.log, 0)
   deleteStudent({ studentId: item.rowData.id })
     .then((res: any) => {
@@ -208,10 +251,28 @@ const deleteStu = (item:any) => {
 
 const showDialog = ref(false)
 
-const createStudent = () => {
+const creat = () => {
   showDialog.value = true
 }
+
 const confrom = () => {
+  createStudent(newStudentData).then((res: any) => {
+    if (res.code == 20000) {
+      ElNotification({
+        title: '成功',
+        message: '已成功创建',
+        type: 'success',
+      })
+    }
+    else {
+      ElNotification({
+        title: 'Warning',
+        message: res.msg,
+        type: 'warning',
+      })
+    }
+  }).catch()
+
   showDialog.value = false
 }
 const cancel = () => {
@@ -238,6 +299,14 @@ const dataCompute = (items: any) => {
   })
   tableData.value = items
 }
+
+
+
+
+
+
+
+
 
 const totalLength = ref<Number>()
 
@@ -268,6 +337,7 @@ loadData(paginationInfo)
 const loadSelectOption = () => {
   getGrades()
     .then((res) => {
+      console.log(res)
       selectOptionGrades.length = 0
       res.data.forEach((item: any) => {
         item.subset.forEach((item: any) => {
@@ -295,6 +365,20 @@ const refresh = () => {
   console.log(searchBarItems)
   loadData(paginationInfo)
 }
+
+const allGender = [
+  {
+    id: '1',
+    value: '1',
+    label: '男',
+  },
+  {
+    id: '2',
+    value: '2',
+    label: '女',
+  },
+]
+
 </script>
 
 <template>
@@ -302,44 +386,68 @@ const refresh = () => {
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>
-      <el-button class="ARMbutton" type="primary" @click="createStudent">新建学生</el-button>
+      <el-button class="ARMbutton" type="primary" @click="creat">新建学生</el-button>
     </div>
   </TablePage>
 
-  <el-dialog v-model="showDialog" width="370px">
+  <el-dialog v-model="showDialog" width="400px">
     <template #header>
       <el-text>新建学生</el-text>
     </template>
-    <div style="height: 300px">
+    <div style="height: 400px">
       <div class="input">
         <div class="input-word">*用户名:</div>
-        <ElInput class="input-input" placeholder="请输入" />
+        <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.account" />
       </div>
       <div class="input">
         <div class="input-word">*姓名:</div>
-        <ElInput class="input-input" placeholder="请输入" />
+        <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.name" />
       </div>
       <div class="input">
-        <div class="input-word">*密码:</div>
-        <ElInput class="input-input" placeholder="6-20位,建议包含数字与字母" />
+        <div class="input-word">*到期时间:</div>
+        <el-date-picker type="datetime" placeholder="请选择" v-model="newStudentData.expiration"
+          value-format="YYYY-MM-DD HH:MM:00" />
       </div>
       <div class="input">
-        <div class="input-word">年级:</div>
-        <ElInput class="input-input" placeholder="请输入" />
+        <div class="input-word">*学习阶段:</div>
+        <el-select placeholder="请选择" class="input-input"  filterable  v-model="newStudentData.gradeId" />
+        <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.value" />
       </div>
+
+      <div class="input">
+        <div class="input-word">性别:</div>
+        <el-select class="input-input" placeholder="请输入" v-model="newStudentData.sex">
+          <el-option v-for="item in allGender" :key="item.id" :label="item.label" :value="item.value" />
+        </el-select>
+      </div>
+      <div class="input">
+        <div class="input-word">密码:</div>
+        <ElInput class="input-input" placeholder="6-20位,建议包含数字与字母" v-model="newStudentData.password" />
+      </div>
+
       <div class="input">
         <div class="input-word">学科:</div>
-        <ElInput class="input-input" placeholder="请输入" />
+        <el-select class="input-input" filterable placeholder="请输入" v-model="newStudentData.subjectId">
+          <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.value" />
+        </el-select>
       </div>
       <div class="input">
         <div class="input-word">手机号码:</div>
-        <ElInput class="input-input" placeholder="请输入" />
+        <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumber" />
+      </div>
+      <div class="input">
+        <div class="input-word">备注:</div>
+        <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.remark" />
+      </div>
+      <div class="input">
+        <div class="input-word">父母手机号:</div>
+        <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumberOfParent" />
       </div>
     </div>
     <template #footer>
-      <ElButton @click="confrom">取消</ElButton>
+      <ElButton @click="cancel">取消</ElButton>
 
-      <ElButton type="primary" @click="cancel">确认</ElButton>
+      <ElButton type="primary" @click="confrom">确认</ElButton>
     </template>
   </el-dialog>
 </template>

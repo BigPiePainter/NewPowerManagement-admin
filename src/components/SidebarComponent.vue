@@ -84,6 +84,10 @@ const items = [
     title: '题库管理'
   },
   {
+    index: '/order-management',
+    title: '订单管理'
+  },
+  {
     index: '/student-points-management',
     title: '消费管理',
     subs: [

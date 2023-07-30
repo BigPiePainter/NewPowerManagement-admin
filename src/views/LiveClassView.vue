@@ -1,53 +1,143 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton } from 'element-plus'
+import { ElButton, ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
-
+import { getLiveClasses, createLiveClass } from '@/apis/liveClass'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { getTeachers } from '@/apis/teacher'
+import { getStudent } from '@/apis/student'
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '实时课程', path: '' }]
 
-const items = reactive([
-  { name: '姓名', value: '' },
-  { name: '手机', value: '' }
+
+const teacherSelect = reactive<any>([])
+const totalLength = ref<Number>()
+const loading = ref(true)
+const tableData = ref<any>([])
+const allTeacher = ref<any>([])
+const allStudent = ref<any>([])
+
+const teacherName = reactive<{
+  name: string
+  teacherId: string
+}>({
+  name: '',
+  teacherId: '',
+})
+
+const studenstName = reactive<{
+  name: string
+  studentIds: string
+}>({
+  name: '',
+  studentIds: '',
+})
+
+getTeachers(teacherName)
+  .then((res) => (allTeacher.value = res.data))
+  .catch()
+
+getStudent(studenstName)
+  .then((res) => (allStudent.value = res.data))
+  .catch()
+
+const newClassData = reactive<{
+  duration: string
+  name: string
+  startTime: string
+  studentIds: string
+  studenstName: string
+  teacherId: string
+  teacherName: string
+  url: string
+}>({
+  duration: '',
+  studenstName: '',
+  name: '',
+  studentIds: '',
+  startTime: '',
+  teacherId: '',
+  teacherName: '',
+  url: '',
+})
+
+
+
+const conformCreate = () => {
+  createLiveClass(newClassData)
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '成功',
+          message: '已成功创建',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: 'Warning',
+          message: res,
+          type: 'warning'
+        })
+      }
+    })
+    .catch()
+
+  showDialog.value = false
+}
+
+const searchBarItems = reactive([
+  {
+    name: '老师名称',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options: teacherSelect
+  },
+  {
+    name: '课堂名称',
+    value: '',
+  }
 ])
+
+
 
 const tableColumns = [
   {
-    dataKey: 'liveClassName',
-    key: 'liveClassName',
+    dataKey: 'name',
+    key: 'name',
     title: '课堂名称',
     width: 120
   },
   {
-    dataKey: 'classTeacherName',
-    key: 'classTeacherName',
+    dataKey: 'teacherName',
+    key: 'teacherName',
     title: '课程老师',
     width: 120
   },
   {
-    dataKey: 'classStartTime',
-    key: 'classStartTime',
+    dataKey: 'startTime',
+    key: 'startTime',
     title: '课程开始时间',
     width: 200
   },
   {
-    dataKey: 'liveClassPeroid',
-    key: 'liveClassPeroid',
+    dataKey: 'duration',
+    key: 'duration',
     title: '课程时长',
     width: 100
   },
   {
-    dataKey: 'acceptedStudents',
-    key: 'acceptedStudents',
+    dataKey: 'studentList[0]',
+    key: 'studentList[0]',
     title: '接受学生',
     width: 200
   },
   {
-    dataKey: 'liveClassUrl',
-    key: 'liveClassUrl',
+    dataKey: 'url',
+    key: 'url',
     title: '课程地址',
     width: 500
   },
@@ -74,40 +164,129 @@ const tableColumns = [
     align: 'left'
   }
 ]
+const showDialog = ref(false)
 
-let fakeData = {
-  liveClassName: '数学提高课',
-  classTeacherName: '陈毅',
-  acceptedStudents: '大黄哥,李阳哥,张清宇,王绿原,张家豪',
-  liveClassPeroid: '2.',
-  classStartTime: '2019-8-17 20:08',
-  liveClassUrl: 'https:/tencentMeeting.com/363872ec012b142f4baasasassa16fb0.html'
+const createliveclass = () => {
+  showDialog.value = true
 }
 
-const tableData: object[] = []
 
-for (let index = 0; index < 100; index++) {
-  let data = { ...fakeData }
-  data.liveClassPeroid += index
-  tableData.push(data)
+
+const createclass = () => {
+  showDialog.value = true
+}
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+
+
+var args = {
+  pageNum: paginationInfo.currentPage,
+  pageSize: paginationInfo.pageSize,
+  id: searchBarItems[0].value,
+  name: searchBarItems[1].value,
 }
 
-console.log(tableData)
+const loadSelectOption = () => {
+  getLiveClasses(args)
+    .then((res) => {
+      res.data.records.forEach((item: any) => {
+        var dataSample = {
+          id: item.id,
+          name: item.name
+        }
+        teacherSelect.push(dataSample)
+      })
+      console.log(res.data.records)
+      console.log('teacher' + teacherSelect)
+    })
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        message: "搜索框选项未成功加载",
+        type: 'error',
+      })
+    })
 
-const refresh = () => {
-  console.log(items)
 }
+loadSelectOption()
+
+const loadData = () => {
+  loading.value = true
+  loadSelectOption()
+
+
+  getLiveClasses(args)
+    .then((res) => {
+      tableData.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+
+
+
+
+
+loadData()
+
 </script>
 
 <template>
-  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+  <TablePage :loading="loading" class="page-container" @paginationChange="loadData" :columns="tableColumns"
+    :itemsTotalLength="totalLength" :data="tableData">
     <div class="div-search-bar">
-      <SearchBar :items="items" @change="refresh()"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
     <div>
-      <el-button class="new-live-class-button" type="primary">新建课堂</el-button>
+      <el-button class="new-live-class-button" type="primary" @click="createliveclass">新建课堂</el-button>
     </div>
   </TablePage>
+  <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">
+    <div>
+      <div class="div-input-element">
+        <span class="dialog-span"> *课堂名称: </span>
+        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.name">
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span"> *老师姓名： </span>
+        <el-select class="dialog-input" filterable placeholder="请输入" v-model="newClassData.teacherName">
+          <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span"> *上课学生姓名： </span>
+        <el-select class="dialog-input" filterable placeholder="请输入" v-model="newClassData.studenstName">
+          <el-option v-for="item in allStudent " :key="item.id" :label="item.name" :value="item.id" />        
+        </el-select>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span"> *开课时间： </span>
+        <el-date-picker type="datetime" placeholder="请选择" v-model="newClassData.startTime"
+          value-format="YYYY-MM-DD HH:MM:00" />
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span"> *时长： </span>
+        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.studentIds">
+        </el-input>
+      </div>
+    </div>
+
+    <template #header>
+      <el-text>新建课堂</el-text>
+    </template>
+
+    <template #footer>
+      <el-button @click="conformCreate" type="primary">确认</el-button>
+      <el-button>取消</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -117,8 +296,9 @@ $gap: 15px;
   width: calc($page-width - $gap);
   height: $page-height;
   margin-left: $gap;
+
   //margin-right: $gap;
-  > .div-search-bar {
+  >.div-search-bar {
     margin: $gap;
   }
 

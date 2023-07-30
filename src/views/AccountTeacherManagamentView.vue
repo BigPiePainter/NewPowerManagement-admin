@@ -22,21 +22,26 @@ breadcrumbStore.data = [
 const loading = ref(true)
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
+const value = ref('')
 
 const newTeacherData = reactive<{
   account: string
   name: string
   password: string
-  phoneNumber: number
+  phoneNumber: string
   gradeId: number
   subjectId: number
+  remark:string
+  email:string
 }>({
   account: '',
   name: '',
   password: '',
-  phoneNumber: 0,
+  phoneNumber: '',
   gradeId: 0,
-  subjectId: 0
+  subjectId: 0,
+  remark:'',
+  email:''
 })
 
 const conformCreate = () => {
@@ -344,19 +349,41 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *学习阶段： </span>
-        <el-select class="dialog-input" placeholder="请选择" v-model="newTeacherData.gradeId">
-          <el-input v-for="index in allGrades" :key="index" />
+        <el-select filterable class="dialog-input" placeholder="请选择" v-model="newTeacherData.gradeId">
+          <el-option
+      v-for="item in allGrades"
+      :key="item.id"
+      :label="item.name"
+      :value="item.id"
+    />
         </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *学科： </span>
-        <el-select class="dialog-input" placeholder="请选择" v-model="newTeacherData.subjectId">
-          <el-input v-for="index in allSubjects" :key="index" />
-        </el-select>
+        <el-select filterable class="dialog-input" place
+        holder="请选择" v-model="newTeacherData.subjectId">
+          <el-option
+      v-for="item in allSubjects"
+      :key="item.id"
+      :label="item.name"
+      :value="item.id"
+    />
+
+  </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *手机号码： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.phoneNumber">
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span"> 邮箱 </span>
+        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.email">
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span"> 备注： </span>
+        <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.remark">
         </el-input>
       </div>
     </div>
