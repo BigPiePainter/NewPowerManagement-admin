@@ -5,6 +5,8 @@ import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
+import { upload } from '@/apis/upload';
+
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: 'banner' }]
@@ -150,8 +152,24 @@ const mouseLeave = () => {
 
 const handleFileChange = (e: Event) => {
   const currentTarget = e.target as HTMLInputElement;
+
+  //图片上传到服务器返回url
+  //url在res.data.url
   if (currentTarget.files) {
     imageFile.file = currentTarget.files[0]
+    var formData = new FormData()
+    formData.append('file', currentTarget.files[0])
+    upload(formData)
+      .then((res: any) => {
+        if (res.data.url) {
+          console.log(res)
+          newBannerContext.url = res.data.url
+        }else{
+          console.log("失败")
+        }
+      })
+      .catch()
+      
     console.log(imageFile.file)
     var reader = new FileReader();
     reader.readAsDataURL(imageFile.file);
@@ -175,7 +193,7 @@ const loadData = () => {
       dataCompute(res)
     })
     .catch()
-    .finally(()=>{
+    .finally(() => {
       loading.value = false
     })
 }
@@ -185,12 +203,7 @@ loadData()
 
 <template>
   <div>
-    <TablePage 
-    class="banner-table" 
-    :loading="loading" 
-    :columns="tableColumns" 
-    :data="tableData" 
-    :row-height="59">
+    <TablePage class="banner-table" :loading="loading" :columns="tableColumns" :data="tableData" :row-height="59">
       <div>
         <el-button @click="newBanner" class="new-banner-button" type="primary">新增</el-button>
       </div>
