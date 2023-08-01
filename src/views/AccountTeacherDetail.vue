@@ -2,8 +2,78 @@
 import DisplayVideoCard from '../components/DisplayVideoCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { getTeacherCourse } from '@/apis/teacherCourses'
+import { useRoute } from 'vue-router'
+import { getMiniLessons } from '@/apis/minilessons'
 
+
+const loading = ref(true)
 const input = ref('')
+const video = reactive<any>([])
+const route = useRoute()
+console.log(route.query.id)
+
+
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const totalLength = ref<Number>()
+const teacherCourseid =ref<any>([])
+const tableData = ref<any>([])
+const CourseData = ref<any>([])
+  
+const loadTeacherData = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    teacherId:route.query.id
+  }
+  getTeacherCourse(args)
+    .then((res) => {
+      console.log(res)
+      tableData.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => {})
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+
+loadTeacherData()
+
+const loadData = () => {
+  loading.value = true
+  tableData.value.id = teacherCourseid.value
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    teacherCourseId: teacherCourseid.value
+  }
+  getMiniLessons(args)
+    .then((res) => {
+      console.log(tableData.value )
+      res.data.records.forEach((item:any)=>{
+        video.push({ 
+          title:item.name,
+          picture:item.cover, 
+          time:item.updatedAt,
+          videoduration :item.videoDuration
+          })
+      })
+    })
+    .catch(() => {})
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+loadData()
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
@@ -11,20 +81,6 @@ breadcrumbStore.data = [
   { name: '老师详情', path: '/teacher-detail-managament' },
 ]
 
-const video = reactive([
-  { title: '【第一讲】九年级物理超级提高课', time: '2023-12-14 12:00', picture: 'sssss', videoduration: '30:00' },
-  { title: '无敌提高课', time: '2023-12-14 12:01', picture: 'sssss', videoduration: '30:01' },
-  { title: '究极提高课', time: '2023-12-14 12:02', picture: 'sssss', videoduration: '30:02' },
-  { title: '究极提高课', time: '2023-12-14 12:03', picture: 'sssss', videoduration: '30:03' },
-  { title: '究极提高课', time: '2023-12-14 12:04', picture: 'sssss', videoduration: '30:04' },
-  { title: '究极提高课', time: '2023-12-14 12:05', picture: 'sssss', videoduration: '30:05' },
-  { title: '究极提高课', time: '2023-12-14 12:06', picture: 'sssss', videoduration: '30:06' },
-  { title: '究极提高课', time: '2023-12-14 12:06', picture: 'sssss', videoduration: '30:06' },
-  { title: '究极提高课', time: '2023-12-14 12:06', picture: 'sssss', videoduration: '30:06' },
-  { title: '究极提高课', time: '2023-12-14 12:06', picture: 'sssss', videoduration: '30:06' },
-  { title: '究极提高课', time: '2023-12-14 12:06', picture: 'sssss', videoduration: '30:06' },
-
-])
 
 
 </script>

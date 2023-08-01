@@ -1,21 +1,59 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton } from 'element-plus'
+import { ElButton,ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
-
+import { changePoint } from '@/apis/point'
+import { getStudent } from '@/apis/student'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { getGrades } from '@/apis/grade'
+import { useRouter } from 'vue-router'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '积分管理', path: '' },
   { name: '学生积分', path: '' },
 ]
 
-const items = reactive([
-  { name: '班级', value: '', type:InputType.Select, label:"请选择"},
-  { name: '用户姓名', value: '', type:InputType.Select, label:"请选择"},
+const tableData = ref<any>([])
+const loading = ref(true)
+const allGrade = ref<any>([])
+
+const searchBarItems = reactive([
+  { name: '用户姓名', value: '', label: "请输入" },
+  { name: '年级', value: '', type: InputType.Select, label: "请选择", options: allGrade },
 ])
+
+
+
+
+const router = useRouter()
+const clickDetail = (props: { rowData: { id: string } }) => {
+  console.log(props);
+  router.push({ path: 'points-detail', query: { id: props.rowData.id } });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const getselection = () => {
+  getGrades()
+    .then((res) => (allGrade.value = res.data.map((i: any) => i.subset).flat()))
+    .catch()
+}
 
 const tableColumns = [
   {
@@ -25,44 +63,36 @@ const tableColumns = [
     width: 120
   },
   {
-    dataKey: 'userName',
-    key: 'userName',
+    dataKey: 'account',
+    key: 'account',
     title: '用户名',
-    width: 200,
+    width: 120,
+    cellRenderer: (cellData: any) => (
+      <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
+        {cellData.cellData}
+      </ElButton>)
   },
   {
-    dataKey: 'studenName',
-    key: 'studenName',
-    title: '学生姓名',
+    dataKey: 'name',
+    key: 'name',
+    title: '用户姓名',
     width: 150
   },
   {
-    dataKey: 'studentGrade',
-    key: 'studentGrade',
+    dataKey: 'gradeName',
+    key: 'gradeName',
     title: '年级',
-    width: 100
+    width: 150
   },
   {
-    dataKey: 'studentCellNumber',
-    key: 'studentCellNumber',
+    dataKey: 'phoneNumber',
+    key: 'phoneNumber',
     title: '手机号',
     width: 200,
   },
   {
-    dataKey: 'accumulatePoint',
-    key: 'accumulatePoint',
-    title: '累计积分数',
-    width: 100,
-  },
-  {
-    dataKey: 'spentPoint',
-    key: 'spentPoint',
-    title: '消耗积分数',
-    width: 100,
-  }, 
-   {
-    dataKey: 'presentPoints',
-    key: 'presentPoints',
+    dataKey: 'point',
+    key: 'point',
     title: '当前积分数',
     width: 200,
   },
@@ -70,9 +100,9 @@ const tableColumns = [
     key: 'option',
     title: '操作',
 
-    cellRenderer: () => (
+    cellRenderer: (item: any) => (
       <>
-        <el-button link type="primary" class="">
+        <el-button link type="primary" class="" onClick={() => editFund(item)}>
           变更积分数
         </el-button>
       </>
@@ -83,40 +113,168 @@ const tableColumns = [
     align: 'left'
   }
 ]
+const totalLength = ref<Number>()
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
 
-let fakeData = {
-  id: '1',
-  userName: 'askldjkasjdlkasld',
-  studentCellNumber: '15536996997',
-  studentGrade: '9',
-  accumulatePoint:"2790",
-  studenName: '张家豪',
-  spentPoint:'2010',
-  presentPoints:'780',
+const loadData = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    name: searchBarItems[0].value,
+    gradeIds: searchBarItems[1].value[0],
+  }
+
+  getStudent(args)
+    .then((res) => {
+      tableData.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
-const tableData: object[] = []
+const allRevenuesType = [
+  {
+    id: '1',
+    value: '1',
+    label: '下单',
+  },
+  {
+    id: '2',
+    value: '2',
+    label: '后台赠送',
+  },
 
-for (let index = 0; index < 100; index++) {
-  let data = { ...fakeData }
-  data.id += index
-  tableData.push(data)
+]
+
+
+
+const allSourceType = [
+  {
+    id: '1',
+    value: '1',
+    label: '收入',
+  },
+  {
+    id: '2',
+    value: '2',
+    label: '支出',
+  },
+
+]
+
+
+const confirmEditDialog = () => {
+  console.log(editStudentFund)
+  editStudentFundDialog.value = false;
+  changePoint(editStudentFund).
+    then((res: any) => {
+      console.log(editStudentFund)
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: '学生编辑成功',
+          type: 'success'
+        })
+        loadData()
+      } else {
+        ElNotification({
+          title: '编辑失败',
+          message: '请求错误或删除被撤回',
+          type: 'error'
+        })
+      }
+    }).catch()
+  editStudentFundDialog.value = false;
+}
+const cancelEditDialog = () => {
+  editStudentFundDialog.value = false;
+}
+const editStudentFundDialog = ref(false);
+
+const editStudentFund = reactive<{ numberOfPoint: string, remark: string, revenuesType: string, sourceType: string, studentId: string }>({ numberOfPoint: '', studentId: '', sourceType: '', revenuesType: '', remark: '' });
+const editFund = (props: { rowData: { id: string } }) => {
+  console.log(props)
+  editStudentFundDialog.value = true;
+  editStudentFund.studentId = props.rowData.id
+
 }
 
-console.log(tableData)
-
-const refresh = () => {
-  console.log(items)
-}
+getselection()
+loadData()
 </script>
 
 <template>
-  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+  <TablePage class="page-container" :loading="loading" :itemsTotalLength="totalLength" @paginationChange="loadData"
+    :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
-      <SearchBar :items="items" @change="refresh()"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
   </TablePage>
+
+
+
+
+  <el-dialog class="teacher-group-dialog" width="370px" v-model="editStudentFundDialog">
+    <div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *变更数量：
+        </span>
+        <el-input class="dialog-input" v-model="editStudentFund.numberOfPoint">
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *来源类型 ：
+        </span>
+        <el-select class="dialog-input" v-model="editStudentFund.revenuesType">
+          <el-option v-for="item in allRevenuesType" :key="item.id" :label="item.label" :value="item.value" />
+        </el-select>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *收支类型：
+        </span>
+        <el-select class="dialog-input" v-model="editStudentFund.sourceType">
+          <el-option v-for="item in allSourceType" :key="item.id" :label="item.label" :value="item.value" />
+        </el-select>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          备注：
+        </span>
+        <el-input class="dialog-input" v-model="editStudentFund.remark">
+        </el-input>
+      </div>
+    </div>
+
+
+
+
+    
+    <template #header>
+      <el-text>编辑积分数</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
+      <el-button @click="cancelEditDialog()">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
+
+
+
+
 
 <style scoped lang="scss">
 $gap: 15px;

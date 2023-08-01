@@ -8,6 +8,7 @@ import { getLiveClasses, createLiveClass } from '@/apis/liveClass'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getTeachers } from '@/apis/teacher'
 import { getStudent } from '@/apis/student'
+import { editLiveclasses } from '@/apis/liveClass'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '实时课程', path: '' }]
@@ -75,6 +76,7 @@ const conformCreate = () => {
           message: '已成功创建',
           type: 'success'
         })
+        loadData()
       } else {
         ElNotification({
           title: 'Warning',
@@ -101,6 +103,59 @@ const searchBarItems = reactive([
     value: '',
   }
 ])
+const editliveclassDialogshow = ref(false)
+
+const editliveclassData = reactive<{
+
+  id: string,
+  remark: string,
+  gradeId: string,
+  expiration: string
+}>({
+  id: '',
+  remark: '',
+  gradeId: '',
+  expiration: ''
+});
+
+const editliveclass =
+  (props: { rowData: { id: string, gradeId: string, expiration: string, remark: string } }) => {
+    editliveclassData.id = props.rowData.id;
+    editliveclassData.expiration = props.rowData.expiration;
+    editliveclassData.gradeId = props.rowData.gradeId;
+    editliveclassData.remark = props.rowData.remark;
+
+    console.log(props)
+    editliveclassDialogshow.value = true;
+  }
+
+const confirmEditDialog = () => {
+  editLiveclasses(editliveclass).
+    then((res: any) => {
+      console.log(editliveclass)
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: '学生编辑成功',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: '编辑失败',
+          message: '请求错误或删除被撤回',
+          type: 'error'
+        })
+      }
+    }).catch()
+  loadData()
+  editliveclassDialogshow.value = false;
+
+}
+
+
+const cancelEditDialog = () => {
+  editliveclassDialogshow.value = false;
+}
 
 
 
@@ -145,9 +200,9 @@ const tableColumns = [
     key: 'option',
     title: '操作',
 
-    cellRenderer: () => (
+    cellRenderer: (item: any) => (
       <>
-        <el-button link type="primary" class="">
+        <el-button link type="primary" class="" onClick={() => editliveclass(item)}>
           编辑
         </el-button>
         <el-button link type="primary" class="">
@@ -256,15 +311,15 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *老师姓名： </span>
-        <el-select class="dialog-input" filterable placeholder="请输入" v-model="newClassData.teacherName">
+        <el-input class="dialog-input"  placeholder="请输入" v-model="newClassData.teacherId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
+        </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *上课学生姓名： </span>
-        <el-select class="dialog-input" filterable placeholder="请输入" v-model="newClassData.studenstName">
-          <el-option v-for="item in allStudent " :key="item.id" :label="item.name" :value="item.id" />        
-        </el-select>
+        <el-input class="dialog-input"  placeholder="请输入" v-model="newClassData.studenstName">
+          <el-option v-for="item in allStudent " :key="item.id" :label="item.name" :value="item.id" />
+        </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *开课时间： </span>
@@ -273,7 +328,12 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *时长： </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.studentIds">
+        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.duration">
+        </el-input>
+      </div>
+      <div class="div-input-element">
+        <span class="dialog-span"> *链接 </span>
+        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.url">
         </el-input>
       </div>
     </div>
@@ -285,6 +345,41 @@ loadData()
     <template #footer>
       <el-button @click="conformCreate" type="primary">确认</el-button>
       <el-button>取消</el-button>
+    </template>
+  </el-dialog>
+
+
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="editliveclassDialogshow">
+    <div class="div-input-element">
+      <span class="dialog-span">
+        <el-input 
+        disabled class="dialog-input" v-model="editliveclassData.id">
+        </el-input>
+      </span>
+    </div>
+    <div class="div-input-element">
+      <span class="dialog-span">
+        学科：
+      </span>
+    </div>
+
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <span class="dialog-span">
+        年级：
+      </span>
+    </div>
+
+    <template #header>
+      <el-text>编辑老师</el-text>
+    </template>
+
+    <template #footer>
+      <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
+      <el-button @click="cancelEditDialog()">
+        取消
+      </el-button>
     </template>
   </el-dialog>
 </template>

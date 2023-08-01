@@ -6,29 +6,33 @@ import { InputType } from '@/type'
 import { useRouter } from 'vue-router'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import SearchBar from '@/components/SearchBar.vue'
+import { getCourseQuestionPackage } from '@/apis/coursequestionpackage'
+
 
 const breadcrumbStore = useBreadcrumbStore()
-
-const refresh = () => {
-  console.log(items)
-}
 
 breadcrumbStore.data = [
   { name: '课程管理', path: '' },
   { name: '课程管理', path: '/course-management' }
 ]
-
-const items = reactive([
+const tableData = ref<any>([])
+const totalLength = ref<Number>()
+const loading = ref(true)
+const searchBarItems = reactive([
   { name: "课程名称", value: "", label: "请输入" },
 ])
+
 
 const router = useRouter()
 
 
-const courseCreat = () => {router.push({path: '/course-create'})
+const courseCreat = (props: any) => {router.push({path: 'course-create', query: { id: props.rowData.id }})
 }
 
-const couseDetail = () => {router.push({path: '/course-detail'})
+
+const couseDetail = (props: any) => {
+  console.log(props)
+  router.push({ path: 'course-detail', query: { id: props.rowData.id } })
 }
 
 const tableColumns = [
@@ -39,46 +43,22 @@ const tableColumns = [
     width: 150
   },
   {
-    dataKey: 'courseName',
-    key: 'courseName',
+    dataKey: 'name',
+    key: 'name',
     title: '课程名称',
     width: 200,
-    cellRenderer: (cellData: any) => <ElButton link type='primary' onClick={() => couseDetail()} class="detailed">{cellData.cellData}</ElButton>
+    cellRenderer: (cellData: any) => <ElButton link type='primary' onClick={() => couseDetail(cellData)} class="detailed">{cellData.cellData}</ElButton>
   },
   {
-    dataKey: 'courseAmount',
-    key: 'courseAmount',
-    title: '课程大纲数量',
+    dataKey: 'teacherId',
+    key: 'teacherId',
+    title: '封面',
     width: 200
   },
   {
-    dataKey: 'courseGrade',
-    key: 'courseGrade',
-    title: '年级',
-    width: 120
-  },
-  {
-    dataKey: 'courseSubject',
-    key: 'courseSubject',
-    title: '学科',
-    width: 120
-  },
-  {
-    dataKey: 'courseTag',
-    key: 'courseTag',
-    title: '标签',
-    width: 120
-  },
-  {
-    dataKey: 'courseCreateTime',
-    key: 'courseCreateTime',
+    dataKey: 'createdAt',
+    key: 'createdAt',
     title: '创建时间',
-    width: 200
-  },
-  {
-    dataKey: 'courseChangeTime',
-    key: 'courseChangeTime',
-    title: '最后更新时间',
     width: 200
   },
   {
@@ -104,115 +84,48 @@ const tableColumns = [
   }
 ]
 
-const tableData: object[] = [
-  {
-    id: '1',
-    courseName: 'Aaron191518',
-    courseAmount: '12',
-    courseGrade: '9年级',
-    courseSubject: '数学',
-    courseTag:'-',
-    courseCreateTime:'2022-11-01 12:20',
-    courseChangeTime:'2022-12-31 12:20'
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
 
-  },
-  {
-    id: '2',
-    courseName: 'Aaron191518',
-    courseAmount: '12',
-    courseGrade: '9年级',
-    courseSubject: '数学',
-    courseTag:'-',
-    courseCreateTime:'2022-11-01 12:20',
-    courseChangeTime:'2022-12-31 12:20'
-
-  },
-  {
-    id: '3',
-    courseName: 'Aaron191518',
-    courseAmount: '12',
-    courseGrade: '9年级',
-    courseSubject: '数学',
-    courseTag:'-',
-    courseCreateTime:'2022-11-01 12:20',
-    courseChangeTime:'2022-12-31 12:20'
-
-  },
-  {
-    id: '4',
-    courseName: 'Aaron191518',
-    courseAmount: '12',
-    courseGrade: '9年级',
-    courseSubject: '数学',
-    courseTag:'-',
-    courseCreateTime:'2022-11-01 12:20',
-    courseChangeTime:'2022-12-31 12:20'
-
-  },
-  {
-    id: '5',
-    courseName: 'Aaron191518',
-    courseAmount: '12',
-    courseGrade: '9年级',
-    courseSubject: '数学',
-    courseTag:'-',
-    courseCreateTime:'2022-11-01 12:20',
-    courseChangeTime:'2022-12-31 12:20'
-
-  },
-  {
-    id: '6',
-    courseName: 'Aaron191518',
-    courseAmount: '12',
-    courseGrade: '9年级',
-    courseSubject: '数学',
-    courseTag:'-',
-    courseCreateTime:'2022-11-01 12:20',
-    courseChangeTime:'2022-12-31 12:20'
-
-  },
-  {
-    id: '7',
-    courseName: 'Aaron191518',
-    courseAmount: '12',
-    courseGrade: '9年级',
-    courseSubject: '数学',
-    courseTag:'-',
-    courseCreateTime:'2022-11-01 12:20',
-    courseChangeTime:'2022-12-31 12:20'
-
-  },
-  {
-    id: '8',
-    courseName: 'Aaron191518',
-    courseAmount: '12',
-    courseGrade: '9年级',
-    courseSubject: '数学',
-    courseTag:'-',
-    courseCreateTime:'2022-11-01 12:20',
-    courseChangeTime:'2022-12-31 12:20'
-
-  },
-  {
-    id: '9',
-    courseName: 'Aaron191518',
-    courseAmount: '12',
-    courseGrade: '9年级',
-    courseSubject: '数学',
-    courseTag:'-',
-    courseCreateTime:'2022-11-01 12:20',
-    courseChangeTime:'2022-12-31 12:20'
-
+const loadData = () => {
+  loading.value = true
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    name: searchBarItems[0].value
   }
+  getCourseQuestionPackage(args)
+    .then((res) => {
+      console.log(res)
+      tableData.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => {})
+    .finally(() => {
+    loading.value = false
+    })
 
-]
+
+}
+
+
+loadData()
+
 </script>
 
 <template>
-
-  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+<TablePage
+    :loading="loading" 
+    class="page-container"
+    :itemsTotalLength="totalLength"
+    @paginationChange="loadData"
+    :columns="tableColumns"
+    :data="tableData"
+  >
     <div class='div-search-bar'>
-      <SearchBar :items="items" @change="refresh()"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="courseCreat">新建课程</el-button>
     </div>
   </TablePage>

@@ -11,7 +11,7 @@ import { ElNotification, ElCheckbox } from 'element-plus'
 import type { CheckboxValueType } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getStudent} from '@/apis/student'
-import { getClassesStudent, deleteClassStudent } from '@/apis/classStudent'
+import { getClassesStudent, deleteClassStudent,createClassStudent } from '@/apis/classStudent'
 
 
 
@@ -42,33 +42,25 @@ const 到期日期 = ref<any>([])
 
 const allGrades = ref<any>([])
 
-  const loadSelectOption = () => {
-  getGrades()
-    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()()))
-    .catch()
-}
-loadSelectOption()
-
 const searchBarItems = reactive([
 { name: "选择年级",
     value: "", 
     label: "请选择",
     type: InputType.Select,
-    Option: allGrades
+    options: allGrades
     },
   { name: "姓名/用户名/电话", value: "", },
 ])
 
-const activeName = ref('officalStudent')
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-  console.log(tab, event)
+  const loadSelectOption = () => {
+  getGrades()
+    .then((res) => allGrades.value = res.data.map((i: any) => i.subset).flat())
+    .catch()
 }
+loadSelectOption()
 
 
-
-
-
-
+const activeName = ref('officalStudent')
 
 
 const normalDialogSearchBarItems = reactive([
@@ -76,10 +68,11 @@ const normalDialogSearchBarItems = reactive([
     value: "", 
     label: "请选择",
     type: InputType.Select,
-    Option: allGrades
+    options: allGrades
     },
   { name: "姓名/用户名/电话", value: "", },
 ])
+
 const dialogTableColumns = reactive<any>([
   {
     key: 'selection',
@@ -237,16 +230,6 @@ const tableColumns = [
   }
 ]
 
-const detailItem = reactive({
-  className: '中考冲刺',
-  teacher: 'Mr.庄',
-  major: '科学',
-  grade: '初三',
-  startDate: '2023-01-01',
-  endDate: '2023-06-01',
-})
-
-
 
 
 
@@ -261,13 +244,43 @@ const addStudent = () => {
 const dialogSearchBarRefresh = () => {
   loadSelectOption()
 }
+const newStudentData = ref<any>([])
 
 const confirmNewStudent = () => {
-  let selectedRows = dialogTableData.value.filter((item: any) => item.checked)
-  console.log(selectedRows)
-  addStudentDialogShow.value = false
-  dialogTableData.value.forEach((i: any) => i.checked = false);
+  newStudentData.value = dialogTableData.value.filter((item: any) => item.checked)
+  let data = newStudentData.value.map((item: any) => item.id)
+  console.log(data)
+
+  createClassStudent({
+    classId: route.query.id,
+    studentIdArr: data
+  }).then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: '添加学生成功',
+          type: 'success'
+        })
+      }else{
+        ElNotification({
+          title: '成功',
+          message: '添加学生失败',
+          type: 'success'
+        })
+      }
+    
+loadData()
+  }).catch
 }
+
+
+
+
+
+
+
+
+
 const cancelNewStudent = () => {
   addStudentDialogShow.value = false;
   dialogTableData.value.forEach((i: any) => i.checked = false);
@@ -306,7 +319,6 @@ const loadDialogData = () => {
     name:normalDialogSearchBarItems[1].value,
     phoneNumber:normalDialogSearchBarItems[1].value,
   }
-  console.log(args)
 
   getStudent(args)
     .then((res) => {
@@ -316,7 +328,8 @@ const loadDialogData = () => {
     })
     .catch(() => {})
     .finally(() => {
-      loading.value = false
+    loading.value = false
+
     })
 }
 
@@ -325,18 +338,23 @@ const loadData = () => {
   loadDialogData()
 
   var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    classId: route.query.id,
-    studentId:searchBarItems[0].value,
+    
+      pageNum: paginationInfo.currentPage,
+      pageSize: paginationInfo.pageSize,
+      classId: route.query.id,
+      studentId:searchBarItems[0].value,
   }
+
   getClassesStudent(args)
+
     .then((res) => {
+      console.log(res)
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
-    })
-    .catch(() => {})
-    .finally(() => {
+      
+      })
+      .catch(() => {})
+      .finally(() => {
       loading.value = false
     })
 }
@@ -362,24 +380,24 @@ loadData()
       <div class="div-card-left-detail">
         <div class="detail-info">
           <el-text class="el-text-detail">
-            班级名称：{{ detailItem.className }}
+            班级名称：{{  }}
           </el-text>
           <el-text class="el-text-detail">
-            负责老师：{{ detailItem.teacher }}
+            负责老师：{{}}
           </el-text>
           <el-text class="el-text-detail">
-            学科：{{ detailItem.major }}
+            学科：{{  }}
           </el-text>
           <el-text class="el-text-detail">
-            年级：{{ detailItem.grade }}
+            年级：{{ }}
           </el-text>
         </div>
         <div class="detail-date">
           <el-text class="el-text-detail">
-            起始日期：{{ detailItem.startDate }}
+            起始日期：{{  }}
           </el-text>
           <el-text class="el-text-detail">
-            到期日期：{{ detailItem.endDate }}
+            到期日期：{{ }}
           </el-text>
         </div>
 

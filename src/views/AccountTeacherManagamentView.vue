@@ -11,6 +11,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 import { createTeacher } from '@/apis/teacher'
 import { ElNotification } from 'element-plus'
+import { editTeachers } from '@/apis/teacher'
 
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
@@ -24,6 +25,7 @@ const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const value = ref('')
 
+
 const newTeacherData = reactive<{
   account: string
   name: string
@@ -31,8 +33,8 @@ const newTeacherData = reactive<{
   phoneNumber: string
   gradeId: number
   subjectId: number
-  remark:string
-  email:string
+  remark: string
+  email: string
 }>({
   account: '',
   name: '',
@@ -40,9 +42,25 @@ const newTeacherData = reactive<{
   phoneNumber: '',
   gradeId: 0,
   subjectId: 0,
-  remark:'',
-  email:''
+  remark: '',
+  email: ''
 })
+
+const editTeacherData = reactive<{
+
+  id: string,
+  subjectId: string,
+  gradeId: string
+}>({
+  id: '',
+  subjectId: '',
+  gradeId: ''
+});
+
+const editTeacherDialogShow = ref(false);
+
+
+
 
 const conformCreate = () => {
   createTeacher(newTeacherData)
@@ -147,7 +165,7 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <div>
-          <el-button link type="primary" onClick={() => console.log(item)}>
+          <el-button link type="primary" onClick={() => editTeacher(item)}>
             编辑
           </el-button>
 
@@ -190,7 +208,7 @@ const tableColumns = [
 const tableData = ref<any>([])
 
 const restPsw = (item: any) => {
-  resetTeacherPsw({ teacherId: item.rowData.id })
+  resetTeacherPsw({ id: item.rowData.id })
     .then((res: any) => {
       if (res.msg == 'success') {
         ElNotification({
@@ -237,16 +255,18 @@ const calcelDeleteTea = (item: any) => {
   item.rowData.id = null
 }
 
+
+
 const deleteTea = (item: any) => {
   setTimeout(console.log, 0)
-  deleteTeacher({ teacherId: item.rowData.id })
-    .then((res: any) => {
+  deleteTeacher({ teacherId: item.rowData.id }).then((res: any) => {
       if (res.code == '20000') {
         ElNotification({
           title: '成功',
           message: item.rowData.name + '老师删除成功',
           type: 'success'
         })
+        loadData()
       } else {
         ElNotification({
           title: '删除失败',
@@ -254,9 +274,8 @@ const deleteTea = (item: any) => {
           type: 'error'
         })
       }
-      loadData()
     })
-    .catch(() => {
+.catch(() => {
       ElNotification({
         title: '未知错误',
         message: '老师未成功删除',
@@ -288,6 +307,50 @@ const loadSelectOption = () => {
     .catch()
 }
 
+
+
+const editTeacher =
+  (props: { rowData: { id: string, gradeId: string, subjectId: string } }) => {
+    editTeacherData.id = props.rowData.id;
+    editTeacherData.subjectId = props.rowData.subjectId;
+    editTeacherData.gradeId = props.rowData.gradeId;
+    console.log(props)
+    editTeacherDialogShow.value = true;
+  }
+
+const confirmEditDialog = () => {
+
+  editTeachers(editTeacherData).
+  then((res: any) => {
+    if (res.code == '20000') {
+      ElNotification({
+        title: '成功',
+        message: '老师编辑成功',
+        type: 'success'
+      })
+    } else {
+
+      ElNotification({
+        title: '编辑失败',
+        message: '请求错误或删除被撤回',
+        type: 'error'
+      })
+    }
+  }).catch()
+
+  loadData()
+  editTeacherDialogShow.value = false;
+
+}
+
+
+const cancelEditDialog = () => {
+  editTeacherDialogShow.value = false;
+}
+
+
+
+
 const loadData = () => {
   loading.value = true
   loadSelectOption()
@@ -306,7 +369,7 @@ const loadData = () => {
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
     })
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
       loading.value = false
     })
@@ -316,19 +379,17 @@ loadData()
 </script>
 
 <template>
-  <TablePage
-    :loading="loading"
-    class="page-container"
-    :itemsTotalLength="totalLength"
-    @paginationChange="loadData"
-    :columns="tableColumns"
-    :data="tableData"
-  >
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+    :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
       <el-button class="ARMbutton" type="primary" @click="createteachers">新建老师</el-button>
     </div>
   </TablePage>
+
+
+
+
 
   <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">
     <div>
@@ -350,26 +411,15 @@ loadData()
       <div class="div-input-element">
         <span class="dialog-span"> *学习阶段： </span>
         <el-select filterable class="dialog-input" placeholder="请选择" v-model="newTeacherData.gradeId">
-          <el-option
-      v-for="item in allGrades"
-      :key="item.id"
-      :label="item.name"
-      :value="item.id"
-    />
+          <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *学科： </span>
-        <el-select filterable class="dialog-input" place
-        holder="请选择" v-model="newTeacherData.subjectId">
-          <el-option
-      v-for="item in allSubjects"
-      :key="item.id"
-      :label="item.name"
-      :value="item.id"
-    />
+        <el-select filterable class="dialog-input" place holder="请选择" v-model="newTeacherData.subjectId">
+          <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
 
-  </el-select>
+        </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *手机号码： </span>
@@ -394,6 +444,47 @@ loadData()
     <template #footer>
       <el-button @click="conformCreate" type="primary">确认</el-button>
       <el-button>取消</el-button>
+    </template>
+  </el-dialog>
+
+
+
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="editTeacherDialogShow">
+    <div class="div-input-element">
+      <span class="dialog-span">
+        <el-text disabled class="dialog-input" v-model="editTeacherData.id">
+        </el-text>
+      </span>
+    </div>
+    <div class="div-input-element">
+      <span class="dialog-span">
+        学科：
+      </span>
+      <el-select filterable class="dialog-input" v-model="editTeacherData.subjectId">
+        <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
+    </div>
+
+    
+    <div class="div-input-element" style="margin-top: 10px;">
+      <span class="dialog-span">
+        年级：
+      </span>
+      <el-select class="dialog-input" v-model="editTeacherData.gradeId">
+        <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
+    </div>
+
+    <template #header>
+      <el-text>编辑老师</el-text>
+    </template>
+
+    <template #footer>
+      <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
+      <el-button @click="cancelEditDialog()">
+        取消
+      </el-button>
     </template>
   </el-dialog>
 </template>
@@ -421,30 +512,32 @@ $gap: 15px;
 }
 
 .new-class-dialog {
-  > .el-dialog__body {
+  >.el-dialog__body {
     display: flex;
     align-items: center;
     flex-direction: column;
 
-    > div {
+    >div {
       width: fit-content;
 
-      > .div-input-element {
+      >.div-input-element {
         display: flex;
         align-items: center;
         justify-content: right;
         margin-bottom: 13px;
+        margin: 10px;
 
-        > .dialog-span {
+        >.dialog-span {
           margin-right: 10px;
+          margin: 10px
         }
 
-        > .dialog-input {
-          width: 200px;
+        >.dialog-input {
+          width: 100px;
+          margin: 10px;
         }
       }
     }
   }
 }
 </style>
-@/apis/grade@/apis/teacher

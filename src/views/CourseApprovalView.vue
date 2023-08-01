@@ -1,16 +1,60 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import type { TabsPaneContext } from 'element-plus'
+import type { ElButton, TabsPaneContext } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue'
+import { getMiniLessons,editMiniLessons,deleteMiniLessons } from '@/apis/minilessons'
+import HeaderCellRenderer from 'element-plus/es/components/table-v2/src/renderers/header-cell'
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '课程管理' }, { name: '微课审核' }]
 
 const activeName = ref('pending')
+const totalLength = ref<Number>()
+const auditStatus = ref<Number>()
+const warningDialogshow = ref(false)
 
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-  console.log(tab, event)
-}
+
+
+const loading = ref(true)
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+
+
+
+
+
+
+const editDialogShow = ref(false);
+
+const editCourseData = reactive<{
+
+  id: string,
+  isTrial: string,
+  name: string,
+
+}>({
+
+  id: '',
+  isTrial: '',
+  name: ''
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const tableColumnsPending = [
   {
@@ -20,44 +64,54 @@ const tableColumnsPending = [
     width: 200
   },
   {
-    dataKey: 'title',
-    key: 'title',
+    dataKey: 'name',
+    key: 'name',
     title: '标题',
     width: 200
   },
   {
-    dataKey: 'uploadUser',
-    key: 'uploadUser',
+    dataKey: 'ownerId',
+    key: 'ownerId',
     title: '上传者',
     width: 200
   },
   {
-    dataKey: 'tag',
-    key: 'tag',
-    title: '标签',
-    width: 200
+    dataKey: 'status',
+    key: 'status',
+    title: '状态',
+    width: 200,
+    cellRenderer: (cellData: any) => (
+      <span>
+        {cellData.cellData == 1 ? "草稿" : cellData.cellData == 2 ? "制作完成" : "已提交"}
+      </span>
+    )
   },
   {
-    dataKey: 'uploadTime',
-    key: 'uploadTime',
-    title: '上传时间',
-    width: 200
+    dataKey: 'isTrial',
+    key: 'isTrial',
+    title: '是否支持试看',
+    width: 200,
+    cellRenderer: (cellData: any) => (
+      <span>
+        {cellData.cellData == 1 ? "支持" : "不支持"}
+      </span>
+    )
   },
   {
     key: 'option',
     title: '操作',
-    cellRenderer: () => (
+    cellRenderer: (cellData: any) => (
       <>
-        <el-button link type="primary" class="">
+        <el-button link type="primary" class="" onClick={() => pass(cellData)}>
           通过
         </el-button>
-        <el-button link type="primary" class="">
+        <el-button link type="primary" class="" onClick={() => reject(cellData)}>
           拒绝
         </el-button>
-        <el-button link type="primary" class="">
+        <el-button link type="primary" class="" onClick={() => edit(cellData)}>
           编辑
         </el-button>
-        <el-button link type="danger" class="">
+        <el-button link type="danger" class=""onClick={() => warningDialog(cellData)}>
           删除
         </el-button>
       </>
@@ -67,100 +121,273 @@ const tableColumnsPending = [
   }
 ]
 
-const tableColumnsApproved = [...tableColumnsPending]
-let options: any = { ...tableColumnsApproved.pop() }
-options.cellRenderer = () => (
-  <>
-    <el-button link type="primary" class="">
-      编辑
-    </el-button>
-    <el-button link type="danger" class="">
-      删除
-    </el-button>
-  </>
-)
-options.width = 100
-tableColumnsApproved.push(options)
+const allOption = [
+  {
+    id: '1',
+    value: '1',
+    label: '支持试看',
+  },
+  {
+    id: '2',
+    value: '2',
+    label: '不支持试看',
+  },
+]
 
-const tableColumnsRejected = [...tableColumnsPending]
-options = { ...tableColumnsRejected.pop() }
-options.cellRenderer = () => (
-  <>
-    <el-button link type="primary" class="">
-      编辑
-    </el-button>
-    <el-button link type="danger" class="">
-      删除
-    </el-button>
-  </>
-)
-options.width = 100
-tableColumnsRejected.push(options)
+const pass = (item: any) => {
 
-//const tableColumnsPending
-
-let fakeData = {
-  id: '1',
-  title: '完形填空突破1',
-  uploadUser: '张清宇',
-  tag: '-',
-  uploadTime: '2023-9-19 18:23'
+  editMiniLessons({ id: item.rowData.id, auditStatus: 3, }).then((res: any) => {
+    if (res.code == '20000') {
+      console.log('已通过')
+    }
+    loadData()
+  }).catch
 }
 
-const tableDataPending: object[] = []
+const reject = (item: any) => {
 
-for (let index = 0; index < 10; index++) {
-  let data = { ...fakeData }
-  data.id += index
-  tableDataPending.push(data)
+  editMiniLessons({ id: item.rowData.id, auditStatus: 4, }).then((res: any) => {
+    if (res.code == '20000') {
+      console.log('已通过')
+    }
+    loadData()
+  }).catch
 }
 
-const tableDataApproved: object[] = []
 
-for (let index = 50; index < 100; index++) {
-  let data = { ...fakeData }
-  data.id += index
-  tableDataApproved.push(data)
+const edit =
+  (props: { rowData: { id: string, name: string, isTrial: string } }) => {
+    editCourseData.id = props.rowData.id;
+    editCourseData.isTrial = '';
+    editCourseData.name = props.rowData.name;
+    console.log(props)
+    editDialogShow.value = true;
+  }
+
+
+  const confirmEditDialog =()=>{
+    editMiniLessons(editCourseData).then((res: any) => {
+    if (res.code == '20000') {
+      console.log('已通过')
+    }
+    editDialogShow.value = false;
+    loadData()
+  }).catch
 }
 
-const tableDataRejected: object[] = []
-
-for (let index = 100; index < 200; index++) {
-  let data = { ...fakeData }
-  data.id += index
-  tableDataRejected.push(data)
+  const cancelEditDialog = () => {
+  editDialogShow.value = false;
 }
+
+const tableDataPending = ref<any>([])
+
+const tableDataApproved = ref<any>([])
+
+const tableDataRejected = ref<any>([])
+
+
+
+const loadPendingData = () => {
+  loading.value = true
+
+  var args = {
+
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    auditStatus: 1
+
+  }
+
+  getMiniLessons(args)
+
+    .then((res) => {
+      tableDataPending.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+
+const loadApprovalData = () => {
+  loading.value = true
+  var args = {
+
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    auditStatus: 3,
+  }
+
+  getMiniLessons(args)
+
+    .then((res) => {
+      tableDataApproved.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+}
+loadApprovalData()
+
+
+const loadRejctData = () => {
+  loading.value = true
+
+  var args = {
+
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    auditStatus: 4,
+  }
+
+  getMiniLessons(args)
+
+    .then((res) => {
+      tableDataRejected.value = res.data.records,
+        totalLength.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+}
+const deleteItemid = ref<any>()
+const loadData = () => {
+  loadPendingData()
+  loadApprovalData()
+  loadRejctData()
+
+}
+
+const warningDialog=(cellData2:any)=>{
+  console.log(cellData2)
+  warningDialogshow.value = true
+  deleteItemid.value=cellData2
+  console.log(deleteItemid.value)
+}
+const ConfirmdeleteMiniLesson = () => {
+  deleteMiniLessons({id:deleteItemid.value.rowData.id}).then((res: any) => {
+    console.log(deleteItemid)
+    if (res.code == 20000) {
+      console.log('删除成功')
+
+      loadData()
+      warningDialogshow.value=false
+    }
+    else {
+      warningDialogshow.value=false
+      console.log('删除失败')
+    }
+  }).catch()
+}
+
+
+
+
+
+
+
+
+
+
+loadData()
+
+const handleClick = (tab: any) => {
+  if (tab.props.name == 'pending') {
+    auditStatus.value = 1
+    loadPendingData()
+  }
+  else if (tab.props.name == 'approved') {
+    auditStatus.value = 3
+    loadApprovalData()
+  }
+
+  else {
+    auditStatus.value = 4
+    loadRejctData()
+  }
+}
+
 </script>
 
 <template>
   <div class="">
     <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick">
       <el-tab-pane label="待审核" name="pending">
-        <TablePage
-          class="tabs-page-table"
-          :columns="tableColumnsPending"
-          :data="tableDataPending"
-        ></TablePage>
+        <TablePage class="tabs-page-table" :columns="tableColumnsPending" :data="tableDataPending"></TablePage>
       </el-tab-pane>
-      <el-tab-pane label="已通过" name="approved"
-        ><TablePage
-          class="tabs-page-table"
-          :columns="tableColumnsApproved"
-          :data="tableDataApproved"
-        ></TablePage
-      ></el-tab-pane>
-      <el-tab-pane label="未通过" name="rejected"
-        ><TablePage
-          class="tabs-page-table"
-          :columns="tableColumnsRejected"
-          :data="tableDataRejected"
-        ></TablePage
-      ></el-tab-pane>
+      <el-tab-pane label="已通过" name="approved">
+        <TablePage class="tabs-page-table" :columns="tableColumnsPending" :data="tableDataApproved"></TablePage>
+      </el-tab-pane>
+      <el-tab-pane label="未通过" name="rejected">
+        <TablePage class="tabs-page-table" :columns="tableColumnsPending" :data="tableDataRejected"></TablePage>
+      </el-tab-pane>
     </el-tabs>
   </div>
+
+
+
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="editDialogShow">
+    <div class="div-input-element">
+      <span class="dialog-span">
+        <el-text disabled class="dialog-input" v-model="editCourseData.id">
+        </el-text>
+      </span>
+    </div>
+
+    <div class="div-input-element">
+      <span class="dialog-span">
+        名称：
+      </span>
+      <el-input filterable class="dialog-input" v-model="editCourseData.name">
+      </el-input>
+    </div>
+    <div class="div-input-element" style="margin-top: 10px;">
+      <span class="dialog-span">
+        可否预览：
+      </span>
+      <el-select class="dialog-input" v-model="editCourseData.isTrial">
+        <el-option v-for="item in allOption" :key="item.id" :label="item.label" :value="item.value" />
+      </el-select>
+    </div>
+
+    <template #header>
+      <el-text>编辑老师</el-text>
+    </template>
+
+    <template #footer>
+      <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
+      <el-button @click="cancelEditDialog()">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
+
+
+
+  <el-dialog v-model="warningDialogshow" title="Warning" width="30%" center>
+    <el-text disabled style="display: flex;align-items: center;justify-content: center;">
+      是否确认删除课程
+    </el-text>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="warningDialogshow=false">Cancel</el-button>
+        <el-button type="primary" @click="ConfirmdeleteMiniLesson">
+          Confirm
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
+
 <style scoped lang="scss">
+$gap: 15px;
 .tabs-page {
   padding-left: 30px;
   padding-top: 10px;
@@ -171,4 +398,54 @@ for (let index = 100; index < 200; index++) {
     height: calc($page-height - 54px - 10px);
   }
 }
+
+.page-container {
+  width: calc($page-width - $gap);
+  height: $page-height;
+  margin-left: $gap;
+  //margin-right: $gap;
+}
+
+.div-search-bar {
+  margin: $gap;
+}
+
+.ARMbutton {
+  margin-top: $gap;
+}
+
+.header {
+  height: 50px;
+}
+
+.new-class-dialog {
+  >.el-dialog__body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    >div {
+      width: fit-content;
+
+      >.div-input-element {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        margin-bottom: 13px;
+        margin: 10px;
+
+        >.dialog-span {
+          margin-right: 10px;
+          margin: 10px
+        }
+
+        >.dialog-input {
+          width: 100px;
+          margin: 10px;
+        }
+      }
+    }
+  }
+}
+
 </style>

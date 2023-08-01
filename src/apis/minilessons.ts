@@ -1,26 +1,15 @@
-
 import http from '@/libs/http'
 
-export const getLiveClasses = (data:object) => {
+export const getMiniLessons = (data: object) => {
     const args = {
-        url: '/api/management/live-class/page-live-classes',
+        url: '/api/management/mini-lesson/page-mini-lessons',
         method: 'GET',
         params: data
     }
     return http.request(args)
-}
+  }
 
-export const createLiveClass = (data:any) => {
-    const args = {
-        url: '/api/management/live-class/create',
-        method: 'POST',
-        data,
-        mode: "json"
-    }
-    return http.request(args)
-}
-
-export const editLiveclasses = (data:any) => {
+  export const editMiniLessons = (data:any) => {
     const args = {
         url: '/api/management/mini-lesson/edit-mini-lessons',
         method: 'POST',
@@ -28,5 +17,17 @@ export const editLiveclasses = (data:any) => {
         mode: "json"
     }
     return http.request(args)
-}
+  }
 
+  export const deleteMiniLessons = (data:any) => {
+    const args = {
+        url: '/api/management/mini-lesson/delete-mini-lessons',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+  }
+
+
+  

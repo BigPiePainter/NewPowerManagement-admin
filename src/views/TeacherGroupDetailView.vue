@@ -1,12 +1,15 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton } from 'element-plus'
+import { ElButton, ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useRoute } from 'vue-router'
 import { ElCheckbox } from 'element-plus'
+import { getTeacherGroupTeachers, addTeacherTogroup, deleteTeacherFromGroup } from '@/apis/teacherGroup'
+import { getTeachers } from '@/apis/teacher'
 import type { CheckboxValueType } from 'element-plus'
+
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
@@ -17,14 +20,14 @@ breadcrumbStore.data = [
 ]
 
 const route = useRoute()
-
+const loading = ref(true)
 const searchBarItems = reactive([
   { name: "姓名/用户名", value: "", },
 ])
 const dialogSearchBarItems = reactive([
-  { name: "选择年级", value: "", label: "请选择", type: InputType.Select },
-  { name: "学科", value: "", label: "请选择", type: InputType.Select },
-  { name: "姓名/用户名/电话", value: "", },
+  { name: "用户名", value: "", },
+  { name: "姓名", value: "", },
+  { name: "电话", value: "", },
 ])
 
 const dialogTableColumns = reactive<any>([
@@ -37,9 +40,9 @@ const dialogTableColumns = reactive<any>([
     },
     headerCellRenderer: () => {
       const onChange = (value: CheckboxValueType) => {
-        dialogTableData.forEach((i: any) => i.checked = value);
+        dialogTableData.value.forEach((i: any) => i.checked = value);
       }
-      return <ElCheckbox onChange={onChange} modelValue={dialogTableData.every((i: any) => i.checked)} indeterminate={!dialogTableData.every((i: any) => i.checked) && dialogTableData.some((i: any) => i.checked)} />
+      return <ElCheckbox onChange={onChange} modelValue={dialogTableData.value.every((i: any) => i.checked)} indeterminate={!dialogTableData.value.every((i: any) => i.checked) && dialogTableData.value.some((i: any) => i.checked)} />
     },
     checked: false,
   },
@@ -47,132 +50,29 @@ const dialogTableColumns = reactive<any>([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 100
+    width: 200
   },
   {
-    dataKey: 'teacherName',
-    key: 'teacherName',
+    dataKey: 'name',
+    key: 'name',
     title: '教师姓名',
-    width: 100
+    width: 200
   },
   {
-    dataKey: 'userName',
-    key: 'userName',
+    dataKey: 'account',
+    key: 'account',
     title: '用户名',
-    width: 150
+    width: 200
   },
   {
-    dataKey: 'grade',
-    key: 'grade',
-    title: '年级',
-    width: 100
-  },
-  {
-    dataKey: 'major',
-    key: 'major',
+    dataKey: 'subjectName',
+    key: 'subjectName',
     title: '学科',
-    width: 150
-  },
-  {
-    dataKey: 'joinDate',
-    key: 'joinDate',
-    title: '加入时间',
-    width: 150
+    width: 200
   },
 ])
 
-const dialogTableData = reactive<any>([
-  {
-    checked: false,
-    id: '1456',
-    teacherName: 'Mr.庄',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '25',
-    teacherName: 'Mr.ir',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '457',
-    teacherName: 'Mr.空间',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '22463',
-    teacherName: 'Mr.如图',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '568769',
-    teacherName: 'Mr.是的',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '23536',
-    teacherName: 'Mr.进方',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '45684',
-    teacherName: 'Mr.搞定',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '2467',
-    teacherName: 'Mr.三个',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '97007',
-    teacherName: 'Mr.刷单',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-  {
-    checked: false,
-    id: '59664',
-    teacherName: 'Mr.锕',
-    userName: 'Nick191518',
-    grade: '高二',
-    major: '英语',
-    joinDate: '2022-10-10'
-  },
-])
+const dialogTableData = ref<any>([])
 
 const tableColumns = reactive<any>([
   {
@@ -188,26 +88,20 @@ const tableColumns = reactive<any>([
     width: 200
   },
   {
-    dataKey: 'userName',
-    key: 'userName',
+    dataKey: 'account',
+    key: 'account',
     title: '用户名',
     width: 200
   },
   {
-    dataKey: 'grade',
-    key: 'grade',
-    title: '年级',
-    width: 200
-  },
-  {
-    dataKey: 'major',
-    key: 'major',
+    dataKey: 'subjectName',
+    key: 'subjectName',
     title: '学科',
     width: 200
   },
   {
-    dataKey: 'joinDate',
-    key: 'joinDate',
+    dataKey: 'createdAt',
+    key: 'createdAt',
     title: '加入时间',
     width: 200
   },
@@ -217,7 +111,19 @@ const tableColumns = reactive<any>([
     cellRenderer: (item: any) => {
       return (
         <div>
-          <ElButton link type='primary' onClick={() => deleteTeacher(item)}>移除</ElButton>
+          <el-popconfirm
+            hide-after={0}
+            width="170"
+            title={`移除老师${item.rowData.id}`}
+            onConfirm={() => preDeleteStu(item)}
+            v-slots={{
+              reference: () => (
+                <el-button link type="primary">
+                  移除
+                </el-button>
+              )
+            }}
+          />
         </div>
       )
     },
@@ -227,30 +133,63 @@ const tableColumns = reactive<any>([
   }
 ])
 
-console.log(route.query.id)
-const tableData = reactive<object[]>([{
-  id: '1456',
-  teacherName: 'Mr.庄',
-  userName: 'Nick191518',
-  grade: '高二',
-  major: '英语',
-  joinDate: '2022-10-10'
-}])
 
-const fakeData = reactive<any>({
-  id: '500551',
-  teacherName: 'Mr.YuTaKa',
-  userName: 'Young191518',
-  grade: '高二',
-  major: '数学',
-  joinDate: '2022-10-10'
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
 })
 
-for (let index = 0; index < 100; index++) {
-  let data = { ...fakeData }
-  data.id += index;
-  tableData.push(data)
+const totalLength = ref<Number>()
+
+const loadDialogData = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    account: dialogSearchBarItems[0].value,
+    name: dialogSearchBarItems[1].value,
+    phoneNumber: dialogSearchBarItems[2].value,
+  }
+  getTeachers(args)
+    .then((res) => {
+      dialogTableData.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
 }
+
+const loadData = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    groupId: route.query.id,
+    name: searchBarItems[0].value,
+    phoneNumber: searchBarItems[0].value,
+    account: searchBarItems[0].value,
+  }
+  getTeacherGroupTeachers(args)
+    .then((res) => {
+      tableData.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+
+loadData()
+loadDialogData()
+console.log(route.query.id)
+const tableData = ref<any>([])
+
 
 const searchBarRefresh = () => {
   console.log(searchBarItems)
@@ -264,29 +203,128 @@ const detailItem = reactive({
   groupLeader: 'Mr.庄',
 })
 
-const deleteTeacher = (props: object) => {
-  console.log(props)
-}
+
 
 const addTeacherDialogShow = ref(false);
+
+
+
+
+
 
 const addTeacher = () => {
   addTeacherDialogShow.value = true;
 }
+
+
+const newTeaData = ref<any>([])
+
+const preDeleteStu = (item: any) => {
+  tableData.value.forEach((i: any) => {
+    if (i.id == item.rowData.id) {
+      tableData.value.splice(tableData.value.indexOf(i), 1)
+    }
+    return
+  })
+  var note: any = ElNotification({
+    title: '点击撤回',
+    message: `撤回移除学生 ${item.rowData.name}`,
+    duration: 5000,
+    onClick: () => {
+      calcelDeleteTea(item)
+      note.close()
+    },
+    onClose: () => deleteCS(item),
+    type: 'warning'
+  })
+}
+
+
+const deleteCS = (item: any) => {
+  setTimeout(console.log, 0)
+  deleteTeacherFromGroup({ id: item.rowData.id })
+    .then((res: any) => {
+      console.log(item.rowData.id)
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: item.rowData.id + '老师删除成功',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: '删除失败',
+          message: '请求错误或删除被撤回',
+          type: 'error'
+        })
+      }
+      loadData()
+    })
+    .catch(() => {
+      ElNotification({
+        title: '未知错误',
+        message: '老师未成功删除',
+        type: 'error'
+      })
+    })
+}
+
+const calcelDeleteTea = (item: any) => {
+  item.rowData.id = null
+}
+
+
 const confirmNewTeacher = () => {
-  let selectedRows = dialogTableData.filter((item: any) => item.checked)
-  console.log(selectedRows)
-  addTeacherDialogShow.value = false
-  dialogTableData.forEach((i: any) => i.checked = false);
+  newTeaData.value = dialogTableData.value.filter((item: any) => item.checked)
+  let data = newTeaData.value.map((item: any) => item.id)
+  console.log(data)
+
+  addTeacherTogroup({
+    groupId: route.query.id,
+    teacherIdArr: data
+  }).then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: '添加老师成功',
+          type: 'success'
+        })
+      }else{
+        ElNotification({
+          title: '成功',
+          message: '添加老师失败',
+          type: 'success'
+        })
+      }
+    
+loadData()
+  }).catch
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
-const cancelNewTeacher = () => { 
+
+
+
+
+const cancelNewTeacher = () => {
   addTeacherDialogShow.value = false;
-  dialogTableData.forEach((i: any) => i.checked = false);
+  dialogTableData.value.forEach((i: any) => i.checked = false);
 }
+
 </script>
 
 <template>
-
   <div class="div-teacher-group-detail">
     <div class="card-left">
       <div class="div-card-left-title">
@@ -308,7 +346,8 @@ const cancelNewTeacher = () => {
     </div>
 
     <div class="card-right">
-      <TablePage class="table-page" :columns="tableColumns" :data="tableData">
+      <TablePage :loading="loading" class="table-page" :columns="tableColumns" :itemsTotalLength="totalLength"
+        @paginationChange="loadData" :data="tableData">
         <div class="div-search-bar">
 
           <SearchBar :items="searchBarItems" @change="searchBarRefresh()"></SearchBar>
@@ -326,6 +365,7 @@ const cancelNewTeacher = () => {
     <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
       <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()"></SearchBar>
     </TablePage>
+
     <template #header>
       <el-text>添加老师</el-text>
     </template>
@@ -336,7 +376,6 @@ const cancelNewTeacher = () => {
       </el-button>
     </template>
   </el-dialog>
-
 </template>
 
 <style scoped lang="scss">
@@ -431,7 +470,7 @@ const cancelNewTeacher = () => {
     display: flex;
     align-items: center;
     flex-direction: column;
-    padding-bottom: 0;    
+    padding-bottom: 0;
     padding-left: 10px;
     padding-right: 5px;
     padding-top: 10px;

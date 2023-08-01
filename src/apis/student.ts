@@ -10,7 +10,6 @@ export const getStudent = (data: any) => {
     return http.request(args)
 }
 
-
 export const createStudent = (data:any) => {
     const args = {
         url: '/api/management/student/create',
@@ -21,7 +20,14 @@ export const createStudent = (data:any) => {
     return http.request(args)
 }
 
-
+export const getAllStudents = (data: object) => {
+    const args = {
+        url: '/api/management/student/get-all-students',
+        method: 'GET',
+        params: data
+    }
+    return http.request(args)
+}
 
 export const loadPoint = () => {
     const args = {
@@ -74,6 +80,18 @@ export const deleteStudent = (data:any) => {
 export const toNormalStudent = (data:any) => {
     const args = {
         url: '/api/management/student/temporary-to-normal',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
+
+
+//----------------------编辑学生-------------------------
+export const editStudent = (data:any) => {
+    const args = {
+        url: 'api/management/student/edit',
         method: 'POST',
         data,
         mode: "json"
