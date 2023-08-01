@@ -20,7 +20,7 @@ const items = [
     show: true,
   },
   {
-    index: '/school-management',
+    index: '',
     title: '学校管理',
     show: true,
     subs: [
@@ -37,7 +37,7 @@ const items = [
     ]
   },
   {
-    index: '/account-management',
+    index: '',
     title: '账号管理',
     show: true,
     subs: [
@@ -74,7 +74,7 @@ const items = [
     show: true,
   },
   {
-    index: '/course-management-group',
+    index: '',
     title: '课程管理',
     show: true,
     subs: [
@@ -106,7 +106,7 @@ const items = [
     show: true,
   },
   {
-    index: '/student-points-management',
+    index: '',
     title: '消费管理',
     show: true,
     subs: [
@@ -343,7 +343,7 @@ onUnmounted(() => {
   <canvas class="sidebar-canvas"></canvas>
   <div class="sidebar">
     <div class="sidebar-header">管理后台</div>
-    <el-menu :default-active="route.path" router>
+    <el-menu :default-active="route.path" router @click="console.log()">
 
       <template v-for="item in items" :key="item.index">
 

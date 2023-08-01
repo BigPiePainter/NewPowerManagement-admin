@@ -44,6 +44,7 @@ const login = () => {
         return
       } else {
         localStorage.token = res.data.token
+        localStorage.info = 111
         ElNotification({
           title: 'Success',
           message: '登陆成功',
