@@ -116,7 +116,7 @@ const allSubjects = ref<any>([])
 
 const clickDetail = (props: { rowData: { id: string } }) => {
   console.log(props);
-  router.push({ path: 'course-create', query: { id: props.rowData.id } });
+  router.push({ path: 'question-create', query: { id: props.rowData.id } });
 }
 
 const loadSelectOption = () => {
