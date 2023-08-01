@@ -13,6 +13,8 @@ breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
 const grades = ref<any[]>([])
 
+
+
 const loadSelectOption = () => {
   getGrades().then((res: any) => {
     grades.value = res.data
@@ -32,7 +34,6 @@ console.log(res)
     // console.log(mainState)
     // console.log(studyState)
   }).catch()
-
 }
 
 

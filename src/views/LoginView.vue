@@ -23,7 +23,7 @@ const pars = reactive({
 })
 
 const enterAccount = () => {
-  pars.account = '15824136350'
+  pars.account = 'nick_young'
   pars.password = '888888'
 }
 
@@ -33,16 +33,16 @@ const enterHome = () => {
 
 const login = () => {
   userLogin(pars)
-    .then((res) => {
+    .then((res:any) => {
       console.log("THEN", res)        
-      if (res.data.code == 20000) {         //res.data.code   undifined         res.data.code - 报错 - catch
+      if (res.code != 20000) {  
         ElNotification({
           title: 'Warning',
-          message: '登入信息错误',
+          message: res.msg,
           type: 'warning'
         })
         return
-      } else {
+      } else if(res.code == 20000){
         localStorage.token = res.data.token
         localStorage.info = 111
         ElNotification({
@@ -57,7 +57,7 @@ const login = () => {
       console.log(error)
       ElNotification({
         title: 'Warning',
-        message: '网络不佳',
+        message: error.msg,
         type: 'warning'
       })
     })

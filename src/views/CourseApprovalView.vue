@@ -1,9 +1,10 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import type { ElButton, TabsPaneContext } from 'element-plus'
+import type { ElButton } from 'element-plus'
+import { ElNotification } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue'
-import { getMiniLessons,editMiniLessons,deleteMiniLessons } from '@/apis/minilessons'
+import { getMiniLessons, editMiniLessons, deleteMiniLessons } from '@/apis/minilessons'
 import HeaderCellRenderer from 'element-plus/es/components/table-v2/src/renderers/header-cell'
 
 const breadcrumbStore = useBreadcrumbStore()
@@ -70,8 +71,8 @@ const tableColumnsPending = [
     width: 200
   },
   {
-    dataKey: 'ownerId',
-    key: 'ownerId',
+    dataKey: 'teacherName',
+    key: 'teacherName',
     title: '上传者',
     width: 200
   },
@@ -111,7 +112,7 @@ const tableColumnsPending = [
         <el-button link type="primary" class="" onClick={() => edit(cellData)}>
           编辑
         </el-button>
-        <el-button link type="danger" class=""onClick={() => warningDialog(cellData)}>
+        <el-button link type="danger" class="" onClick={() => warningDialog(cellData)}>
           删除
         </el-button>
       </>
@@ -165,17 +166,32 @@ const edit =
   }
 
 
-  const confirmEditDialog =()=>{
-    editMiniLessons(editCourseData).then((res: any) => {
+const confirmEditDialog = () => {
+  editMiniLessons(editCourseData).then((res: any) => {
     if (res.code == '20000') {
-      console.log('已通过')
+      ElNotification({
+          title: '成功',
+          message: '已成功编辑',
+          type: 'success'
+        })
+        loadData()
+        editDialogShow.value = false;
+      } else {
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning'
+        })
+      
     }
-    editDialogShow.value = false;
-    loadData()
   }).catch
 }
 
-  const cancelEditDialog = () => {
+
+
+
+
+const cancelEditDialog = () => {
   editDialogShow.value = false;
 }
 
@@ -263,23 +279,23 @@ const loadData = () => {
 
 }
 
-const warningDialog=(cellData2:any)=>{
+const warningDialog = (cellData2: any) => {
   console.log(cellData2)
   warningDialogshow.value = true
-  deleteItemid.value=cellData2
+  deleteItemid.value = cellData2
   console.log(deleteItemid.value)
 }
 const ConfirmdeleteMiniLesson = () => {
-  deleteMiniLessons({id:deleteItemid.value.rowData.id}).then((res: any) => {
+  deleteMiniLessons({ id: deleteItemid.value.rowData.id }).then((res: any) => {
     console.log(deleteItemid)
     if (res.code == 20000) {
       console.log('删除成功')
 
       loadData()
-      warningDialogshow.value=false
+      warningDialogshow.value = false
     }
     else {
-      warningDialogshow.value=false
+      warningDialogshow.value = false
       console.log('删除失败')
     }
   }).catch()
@@ -342,11 +358,13 @@ const handleClick = (tab: any) => {
 
     <div class="div-input-element">
       <span class="dialog-span">
-        名称：
+        课程名称：
       </span>
-      <el-input filterable class="dialog-input" v-model="editCourseData.name">
+      <el-input filterable class="dialog-input" style="width: 220px;" v-model="editCourseData.name">
       </el-input>
     </div>
+
+
     <div class="div-input-element" style="margin-top: 10px;">
       <span class="dialog-span">
         可否预览：
@@ -376,7 +394,7 @@ const handleClick = (tab: any) => {
     </el-text>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="warningDialogshow=false">Cancel</el-button>
+        <el-button @click="warningDialogshow = false">Cancel</el-button>
         <el-button type="primary" @click="ConfirmdeleteMiniLesson">
           Confirm
         </el-button>
@@ -388,6 +406,7 @@ const handleClick = (tab: any) => {
 
 <style scoped lang="scss">
 $gap: 15px;
+
 .tabs-page {
   padding-left: 30px;
   padding-top: 10px;
@@ -447,5 +466,4 @@ $gap: 15px;
     }
   }
 }
-
 </style>

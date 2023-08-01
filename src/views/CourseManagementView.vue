@@ -50,10 +50,20 @@ const tableColumns = [
     cellRenderer: (cellData: any) => <ElButton link type='primary' onClick={() => couseDetail(cellData)} class="detailed">{cellData.cellData}</ElButton>
   },
   {
-    dataKey: 'teacherId',
-    key: 'teacherId',
+    dataKey: 'cover',
+    key: 'cover',
     title: '封面',
-    width: 200
+    width: 200,
+    cellRenderer: (item: any) => (
+      <el-image
+        fit="scale-down"
+        src={item.rowData.cover}
+        //onClick={()=>console.log(item)}
+        className="shop-Preview"
+        preview-src-list={[item.rowData.cover]}
+        preview-teleported
+      />
+    )
   },
   {
     dataKey: 'createdAt',

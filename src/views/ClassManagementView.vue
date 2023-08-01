@@ -347,15 +347,15 @@ loadAllTeacher()
         <span class="dialog-span">
           *起始时间：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.startDate">
-        </el-input>
+        <el-date-picker class="dialog-input" placeholder="yyyy-mm-dd" v-model="newClassData.startDate">
+        </el-date-picker>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           *到期时间：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.endDate">
-        </el-input>
+        <el-date-picker class="dialog-input" placeholder="请输入" v-model="newClassData.endDate">
+        </el-date-picker>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
@@ -406,7 +406,7 @@ loadAllTeacher()
         <span class="dialog-span">
           *起始时间：
         </span>
-        <el-input class="dialog-input" v-model="editClassData.startDate">
+        <el-input class="dialog-input" placeholder="yyyy-mm-dd" v-model="editClassData.startDate">
         </el-input>
       </div>
       <div class="div-input-element">

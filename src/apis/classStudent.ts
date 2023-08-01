@@ -20,6 +20,9 @@ export const createClassStudent = (data: any) => {
     return http.request(args)
 }
 
+
+
+
 export const deleteClassStudent = (data: any) => {
     const args = {
         url: '/api/management/class-student/delete-class-student',
@@ -29,6 +32,7 @@ export const deleteClassStudent = (data: any) => {
     }
     return http.request(args)
 }
+
 
 
 

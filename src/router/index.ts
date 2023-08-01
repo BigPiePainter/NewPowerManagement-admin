@@ -38,7 +38,12 @@ import AccountTeacherDetail from '@/views/AccountTeacherDetail.vue'
 import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 import AccountRoleDetail from '@/views/AccountRoleDetail.vue'
 import CourseDetailView from '@/views/CourseDetailView.vue'
+import QuestionCreateView from '@/views/QuestionCreateView.vue'
+
 import CourseCreateView from '@/views/CourseCreateView.vue'
+
+
+
 import { userInfo } from '@/apis/manager'
 
 const router = createRouter({
@@ -192,6 +197,12 @@ const router = createRouter({
           path: 'question-bank-management',
           name: 'question-bank-management',
           component: QuestionBankManagementView,
+          meta: { Protected: true }
+        },
+        {
+          path: 'question-create',
+          name: 'question-create',
+          component: QuestionCreateView,
           meta: { Protected: true }
         },
         {

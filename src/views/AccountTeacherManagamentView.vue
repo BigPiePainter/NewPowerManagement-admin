@@ -31,8 +31,8 @@ const newTeacherData = reactive<{
   name: string
   password: string
   phoneNumber: string
-  gradeId: number
-  subjectId: number
+  gradeId: string
+  subjectId: string
   remark: string
   email: string
 }>({
@@ -40,8 +40,8 @@ const newTeacherData = reactive<{
   name: '',
   password: '',
   phoneNumber: '',
-  gradeId: 0,
-  subjectId: 0,
+  gradeId: '',
+  subjectId: '',
   remark: '',
   email: ''
 })
@@ -71,6 +71,7 @@ const conformCreate = () => {
           message: '已成功创建',
           type: 'success'
         })
+        loadData()
       } else {
         ElNotification({
           title: 'Warning',
@@ -83,6 +84,7 @@ const conformCreate = () => {
 
   console.log(newTeacherData)
   showDialog.value = false
+ 
 }
 
 const searchBarItems = reactive([
@@ -471,7 +473,7 @@ loadData()
       <span class="dialog-span">
         年级：
       </span>
-      <el-select class="dialog-input" v-model="editTeacherData.gradeId">
+      <el-select class="dialog-input" v-model="editTeacherData.gradeId" >
         <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </div>
@@ -525,16 +527,13 @@ $gap: 15px;
         align-items: center;
         justify-content: right;
         margin-bottom: 13px;
-        margin: 10px;
 
         >.dialog-span {
           margin-right: 10px;
-          margin: 10px
         }
 
         >.dialog-input {
-          width: 100px;
-          margin: 10px;
+          width: 167px;
         }
       }
     }
