@@ -4,6 +4,7 @@ import { KawaseBlurFilter } from 'https://cdn.skypack.dev/@pixi/filter-kawase-bl
 import SimplexNoise from 'https://cdn.skypack.dev/simplex-noise@3.0.0'
 import hsl from 'https://cdn.skypack.dev/hsl-to-hex'
 import debounce from 'https://cdn.skypack.dev/debounce'
+import { t } from '@wangeditor/editor'
 PIXI.utils.skipHello()
 console.log('超炫酷无敌动画依赖import加载完毕')
 </script>
@@ -15,127 +16,156 @@ import { onMounted, onUnmounted } from 'vue'
 const items = [
   {
     index: '/work-space',
-    title: '工作台'
+    title: '工作台',
+    show: true,
   },
   {
     index: '/school-management',
     title: '学校管理',
+    show: true,
     subs: [
       {
         index: '/class-management',
-        title: '班级管理'
+        title: '班级管理',
+        show: true,
       },
       {
         index: '/teacher-group-management',
-        title: '教研组管理'
+        title: '教研组管理',
+        show: true,
       }
     ]
   },
   {
     index: '/account-management',
     title: '账号管理',
+    show: true,
     subs: [
       {
         index: '/account-role-managment',
-        title: '角色管理'
+        title: '角色管理',
+        show: true,
       },
       {
         index: '/acount-equipment-management',
-        title: '账号设备管理'
+        title: '账号设备管理',
+        show: true,
       },
       {
         index: '/account-teacher-managament',
-        title: '老师管理'
+        title: '老师管理',
+        show: true,
       },
       {
         index: '/account-student-management',
-        title: '学生管理'
+        title: '学生管理',
+        show: true,
       },
       {
         index: '/account-temoorary-student',
-        title: '临时学生'
+        title: '临时学生',
+        show: true,
       }
     ]
   },
   {
     index: '/live-class',
-    title: '实时课堂'
+    title: '实时课堂',
+    show: true,
   },
   {
     index: '/course-management-group',
     title: '课程管理',
+    show: true,
     subs: [
       {
         index: '/course-approval',
-        title: '微课审核'
+        title: '微课审核',
+        show: true,
       },
       {
         index: '/course-management',
-        title: '课程管理'
+        title: '课程管理',
+        show: true,
       }
     ]
   },
   {
     index: '/shop-management',
-    title: '商城管理'
+    title: '商城管理',
+    show: true,
   },
   {
     index: '/question-bank-management',
-    title: '题库管理'
+    title: '题库管理',
+    show: true,
   },
   {
     index: '/order-management',
-    title: '订单管理'
+    title: '订单管理',
+    show: true,
   },
   {
     index: '/student-points-management',
     title: '消费管理',
+    show: true,
     subs: [
       {
         index: '/student-points-management',
-        title: '学生积分'
+        title: '学生积分',
+        show: true,
       },
       {
         index: '/student-tcoin-management',
-        title: '学生T币'
+        title: '学生T币',
+        show: true,
       }
     ]
   },
   {
-    index: '/setting',
+    index: '',
     title: '设置',
+    show: true,
     subs: [
       {
         index: '/category-management',
-        title: '分类管理'
+        title: '分类管理',
+        show: true,
       },
       {
         index: '/tag-management',
-        title: '标签管理'
+        title: '标签管理',
+        show: true,
       },
       {
         index: '/course-category',
-        title: '课程类目'
+        title: '课程类目',
+        show: true,
       },
       {
         index: '/exam-info',
-        title: '考试咨询'
+        title: '考试咨询',
+        show: true,
       },
       {
         index: '/exam-date',
-        title: '考试时间'
+        title: '考试时间',
+        show: true,
       },
       {
         index: '/banner',
-        title: 'banner'
+        title: 'banner',
+        show: true,
       },
       {
         index: '/info-center',
-        title: '消息中心'
+        title: '消息中心',
+        show: true,
       },
       {
         index: '/family-report',
-        title: '家长报告'
+        title: '家长报告',
+        show: true,
       }
     ]
   },
@@ -314,27 +344,37 @@ onUnmounted(() => {
   <div class="sidebar">
     <div class="sidebar-header">管理后台</div>
     <el-menu :default-active="route.path" router>
+
       <template v-for="item in items" :key="item.index">
-        <template v-if="item.subs">
-          <el-sub-menu :index="item.index" :key="item.index" class="sidebar-sub-menu">
+
+        <template v-if="(item as any).subs">
+
+          <el-sub-menu v-if="(item as any).show" :index="(item as any).index" :key="(item as any).index" class="sidebar-sub-menu">
+
             <template #title>
-              <span>{{ item.title }}</span>
+              <span>{{ (item as any).title }}</span>
             </template>
+
             <template v-for="subItem in item.subs" :key="subItem.title">
-              <el-menu-item :index="subItem.index" class="sidebar-menu-item">
+              <el-menu-item v-if="subItem.show" :index="subItem.index" class="sidebar-menu-item">
                 {{ subItem.title }}
               </el-menu-item>
             </template>
+
           </el-sub-menu>
+
         </template>
-        <template v-else>
-          <app-link :to="item.index">
-            <el-menu-item :index="item.index" :key="item.index" class="sidebar-menu-item">
-              <template #title>{{ item.title }}</template>
+
+        <template v-else-if="(item as any).show">
+          <app-link :to="(item as any).index">
+            <el-menu-item :index="(item as any).index" :key="(item as any).index" class="sidebar-menu-item">
+              <template #title>{{ (item as any).title }}</template>
             </el-menu-item>
           </app-link>
         </template>
+
       </template>
+
     </el-menu>
   </div>
 </template>
@@ -349,6 +389,7 @@ onUnmounted(() => {
   z-index: -1;
   background-color: $sidebar-color;
 }
+
 .sidebar {
   --el-menu-text-color: #ebebeb;
   --el-menu-bg-color: #00000000;
@@ -366,7 +407,7 @@ onUnmounted(() => {
 
   border-right: 1px #f0f2f5 solid;
 
-  > .sidebar-header {
+  >.sidebar-header {
     height: $header-height;
 
     font-size: 18px;
@@ -382,7 +423,7 @@ onUnmounted(() => {
     box-sizing: border-box;
   }
 
-  > .el-menu {
+  >.el-menu {
     height: calc(100vh - $header-height);
     scrollbar-gutter: stable;
     border-right: none;

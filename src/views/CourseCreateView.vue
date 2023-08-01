@@ -112,6 +112,7 @@ if(res =='20000'){
     </div>
 
   </div>
+  <RichTextEditor/>
 </template>
 
 <style scoped lang="scss">

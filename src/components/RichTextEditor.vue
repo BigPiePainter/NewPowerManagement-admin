@@ -91,7 +91,7 @@ const handleFileChange = (e: Event) => {
     <input type="file" id="file" @change="handleFileChange" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
     <div style="border: 1px solid #ccc; margin-top: 10px">
         <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple" style="border-bottom: 1px solid #ccc" />
-        <Editor readOnly :defaultConfig="editorConfig" mode="simple" v-model="valueHtml"
+        <Editor :defaultConfig="editorConfig" mode="simple" v-model="valueHtml"
             style="height: 400px; overflow-y: hidden" @onCreated="handleCreated" @onDestroyed="handleDestroyed" />
         <button style="position: absolute;margin-top: 10px;" @click="insertImage">插入图片</button>
     </div>
