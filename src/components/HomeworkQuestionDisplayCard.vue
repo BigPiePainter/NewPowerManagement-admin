@@ -1,11 +1,12 @@
 <script setup lang="ts">
 
-type Props = {
-  title: string
-  title2: string
-  title3: string
-}
 const props = defineProps<Props>()
+type Props = {
+  homeworkName: string
+  teacherName: string
+  isFinished: string
+}
+
 
 
 
@@ -16,14 +17,14 @@ const props = defineProps<Props>()
 <template>
 <div class="HomeworkQuestionDisplayCard">
 
-<div class="title">{{ title }}
+<div class="title">{{ homeworkName }}
 </div>
 
-<div class="title1">{{ title2 }}
+<div class="title1">{{ teacherName }}
 
   
 </div>
-<div class="title2">{{ title3 }}
+<div class="title2">{{ isFinished }}
 
   
 </div>

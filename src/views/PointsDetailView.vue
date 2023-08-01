@@ -4,108 +4,116 @@ import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
-
+import { getPointInfor } from '@/apis/point'
+import { useRoute } from 'vue-router'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
+const loading = ref(true)
 breadcrumbStore.data = [
+
   { name: '积分管理', path: '' },
   { name: '积分明细', path: '' },
 ]
+const route = useRoute()
+const SearchBarItem = reactive([
+  { name: '班级', value: '', type: InputType.Select, label: "请选择" },
 
-const items = reactive([
-  { name: '班级', value: '', type:InputType.Select, label:"请选择"},
-  { name: '时间范围', value: '', type:InputType.Select, label:"请选择"},
-  { name: '用户姓名', value:''}
 ])
 
 const tableColumns = [
   {
     dataKey: 'id',
     key: 'id',
-    title: '用户ID',
+    title: 'id',
     width: 120
   },
   {
-    dataKey: 'userName',
-    key: 'userName',
-    title: '用户名',
+    dataKey: 'studentName',
+    key: 'studentName',
+    title: '姓名',
     width: 200,
   },
   {
-    dataKey: 'studenName',
-    key: 'studenName',
-    title: '学生姓名',
+    dataKey: 'numberOfPoint',
+    key: 'numberOfPoint',
+    title: '积分变动数量',
     width: 150
   },
   {
-    dataKey: 'studentGrade',
-    key: 'studentGrade',
-    title: '年级',
-    width: 100
-  },
-  {
-    dataKey: 'studentCellNumber',
-    key: 'studentCellNumber',
-    title: '手机号',
+    dataKey: 'revenuesType',
+    key: 'revenuesType',
+    title: '收支类型',
     width: 200,
+    cellRenderer: (cellData: any) => 
+    <span>
+      {cellData.cellData == 1 ? "收入" : "支出"}
+    </span>
   },
   {
-    dataKey: 'studentType',
-    key: 'studentType',
-    title: '学生类型',
-    width: 100,
-  },
-  {
-    dataKey: 'pointReason',
-    key: 'pointReason',
-    title: '原因',
-    width: 100,
-  }, 
-   {
-    dataKey: 'userPointAmount',
-    key: 'userPointAmount',
-    title: '积分数',
+    dataKey: 'sourceType',
+    key: 'sourceType',
+    title: '来源类型',
     width: 200,
+    cellRenderer: (cellData: any) => 
+    <span>
+      {cellData.cellData == 1 ? "下单" : "后台赠送"}
+    </span>
   },
   {
-    dataKey: 'userPointTime',
-    key: 'userPointTime',
-    title: '时间',
+    dataKey: 'remark',
+    key: 'remark',
+    title: '备注',
     width: 200,
   }
 ]
 
-let fakeData = {
-  id: '1',
-  userName: 'askldjkasjdlkasld',
-  studentCellNumber: '15536996997',
-  studentGrade: '9',
-  studentType:"正式学生",
-  studenName: '张家豪',
-  pointReason:'购买课程',
-  userPointAmount:'+10',
-  userPointTime:'2022-11-11 20:23'
+const tableData = ref<any>([])
+
+
+
+
+
+
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20,
+  type: 1
+})
+
+const totalLength = ref<Number>()
+
+const loadData = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    studentId: route.query.id,
+
+  }
+
+
+  getPointInfor(args)
+    .then((res) => {
+      console.log(args)
+      console.log(res)
+      tableData.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
 }
+loadData()
 
-const tableData: object[] = []
 
-for (let index = 0; index < 100; index++) {
-  let data = { ...fakeData }
-  data.id += index
-  tableData.push(data)
-}
-
-console.log(tableData)
-
-const refresh = () => {
-  console.log(items)
-}
 </script>
 
 <template>
-  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+    :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
-      <SearchBar :items="items" @change="refresh()"></SearchBar>
     </div>
   </TablePage>
 </template>

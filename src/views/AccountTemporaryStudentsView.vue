@@ -70,9 +70,6 @@ const tableColumns = reactive([
       }
       return (
         <div>
-          <el-button link type="primary" onClick={() => console.log(item)}>
-            编辑
-          </el-button>
           <el-popconfirm hide-after={0} width='170' title={`将${item.rowData.name}转正`} onConfirm={() => toNormalStu(item)} v-slots={toNormalSlot} />
 
           <el-popconfirm hide-after={0} width='170' title={`重置${item.rowData.name}密码`} onConfirm={() => restPsw(item)} v-slots={resetPswSlot} />
@@ -81,7 +78,7 @@ const tableColumns = reactive([
         </div>
       )
     },
-    width: 300,
+    width: 200,
     fixed: 'right',
     align: 'left'
   }

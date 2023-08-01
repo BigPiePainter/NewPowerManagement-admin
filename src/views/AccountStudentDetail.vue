@@ -1,12 +1,19 @@
 <script setup lang="ts">
+import {getStudentCouse} from '@/apis/studentCourse'
 import DisplayQuestionCard from '@/components/DisplayQuestionCard.vue'
+import QuestionDisplayCard from '@/components/QuestionDisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import type { TabsPaneContext } from 'element-plus'
+import { useRoute } from 'vue-router'
+import  {getStudentQuestions } from '@/apis/studentQuestion'
+import  {getStudentHomework } from '@/apis/studentHomework'
 import HomeworkQuestionDisplayCard from '@/components/HomeworkQuestionDisplayCard.vue'
+import { ITEM_RENDER_EVT } from 'element-plus/es/components/virtual-list/src/defaults'
 
+const route = useRoute()
 
-const input = ref('')
+const loading = ref(true)
 const breadcrumbStore = useBreadcrumbStore()
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
@@ -15,7 +22,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 
 const activeName = ref('first')
 
-
+const studentData=ref<any>([])
 
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
@@ -23,27 +30,123 @@ breadcrumbStore.data = [
   { name: '学生详情', path: '/student-detail-managament' },
 ]
 
+const questionPackage = reactive<any>({})
 
-const lessons = reactive([
-  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 1000, classfiction: '普通课',time2: 2000 },
-  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 1666, classfiction: 'AI课',time2: 2000 },
-  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 2000, classfiction: 'AI课',time2: 2000 },
-  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 1234, classfiction: 'AI课',time2: 2000 },
-  { title: '第一讲 九年级物理超级提高课', picture: 'question', tag: '好题', time: 1888, classfiction: 'AI课',time2: 2000 },
-])
+const lessons = reactive<any>([])
+const question = reactive<any>([])
+const homeWork = reactive<any>([])
+const loadData = () => {
+  loading.value = true
 
-const question = reactive([
-  { title: '高考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
-  { title: '中考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
-  { title: '中考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
-  { title: '中考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
-  { title: '中考模拟题，小试牛刀', title2: '已做11题/共22题', title3:'★★★' },
-])
+  var args = {
+    studentId:1
+  }
 
-const homeWork = reactive([
-  { title: '作业-5月24日', title2: '老师：小陈老师', title3:'已做/未作' },
-  { title: '作业-5月24日', title2: '老师：小陈老师', title3:'已做/未作' },
-])
+
+  getStudentCouse(args)
+    .then((res) => {
+      res.data.forEach((item:any)=>{
+        lessons.push({ 
+          title: item.miniLessonName,
+          picture: '', 
+          tag: '好题', 
+          time: item.watchedTime, 
+          classfiction: '普通课',
+          time2:item.miniLessonDuration 
+          })
+      })
+
+      (studentData.value = res.data[0])
+
+    
+      console.log(studentData)
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+
+    getStudentQuestions(args)
+    .then((res) => {
+      console.log(res)
+      res.data.forEach((item:any)=>{
+        if(item.difficultyLevel== 0 ){
+          item.difficultyLevel = '※'
+      }
+
+        if (item.questionPackageId in questionPackage) {
+          questionPackage[item.questionPackageId].push(item)
+        } else {
+          questionPackage[item.questionPackageId]=[];
+          // {id:[]}
+          questionPackage[item.questionPackageId].push(item)
+        }
+      })
+      
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+
+
+
+    getStudentHomework(args)
+    .then((res) => {
+      console.log(res)
+      res.data.forEach((item:any)=>{
+       console.log(item)
+        if(item.isFinished == 0){
+
+        homeWork.push({ 
+
+          homeworkName: item.homeworkName,
+          teacherName: item.teacherName,
+          isFinished: '未完成'
+
+        })
+      } else {
+
+          homeWork.push({ 
+          homeworkName: item.homeworkName,
+          teacherName: item.teacherName,
+          isFinished: '已完成'
+          })
+
+    }
+
+})
+})
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+  }
+
+const cal =()=>{
+
+Object.keys(questionPackage).forEach((item:any)=>{
+  var count = 0
+   questionPackage[item].forEach((i:any)=>{
+    if (i.outcomeType!=3){
+            count = count + 1
+          }
+          // console.log(count)
+   })
+   questionPackage[item].unshift(count)
+})
+console.log(questionPackage)
+}
+
+
+
+
+loadData()
+
+
+
+
+
 // question.forEach((i) => {
 //     i.convertedTime = convert(i.time)
 // })
@@ -61,10 +164,10 @@ const homeWork = reactive([
     <div class="topPart">
       <div class="topPart1">
         <div class="topPart1-1">
-          <div class="top-Part1-1-1"><el-text>老师信息</el-text></div>
+          <div class="top-Part1-1-1" @click="cal"><el-text>老师信息</el-text></div>
         </div>
         <div class="topPart1-2">
-          <div class="top-Part1-2-1">张家豪</div>
+          <div class="top-Part1-2-1">{{studentData.teacherName}}</div>
           <div class="top-Part1-2-2">
             <div><el-text>年级:20年级</el-text></div>
             <div><el-text>学科:语文</el-text></div>
@@ -73,7 +176,7 @@ const homeWork = reactive([
         </div>
 
         <div class="topPart1-3">
-          <div><el-text>创建时间:2022-2-13 13:00</el-text></div>
+          <div><el-text>studentData</el-text></div>
           <div class="topPart1-3-2"><el-text>最后登录:2023-6-5 12:00</el-text></div>
         </div>
       </div>
@@ -81,7 +184,7 @@ const homeWork = reactive([
       <el-divider direction="vertical" class="divider-height" />
 
       <div class="topPart1--1">
-        <div class="topPart1-1"><el-text>所在班级(1)</el-text></div>
+        <div class="topPart1-1"><el-text>⭐</el-text></div>
         <div class="topPart2-2"><el-text>三年级二班</el-text></div>
       </div>
       <el-divider direction="vertical" class="divider-height" />
@@ -96,8 +199,6 @@ const homeWork = reactive([
 
 
  <el-divider class="row-divider"></el-divider>
-
-
 
 
     <div class="downpart">
@@ -115,16 +216,16 @@ const homeWork = reactive([
     </el-tab-pane>
       <el-tab-pane label="好题演练" name="questions">
         <div class="botPart1-2">
-        <HomeworkQuestionDisplayCard
-    v-for="item in question" :key="item.title" :title="item.title" :title2="item.title2" :title3="item.title3">
-    </HomeworkQuestionDisplayCard>
+        <QuestionDisplayCard
+    v-for="(key,val) in questionPackage" :key="val" :questionName="key[0].coursesQuestionPackageName" :questionCount="(key.length-1)" :questionFinished="key[0][0]" :difficultyLevel="(key[0].difficultyLevel)">
+    </QuestionDisplayCard>
     </div>
       </el-tab-pane>
       
       <el-tab-pane label="作业巩固" name="homework"> 
         <div class="botPart1-2">
         <HomeworkQuestionDisplayCard
-    v-for="item in homeWork" :key="item.title" :title="item.title" :title2="item.title2" :title3="item.title3">
+    v-for="item in homeWork" :key="item.title" :homeworkName="item.homeworkName" :teacherName="item.teacherName" :isFinished="item.isFinished">
     </HomeworkQuestionDisplayCard>
     </div>
       </el-tab-pane>

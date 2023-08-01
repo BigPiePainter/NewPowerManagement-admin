@@ -96,16 +96,8 @@ const items = [
         title: '学生积分'
       },
       {
-        index: '/points-detail',
-        title: '积分明细'
-      },
-      {
         index: '/student-tcoin-management',
         title: '学生T币'
-      },
-      {
-        index: '/tcoin-detail',
-        title: 'T币明细'
       }
     ]
   },

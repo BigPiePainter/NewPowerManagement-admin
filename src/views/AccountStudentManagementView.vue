@@ -8,17 +8,15 @@ import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 import { getStudent, restStudentPsw, deleteStudent } from '@/apis/student'
-import { createStudent } from '@/apis/student'
+import { createStudent, editStudent } from '@/apis/student'
 import { getSubjects } from '@/apis/subject'
 
 const router = useRouter()
 
-const studentName = (props: any) => {
-  console.log(props)
-  router.push({ path: 'student-detail-management', query: { id: props.rowData.id } })
-}
 
 const breadcrumbStore = useBreadcrumbStore()
+const createDialogShow = ref(false);
+const editStudentDialogShow = ref(false);
 
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
@@ -26,6 +24,11 @@ breadcrumbStore.data = [
 ]
 
 const loading = ref(true)
+
+const clickDetail = (props: { rowData: { id: string } }) => {
+  console.log(props);
+  router.push({ path: 'student-detail-management', query: { id: props.rowData.id } });
+}
 
 const tableColumns = [
   {
@@ -40,11 +43,14 @@ const tableColumns = [
     title: '姓名',
     width: 80,
     cellRenderer: (cellData: any) => (
-      <ElButton link type="primary" onClick={() => studentName(cellData)}>
+      <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
         {cellData.cellData}
       </ElButton>
     )
   },
+
+
+
   {
     dataKey: 'account',
     key: 'account',
@@ -116,7 +122,7 @@ const tableColumns = [
 
       return (
         <div>
-          <el-button link type="primary" onClick={() => console.log(item)}>
+          <el-button link type="primary" onClick={() => editstudent(item)}>
             编辑
           </el-button>
 
@@ -136,6 +142,7 @@ const tableData = ref<object[]>([])
 
 
 const newStudentData = reactive<{
+  
   account: string,
   expiration: string,
   name: string,
@@ -170,6 +177,10 @@ const loadSelectOptionDialog = () => {
 
   getSubjects()
     .then((res) => (allSubjects.value = res.data))
+    .catch()
+
+    getGrades()
+    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
     .catch()
 }
 
@@ -249,13 +260,9 @@ const deleteStu = (item: any) => {
     })
 }
 
-const showDialog = ref(false)
 
-const creat = () => {
-  showDialog.value = true
-}
 
-const confrom = () => {
+const conformCreate = () => {
   createStudent(newStudentData).then((res: any) => {
     if (res.code == 20000) {
       ElNotification({
@@ -273,10 +280,10 @@ const confrom = () => {
     }
   }).catch()
 
-  showDialog.value = false
+  createDialogShow.value = false
 }
 const cancel = () => {
-  showDialog.value = false
+  createDialogShow.value = false
 }
 
 const selectOptionGrades = reactive<any>([])
@@ -324,6 +331,7 @@ const loadData = (prop: any) => {
     phoneNumber: searchBarItems[1].value,
     gradeIds: searchBarItems[3].value
   }
+
   getStudent(args)
     .then((res) => {
       dataCompute(res.data.records)
@@ -361,10 +369,6 @@ const loadSelectOption = () => {
 }
 loadSelectOption()
 
-const refresh = () => {
-  console.log(searchBarItems)
-  loadData(paginationInfo)
-}
 
 const allGender = [
   {
@@ -379,18 +383,77 @@ const allGender = [
   },
 ]
 
+
+
+const editStudentData = reactive<{
+
+  id: string,
+  remark: string,
+  gradeId: string,
+  expiration: string
+}>({
+  id: '',
+  remark: '',
+  gradeId: '',
+  expiration: ''
+});
+const editstudent =
+  (props: { rowData: { id: string, gradeId: string, expiration: string, remark: string } }) => {
+    editStudentData.id = props.rowData.id;
+    editStudentData.expiration = props.rowData.expiration;
+    editStudentData.gradeId = props.rowData.gradeId;
+    editStudentData.remark= props.rowData.remark;
+
+    console.log(props)
+    editStudentDialogShow.value = true;
+  }
+
+const confirmEditDialog = () => {
+  editStudent(editStudentData).
+    then((res: any) => {
+      console.log(editStudentData)
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: '学生编辑成功',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: '编辑失败',
+          message: '请求错误或删除被撤回',
+          type: 'error'
+        })
+      }
+    }).catch()
+  loadData((paginationInfo))
+  editStudentDialogShow.value = false;
+
+}
+
+const createStudents = () => {
+  createDialogShow.value = true;
+}
+
+
+const cancelEditDialog = () => {
+  editStudentDialogShow.value = false;
+}
+
+
+
+
+
+
+
 </script>
 
 <template>
-  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
-    :columns="tableColumns" :data="tableData">
-    <div class="div-search-bar">
-      <SearchBar :items="searchBarItems" @change="refresh"></SearchBar>
-      <el-button class="ARMbutton" type="primary" @click="creat">新建学生</el-button>
-    </div>
-  </TablePage>
 
-  <el-dialog v-model="showDialog" width="400px">
+
+
+
+<el-dialog v-model="createDialogShow" width="400px">
     <template #header>
       <el-text>新建学生</el-text>
     </template>
@@ -410,7 +473,7 @@ const allGender = [
       </div>
       <div class="input">
         <div class="input-word">*学习阶段:</div>
-        <el-select placeholder="请选择" class="input-input"  filterable  v-model="newStudentData.gradeId" />
+        <el-select placeholder="请选择" class="input-input" filterable v-model="newStudentData.gradeId" />
         <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.value" />
       </div>
 
@@ -447,9 +510,74 @@ const allGender = [
     <template #footer>
       <ElButton @click="cancel">取消</ElButton>
 
-      <ElButton type="primary" @click="confrom">确认</ElButton>
+      <ElButton type="primary" @click="conformCreate">确认</ElButton>
     </template>
   </el-dialog>
+
+
+
+
+
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+    :columns="tableColumns" :data="tableData">
+    <div class="div-search-bar">
+      <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
+      <el-button class="ARMbutton" type="primary" @click="createStudents">新建学生</el-button>
+    </div>
+  </TablePage>
+
+ 
+
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="editStudentDialogShow">
+    <div class="div-input-element">
+      <span class="dialog-span">
+       
+        <el-text disabled class="dialog-input" v-model="editStudentData.id">
+          学生id： {{ editStudentData.id }}
+        </el-text>
+      </span>     
+    </div>
+
+    <div class="div-input-element" style="margin-top: 10px;" >
+      <span class="dialog-span" style="width: 1000px;">
+        年级
+      </span>
+
+      <el-select filterable class="dialog-input" v-model="editStudentData.gradeId">
+        <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
+    </div>
+
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <span class="dialog-span">
+        时间：
+      </span>
+      <el-input class="dialog-input" v-model="editStudentData.expiration">
+      </el-input>
+    </div>
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <span class="dialog-span">
+        备注：
+      </span>
+      <el-input class="dialog-input" v-model="editStudentData.remark">
+      </el-input>
+    </div>
+
+    <template #header>
+      <el-text>编辑学生</el-text>
+    </template>
+
+    <template #footer>
+      <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
+      <el-button @click="cancelEditDialog()">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
+  
 </template>
 
 <style scoped lang="scss">
@@ -490,5 +618,11 @@ $gap: 15px;
   justify-content: flex-start;
   width: 200px;
   height: 32px;
+}
+
+
+.dialog-span{
+  margin-right: 10px;
+          margin: 10px
 }
 </style>

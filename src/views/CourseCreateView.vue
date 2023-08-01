@@ -2,11 +2,12 @@
 import RichTextEditor from '@/components/RichTextEditor.vue';
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { createTeacherCourse, uploadCouseCover } from '@/apis/teacherCourses'
 //import { useRouter } from 'vue-router'
 //const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '课程管理', path: '' }, { name: '课程管理', path: '/course-management'  }, { name: '新建课程' }]
-
+breadcrumbStore.data = [{ name: '课程管理', path: '' }, { name: '课程管理', path: '/course-management' }, { name: '新建课程' }]
+const loading = ref(true)
 const bgc = ref('#e2e5ec')
 const mouseEnter = () => {
   bgc.value = '#BEC2CB'
@@ -15,6 +16,7 @@ const mouseLeave = () => {
   bgc.value = '#e2e5ec'
 }
 
+const newCourse = reactive<any>([])
 const showImgSrc = ref<string>('')
 const imageFile = reactive<{ file: Blob | null }>({ file: null })
 
@@ -30,6 +32,33 @@ const handleFileChange = (e: Event) => {
     }
   }
 }
+const createNewCourse = () =>{
+  loading.value = true
+var args ={
+  cover:showImgSrc.value,
+  label:newCourse.name,
+  name:'newCourse.label',
+  teacherId:newCourse.teacherId
+}
+
+  
+  createTeacherCourse(args)
+  .then((res:any) => {
+if(res =='20000'){
+  console.log('创建成功')
+}
+      loading.value = false
+    })
+    .catch(() => {})
+    .finally(() => {
+    loading.value = false
+
+    })
+}
+
+
+
+
 
 </script>
 
@@ -40,7 +69,7 @@ const handleFileChange = (e: Event) => {
       <el-text class="dialog-el-text">
         *课程名称：
       </el-text>
-      <el-input class="dialog-input" placeholder="输入消息标题">
+      <el-input class="dialog-input" placeholder="输入消息标题" v-model="newCourse.name">
       </el-input>
     </div>
 
@@ -58,31 +87,15 @@ const handleFileChange = (e: Event) => {
         </div>
 
         <input class="upload-file-input" type="file" accept="image/png, image/jpeg, image/jpg"
-          @change="handleFileChange" />
+          @change="handleFileChange"/>
       </div>
     </div>
 
     <div class="div-input-element">
-      <el-text class="dialog-el-text">
-        年级：
-      </el-text>
-      <el-input class="dialog-input" placeholder="请选择">
-      </el-input>
-    </div>
-
-    <div class="div-input-element">
-      <el-text class="dialog-el-text">
-        学科：
-      </el-text>
-      <el-input class="dialog-input" placeholder="请选择">
-      </el-input>
-    </div>
-
-    <div class="div-input-element">
-      <el-text class="dialog-el-text">
+      <el-text class="dialog-el-text" v-model="newCourse.label">
         标签：
       </el-text>
-      <el-input class="dialog-input" placeholder="请选择">
+      <el-input class="dialog-input" placeholder="请选择" >
       </el-input>
     </div>
 
@@ -90,15 +103,12 @@ const handleFileChange = (e: Event) => {
       <el-text class="dialog-el-text">
         老师：
       </el-text>
-      <el-input class="dialog-input" placeholder="请选择">
+      <el-input class="dialog-input" placeholder="请选择"  v-model="newCourse.teacherId">
       </el-input>
     </div>
 
     <div class="rich-text-area">
-      <el-text class="dialog-el-text">
-        课程详情介绍
-      </el-text>
-      <RichTextEditor></RichTextEditor>
+   <el-button @click="createNewCourse()">createNewCourse</el-button>
     </div>
 
   </div>
@@ -111,7 +121,7 @@ const handleFileChange = (e: Event) => {
   margin-left: 15px;
 }
 
-.rich-text-area{
+.rich-text-area {
   max-width: calc($page-width - 30px);
   margin-top: 15px;
   margin-left: 15px;

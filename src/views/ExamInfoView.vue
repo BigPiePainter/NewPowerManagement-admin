@@ -4,15 +4,29 @@ import { ElButton } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
+import { getExamInfor } from '@/apis/examinfo'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '设置', path: '' },{name:'考试咨询'}]
+breadcrumbStore.data = [{ name: '设置', path: '' }, { name: '考试咨询' }]
+
+const loading = ref(true)
+
+
+const tableData = ref<any>([])
+
+const totalLength = ref<Number>()
 
 const tableColumns = [
   {
-    dataKey: 'context',
-    key: 'context',
-    title: '咨询内容（最长25字）',
+    dataKey: 'content',
+    key: 'content',
+    title: '资讯内容',
+    width: 500
+  },
+  {
+    dataKey: 'createdAt',
+    key: 'createdAt',
+    title: '资讯时间',
     width: 500
   },
   {
@@ -37,24 +51,32 @@ const tableColumns = [
   }
 ]
 
-let fakeData = {
-  id: '1',
-  context: 'hhhoddly轮廓考六级类目利口酒立刻没离开4旅客零开局3老娘们课件3零空间',
+
+const loadData = () => {
+  loading.value = true
+
+  getExamInfor()
+    .then((res) => {
+      tableData.value = res.data
+      totalLength.value = res.data.length
+    })
+    .catch(() => {})
+    .finally(() => {
+      loading.value = false
+    })
 }
 
-const tableData: object[] = []
 
-for (let index = 0; index < 2; index++) {
-  let data = { ...fakeData }
-  data.id += index
-  tableData.push(data)
-}
+loadData()
 
-console.log(tableData)
+
+
+
 </script>
 
 <template>
-  <TablePage class="info-table" :columns="tableColumns" :data="tableData">
+  <TablePage :loading="loading" class="info-table" :itemsTotalLength="totalLength" @paginationChange="loadData"
+    :columns="tableColumns" :data="tableData">
     <div>
       <el-button @click="router.push({ path: 'new-product' })" class="new-info-button" type="primary">新增</el-button>
     </div>
