@@ -4,7 +4,6 @@ import { KawaseBlurFilter } from 'https://cdn.skypack.dev/@pixi/filter-kawase-bl
 import SimplexNoise from 'https://cdn.skypack.dev/simplex-noise@3.0.0'
 import hsl from 'https://cdn.skypack.dev/hsl-to-hex'
 import debounce from 'https://cdn.skypack.dev/debounce'
-import { t } from '@wangeditor/editor'
 PIXI.utils.skipHello()
 console.log('超炫酷无敌动画依赖import加载完毕')
 </script>
@@ -16,156 +15,127 @@ import { onMounted, onUnmounted } from 'vue'
 const items = [
   {
     index: '/work-space',
-    title: '工作台',
-    show: true,
+    title: '工作台'
   },
   {
-    index: '',
+    index: '/school-management',
     title: '学校管理',
-    show: true,
     subs: [
       {
         index: '/class-management',
-        title: '班级管理',
-        show: true,
+        title: '班级管理'
       },
       {
         index: '/teacher-group-management',
-        title: '教研组管理',
-        show: true,
+        title: '教研组管理'
       }
     ]
   },
   {
-    index: '',
+    index: '/account-management',
     title: '账号管理',
-    show: true,
     subs: [
       {
         index: '/account-role-managment',
-        title: '角色管理',
-        show: true,
+        title: '角色管理'
       },
       {
         index: '/acount-equipment-management',
-        title: '账号设备管理',
-        show: true,
+        title: '账号设备管理'
       },
       {
         index: '/account-teacher-managament',
-        title: '老师管理',
-        show: true,
+        title: '老师管理'
       },
       {
         index: '/account-student-management',
-        title: '学生管理',
-        show: true,
+        title: '学生管理'
       },
       {
         index: '/account-temoorary-student',
-        title: '临时学生',
-        show: true,
+        title: '临时学生'
       }
     ]
   },
   {
     index: '/live-class',
-    title: '实时课堂',
-    show: true,
+    title: '实时课堂'
   },
   {
-    index: '',
+    index: '/course-management-group',
     title: '课程管理',
-    show: true,
     subs: [
       {
         index: '/course-approval',
-        title: '微课审核',
-        show: true,
+        title: '微课审核'
       },
       {
         index: '/course-management',
-        title: '课程管理',
-        show: true,
+        title: '课程管理'
       }
     ]
   },
   {
     index: '/shop-management',
-    title: '商城管理',
-    show: true,
+    title: '商城管理'
   },
   {
     index: '/question-bank-management',
-    title: '题库管理',
-    show: true,
+    title: '题库管理'
   },
   {
     index: '/order-management',
-    title: '订单管理',
-    show: true,
+    title: '订单管理'
   },
   {
-    index: '',
+    index: '/student-points-management',
     title: '消费管理',
-    show: true,
     subs: [
       {
         index: '/student-points-management',
-        title: '学生积分',
-        show: true,
+        title: '学生积分'
       },
       {
         index: '/student-tcoin-management',
-        title: '学生T币',
-        show: true,
+        title: '学生T币'
       }
     ]
   },
   {
-    index: '',
+    index: '/setting',
     title: '设置',
-    show: true,
     subs: [
       {
         index: '/category-management',
-        title: '分类管理',
-        show: true,
+        title: '分类管理'
       },
       {
         index: '/tag-management',
-        title: '标签管理',
-        show: true,
+        title: '标签管理'
       },
       {
         index: '/course-category',
-        title: '课程类目',
-        show: true,
+        title: '课程类目'
       },
       {
         index: '/exam-info',
-        title: '考试咨询',
-        show: true,
+        title: '考试咨询'
       },
       {
         index: '/exam-date',
-        title: '考试时间',
-        show: true,
+        title: '考试时间'
       },
       {
         index: '/banner',
-        title: 'banner',
-        show: true,
+        title: 'banner'
       },
       {
         index: '/info-center',
-        title: '消息中心',
-        show: true,
+        title: '消息中心'
       },
       {
         index: '/family-report',
-        title: '家长报告',
-        show: true,
+        title: '家长报告'
       }
     ]
   },
@@ -343,38 +313,28 @@ onUnmounted(() => {
   <canvas class="sidebar-canvas"></canvas>
   <div class="sidebar">
     <div class="sidebar-header">管理后台</div>
-    <el-menu :default-active="route.path" router @click="console.log()">
-
+    <el-menu :default-active="route.path" router>
       <template v-for="item in items" :key="item.index">
-
-        <template v-if="(item as any).subs">
-
-          <el-sub-menu v-if="(item as any).show" :index="(item as any).index" :key="(item as any).index" class="sidebar-sub-menu">
-
+        <template v-if="item.subs">
+          <el-sub-menu :index="item.index" :key="item.index" class="sidebar-sub-menu">
             <template #title>
-              <span>{{ (item as any).title }}</span>
+              <span>{{ item.title }}</span>
             </template>
-
             <template v-for="subItem in item.subs" :key="subItem.title">
-              <el-menu-item v-if="subItem.show" :index="subItem.index" class="sidebar-menu-item">
+              <el-menu-item :index="subItem.index" class="sidebar-menu-item">
                 {{ subItem.title }}
               </el-menu-item>
             </template>
-
           </el-sub-menu>
-
         </template>
-
-        <template v-else-if="(item as any).show">
-          <app-link :to="(item as any).index">
-            <el-menu-item :index="(item as any).index" :key="(item as any).index" class="sidebar-menu-item">
-              <template #title>{{ (item as any).title }}</template>
+        <template v-else>
+          <app-link :to="item.index">
+            <el-menu-item :index="item.index" :key="item.index" class="sidebar-menu-item">
+              <template #title>{{ item.title }}</template>
             </el-menu-item>
           </app-link>
         </template>
-
       </template>
-
     </el-menu>
   </div>
 </template>
@@ -389,7 +349,6 @@ onUnmounted(() => {
   z-index: -1;
   background-color: $sidebar-color;
 }
-
 .sidebar {
   --el-menu-text-color: #ebebeb;
   --el-menu-bg-color: #00000000;
@@ -407,7 +366,7 @@ onUnmounted(() => {
 
   border-right: 1px #f0f2f5 solid;
 
-  >.sidebar-header {
+  > .sidebar-header {
     height: $header-height;
 
     font-size: 18px;
@@ -423,7 +382,7 @@ onUnmounted(() => {
     box-sizing: border-box;
   }
 
-  >.el-menu {
+  > .el-menu {
     height: calc(100vh - $header-height);
     scrollbar-gutter: stable;
     border-right: none;
