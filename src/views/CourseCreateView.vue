@@ -32,26 +32,26 @@ const handleFileChange = (e: Event) => {
     }
   }
 }
-const createNewCourse = () =>{
+const createNewCourse = () => {
   loading.value = true
-var args ={
-  cover:showImgSrc.value,
-  label:newCourse.name,
-  name:'newCourse.label',
-  teacherId:newCourse.teacherId
-}
+  var args = {
+    cover: showImgSrc.value,
+    label: newCourse.name,
+    name: 'newCourse.label',
+    teacherId: newCourse.teacherId
+  }
 
-  
+
   createTeacherCourse(args)
-  .then((res:any) => {
-if(res =='20000'){
-  console.log('创建成功')
-}
+    .then((res: any) => {
+      if (res == '20000') {
+        console.log('创建成功')
+      }
       loading.value = false
     })
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
-    loading.value = false
+      loading.value = false
 
     })
 }
@@ -87,7 +87,7 @@ if(res =='20000'){
         </div>
 
         <input class="upload-file-input" type="file" accept="image/png, image/jpeg, image/jpg"
-          @change="handleFileChange"/>
+          @change="handleFileChange" />
       </div>
     </div>
 
@@ -95,7 +95,7 @@ if(res =='20000'){
       <el-text class="dialog-el-text" v-model="newCourse.label">
         标签：
       </el-text>
-      <el-input class="dialog-input" placeholder="请选择" >
+      <el-input class="dialog-input" placeholder="请选择">
       </el-input>
     </div>
 
@@ -103,16 +103,15 @@ if(res =='20000'){
       <el-text class="dialog-el-text">
         老师：
       </el-text>
-      <el-input class="dialog-input" placeholder="请选择"  v-model="newCourse.teacherId">
+      <el-input class="dialog-input" placeholder="请选择" v-model="newCourse.teacherId">
       </el-input>
     </div>
 
     <div class="rich-text-area">
-   <el-button @click="createNewCourse()">createNewCourse</el-button>
+      <el-button @click="createNewCourse()">createNewCourse</el-button>
     </div>
-
+    <RichTextEditor />
   </div>
-  <RichTextEditor/>
 </template>
 
 <style scoped lang="scss">
