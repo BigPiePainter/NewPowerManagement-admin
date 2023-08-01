@@ -26,7 +26,7 @@ const searchBarItems = reactive([
 const router = useRouter()
 
 
-const courseCreat = (props: any) => {router.push({path: 'course-create', query: { id: props.rowData.id }})
+const courseCreat = () => {router.push({path:'course-create'})
 }
 
 
