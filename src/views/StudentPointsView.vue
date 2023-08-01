@@ -142,14 +142,14 @@ const loadData = () => {
 
 const allRevenuesType = [
   {
-    id: '1',
+    id: 1,
     value: '1',
-    label: '下单',
+    label: '收入',
   },
   {
-    id: '2',
+    id: 2,
     value: '2',
-    label: '后台赠送',
+    label: '支出',
   },
 
 ]
@@ -160,12 +160,12 @@ const allSourceType = [
   {
     id: '1',
     value: '1',
-    label: '收入',
+    label: '下单',
   },
   {
     id: '2',
     value: '2',
-    label: '支出',
+    label: '后台赠送',
   },
 
 ]
@@ -203,8 +203,7 @@ const editStudentFund = reactive<{ numberOfPoint: string, remark: string, revenu
 const editFund = (props: { rowData: { id: string } }) => {
   console.log(props)
   editStudentFundDialog.value = true;
-  editStudentFund.studentId = props.rowData.id
-
+  editStudentFund.studentId = props.rowData.id;
 }
 
 getselection()
@@ -233,15 +232,15 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *来源类型 ：
+         *收支类型：
         </span>
         <el-select class="dialog-input" v-model="editStudentFund.revenuesType">
-          <el-option v-for="item in allRevenuesType" :key="item.id" :label="item.label" :value="item.value" />
+          <el-option v-for="item in allRevenuesType" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *收支类型：
+           *来源类型 ：
         </span>
         <el-select class="dialog-input" v-model="editStudentFund.sourceType">
           <el-option v-for="item in allSourceType" :key="item.id" :label="item.label" :value="item.value" />

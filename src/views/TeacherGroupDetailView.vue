@@ -114,7 +114,7 @@ const tableColumns = reactive<any>([
           <el-popconfirm
             hide-after={0}
             width="170"
-            title={`移除老师${item.rowData.id}`}
+            title={`移除${item.rowData.id}`}
             onConfirm={() => preDeleteStu(item)}
             v-slots={{
               reference: () => (

@@ -38,7 +38,7 @@ import AccountTeacherDetail from '@/views/AccountTeacherDetail.vue'
 import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 import AccountRoleDetail from '@/views/AccountRoleDetail.vue'
 import CourseDetailView from '@/views/CourseDetailView.vue'
-import CourseCreateView from '@/views/CourseCreateView.vue'
+// import CourseCreateView from '@/views/CourseCreateView.vue'
 import { userInfo } from '@/apis/manager'
 
 const router = createRouter({
@@ -162,12 +162,12 @@ const router = createRouter({
           component: CourseManagementView,
           meta: { Protected: true }
         },
-        {
-          path: 'course-create',
-          name: 'course-create',
-          component: CourseCreateView,
-          meta: { Protected: true }
-        },
+        // {
+        //   path: 'course-create',
+        //   name: 'course-create',
+        //   component: CourseCreateView,
+        //   meta: { Protected: true }
+        // },
         {
           path: 'course-detail',
           name: 'course-detail',
@@ -194,6 +194,12 @@ const router = createRouter({
           component: QuestionBankManagementView,
           meta: { Protected: true }
         },
+        // {
+        //   path: 'question-create',
+        //   name: 'question-create',
+        //   component:QuestionCreateView,
+        //   meta: { Protected: true }
+        // },
         {
           path: 'student-points-management',
           name: 'student-points-management',

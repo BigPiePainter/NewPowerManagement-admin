@@ -15,7 +15,7 @@ const router = useRouter()
 
 
 const breadcrumbStore = useBreadcrumbStore()
-const createDialogShow = ref();
+const createDialogShow = ref(false);
 const editStudentDialogShow = ref(false);
 
 breadcrumbStore.data = [
@@ -27,7 +27,7 @@ const loading = ref(true)
 
 const clickDetail = (props: { rowData: { id: string } }) => {
   console.log(props);
-  router.push({ path: 'course-create', query: { id: props.rowData.id } });
+  router.push({ path: 'student-detail-management', query: { id: props.rowData.id } });
 }
 
 const tableColumns = [
@@ -433,6 +433,7 @@ const confirmEditDialog = () => {
 
 const createStudents = () => {
   createDialogShow.value = true;
+  console.log(createDialogShow.value)
 }
 
 
@@ -473,8 +474,9 @@ const cancelEditDialog = () => {
       </div>
       <div class="input">
         <div class="input-word">*学习阶段:</div>
-        <el-select placeholder="请选择" class="input-input" filterable v-model="newStudentData.gradeId" />
-        <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.value" />
+        <el-select placeholder="请选择" class="input-input" filterable v-model="newStudentData.gradeId">
+        <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
       </div>
 
       <div class="input">
@@ -491,7 +493,7 @@ const cancelEditDialog = () => {
       <div class="input">
         <div class="input-word">学科:</div>
         <el-select class="input-input" filterable placeholder="请输入" v-model="newStudentData.subjectId">
-          <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.value" />
+          <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="input">

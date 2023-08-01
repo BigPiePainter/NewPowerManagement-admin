@@ -43,13 +43,7 @@ const 到期日期 = ref<any>([])
 const allGrades = ref<any>([])
 
 const searchBarItems = reactive([
-{ name: "选择年级",
-    value: "", 
-    label: "请选择",
-    type: InputType.Select,
-    options: allGrades
-    },
-  { name: "姓名/用户名/电话", value: "", },
+  { name: "姓名/用户名/电话", value: "" },
 ])
 
   const loadSelectOption = () => {
@@ -314,13 +308,13 @@ const loadDialogData = () => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     type: studentType.value,
-    gradeIds: normalDialogSearchBarItems[0].value,
-    studentId:normalDialogSearchBarItems[1].value,
-    name:normalDialogSearchBarItems[1].value,
-    phoneNumber:normalDialogSearchBarItems[1].value,
+    studentId:normalDialogSearchBarItems[0].value,
+    name:normalDialogSearchBarItems[0].value,
+    phoneNumber:normalDialogSearchBarItems[0].value,
   }
 
-  getStudent(args)
+  getStudent
+  (args)
     .then((res) => {
       dialogTableData.value = res.data.records
       totalLength.value = res.data.records.length

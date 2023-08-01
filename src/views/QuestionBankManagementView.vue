@@ -3,18 +3,20 @@ import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
+import { useRouter } from 'vue-router'
+import { getGrades } from '@/apis/grade'
+import { getSubjects } from '@/apis/subject'
 import { InputType } from '@/type'
-
+import { getCourseQuestionPackage } from '@/apis/coursequestionpackage'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '题目管理', path: '' }]
 
-const items = reactive([
-  { name: '年级', value: '', type: InputType.Select, label: '请选择' },
-  { name: '学科', value: '', type: InputType.Select, label: '请选择' },
-  { name: '难度', value: '', type: InputType.Select, label: '请选择' },
-  { name: '好题名称', value: '' }
-])
+
+
+
+const loading = ref(true)
+
 
 const tableColumns = [
   {
@@ -24,13 +26,13 @@ const tableColumns = [
     width: 120
   },
   {
-    dataKey: 'questionName',
-    key: 'questionName',
+    dataKey: 'name',
+    key: 'name',
     title: '好题名称',
     width: 200,
-    cellRenderer: ({ cellData: questionName }: any) => (
-      <ElButton link type="primary">
-        {questionName}
+    cellRenderer: ( cellData: any ) => (
+      <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
+        {cellData.rowData.name}
       </ElButton>
     )
   },
@@ -41,15 +43,21 @@ const tableColumns = [
     width: 150
   },
   {
-    dataKey: 'studentGrade',
-    key: 'studentGrade',
-    title: '年级',
+    dataKey: 'gradeName',
+    key: 'gradeName',
+    title: '学习阶段',
     width: 100
   },
   {
-    dataKey: 'studentSubject',
-    key: 'studentSubject',
+    dataKey: 'subjectName',
+    key: 'subjectName',
     title: '学科',
+    width: 100
+  },
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '老师名',
     width: 100
   },
   {
@@ -59,23 +67,25 @@ const tableColumns = [
     width: 100
   },
   {
-    dataKey: 'questionTag',
-    key: 'questionTag',
-    title: '标签',
+    dataKey: 'description',
+    key: 'description',
+    title: '详情描述',
     width: 100
   },
   {
-    dataKey: 'questionCreatTime',
-    key: 'questionCreatTime',
+    dataKey: 'createdAt',
+    key: 'createdAt',
     title: '创建时间',
     width: 200
   },
   {
-    dataKey: 'lastChangeTime',
-    key: 'lastChangeTime',
-    title: '最后更新时间',
+    dataKey: 'updatedAt',
+    key: 'updatedAt',
+    title: '创建时间',
     width: 200
   },
+
+
   {
     key: 'option',
     title: '操作',
@@ -100,40 +110,96 @@ const tableColumns = [
   }
 ]
 
-let fakeData = {
-  id: '1',
-  questionName: '超级提高题',
-  studentSubject: '数学',
-  studentGrade: '9',
-  questionDifficulty: '★★★★',
-  questionAmount: '20',
-  lastChangeTime: '2019-8-17 20:082',
-  questionCreatTime: '2019-8-17 20:082',
-  questionTag: '-'
+const allGrades = ref<any>([])
+const allSubjects = ref<any>([])
+  const router = useRouter()
+
+const clickDetail = (props: { rowData: { id: string } }) => {
+  console.log(props);
+  router.push({ path: 'course-create', query: { id: props.rowData.id } });
 }
 
-const tableData: object[] = []
+const loadSelectOption = () => {
+  getGrades()
+    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
+    .catch()
 
-for (let index = 0; index < 100; index++) {
-  let data = { ...fakeData }
-  data.studentGrade += index
-  tableData.push(data)
+  getSubjects()
+    .then((res) => (allSubjects.value = res.data))
+    .catch()
 }
 
-console.log(tableData)
+loadSelectOption()
 
-const refresh = () => {
-  console.log(items)
+const searchBarItems = reactive([
+  {
+    name: '年级',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    single: true,
+    options: allGrades
+  },
+  {
+    name: '学科',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options: allSubjects
+  },
+  { name: '难度', value: '' },
+  { name: '好题名称', value: '' }
+])
+const tableData = ref<any>([])
+
+
+const totalLength = ref<Number>()
+
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+
+})
+
+const loadData = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    type: 2,
+    gradeId: searchBarItems[0].value[0],
+    subjectId: searchBarItems[1].value[0],
+    difficultyLevel: searchBarItems[2].value,
+    name: searchBarItems[3].value
+
+  }
+  console.log(args)
+  getCourseQuestionPackage(args)
+    .then((res) => {
+      tableData.value = res.data.records
+      totalLength.value = res.data.records.length
+      
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+    
 }
+
+
+loadData()
 </script>
 
 <template>
-  <TablePage class="page-container" :columns="tableColumns" :data="tableData">
+  <TablePage :loading="loading" class="table-page" :columns="tableColumns" :searchBarItemsTotalLength="totalLength"
+    @paginationChange="loadData" :data="tableData" style="margin-left: 15px;">
     <div class="div-search-bar">
-      <SearchBar :items="items" @change="refresh()"></SearchBar>
+      <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
     <div>
-      <el-button class="new-button" type="primary">新建好题</el-button>
+      <el-button class="new-button" style="margin-bottom: 15px; margin-left: 15px;" type="primary">新建好题包</el-button>
     </div>
   </TablePage>
 </template>

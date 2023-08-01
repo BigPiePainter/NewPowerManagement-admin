@@ -143,7 +143,9 @@ const loadData = () => {
 
 
 
-
+const concel=(item:any)=>{
+console.log(item)
+}
 
   loadData()
 
@@ -154,15 +156,24 @@ const loadData = () => {
     <div class="topPart">
       <div class="topPart1">
         <div>
-          <el-image class="image"></el-image>
+          <el-image
+        class="image"
+        fit="scale-down"
+        src={{tableData.cover}}
+        className="shop-Preview"
+        preview-src-list={{tableData.cover}}
+        preview-teleported
+        
+      />
+
         </div>
         <div class="topPart1-3">
           <div class="topPart1-3-2">
-            <div class="topPart1-3-2"><el-text style="font-size: 20px;">这里是课程名称</el-text></div>
+            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{tableData.cover}}</el-text></div>
             <div class="topPart1-3-2"><el-text>年级：三年级</el-text></div>
             <div class="topPart1-3-2"><el-text>学科：语文</el-text></div>
-            <div class="topPart1-3-2"><el-text>标签：难度系数很高</el-text></div>
-            <div class="topPart1-3-2"><el-text>老师：庄老师</el-text></div>
+            <div class="topPart1-3-2"><el-text>标签：难系数很高</el-text></div>
+            <div class="topPart1-3-2"><el-text @click="concel(tableData)">老师：庄老师</el-text></div>
           </div>
         </div>
 

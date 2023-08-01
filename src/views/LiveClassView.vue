@@ -14,7 +14,7 @@ const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '实时课程', path: '' }]
 
 
-const teacherSelect = reactive<any>([])
+const teacherSelect = ref<any>([])
 const totalLength = ref<Number>()
 const loading = ref(true)
 const tableData = ref<any>([])
@@ -96,7 +96,7 @@ const searchBarItems = reactive([
     value: '',
     type: InputType.Select,
     label: '请选择',
-    options: teacherSelect
+    options: teacherSelect.value
   },
   {
     name: '课堂名称',
@@ -239,8 +239,8 @@ const paginationInfo = reactive({
 var args = {
   pageNum: paginationInfo.currentPage,
   pageSize: paginationInfo.pageSize,
-  id: searchBarItems[0].value,
   name: searchBarItems[1].value,
+  teacherId: searchBarItems[0].value
 }
 
 const loadSelectOption = () => {
@@ -248,13 +248,13 @@ const loadSelectOption = () => {
     .then((res) => {
       res.data.records.forEach((item: any) => {
         var dataSample = {
-          id: item.id,
-          name: item.name
+          name: item.name,
+          id: item.id
         }
-        teacherSelect.push(dataSample)
+        teacherSelect.value.push(dataSample)
       })
       console.log(res.data.records)
-      console.log('teacher' + teacherSelect)
+      console.log(teacherSelect.value)
     })
     .catch(() => {
       ElNotification({
@@ -271,6 +271,11 @@ const loadData = () => {
   loading.value = true
   loadSelectOption()
 
+  var args = {
+  pageNum: paginationInfo.currentPage,
+  pageSize: paginationInfo.pageSize,
+  name: searchBarItems[1].value
+}
 
   getLiveClasses(args)
     .then((res) => {
@@ -281,6 +286,7 @@ const loadData = () => {
     .finally(() => {
       loading.value = false
     })
+  
 }
 
 
