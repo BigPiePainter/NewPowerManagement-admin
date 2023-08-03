@@ -92,9 +92,20 @@ const items = [
     show: true
   },
   {
-    index: '/question-bank-management',
+    index: '',
     title: '题库管理',
-    show: true
+    subs: [
+      {
+        index: '/question-bank-management',
+        title: '好题包管理',
+        show: true
+      },
+      {
+        index: '/question-bank',
+        title: '题库',
+        show: true
+      }
+    ]
   },
   {
     index: '/order-management',

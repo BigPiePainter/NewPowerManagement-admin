@@ -8,14 +8,24 @@ import { upload } from '@/apis/upload';
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef();
 
+type Props = {
+    questionPrompt: string
+    id:string
+    options: string
+    answer:string
+    id:string
+    // difficultyType: string
+    // isShow: boolean
+    // type: string
+}
+const props = defineProps<Props>()
+
 // 内容 HTML
-const valueHtml = ref('');
+const valueHtml = ref(props.questionPrompt);
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
-    setTimeout(() => {
-        valueHtml.value = '';
-    }, 1500);
+
 });
 
 const toolbarConfig = {
@@ -35,7 +45,6 @@ const toolbarConfig = {
         'fullScreen'
     ]
 }
-    ;
 const editorConfig = { placeholder: '请输入内容...' };
 
 // 组件销毁时，也及时销毁编辑器，重要！
@@ -64,38 +73,56 @@ const insertImage = () => {
 }
 
 const handleFileChange = (e: Event) => {
-    const currentTarget = e.target as HTMLInputElement;
+    // const currentTarget = e.target as HTMLInputElement;
 
-    //图片上传到服务器返回url
-    //url在res.data.url
-    if (currentTarget.files) {
-        var formData = new FormData()
-        formData.append('file', currentTarget.files[0])
-        upload(formData)
-            .then((res: any) => {
-                if (res.data.url) {
-                    const editor = editorRef.value
-                    console.log(res)
-                    editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
-                } else {
-                    console.log("失败")
-                }
-            })
-            .catch()
-    }
+    // //图片上传到服务器返回url
+    // //url在res.data.url
+    // if (currentTarget.files) {
+    //     var formData = new FormData()
+    //     formData.append('file', currentTarget.files[0])
+    //     upload(formData)
+    //         .then((res: any) => {
+    //             if (res.data.url) {
+    //                 const editor = editorRef.value
+    //                 console.log(res)
+    //                 editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
+    //             } else {
+    //                 console.log("失败")
+    //             }
+    //         })
+    //         .catch()
 }
+
+
+
+
 
 </script>
 
 <template>
-    <input type="file" id="file" @change="handleFileChange" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
-    <div style="border: 1px solid #ccc; margin-top: 10px">
-        <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple" style="border-bottom: 1px solid #ccc" />
-        <Editor :defaultConfig="editorConfig" mode="simple" v-model="valueHtml"
-            style="height: 400px; overflow-y: hidden" @onCreated="handleCreated" @onDestroyed="handleDestroyed" />
-        <button style="margin-top: 10px;" @click="insertImage">插入图片</button>
+    <div  v-for="items in props.id" :key="items.id">
+        <input v-if="isShow" type="file" id="file" @change="handleFileChange"
+            style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
+        <div style="border: 1px solid #ccc; margin-top: 10px">
+            <Toolbar v-if="isShow" :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple"
+                style="border-bottom: 1px solid #ccc" />
+            <Editor :defaultConfig="editorConfig" mode="simple" v-model=valueHtml
+                style="height: 400px; overflow-y: hidden" @onCreated="handleCreated" @onDestroyed="handleDestroyed" />
+            <button v-if="isShow" style="margin-top: 10px;" @click="insertImage">插入图片</button>
+        </div>
+
+        <div style="display:flex; flex-direction:row">
+            <div style="margin-left:10px" v-for="items in JSON.parse(props.options)" :key="items.options">{{ items.identifier}}:{{ items.value }}</div>
+
     </div>
+
+
+            <div style="float:right;"><el-button @click="console.log(props)">讲解视频</el-button></div>
+        </div>
+       
 </template>
   
 
-  
+<style>.margin {
+    margin: 10px
+}</style>

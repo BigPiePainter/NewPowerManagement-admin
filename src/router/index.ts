@@ -38,10 +38,11 @@ import AccountTeacherDetail from '@/views/AccountTeacherDetail.vue'
 import AccountStudentDetail from '@/views/AccountStudentDetail.vue'
 import AccountRoleDetail from '@/views/AccountRoleDetail.vue'
 import CourseDetailView from '@/views/CourseDetailView.vue'
+import QuestionPackageCreateView from '@/views/QuestionPackageCreateView.vue'
 import QuestionCreateView from '@/views/QuestionCreateView.vue'
-
+import QuestionDetailView from '@/views/QuestionDetailView.vue'
+import QuestionsManagementView from '@/views/QuestionsManagementView.vue'
 import CourseCreateView from '@/views/CourseCreateView.vue'
-
 
 
 import { userInfo } from '@/apis/manager'
@@ -200,9 +201,27 @@ const router = createRouter({
           meta: { Protected: true }
         },
         {
+          path: 'question-package-create',
+          name: 'question-package-create',
+          component: QuestionPackageCreateView,
+          meta: { Protected: true }
+        },
+        {
           path: 'question-create',
           name: 'question-create',
           component: QuestionCreateView,
+          meta: { Protected: true }
+        },
+        {
+          path: 'question-detail',
+          name: 'question-detail',
+          component: QuestionDetailView,
+          meta: { Protected: true }
+        },
+        {
+          path: 'question-bank',
+          name: 'question-bank',
+          component:QuestionsManagementView,
           meta: { Protected: true }
         },
         {
@@ -229,7 +248,6 @@ const router = createRouter({
           component: TcoinDetailView,
           meta: { Protected: true }
         },
-
         {
           path: 'order-management',
           name: 'order-management',

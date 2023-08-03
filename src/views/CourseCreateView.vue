@@ -3,8 +3,6 @@ import RichTextEditor from '@/components/RichTextEditor.vue';
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { createTeacherCourse, uploadCouseCover } from '@/apis/teacherCourses'
-//import { useRouter } from 'vue-router'
-//const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '课程管理', path: '' }, { name: '课程管理', path: '/course-management' }, { name: '新建课程' }]
 const loading = ref(true)
@@ -110,7 +108,7 @@ const createNewCourse = () => {
     <div class="rich-text-area">
       <el-button @click="createNewCourse()">createNewCourse</el-button>
     </div>
-    <RichTextEditor />
+    <RichTextEditor/>
   </div>
 </template>
 

@@ -10,16 +10,13 @@ export const createTeacher = (data:any) => {
     return http.request(args)
 }
 
-export const getAllTeachers = (data: object) => {
+export const getAllTeachers = () => {
     const args = {
         url: '/api/management/teacher/get-all-teachers',
-        method: 'GET',
-        params: data
+        method: 'GET'
     }
     return http.request(args)
 }
-
-
 
 export const getTeachers = (data: object) => {
     const args = {

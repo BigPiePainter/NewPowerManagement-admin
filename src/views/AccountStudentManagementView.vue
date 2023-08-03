@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import { getGrades } from '@/apis/grade'
+import { getSubjects } from '@/apis/subject'
 import { ref, reactive } from 'vue'
 import { ElButton, ElInput, ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
@@ -9,7 +10,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 import { getStudent, restStudentPsw, deleteStudent } from '@/apis/student'
 import { createStudent, editStudent } from '@/apis/student'
-import { getSubjects } from '@/apis/subject'
+
 
 const router = useRouter()
 

@@ -13,6 +13,9 @@ const TeacherAmount = ref()
 const PointAmount = ref()
 const CoinsAmount = ref()
 
+
+
+
 const history = reactive([
   { title: '学生账号', amount: studentAmount },
   { title: '老师账号', amount: TeacherAmount },
@@ -46,7 +49,9 @@ const loadTeacher = () => {
 }
 loadTeacher()
 
+
 const loadMark = () => {
+
   loadPoint().then((res)=>{
     PointAmount.value=res.data
   }).catch()
@@ -85,7 +90,10 @@ LoadCoins()
       </DisplayCard>
     </div>
   </div>
+
+ 
 </template>
+
 <style scoped lang="scss">
 .page {
   >.card-container-header {
@@ -99,6 +107,8 @@ LoadCoins()
     &.partA {
       margin-top: 33px;
     }
+
+
 
     &.partB {
       margin-top: 48px;
@@ -129,5 +139,5 @@ LoadCoins()
     justify-content: flex-start;
   }
 }
+
 </style>
-@/apis/student@/apis/login@/apis/teacher

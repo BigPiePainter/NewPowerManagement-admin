@@ -24,6 +24,7 @@ const loading = ref(true)
 const searchBarItems = reactive([
   { name: "姓名/用户名", value: "", },
 ])
+
 const dialogSearchBarItems = reactive([
   { name: "用户名", value: "", },
   { name: "姓名", value: "", },
@@ -289,11 +290,12 @@ const confirmNewTeacher = () => {
           message: '添加老师成功',
           type: 'success'
         })
+        addTeacherDialogShow.value = false
       }else{
         ElNotification({
-          title: '成功',
+          title: '失败',
           message: '添加老师失败',
-          type: 'success'
+          type: 'warning'
         })
       }
     

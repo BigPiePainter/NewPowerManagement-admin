@@ -10,13 +10,18 @@ import { InputType } from '@/type'
 import { getCourseQuestionPackage } from '@/apis/coursequestionpackage'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '题目管理', path: '' }]
+breadcrumbStore.data = [{ name: '好题包管理', path: '' }]
 
 
 
 
 const loading = ref(true)
 
+const clickDetail = (props: { rowData: { id: string }})=>{
+
+  router.push({ path: 'question-detail', query: { id: props.rowData.id }});
+
+}
 
 const tableColumns = [
   {
@@ -32,7 +37,7 @@ const tableColumns = [
     width: 200,
     cellRenderer: ( cellData: any ) => (
       <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
-        {cellData.rowData.name}
+        {cellData.cellData}
       </ElButton>
     )
   },
@@ -84,13 +89,12 @@ const tableColumns = [
     title: '创建时间',
     width: 200
   },
-
-
   {
     key: 'option',
     title: '操作',
 
     cellRenderer: () => (
+
       <>
         <el-button link type="primary" class="">
           下发
@@ -102,6 +106,7 @@ const tableColumns = [
           删除
         </el-button>
       </>
+
     ),
 
     width: 180,
@@ -114,9 +119,8 @@ const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
   const router = useRouter()
 
-const clickDetail = (props: { rowData: { id: string } }) => {
-  console.log(props);
-  router.push({ path: 'question-create', query: { id: props.rowData.id } });
+const clickCreate = () => {
+  router.push({ path: 'question-package-create'});
 }
 
 const loadSelectOption = () => {
@@ -147,12 +151,15 @@ const searchBarItems = reactive([
     label: '请选择',
     options: allSubjects
   },
-  { name: '难度', value: '' },
-  { name: '好题名称', value: '' }
+  { name: '难度',
+   value: '' },
+
+  { name: '好题名称',
+   value: '' }
 ])
+
+
 const tableData = ref<any>([])
-
-
 const totalLength = ref<Number>()
 
 const paginationInfo = reactive({
@@ -167,11 +174,11 @@ const loadData = () => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    type: 2,
     gradeId: searchBarItems[0].value[0],
     subjectId: searchBarItems[1].value[0],
     difficultyLevel: searchBarItems[2].value,
-    name: searchBarItems[3].value
+    name: searchBarItems[3].value,
+    type: 2,
 
   }
   console.log(args)
@@ -190,17 +197,21 @@ const loadData = () => {
 
 
 loadData()
+
 </script>
 
 <template>
   <TablePage :loading="loading" class="table-page" :columns="tableColumns" :searchBarItemsTotalLength="totalLength"
     @paginationChange="loadData" :data="tableData" style="margin-left: 15px;">
+
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
+
     <div>
-      <el-button class="new-button" style="margin-bottom: 15px; margin-left: 15px;" type="primary">新建好题包</el-button>
+      <el-button class="new-button" style="margin-bottom: 15px; margin-left: 15px;" type="primary" @click="clickCreate">新建好题包</el-button>
     </div>
+    
   </TablePage>
 </template>
 
