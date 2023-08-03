@@ -20,11 +20,10 @@ export const createStudent = (data:any) => {
     return http.request(args)
 }
 
-export const getAllStudents = (data: object) => {
+export const getAllStudents = () => {
     const args = {
         url: '/api/management/student/get-all-students',
-        method: 'GET',
-        params: data
+        method: 'GET'
     }
     return http.request(args)
 }

@@ -10,7 +10,7 @@ import { getSubjects } from '@/apis/subject'
 import { ElNotification } from 'element-plus'
 import { getClasses, createClass } from '@/apis/class'
 import { editClasses, deleteClasses } from '@/apis/class'
-import {getAllTeachers} from '@/apis/teacher'
+import { getAllTeachers } from '@/apis/teacher'
 
 
 
@@ -28,7 +28,7 @@ const loading = ref(true)
 const tableData = ref<any>([])
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
-const allTeacher= ref<any>([])
+const allTeacher = ref<any>([])
 
 const newClassData = reactive<{
   creationType: number
@@ -63,11 +63,16 @@ const totalLength = ref<Number>()
 
 const searchBarItems = reactive([
   { name: "班级名称", value: "", },
-  { name: "负责老师",     type: InputType.Select,
-    value: "", options: allTeacher},
   {
-    name: "年级",
+    name: "负责老师", type: InputType.Select,
+    single: true,
+    value: "", options: allTeacher
+    
+  },
+  {
+    name: "阶段",
     type: InputType.Select,
+    single: true,
     value: "",
     options: allGrades
 
@@ -76,6 +81,7 @@ const searchBarItems = reactive([
   {
     name: "学科",
     type: InputType.Select,
+    single: true,
     value: "",
     options: allSubjects
   },
@@ -231,6 +237,7 @@ const editClass = (props: {
     subjectId: string,
     gradeId: string,
   }
+
 }) => {
   console.log(props);
   editClassDialogShow.value = true;
@@ -283,23 +290,18 @@ const loadData = () => {
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
     })
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
       loading.value = false
     })
 }
-const loadAllTeacher = ()=>{
+const loadAllTeacher = () => {
 
-var args={
-  pageNum: paginationInfo.currentPage,
-  pageSize: paginationInfo.pageSize,
-  name: searchBarItems[1].value,
-}
-getAllTeachers(args)
-.then((res) => {
-    allTeacher.value = res.data
-     })
-     .catch()
+  getAllTeachers()
+    .then((res) => {
+      allTeacher.value = res.data
+    })
+    .catch()
 }
 
 
@@ -310,14 +312,8 @@ loadAllTeacher()
 
 <template>
   <div class="div-class-management">
-    <TablePage 
-    class="table-page" 
-    :loading="loading"
-    :itemsTotalLength="totalLength"
-    :columns="tableColumns" 
-    @paginationChange="loadData"
-    :data="tableData"
-    >
+    <TablePage class="table-page" :loading="loading" :itemsTotalLength="totalLength" :columns="tableColumns"
+      @paginationChange="loadData" :data="tableData">
       <div class="div-search-bar">
         <SearchBar :items="searchBarItems" @change="loadData()" />
       </div>

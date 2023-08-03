@@ -14,7 +14,10 @@ import { createStudent, editStudent } from '@/apis/student'
 
 const router = useRouter()
 
-
+const clickDetail = (props: { rowData: { id: string } }) => {
+  console.log(props);
+  router.push({ path: 'student-detail-management', query: { id: props.rowData.id } });
+}
 const breadcrumbStore = useBreadcrumbStore()
 const createDialogShow = ref(false);
 const editStudentDialogShow = ref(false);
@@ -26,10 +29,7 @@ breadcrumbStore.data = [
 
 const loading = ref(true)
 
-const clickDetail = (props: { rowData: { id: string } }) => {
-  console.log(props);
-  router.push({ path: 'student-detail-management', query: { id: props.rowData.id } });
-}
+
 
 const tableColumns = [
   {
@@ -143,7 +143,7 @@ const tableData = ref<object[]>([])
 
 
 const newStudentData = reactive<{
-  
+
   account: string,
   expiration: string,
   name: string,
@@ -180,7 +180,7 @@ const loadSelectOptionDialog = () => {
     .then((res) => (allSubjects.value = res.data))
     .catch()
 
-    getGrades()
+  getGrades()
     .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
     .catch()
 }
@@ -271,13 +271,16 @@ const conformCreate = () => {
         message: '已成功创建',
         type: 'success',
       })
+      createDialogShow.value = false
     }
+
     else {
       ElNotification({
         title: 'Warning',
         message: res.msg,
         type: 'warning',
       })
+      createDialogShow.value = false
     }
   }).catch()
 
@@ -403,7 +406,7 @@ const editstudent =
     editStudentData.id = props.rowData.id;
     editStudentData.expiration = props.rowData.expiration;
     editStudentData.gradeId = props.rowData.gradeId;
-    editStudentData.remark= props.rowData.remark;
+    editStudentData.remark = props.rowData.remark;
 
     console.log(props)
     editStudentDialogShow.value = true;
@@ -451,11 +454,7 @@ const cancelEditDialog = () => {
 </script>
 
 <template>
-
-
-
-
-<el-dialog v-model="createDialogShow" width="400px">
+  <el-dialog v-model="createDialogShow" width="400px">
     <template #header>
       <el-text>新建学生</el-text>
     </template>
@@ -470,14 +469,14 @@ const cancelEditDialog = () => {
       </div>
       <div class="input">
         <div class="input-word">*到期时间:</div>
-        <el-date-picker type="datetime" placeholder="请选择" v-model="newStudentData.expiration"
+        <el-date-picker type="datetime" placeholder="请选择" style="width:200px" v-model="newStudentData.expiration"
           value-format="YYYY-MM-DD HH:MM:00" />
       </div>
       <div class="input">
         <div class="input-word">*学习阶段:</div>
         <el-select placeholder="请选择" class="input-input" filterable v-model="newStudentData.gradeId">
-        <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
-      </el-select>
+          <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
       </div>
 
       <div class="input">
@@ -529,46 +528,40 @@ const cancelEditDialog = () => {
     </div>
   </TablePage>
 
- 
+
 
 
   <el-dialog class="new-class-dialog" width="370px" v-model="editStudentDialogShow">
     <div class="div-input-element">
-      <span class="dialog-span">
-       
-        <el-text disabled class="dialog-input" v-model="editStudentData.id">
-          学生id： {{ editStudentData.id }}
-        </el-text>
-      </span>     
     </div>
-
-    <div class="div-input-element" style="margin-top: 10px;" >
-      <span class="dialog-span" style="width: 1000px;">
-        年级
-      </span>
-
-      <el-select filterable class="dialog-input" v-model="editStudentData.gradeId">
-        <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
-      </el-select>
-    </div>
-
-
     <div class="div-input-element" style="margin-top: 10px;">
-      <span class="dialog-span">
-        时间：
-      </span>
-      <el-input class="dialog-input" v-model="editStudentData.expiration">
-      </el-input>
+      <el-text style="margin-left: 10px;">
+        阶段：
+      </el-text>
+      <div>
+        <el-select class="dialog-input" v-model="editStudentData.gradeId" style="width: 256px;">
+          <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </div>
     </div>
-
     <div class="div-input-element" style="margin-top: 10px;">
-      <span class="dialog-span">
+      <el-text style="margin-left: 10px;">
         备注：
-      </span>
-      <el-input class="dialog-input" v-model="editStudentData.remark">
-      </el-input>
+      </el-text>
+      <div>
+        <el-input class="dialog-input" v-model="editStudentData.remark" style="width: 256px;">
+        </el-input>
+      </div>
     </div>
-
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text style="margin-left: 10px;">
+        期限：
+      </el-text>
+      <div>
+        <el-date-picker type="datetime" placeholder="请选择" style="width:256px" v-model="editStudentData.expiration"
+          value-format="YYYY-MM-DD HH:MM:00" />
+      </div>
+    </div>
     <template #header>
       <el-text>编辑学生</el-text>
     </template>
@@ -580,7 +573,6 @@ const cancelEditDialog = () => {
       </el-button>
     </template>
   </el-dialog>
-  
 </template>
 
 <style scoped lang="scss">
@@ -624,8 +616,8 @@ $gap: 15px;
 }
 
 
-.dialog-span{
+.dialog-span {
   margin-right: 10px;
-          margin: 10px
+  margin: 10px
 }
 </style>

@@ -4,13 +4,18 @@ import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getTeacherCourse } from '@/apis/teacherCourses'
 import { useRoute } from 'vue-router'
+import SearchBar from '@/components/SearchBar.vue'
 import { getMiniLessons } from '@/apis/minilessons'
+import { getTeacherGroup } from '@/apis/teacherGroup'
+import type { CheckboxValueType } from 'element-plus'
+import { ElCheckbox } from 'element-plus'
 
-
+const newTeacherGroupDialogShow = ref(false);
 const loading = ref(true)
 const input = ref('')
 const video = reactive<any>([])
 const route = useRoute()
+const addTeacherDialogShow = ref(false);
 console.log(route.query.id)
 
 
@@ -18,18 +23,25 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
+
+const dialogSearchBarItems = reactive([
+  { name: "名称", value: "", },
+  { name: "标签", value: "", },
+  { name: "上传者", value: ""  },
+])
+
 const totalLength = ref<Number>()
-const teacherCourseid =ref<any>([])
+const teacherCourseid = ref<any>([])
 const tableData = ref<any>([])
 const CourseData = ref<any>([])
-  
+
 const loadTeacherData = () => {
   loading.value = true
 
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    teacherId:route.query.id
+    teacherId: route.query.id
   }
   getTeacherCourse(args)
     .then((res) => {
@@ -37,7 +49,7 @@ const loadTeacherData = () => {
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
     })
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
       loading.value = false
     })
@@ -56,22 +68,53 @@ const loadData = () => {
   }
   getMiniLessons(args)
     .then((res) => {
-      console.log(tableData.value )
-      res.data.records.forEach((item:any)=>{
-        video.push({ 
-          title:item.name,
-          picture:item.cover, 
-          time:item.updatedAt,
-          videoduration :item.videoDuration
-          })
+      console.log(tableData.value)
+      res.data.records.forEach((item: any) => {
+        video.push({
+          title: item.name,
+          picture: item.cover,
+          time: item.updatedAt,
+          videoduration: item.videoDuration
+        })
       })
     })
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
       loading.value = false
     })
+
+
+
 }
 
+
+
+const loadDialogData = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    teacherCourseId: teacherCourseid.value
+  }
+  getMiniLessons(args)
+    .then((res) => {
+      console.log(tableData.value)
+      res.data.records.forEach((item: any) => {
+        video.push({
+          title: item.name,
+          picture: item.cover,
+          time: item.updatedAt,
+          videoduration: item.videoDuration
+        })
+      })
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+
+}
 loadData()
 
 const breadcrumbStore = useBreadcrumbStore()
@@ -100,7 +143,7 @@ breadcrumbStore.data = [
             <div><el-text>电话:15536996997</el-text></div>
           </div>
         </div>
-
+<el-button @click="console.log(tableData)"></el-button>
         <div class="topPart1-3">
           <div><el-text>创建时间:2022-2-13 13:00</el-text></div>
           <div class="topPart1-3-2"><el-text>最后登录:2023-6-5 12:00</el-text></div>
@@ -129,21 +172,33 @@ breadcrumbStore.data = [
       </div>
     </div>
     <div class="botPart1-2">
+  </div>
 
-      <DisplayVideoCard v-for="item in video" :key="item.title" :title="item.title" :time="item.time"
-        :picture="item.picture" :videoduration="item.videoduration">
 
-      </DisplayVideoCard>
+
+  <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addTeacherDialogShow">
+    <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+      <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
+    </TablePage>
+
+    <template #header>
+      <el-text>添加老师</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="confirmNewTeacher()">确定</el-button>
+      <el-button @click="cancelNewTeacher()">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
 
     </div>
 
-  </div>
-  
 </template>
 
 <style scoped lang="scss">
-
 $scale: 0.88;
+
 .whole {
   display: flex;
   flex-direction: column;

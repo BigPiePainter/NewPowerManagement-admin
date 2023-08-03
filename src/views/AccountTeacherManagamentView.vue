@@ -445,7 +445,7 @@ loadData()
 
     <template #footer>
       <el-button @click="conformCreate" type="primary">确认</el-button>
-      <el-button>取消</el-button>
+      <el-button @click="showDialog=false">取消</el-button>
     </template>
   </el-dialog>
 

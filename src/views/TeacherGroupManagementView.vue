@@ -1,11 +1,11 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue';
-import { ElButton,ElNotification } from 'element-plus'
+import { ElButton, ElNotification } from 'element-plus'
 import SearchBar from '../components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
-import {getTeacherGroupTeachers, getTeacherGroup, createTeacherGroup,deleteTeacherGroups} from '@/apis/teacherGroup'
-import {getAllTeachers, getTeachers} from '@/apis/teacher'
+import { getTeacherGroupTeachers, getTeacherGroup, createTeacherGroup, deleteTeacherGroups } from '@/apis/teacherGroup'
+import { getAllTeachers, getTeachers } from '@/apis/teacher'
 const router = useRouter()
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
@@ -28,11 +28,14 @@ const loading = ref(true)
 const newTeacherGroupDialogShow = ref(false);
 
 const newTeacherGroupData = reactive<
-{ leaderId: string,
-  name: string 
+  {
+    leaderId: string,
+    name: string
   }>(
-    { leaderId: '',
-    name: '' });
+    {
+      leaderId: '',
+      name: ''
+  });
 
 const creatNewTeacherGroup = () => {
   newTeacherGroupDialogShow.value = true;
@@ -133,9 +136,9 @@ const preDeleteTea = (item: any) => {
       calcelDeleteTea(item)
       note.close()
     },
-    onClose: () => {deleteTea(item),console.log(item.rowData.id)},
+    onClose: () => { deleteTea(item), console.log(item.rowData.id) },
     type: 'warning'
-    
+
   })
 }
 
@@ -210,42 +213,29 @@ const loadData = () => {
     name: searchBarItems[0].value,
     leaderId: searchBarItems[1].value[0]
   }
-  
+
   getTeacherGroup(args)
     .then((res) => {
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
     })
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
       loading.value = false
     })
 
 }
 
-const loadAllTeacher = ()=>{
 
-  var args={
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    name: searchBarItems[1].value,
-  }
-  getAllTeachers(args)
-  .then((res) => {
-      allTeacher.value = res.data
-       })
-       .catch()
-}
 
 loadData()
-loadAllTeacher()
 
 const confirmNewTeacherGroup = () => {
   console.log(newTeacherGroupData)
   newTeacherGroupDialogShow.value = false
 
   createTeacherGroup(newTeacherGroupData)
-  .then((res: any) => {
+    .then((res: any) => {
       if (res.code == 20000) {
         ElNotification({
           title: '成功',
@@ -262,7 +252,7 @@ const confirmNewTeacherGroup = () => {
       }
     })
     .catch()
-    }
+}
 
 const cancelNewTeacherGroup = () => {
   newTeacherGroupDialogShow.value = false
@@ -271,14 +261,8 @@ const cancelNewTeacherGroup = () => {
 
 <template>
   <div class="div-teacher-group-management">
-    <TablePage 
-    :loading="loading"
-    class="table-page" 
-    :columns="tableColumns" 
-    :data="tableData"
-    :itemsTotalLength="totalLength"
-    @paginationChange="loadData"
-    >
+    <TablePage :loading="loading" class="table-page" :columns="tableColumns" :data="tableData"
+      :itemsTotalLength="totalLength" @paginationChange="loadData">
       <div class="div-search-bar">
         <SearchBar :items="searchBarItems" @change="loadData()" />
       </div>
@@ -302,12 +286,7 @@ const cancelNewTeacherGroup = () => {
           *教研组长：
         </span>
         <el-select class="dialog-input" placeholder="请输入" v-model="newTeacherGroupData.leaderId">
-          <el-option
-      v-for="item in allTeacher"
-      :key="item.id"
-      :label="item.name"
-      :value="item.id"
-    />
+          <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
     </div>
@@ -336,12 +315,7 @@ const cancelNewTeacherGroup = () => {
           *教研组长：
         </span>
         <el-select class="dialog-input" v-model="editTeacherGroupData.groupLeader">
-          <el-option
-      v-for="item in allTeacher"
-      :key="item.id"
-      :label="item.name"
-      :value="item.id"
-    />
+          <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
     </div>

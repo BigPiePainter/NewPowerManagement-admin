@@ -10,11 +10,13 @@ import { useRoute } from 'vue-router'
 import { ElNotification, ElCheckbox } from 'element-plus'
 import type { CheckboxValueType } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { getStudent} from '@/apis/student'
-import { getClassesStudent, deleteClassStudent,createClassStudent } from '@/apis/classStudent'
+import { getAllStudents, getStudent } from '@/apis/student'
+import { getClassesStudent, deleteClassStudent, createClassStudent } from '@/apis/classStudent'
 
 
 
+import { getClasses } from '@/apis/class'
+import router from '@/router'
 
 
 
@@ -27,44 +29,59 @@ breadcrumbStore.data = [
 
 
 const route = useRoute()
-
-const 班级名称 = ref<any>([])
-
-const 负责老师 = ref<any>([])
-
-const 学科 = ref<any>([])
-
-const 年级 = ref<any>([])
-
-const 起始日期 = ref<any>([])
-
-const 到期日期 = ref<any>([])
-
+const allStudents = ref<any>([])
 const allGrades = ref<any>([])
+const allDetail = reactive<any>({})
 
+const loading = ref(true)
 const searchBarItems = reactive([
-  { name: "姓名/用户名/电话", value: "" },
+  { name: "用户", type: InputType.Select, value: "", options: allStudents, single: true, },
 ])
 
-  const loadSelectOption = () => {
+const loadSelectOption = () => {
   getGrades()
     .then((res) => allGrades.value = res.data.map((i: any) => i.subset).flat())
     .catch()
+
+  getAllStudents()
+    .then((res) => allStudents.value = res.data)
+    .catch()
 }
+
 loadSelectOption()
 
+const loadDetail = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    id:route.query.id
+
+  }
+
+  getClasses(args)
+    .then((res) => {allDetail.value=res.data.records[0]})
+
+    .catch()
+    .finally(() => {
+      loading.value = false
+    })
+}
 
 const activeName = ref('officalStudent')
 
 
 const normalDialogSearchBarItems = reactive([
-  { name: "选择年级",
-    value: "", 
+  {
+    name: "选择年级",
+    value: "",
     label: "请选择",
     type: InputType.Select,
     options: allGrades
-    },
-  { name: "姓名/用户名/电话", value: "", },
+  },
+  { name: "姓名", value: "", },
+
 ])
 
 const dialogTableColumns = reactive<any>([
@@ -215,7 +232,7 @@ const tableColumns = [
             }}
           />
         </div>
-        
+
       )
     },
     width: 150,
@@ -238,6 +255,7 @@ const addStudent = () => {
 const dialogSearchBarRefresh = () => {
   loadSelectOption()
 }
+
 const newStudentData = ref<any>([])
 
 const confirmNewStudent = () => {
@@ -249,21 +267,21 @@ const confirmNewStudent = () => {
     classId: route.query.id,
     studentIdArr: data
   }).then((res: any) => {
-      if (res.code == '20000') {
-        ElNotification({
-          title: '成功',
-          message: '添加学生成功',
-          type: 'success'
-        })
-      }else{
-        ElNotification({
-          title: '成功',
-          message: '添加学生失败',
-          type: 'success'
-        })
-      }
-    
-loadData()
+    if (res.code == '20000') {
+      ElNotification({
+        title: '成功',
+        message: '添加学生成功',
+        type: 'success'
+      })
+    } else {
+      ElNotification({
+        title: '成功',
+        message: '添加学生失败',
+        type: 'success'
+      })
+    }
+
+    loadData()
   }).catch
 }
 
@@ -280,7 +298,6 @@ const cancelNewStudent = () => {
   dialogTableData.value.forEach((i: any) => i.checked = false);
 }
 
-const loading = ref(true)
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
@@ -288,14 +305,14 @@ const paginationInfo = reactive({
 
 const totalLength = ref<Number>()
 const studentType = ref<number>()
-const handleTabClick =(tab:any)=>{
+const handleTabClick = (tab: any) => {
 
-  if(tab.props.name == 'officalStudent'){
+  if (tab.props.name == 'officalStudent') {
     studentType.value = 1
     loadData()
   }
- else studentType.value = 2
-    loadData()
+  else studentType.value = 2
+  loadData()
 }
 
 
@@ -308,35 +325,33 @@ const loadDialogData = () => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     type: studentType.value,
-    studentId:normalDialogSearchBarItems[0].value,
-    name:normalDialogSearchBarItems[0].value,
-    phoneNumber:normalDialogSearchBarItems[0].value,
+    name: normalDialogSearchBarItems[1].value,
+    gradeIds: normalDialogSearchBarItems[0].value[0]
+
   }
 
-  getStudent
-  (args)
+  getStudent(args)
     .then((res) => {
       dialogTableData.value = res.data.records
       totalLength.value = res.data.records.length
       loading.value = false
     })
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
-    loading.value = false
-
+      loading.value = false
     })
 }
 
 const loadData = () => {
   loading.value = true
   loadDialogData()
-
+  loadDetail()
   var args = {
-    
-      pageNum: paginationInfo.currentPage,
-      pageSize: paginationInfo.pageSize,
-      classId: route.query.id,
-      studentId:searchBarItems[0].value,
+
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    classId: route.query.id,
+    studentId: searchBarItems[0].value[0],
   }
 
   getClassesStudent(args)
@@ -345,15 +360,23 @@ const loadData = () => {
       console.log(res)
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
-      
-      })
-      .catch(() => {})
-      .finally(() => {
+
+    })
+    .catch(() => { })
+    .finally(() => {
       loading.value = false
     })
 }
 loadData()
 
+
+
+
+const detail=[
+
+
+
+]
 
 
 
@@ -374,43 +397,35 @@ loadData()
       <div class="div-card-left-detail">
         <div class="detail-info">
           <el-text class="el-text-detail">
-            班级名称：{{  }}
+            班级名称：{{ allDetail.value }}
           </el-text>
           <el-text class="el-text-detail">
-            负责老师：{{}}
+            负责老师：{{ allDetail.value }}
           </el-text>
           <el-text class="el-text-detail">
-            学科：{{  }}
+            学科：{{ allDetail.value }}
           </el-text>
           <el-text class="el-text-detail">
-            年级：{{ }}
+            年级：{{ allDetail.value }}
           </el-text>
         </div>
         <div class="detail-date">
           <el-text class="el-text-detail">
-            起始日期：{{  }}
+            起始日期：{{ allDetail.value }}
           </el-text>
           <el-text class="el-text-detail">
-            到期日期：{{ }}
+            到期日期：{{ allDetail.value }}
           </el-text>
         </div>
-
       </div>
-
     </div>
     <div class="card-right">
-      <TablePage 
-      class="table-page" 
-      :itemsTotalLength="totalLength"
-      :loading="loading"
-      :columns="tableColumns" 
-      @paginationChange="loadData"
-      :data="tableData"
-      >
+      <TablePage class="table-page" :itemsTotalLength="totalLength" :loading="loading" :columns="tableColumns"
+        @paginationChange="loadData" :data="tableData">
         <div class="div-search-bar">
-          <SearchBar :items="searchBarItems" @change="dialogSearchBarRefresh()"></SearchBar>
+          <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
           <div style="flex-grow: 1"></div>
-          <el-button class="search-bar-button" type="primary" @click="addStudent(), studentType=1">添加成员</el-button>
+          <el-button class="search-bar-button" type="primary" @click="addStudent(), studentType = 1">添加成员</el-button>
         </div>
       </TablePage>
     </div>
@@ -420,13 +435,13 @@ loadData()
     <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleTabClick">
       <el-tab-pane label="正式学生" name="officalStudent">
         <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
-          <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="dialogSearchBarRefresh()" >
+          <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="loadDialogData()">
           </SearchBar>
         </TablePage>
       </el-tab-pane>
       <el-tab-pane label="临时学生" name="inofficalStudent">
         <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
-          <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="dialogSearchBarRefresh()">
+          <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="loadDialogData()">
           </SearchBar>
         </TablePage>
       </el-tab-pane>
@@ -536,6 +551,7 @@ loadData()
         }
       }
     }
+
     display: flex;
     align-items: center;
     flex-direction: column;

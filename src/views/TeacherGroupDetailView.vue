@@ -6,7 +6,7 @@ import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useRoute } from 'vue-router'
 import { ElCheckbox } from 'element-plus'
-import { getTeacherGroupTeachers, addTeacherTogroup, deleteTeacherFromGroup } from '@/apis/teacherGroup'
+import { getTeacherGroupTeachers, addTeacherTogroup, deleteTeacherFromGroup,getTeacherGroup } from '@/apis/teacherGroup'
 import { getTeachers } from '@/apis/teacher'
 import type { CheckboxValueType } from 'element-plus'
 
@@ -154,14 +154,38 @@ const loadDialogData = () => {
   }
   getTeachers(args)
     .then((res) => {
+      console.log(dialogSearchBarItems)
+      console.log(res)
       dialogTableData.value = res.data.records
       totalLength.value = res.data.records.length
     })
     .catch(() => { })
     .finally(() => {
-      loading.value = false
+    loading.value = false
     })
 }
+const detilData = reactive<any>({})
+
+const loadDetail = () => {
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    id: route.query.id
+    
+  }
+
+  getTeacherGroup(args)
+    .then((res) => {
+    detilData.value = res.data.records
+    console.log(detilData)
+    })
+    .catch(() => { })
+    .finally(() => {
+    })
+
+  }
+  loadDetail()
 
 const loadData = () => {
   loading.value = true
@@ -170,9 +194,9 @@ const loadData = () => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     groupId: route.query.id,
-    name: searchBarItems[0].value,
-    phoneNumber: searchBarItems[0].value,
-    account: searchBarItems[0].value,
+    name: dialogSearchBarItems[0].value,
+    phoneNumber: dialogSearchBarItems[0].value,
+    account: dialogSearchBarItems[0].value,
   }
   getTeacherGroupTeachers(args)
     .then((res) => {
@@ -192,24 +216,7 @@ console.log(route.query.id)
 const tableData = ref<any>([])
 
 
-const searchBarRefresh = () => {
-  console.log(searchBarItems)
-}
-const dialogSearchBarRefresh = () => {
-  console.log(dialogSearchBarItems)
-}
-
-const detailItem = reactive({
-  teacherGroupName: '中考冲刺',
-  groupLeader: 'Mr.庄',
-})
-
-
-
 const addTeacherDialogShow = ref(false);
-
-
-
 
 
 
@@ -334,14 +341,14 @@ const cancelNewTeacher = () => {
           基本信息
         </el-text>
       </div>
-
+<el-button @click="console.log(detilData.value.id)">aa</el-button>
       <div class="div-card-left-detail">
         <div class="detail-info">
           <el-text class="el-text-detail">
-            教研组名称：{{ detailItem.teacherGroupName }}
+            教研组名称：{{ detilData }}
           </el-text>
           <el-text class="el-text-detail">
-            组长：{{ detailItem.groupLeader }}
+            组长：{{ detilData }}
           </el-text>
         </div>
       </div>
@@ -352,7 +359,7 @@ const cancelNewTeacher = () => {
         @paginationChange="loadData" :data="tableData">
         <div class="div-search-bar">
 
-          <SearchBar :items="searchBarItems" @change="searchBarRefresh()"></SearchBar>
+          <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
 
           <div style="flex-grow: 1"></div>
 
@@ -365,7 +372,7 @@ const cancelNewTeacher = () => {
 
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addTeacherDialogShow">
     <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
-      <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="dialogSearchBarRefresh()"></SearchBar>
+      <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
     </TablePage>
 
     <template #header>
