@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { userLogin } from '@/apis/login'
+import { userLogin, roleInfo } from '@/apis/login'
 import { ref, reactive, pushScopeId } from 'vue'
 import { rejects } from 'assert'
 import router from '@/router'
@@ -28,6 +28,7 @@ const enterAccount = () => {
 }
 
 const enterHome = () => {
+
   router.push({ path: 'work-space' })
 }
 
@@ -112,5 +113,5 @@ const login = () => {
   font-size: 22px;
   margin: 10px;
 }
+
 </style>
-@/apis/login@/apis/login
