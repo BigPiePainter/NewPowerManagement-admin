@@ -7,3 +7,13 @@ export const userInfo = () => {
     }
     return http.request(args)
   }
+
+export const userAuthor = (data: any) => {
+    const args = {
+        url: '/api/management/manager/page-managers',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+  }

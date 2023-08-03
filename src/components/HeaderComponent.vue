@@ -4,13 +4,20 @@ import { ArrowRight } from '@element-plus/icons-vue'
 import { FullScreen } from '@element-plus/icons-vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import screenfull from 'screenfull'
+import { useRouter } from 'vue-router'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '工作台', path: '/' }]
+const router = useRouter()
 
 const fullScreen = () => {
   if (screenfull.isEnabled) {
     screenfull.request()
   }
+}
+
+const quit = () => {
+  localStorage.clear()
+  router.push({ path: 'login'})
 }
 
 </script>
@@ -32,12 +39,14 @@ const fullScreen = () => {
     </el-breadcrumb>
     <div class="space"></div>
     <div class="full-screen">
-      <el-icon @click="fullScreen" class="full-screen-icon"><FullScreen /></el-icon>
+      <el-icon @click="fullScreen" class="full-screen-icon">
+        <FullScreen />
+      </el-icon>
     </div>
     <div class="user-avatar"></div>
     <el-dropdown class="user-action">
       <span>
-        Zack Zhang
+        {localStorage.}
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
@@ -47,7 +56,7 @@ const fullScreen = () => {
           <el-dropdown-item>阿巴阿巴</el-dropdown-item>
           <el-dropdown-item>阿巴巴</el-dropdown-item>
           <el-dropdown-item>阿巴巴巴</el-dropdown-item>
-          <el-dropdown-item divided>巴阿巴阿</el-dropdown-item>
+          <el-dropdown-item divided @click="quit">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -55,7 +64,6 @@ const fullScreen = () => {
 </template>
 
 <style scoped lang="scss">
-
 .header {
   display: flex;
   align-items: center;
@@ -65,19 +73,21 @@ const fullScreen = () => {
   border-bottom: 1px #f0f2f5 solid;
   box-sizing: border-box;
 
-  > .breadcrumb {
+  >.breadcrumb {
     margin-left: 30px;
   }
-  > .space {
+
+  >.space {
     flex-grow: 1;
   }
 
-  > .full-screen {
+  >.full-screen {
     width: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    > .full-screen-icon {
+
+    >.full-screen-icon {
       transition: all 0.5s ease;
 
       &:hover {
@@ -85,13 +95,15 @@ const fullScreen = () => {
       }
     }
   }
-  > .user-avatar {
+
+  >.user-avatar {
     width: 33px;
     height: 33px;
     background-color: rgb(226, 223, 223);
     border-radius: 100%;
   }
-  > .user-action {
+
+  >.user-action {
     margin-right: 20px;
     margin-left: 15px;
 
@@ -100,5 +112,4 @@ const fullScreen = () => {
       color: black;
     }
   }
-}
-</style>
+}</style>

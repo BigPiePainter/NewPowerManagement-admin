@@ -12,11 +12,14 @@ console.log('超炫酷无敌动画依赖import加载完毕')
 import { useRoute } from 'vue-router'
 import { onMounted, onUnmounted } from 'vue'
 
+import { getCurrentInstance } from "vue";
+const author = getCurrentInstance()?.appContext.config.globalProperties.$author
+
 const items = [
   {
     index: '/work-space',
     title: '工作台',
-    show: true
+    show: !('工作台' in author)
   },
   {
     index: '/school-management',
@@ -25,12 +28,12 @@ const items = [
       {
         index: '/class-management',
         title: '班级管理',
-        show: true
+        show: !('班级管理' in author)
       },
       {
         index: '/teacher-group-management',
         title: '教研组管理',
-        show: true
+        show: !('教研组管理' in author)
       }
     ]
   },
@@ -41,34 +44,34 @@ const items = [
       {
         index: '/account-role-managment',
         title: '角色管理',
-        show: true
+        show: !('角色管理' in author)
       },
       {
         index: '/acount-equipment-management',
         title: '账号设备管理',
-        show: true
+        show: !('账号设备管理' in author)
       },
       {
         index: '/account-teacher-managament',
         title: '老师管理',
-        show: true
+        show: !('老师管理' in author)
       },
       {
         index: '/account-student-management',
         title: '学生管理',
-        show: true
+        show: !('学生管理' in author)
       },
       {
         index: '/account-temoorary-student',
         title: '临时学生',
-        show: true
+        show: !('临时学生' in author)
       }
     ]
   },
   {
     index: '/live-class',
     title: '实时课堂',
-    show: true
+    show: !('实时课堂' in author)
   },
   {
     index: '/course-management-group',
@@ -77,19 +80,19 @@ const items = [
       {
         index: '/course-approval',
         title: '微课审核',
-        show: true
+        show: !('微课审核' in author)
       },
       {
         index: '/course-management',
         title: '课程管理',
-        show: true
+        show: !('课程管理' in author)
       }
     ]
   },
   {
     index: '/shop-management',
     title: '商城管理',
-    show: true
+    show: !('商城管理' in author)
   },
   {
     index: '',
@@ -98,19 +101,19 @@ const items = [
       {
         index: '/question-bank-management',
         title: '好题包管理',
-        show: true
+        show: !('好题包管理' in author)
       },
       {
         index: '/question-bank',
         title: '题库',
-        show: true
+        show: !('题库' in author)
       }
     ]
   },
   {
     index: '/order-management',
     title: '订单管理',
-    show: true
+    show: !('订单管理' in author)
   },
   {
     index: '/student-points-management',
@@ -119,12 +122,12 @@ const items = [
       {
         index: '/student-points-management',
         title: '学生积分',
-        show: true
+        show: !('学生积分' in author)
       },
       {
         index: '/student-tcoin-management',
         title: '学生T币',
-        show: true
+        show: !('学生T币' in author)
       }
     ]
   },
@@ -135,42 +138,42 @@ const items = [
       {
         index: '/category-management',
         title: '分类管理',
-        show: true
+        show: !('分类管理' in author)
       },
       {
         index: '/tag-management',
         title: '标签管理',
-        show: true
+        show: !('标签管理' in author)
       },
       {
         index: '/course-category',
         title: '课程类目',
-        show: true
+        show: !('课程类目' in author)
       },
       {
         index: '/exam-info',
         title: '考试咨询',
-        show: true
+        show: !('考试咨询' in author)
       },
       {
         index: '/exam-date',
         title: '考试时间',
-        show: true
+        show: !('考试时间' in author)
       },
       {
         index: '/banner',
         title: 'banner',
-        show: true
+        show: !('banner' in author)
       },
       {
         index: '/info-center',
         title: '消息中心',
-        show: true
+        show: !('消息中心' in author)
       },
       {
         index: '/family-report',
         title: '家长报告',
-        show: true
+        show: !('家长报告' in author)
       }
     ]
   },
