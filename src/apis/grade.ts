@@ -7,3 +7,28 @@ export const getGrades = () => {
     }
     return http.request(args)
 }
+
+
+
+export const createGrades = (data: any) => {
+    const args = {
+        url: '/api/management/grade/create-grade',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
+
+
+export const deleteGrades = (data: any) => {
+    const args = {
+        url: '/api/management/grade/delete-grade',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
+
+

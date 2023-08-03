@@ -92,7 +92,7 @@ const searchBarItems = reactive([
   { name: '姓名', value: '' },
   { name: '手机号', value: '', label: '' },
   {
-    name: '年级',
+    name: '学习阶段',
     value: '',
     type: InputType.Select,
     label: '请选择',
@@ -471,7 +471,7 @@ loadData()
     
     <div class="div-input-element" style="margin-top: 10px;">
       <span class="dialog-span">
-        年级：
+        学习阶段：
       </span>
       <el-select class="dialog-input" v-model="editTeacherData.gradeId" >
         <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />

@@ -1,10 +1,88 @@
 <script setup lang="tsx">
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import { getLabels, createLabel, deleteLabel } from '@/apis/label'
+
+
+
+
+
+
+
+
+
+
+
 const breadcrumbStore = useBreadcrumbStore()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const tagMenu: any = ['语文', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史']
 const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 <template>
@@ -33,7 +111,7 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
         <el-text>新标签：</el-text>
         <el-input></el-input>
         <div style="flex-grow: 1;"></div>
-        <el-button type="primary">添加</el-button>
+        <el-button type="primary" @click="">添加</el-button>
       </div>
 
       <div class="card-body">
@@ -41,6 +119,14 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
       </div>
 
     </div>
+
+
+
+
+
+
+
+    
   </div>
 </template>
 
@@ -104,4 +190,5 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
       }
     }
   }
-}</style>
+}
+</style>
