@@ -4,11 +4,13 @@ import { ElButton, ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
-import { getLiveClasses, createLiveClass } from '@/apis/liveClass'
+import { getLiveClasses, createLiveClass, deleteLiveclasses } from '@/apis/liveClass'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getTeachers } from '@/apis/teacher'
 import { getStudent } from '@/apis/student'
 import { editLiveclasses } from '@/apis/liveClass'
+import { getGrades } from '@/apis/grade'
+import { getSubjects } from '@/apis/subject'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '实时课程', path: '' }]
@@ -37,6 +39,14 @@ const studenstName = reactive<{
   studentIds: '',
 })
 
+const allSubjects = ref([])
+
+
+
+getSubjects()
+  .then((res) => (allSubjects.value = res.data))
+  .catch()
+
 getTeachers(teacherName)
   .then((res) => (allTeacher.value = res.data))
   .catch()
@@ -45,6 +55,9 @@ getStudent(studenstName)
   .then((res) => (allStudent.value = res.data))
   .catch()
 
+getGrades()
+  .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
+  .catch()
 const newClassData = reactive<{
   duration: string
   name: string
@@ -65,7 +78,7 @@ const newClassData = reactive<{
   url: '',
 })
 
-
+const allStudentsDialogShow = ref(false)
 
 const conformCreate = () => {
   createLiveClass(newClassData)
@@ -118,6 +131,7 @@ const editliveclassData = reactive<{
   expiration: ''
 });
 
+const allGrades = ref<any>([])
 const editliveclass =
   (props: { rowData: { id: string, gradeId: string, expiration: string, remark: string } }) => {
     editliveclassData.id = props.rowData.id;
@@ -158,6 +172,29 @@ const cancelEditDialog = () => {
 }
 
 
+const classStudent = ref([])
+
+const classStudents = (item: any) => {
+  classStudent.value = item.rowData.studentList
+  allStudentsDialogShow.value = true
+
+}
+
+const classstudentCloumn = [
+
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: '学生id',
+    width: 300
+  },
+  {
+    dataKey: 'name',
+    key: 'name',
+    title: '学生姓名',
+    width: 300
+  }
+]
 
 const tableColumns = [
   {
@@ -176,19 +213,26 @@ const tableColumns = [
     dataKey: 'startTime',
     key: 'startTime',
     title: '课程开始时间',
-    width: 200
+    width: 250
   },
   {
     dataKey: 'duration',
     key: 'duration',
     title: '课程时长',
-    width: 100
+    width: 150
   },
   {
-    dataKey: 'studentList[0]',
-    key: 'studentList[0]',
+    dataKey: 'studentList',
+    key: 'studentList',
     title: '接受学生',
-    width: 200
+    width: 200,
+    cellRenderer: (item: any) => {
+      return (
+        <el-button link onClick={() => classStudents(item)} style='width:100px'>
+          查看上课学生
+        </el-button>
+      )
+    }
   },
   {
     dataKey: 'url',
@@ -205,16 +249,13 @@ const tableColumns = [
         <el-button link type="primary" class="" onClick={() => editliveclass(item)}>
           编辑
         </el-button>
-        <el-button link type="primary" class="">
-          关闭
-        </el-button>
-        <el-button link type="danger" class="">
+        <el-button link type="danger" class="" onClick={() => deleteliveclass(item)}>
           删除
         </el-button>
       </>
     ),
 
-    width: 180,
+    width: 120,
     fixed: 'right',
     align: 'left'
   }
@@ -225,11 +266,29 @@ const createliveclass = () => {
   showDialog.value = true
 }
 
+const deleteliveclass = (cellData: any) => {
+  cellData.rowData.id
+  deleteLiveclasses(cellData.rowData.id).
+    then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '成功',
+          message: '已成功删除',
+          type: 'success'
+        })
+        loadData()
+      } else {
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning'
+        })
+      }
+    }).catch()
 
-
-const createclass = () => {
-  showDialog.value = true
 }
+
+
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
@@ -253,7 +312,7 @@ const loadSelectOption = () => {
         }
         teacherSelect.value.push(dataSample)
       })
-      console.log(res.data.records)
+      console.log(res)
       console.log(teacherSelect.value)
     })
     .catch(() => {
@@ -272,21 +331,22 @@ const loadData = () => {
   loadSelectOption()
 
   var args = {
-  pageNum: paginationInfo.currentPage,
-  pageSize: paginationInfo.pageSize,
-  name: searchBarItems[1].value
-}
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    name: searchBarItems[1].value
+  }
 
   getLiveClasses(args)
     .then((res) => {
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
+      console.log(res)
     })
     .catch(() => { })
     .finally(() => {
       loading.value = false
     })
-  
+
 }
 
 
@@ -317,20 +377,20 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *老师姓名： </span>
-        <el-input class="dialog-input"  placeholder="请输入" v-model="newClassData.teacherId">
+        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *上课学生姓名： </span>
-        <el-input class="dialog-input"  placeholder="请输入" v-model="newClassData.studenstName">
+        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.studenstName">
           <el-option v-for="item in allStudent " :key="item.id" :label="item.name" :value="item.id" />
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *开课时间： </span>
         <el-date-picker type="datetime" placeholder="请选择" v-model="newClassData.startTime"
-          value-format="YYYY-MM-DD HH:MM:00" />
+          value-format="YYYY-MM-DD HH:MM:00" style="width: 200px;" />
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *时长： </span>
@@ -350,7 +410,7 @@ loadData()
 
     <template #footer>
       <el-button @click="conformCreate" type="primary">确认</el-button>
-      <el-button>取消</el-button>
+      <el-button @click="showDialog=false">取消</el-button>
     </template>
   </el-dialog>
 
@@ -359,8 +419,7 @@ loadData()
   <el-dialog class="new-class-dialog" width="370px" v-model="editliveclassDialogshow">
     <div class="div-input-element">
       <span class="dialog-span">
-        <el-input 
-        disabled class="dialog-input" v-model="editliveclassData.id">
+        <el-input disabled class="dialog-input" v-model="editliveclassData.id">
         </el-input>
       </span>
     </div>
@@ -368,17 +427,23 @@ loadData()
       <span class="dialog-span">
         学科：
       </span>
+      <el-input>
+
+      </el-input>
     </div>
 
 
     <div class="div-input-element" style="margin-top: 10px;">
       <span class="dialog-span">
-        年级：
+        学习阶段：
       </span>
+      <el-select>
+        <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
     </div>
 
     <template #header>
-      <el-text>编辑老师</el-text>
+      <el-text>编辑</el-text>
     </template>
 
     <template #footer>
@@ -388,6 +453,35 @@ loadData()
       </el-button>
     </template>
   </el-dialog>
+
+
+
+
+
+
+
+
+
+  <el-dialog v-model="allStudentsDialogShow" class='dialog-container' style="width:630px" >
+    
+    <TablePage :data="classStudent" :columns="classstudentCloumn" class="dialog-container">
+
+
+    </TablePage>
+ 
+  <template #header>
+      <el-text>上课学生名单</el-text>
+    </template>
+
+  <template #footer>
+      <el-button type="primary" @click="allStudentsDialogShow=false">确定</el-button>
+      <el-button @click="allStudentsDialogShow=false">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
+
+
 </template>
 
 <style scoped lang="scss">
@@ -407,5 +501,11 @@ $gap: 15px;
     margin-bottom: $gap;
     margin-left: $gap;
   }
+}
+
+
+.dialog-container {
+  width: 600px;
+  height: 500px;
 }
 </style>

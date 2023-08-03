@@ -61,7 +61,7 @@ const tableColumns = [
   {
     dataKey: 'studentGrade',
     key: 'Studentgrade',
-    title: '年级',
+    title: '学习阶段',
     width: 70
   },
   {

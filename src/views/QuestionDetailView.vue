@@ -222,7 +222,7 @@ loadData()
         <div class="topPart1-3">
           <div class="topPart1-3-2">
             <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{}}</el-text></div>
-               <div class="topPart1-3-2"><el-text>年级：三年级</el-text></div>
+               <div class="topPart1-3-2"><el-text>学习阶段：三年级</el-text></div>
                <div class="topPart1-3-2"><el-text>学科：语文</el-text></div>
                <div class="topPart1-3-2"><el-text>难度：{{tableData.difficultyType}}</el-text></div>
             <div class="topPart1-3-2"><el-text>老师：庄老师</el-text></div>

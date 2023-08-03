@@ -137,7 +137,7 @@ loadSelectOption()
 
 const searchBarItems = reactive([
   {
-    name: '年级',
+    name: '学习阶段',
     value: '',
     type: InputType.Select,
     label: '请选择',

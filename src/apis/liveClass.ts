@@ -29,4 +29,14 @@ export const editLiveclasses = (data:any) => {
     }
     return http.request(args)
 }
+export const deleteLiveclasses = (data:any) => {
+    const args = {
+        url: '/api/management/live-class/delete',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
+
 

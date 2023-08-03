@@ -138,7 +138,7 @@ breadcrumbStore.data = [
         <div class="topPart1-2">
           <div class="top-Part1-2-1">Aaron</div>
           <div class="top-Part1-2-2">
-            <div><el-text>年级:9年级</el-text></div>
+            <div><el-text>学习阶段:初一</el-text></div>
             <div><el-text>学科:语文</el-text></div>
             <div><el-text>电话:15536996997</el-text></div>
           </div>
@@ -154,7 +154,7 @@ breadcrumbStore.data = [
 
       <div class="topPart1">
         <div class="topPart1-1"><el-text>所带班级：</el-text></div>
-        <div class="topPart2-2"><el-text>三年级二班</el-text></div>
+        <div class="topPart2-2"><el-text>学习阶段</el-text></div>
       </div>
 
       <el-divider direction="vertical" class="divider-height" />

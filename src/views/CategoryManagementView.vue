@@ -1,8 +1,9 @@
 <script setup lang="tsx">
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { ref, reactive } from 'vue'
-import { getGrades } from '@/apis/grade'
-
+import { getGrades, createGrades, deleteGrades } from '@/apis/grade'
+import { getSubjects } from '@/apis/subject';
+import { ElNotification } from 'element-plus'
 
 
 
@@ -10,15 +11,15 @@ const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
 
+const allTheGrades=ref<any>([])
+const allGrades = ref<any[]>([])
 
-const grades = ref<any[]>([])
 
 
-
-const loadSelectOption = () => {
+const loadGrade = () => {
   getGrades().then((res: any) => {
-    grades.value = res.data
-console.log(res)
+    allGrades.value = res.data
+    console.log(res)
     // console.log(res)
     // for (var i in res.data) {
     //   console.log(res.data[i].name)
@@ -37,42 +38,146 @@ console.log(res)
 }
 
 
-loadSelectOption()
+getGrades()
+    .then((res) => (allTheGrades.value = res.data.map((i: any) => i.subset).flat()))
+    .catch()
 
 
 
 
+const loadData=()=>{
+  loadGrade()
+  getGrades()
 
-const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史']
+}
+
+loadData()
+
+
+const newGradedata = reactive<{
+
+  level: string,
+  name: string,
+  parentId: string,
+
+}>({
+  level: '',
+  name: '',
+  parentId: ''
+});
+
+const createDialogShow = ref(false)
+
+const createNew = () => {
+  createDialogShow.value = true
+}
+
+const confrimCreateNew = () => {
+  loadData()
+  createGrades(newGradedata).then((res:any)=>{
+    if(res.code==20000){
+    ElNotification({
+          title: '成功',
+          message: '已成功创建',
+          type: 'success'
+        })
+        createDialogShow.value = false
+        loadData()
+      }
+        else{
+          ElNotification({
+          title: '失败',
+          message: '创建失败',
+          type: 'warning'
+        })
+      }}).catch()
+    }
+
+const major = ref<any[]>([])
+
+
+
+
+const deletDialogShow = ref(false)
+
+getSubjects().then((res) =>
+  major.value = res.data).catch()
+
+
+
+console.log(major.value)
+const allLevel = [
+  {
+    id: 2,
+    name: '子级学习阶段'
+  }
+]
+
+
+
+
+const deleteGradedata = reactive<{
+  id: string,
+}>({
+  id: '',
+});
+
+
+const confrimDelete = () => {
+  deleteGrades(deleteGradedata).then((res:any)=>{
+    if(res.code==20000){
+    ElNotification({
+          title: '成功',
+          message: '已成功删除',
+          type: 'success'
+        })
+        deletDialogShow.value = false
+        loadData()
+      }
+
+        else{
+          ElNotification({
+          title: '失败',
+          message: '删除失败',
+          type: 'warning'
+        })
+        loadData()
+      }
+        
+        })
+ .catch()
+}
+
+
+const deleteGrade = () => {
+  loadData()
+  deletDialogShow.value = true
+}
+
 
 </script>
 
 <template>
   <div class="sup-card">
     <div class="card-left">
-
       <div class="card-title-bar">
         <el-text class="card-title-text">学习阶段</el-text>
         <div style="flex-grow: 1;"></div>
-        
-        <el-text link type="primary">新增一级</el-text>
+
+        <el-button type="primary" @Click="createNew">新增阶段</el-button>
+        <el-button type="primary" @Click="deleteGrade">删除阶段</el-button>
       </div>
 
 
-      
 
 
-      <div v-for="(value, key) in grades" :key="key" class="subtitle">
+
+      <div v-for="(value, key) in allGrades" :key="key" class="subtitle">
         <div>{{ value.name }}</div>
+
+
         <div v-for="(innervalue, innerKey) in value.subset" :key="innerKey" class="subtitle">
           <div>{{ innervalue.name }}</div>
-        </div>
-        <div class="subtitle">
-          <el-button link type="primary" class="">添加</el-button>
-        </div>
-      </div>
-      <div class="sub-title">
-        <div style="flex-grow: 1;">
         </div>
       </div>
     </div>
@@ -81,21 +186,127 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
     <div class="card-right">
 
       <div class="card-title-bar">
-        <el-text class="card-title-text">学科分类</el-text>
+        <el-text class="card-title-text">学科大全</el-text>
         <div style="flex-grow: 1;"></div>
-        <el-text style="margin-right: 20px;" link type="primary">设置</el-text>
-        <el-text link type="primary">新增</el-text>
+        <!-- <el-text style="margin-right: 20px;" link type="primary" @click="createSubjectDialogShow = true">设置</el-text>
+        <el-text link type="primary">新增</el-text> -->
       </div>
 
       <div class="card-body">
         <div class="div-major-items">
-          <el-text class="major-item" v-for=" item  in  major " :key="item">{{ item }}</el-text>
+
+          <el-text class="major-item" v-for=" item  in  major " :key="item.id">{{ item.name }}</el-text>
         </div>
 
       </div>
 
     </div>
   </div>
+
+
+
+
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="createDialogShow">
+    <div class="div-input-element">
+    </div>
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text>
+        层级：
+      </el-text>
+      <div>
+        <el-select placeholder="例：初中为父级，初一为子级别" class="dialog-input" v-model="newGradedata.level" style="width: 256px;">
+          <el-option v-for="item in allLevel" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+
+      </div>
+
+    </div>
+
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text>
+        阶段名称：
+      </el-text>
+      <div>
+        <el-input class="dialog-input" v-model="newGradedata.name" style="width: 256px;">
+        </el-input>
+      </div>
+    </div>
+
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text>
+        父级阶段：
+      </el-text>
+      <div>
+        <el-select type="datetime" placeholder="请选择" style="width:256px" v-model="newGradedata.parentId">
+          <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </div>
+
+    </div>
+
+    <template #header>
+      <el-text>添加学习阶段</el-text>
+    </template>
+
+    <template #footer>
+      <el-button type="primary" @click="confrimCreateNew()">确定</el-button>
+      <el-button @click="createDialogShow = false">
+        取消
+      </el-button>
+    </template>
+
+  </el-dialog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="deletDialogShow">
+    <div class="div-input-element">
+    </div>
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text>
+        要删除的学习阶段：
+      </el-text>
+      <div>
+        <el-select placeholder="例：初中为父级，初一为子级别" class="dialog-input" v-model="deleteGradedata.id" style="width: 256px;">
+          <el-option v-for="item in allTheGrades" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+
+      </div>
+
+    </div>
+
+    <template #header>
+      <el-text>删除学习阶段</el-text>
+    </template>
+
+    <template #footer>
+      <el-button type="primary" @click="confrimDelete()">确定</el-button>
+      <el-button @click="createDialogShow = false">
+        取消
+      </el-button>
+    </template>
+
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">

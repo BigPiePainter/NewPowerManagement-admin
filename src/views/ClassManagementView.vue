@@ -166,7 +166,7 @@ const tableColumns = reactive([
   {
     dataKey: 'gradeName',
     key: 'gradeName',
-    title: '年级',
+    title: '学习阶段',
     width: 150
   },
   {
@@ -363,7 +363,7 @@ loadAllTeacher()
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          年级：
+          学习阶段：
         </span>
         <el-select class="dialog-input" placeholder="请输入" v-model="newClassData.gradeId">
           <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
@@ -422,7 +422,7 @@ loadAllTeacher()
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          年级：
+          学习阶段：
         </span>
         <el-select class="dialog-input" v-model="editClassData.gradeId">
           <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />

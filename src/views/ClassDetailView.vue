@@ -74,7 +74,7 @@ const activeName = ref('officalStudent')
 
 const normalDialogSearchBarItems = reactive([
   {
-    name: "选择年级",
+    name: "选择学习阶段",
     value: "",
     label: "请选择",
     type: InputType.Select,
@@ -121,7 +121,7 @@ const dialogTableColumns = reactive<any>([
   {
     dataKey: 'gradeName',
     key: 'gradeName',
-    title: '年级',
+    title: '学习阶段',
     width: 100
   },
   {
@@ -406,7 +406,7 @@ const detail=[
             学科：{{ allDetail.value }}
           </el-text>
           <el-text class="el-text-detail">
-            年级：{{ allDetail.value }}
+            学习阶段：{{ allDetail.value }}
           </el-text>
         </div>
         <div class="detail-date">

@@ -169,7 +169,7 @@ loadData()
         <div class="topPart1-2">
           <div class="top-Part1-2-1">{{studentData.teacherName}}</div>
           <div class="top-Part1-2-2">
-            <div><el-text>年级:20年级</el-text></div>
+            <div><el-text>学习阶段:初一</el-text></div>
             <div><el-text>学科:语文</el-text></div>
             <div><el-text>电话:15536996997</el-text></div>
           </div>
@@ -185,7 +185,7 @@ loadData()
 
       <div class="topPart1--1">
         <div class="topPart1-1"><el-text>⭐</el-text></div>
-        <div class="topPart2-2"><el-text>三年级二班</el-text></div>
+        <div class="topPart2-2"><el-text>初一</el-text></div>
       </div>
       <el-divider direction="vertical" class="divider-height" />
       <div>

@@ -21,7 +21,7 @@ const allGrade = ref<any>([])
 
 const searchBarItems = reactive([
   { name: '用户姓名', value: '', label: "请输入" },
-  { name: '年级', value: '', type: InputType.Select, label: "请选择", options: allGrade },
+  { name: '学习阶段', value: '', type: InputType.Select, label: "请选择", options: allGrade },
 ])
 
 const getselection = () => {
@@ -91,7 +91,7 @@ const tableColumns = [
   {
     dataKey: 'gradeName',
     key: 'gradeName',
-    title: '年级',
+    title: '学习阶段',
     width: 150
   },
   {
