@@ -11,9 +11,8 @@ export const userInfo = () => {
 export const userAuthor = (data: any) => {
     const args = {
         url: '/api/management/manager/page-managers',
-        method: 'POST',
-        data,
-        mode: "json"
+        method: 'GET',
+        params:data
     }
     return http.request(args)
   }

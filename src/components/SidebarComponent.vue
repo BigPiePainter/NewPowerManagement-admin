@@ -11,15 +11,16 @@ console.log('超炫酷无敌动画依赖import加载完毕')
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { onMounted, onUnmounted } from 'vue'
-
+import { watch, reactive } from 'vue';
 import { getCurrentInstance } from "vue";
 const author = getCurrentInstance()?.appContext.config.globalProperties.$author
+const isIn = getCurrentInstance()?.appContext.config.globalProperties.$isIn
 
-const items = [
+const items = reactive([
   {
     index: '/work-space',
     title: '工作台',
-    show: !('工作台' in author)
+    viewable: author['工作台'] == "check" ? true : false
   },
   {
     index: '/school-management',
@@ -28,12 +29,12 @@ const items = [
       {
         index: '/class-management',
         title: '班级管理',
-        show: !('班级管理' in author)
+        viewable: '班级管理' in author
       },
       {
         index: '/teacher-group-management',
         title: '教研组管理',
-        show: !('教研组管理' in author)
+        viewable: '教研组管理' in author
       }
     ]
   },
@@ -44,34 +45,34 @@ const items = [
       {
         index: '/account-role-managment',
         title: '角色管理',
-        show: !('角色管理' in author)
+        viewable: '角色管理' in author
       },
       {
         index: '/acount-equipment-management',
         title: '账号设备管理',
-        show: !('账号设备管理' in author)
+        viewable: '账号设备管理' in author
       },
       {
         index: '/account-teacher-managament',
         title: '老师管理',
-        show: !('老师管理' in author)
+        viewable: '老师管理' in author
       },
       {
         index: '/account-student-management',
         title: '学生管理',
-        show: !('学生管理' in author)
+        viewable: '学生管理' in author
       },
       {
         index: '/account-temoorary-student',
         title: '临时学生',
-        show: !('临时学生' in author)
+        viewable: '临时学生' in author
       }
     ]
   },
   {
     index: '/live-class',
     title: '实时课堂',
-    show: !('实时课堂' in author)
+    viewable: '实时课堂' in author
   },
   {
     index: '/course-management-group',
@@ -80,19 +81,19 @@ const items = [
       {
         index: '/course-approval',
         title: '微课审核',
-        show: !('微课审核' in author)
+        viewable: '微课审核' in author
       },
       {
         index: '/course-management',
-        title: '课程管理',
-        show: !('课程管理' in author)
+        title: '课程包管理',
+        viewable: '课程包管理' in author
       }
     ]
   },
   {
     index: '/shop-management',
     title: '商城管理',
-    show: !('商城管理' in author)
+    viewable: '商城管理' in author
   },
   {
     index: '',
@@ -101,19 +102,19 @@ const items = [
       {
         index: '/question-bank-management',
         title: '好题包管理',
-        show: !('好题包管理' in author)
+        viewable: '好题包管理' in author
       },
       {
         index: '/question-bank',
         title: '题库',
-        show: !('题库' in author)
+        viewable: '题库' in author
       }
     ]
   },
   {
     index: '/order-management',
     title: '订单管理',
-    show: !('订单管理' in author)
+    viewable: '订单管理' in author
   },
   {
     index: '/student-points-management',
@@ -122,12 +123,12 @@ const items = [
       {
         index: '/student-points-management',
         title: '学生积分',
-        show: !('学生积分' in author)
+        viewable: '学生积分' in author
       },
       {
         index: '/student-tcoin-management',
         title: '学生T币',
-        show: !('学生T币' in author)
+        viewable: '学生T币' in author
       }
     ]
   },
@@ -138,46 +139,50 @@ const items = [
       {
         index: '/category-management',
         title: '分类管理',
-        show: !('分类管理' in author)
+        viewable: '分类管理' in author
       },
       {
         index: '/tag-management',
         title: '标签管理',
-        show: !('标签管理' in author)
+        viewable: '标签管理' in author
       },
       {
         index: '/course-category',
         title: '课程类目',
-        show: !('课程类目' in author)
+        viewable: '课程类目' in author
       },
       {
         index: '/exam-info',
         title: '考试咨询',
-        show: !('考试咨询' in author)
+        viewable: '考试咨询' in author
       },
       {
         index: '/exam-date',
         title: '考试时间',
-        show: !('考试时间' in author)
+        viewable: '考试时间' in author
       },
       {
         index: '/banner',
         title: 'banner',
-        show: !('banner' in author)
+        viewable: 'banner' in author
       },
       {
         index: '/info-center',
         title: '消息中心',
-        show: !('消息中心' in author)
+        viewable: '消息中心' in author
       },
       {
         index: '/family-report',
         title: '家长报告',
-        show: !('家长报告' in author)
+        viewable: '家长报告' in author
       }
     ]
   },
-]
+])
+
+watch(author, (newVal, oldVal) => {
+  console.log(newVal, oldVal)
+})
 
 const route = useRoute()
 
@@ -349,8 +354,8 @@ onUnmounted(() => {
 
 <template>
   <canvas class="sidebar-canvas"></canvas>
-  <div class="sidebar">
-    <div class="sidebar-header">管理后台</div>
+  <div v-if="isIn" class="sidebar">
+    <div class="sidebar-header" @click="{ console.log(items); console.log(author) }">管理后台</div>
     <el-menu :default-active="route.path" router>
       <template v-for="item in items" :key="item.index">
         <template v-if="item.subs">
@@ -359,7 +364,7 @@ onUnmounted(() => {
               <span>{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs" :key="subItem.title">
-              <el-menu-item v-if="(subItem as any).show" :index="subItem.index" class="sidebar-menu-item">
+              <el-menu-item :disabled="!(subItem.title in author)" :index="subItem.index" class="sidebar-menu-item">
                 {{ subItem.title }}
               </el-menu-item>
             </template>
@@ -367,7 +372,7 @@ onUnmounted(() => {
         </template>
         <template v-else>
           <app-link :to="item.index">
-            <el-menu-item v-if="item.show" :index="item.index" :key="item.index" class="sidebar-menu-item">
+            <el-menu-item :disabled="!(item.title in author)" :index="item.index" :key="item.index" class="sidebar-menu-item">
               <template #title>{{ item.title }}</template>
             </el-menu-item>
           </app-link>
