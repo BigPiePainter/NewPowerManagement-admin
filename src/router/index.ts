@@ -43,6 +43,7 @@ import QuestionCreateView from '@/views/QuestionCreateView.vue'
 import QuestionDetailView from '@/views/QuestionDetailView.vue'
 import QuestionsManagementView from '@/views/QuestionsManagementView.vue'
 import CourseCreateView from '@/views/CourseCreateView.vue'
+import ShopProductDetailView from '@/views/ShopProductDetailView.vue'
 
 
 import { userInfo } from '@/apis/manager'
@@ -192,6 +193,12 @@ const router = createRouter({
           path: 'new-product',
           name: 'new-product',
           component: NewProductView,
+          meta: { Protected: true }
+        },
+        {
+          path: 'product-detail',
+          name: 'product-detail',
+          component: ShopProductDetailView,
           meta: { Protected: true }
         },
         {

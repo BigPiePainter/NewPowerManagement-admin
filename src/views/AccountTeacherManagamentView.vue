@@ -471,7 +471,7 @@ loadData()
     
     <div class="div-input-element" style="margin-top: 10px;">
       <span class="dialog-span">
-        学习阶段：
+        阶段：
       </span>
       <el-select class="dialog-input" v-model="editTeacherData.gradeId" >
         <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />

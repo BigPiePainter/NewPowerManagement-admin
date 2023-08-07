@@ -11,7 +11,7 @@ export const getOrder = (data: object) => {
 
 export const cancelOrder = (data:any) => {
     const args = {
-        url: '/api/management/order/delete-orderr',
+        url: '/api/management/order/delete-order',
         method: 'POST',
         data,
         mode: "json"
