@@ -5,7 +5,6 @@ import SearchBar from '@/components/SearchBar.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue';
 import { useRoute } from 'vue-router'
-import { getMiniLessons, deleteMiniLessons, editMiniLessons } from '@/apis/minilessons'
 import { getProductContent,addProduct,deleteProductContent } from '@/apis/product';
 import type { CheckboxValueType } from 'element-plus'
 import { ElCheckbox,ElNotification } from 'element-plus'
@@ -34,14 +33,22 @@ const confirmDelete = () => {
     console.log(deleteItemid)
     if (res.code == 20000) {
       console.log('删除成功')
-
+      ElNotification({
+          title: '成功',
+          message: '课程删除成功',
+          type: 'success'
+        })
+        loadData()
+      } else {
+        ElNotification({
+          title: '删除失败',
+          message: '删除失败'+res.msg,
+          type: 'error'
+        })
+      }
       loadData()
       warningDialogshow.value=false
-    }
-    else {
-      warningDialogshow.value=false
-      console.log('删除失败')
-    }
+
   }).catch()
 }
 
@@ -186,7 +193,7 @@ const loadData = () => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    id:route.query.id
+    productId:route.query.id
   }
 
   getProductContent(args).then((res) => {
@@ -269,7 +276,7 @@ const confirmAdd = () => {
   console.log(data)
   addProduct({
     productId: route.query.id,
-    coursesQuestionPackagesId: data
+    coursesQuestionPackagesIds: data
   }).then((res: any) => {
       if (res.code == '20000') {
         ElNotification({
@@ -280,8 +287,8 @@ const confirmAdd = () => {
         addProductDialog.value = false
       }else{
         ElNotification({
-          title: '失败',
-          message: '添加课程/题包到商品失败',
+          title: '添加失败',
+          message: (res.msg),
           type: 'warning'
         })
       }
