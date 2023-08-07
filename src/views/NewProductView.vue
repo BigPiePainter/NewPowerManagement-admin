@@ -24,6 +24,11 @@ breadcrumbStore.data = [
 const next = () => {
   if (++active.value > 2) active.value = 0
 }
+
+const up = () => {
+  active.value = 0
+}
+
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 
@@ -355,17 +360,20 @@ const create = () => {
       </div>
 
 
-        
-        <el-text style="margin-left: 35px;">是否上架*：</el-text>
-        <div>
-        <el-select input-length class="input-input" placeholder="请选择是否立即上架" v-model="newProductData.status">
+      <div style="margin-left: 175px; margin-top:50px">
+        <el-text >是否上架*：</el-text>
+
+        <el-select style="margin-left: 27px;" input-length class="input-input" placeholder="请选择是否立即上架"
+          v-model="newProductData.status">
           <el-option v-for="item in allstatus" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
 
 
 
-      <div style="margin-top: 300px;margin-left: 400px;">
+      <div style="margin-top: 200px;margin-right: 40px;">
+
+        <el-button type="primary" @click="up()">上一页</el-button>
 
         <el-button type="primary" @click="create()">确认添加商品</el-button>
       </div>
