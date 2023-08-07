@@ -7,7 +7,7 @@ console.log('后端网址', import.meta.env.VITE_API_URL)
 
 <template>
   <el-config-provider :locale="zhCn">
-    <router-view />
+    <router-view :key="$route.fullPath" />
   </el-config-provider>
 </template>
 

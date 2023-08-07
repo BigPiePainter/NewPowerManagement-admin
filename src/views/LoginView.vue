@@ -8,37 +8,31 @@ import router from '@/router'
 const account = ref('')
 const password = ref('')
 
-import { getCurrentInstance } from "vue";
-const author = getCurrentInstance()?.appContext.config.globalProperties.$author
-
 const enterHome = () => {
-  // Object.keys(author).forEach((key) => {
-  //   delete author[key]
-  //   console.log("初始化...",author)
-  // })
-
-  // console.log("权限初始化",author)
   var args = {
     account: account.value,
-    pageNum:1,
-    pageSize:1
+    pageNum: 1,
+    pageSize: 1
   }
-  console.log("账号",args.account)
+  console.log("账号", args.account)
   userAuthor(args)
     .then((res: any) => {
-      console.log("账号",args.account)
+      console.log("账号", args.account)
       if (res.code == 20000) {
-
         localStorage.account = res.data.records[0].account
         localStorage.avator = res.data.records[0].avator
-        localStorage.remark = res.data.records[0].remark
+        // localStorage.remark = res.data.records[0].remark
         console.log(localStorage)
+        var author:any = {}
         var items = res.data.records[0].menuList
         for (const key in items) {
           var menu = items[key].name
           console.log(key, menu)
           author[menu] = "check"
         }
+
+
+        return localStorage.setItem('author', JSON.stringify(author))
       } else {
         ElNotification({
           title: 'Error',
@@ -46,7 +40,7 @@ const enterHome = () => {
           type: 'error'
         })
       }
-      console.log("权限初始化",author)
+      console.log("权限初始化", author)
       console.log(localStorage)
     })
   router.push({ path: 'work-space' })
@@ -76,6 +70,7 @@ const login = () => {
       } else if (res.code == 20000) {
         localStorage.clear()
         localStorage.token = res.data.token
+        localStorage.reload = "true"
         ElNotification({
           title: 'Success',
           message: '登陆成功',

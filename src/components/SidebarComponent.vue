@@ -11,16 +11,18 @@ console.log('超炫酷无敌动画依赖import加载完毕')
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { onMounted, onUnmounted } from 'vue'
-import { watch, reactive } from 'vue';
+import { reactive } from 'vue';
 import { getCurrentInstance } from "vue";
-const author = getCurrentInstance()?.appContext.config.globalProperties.$author
 const isIn = getCurrentInstance()?.appContext.config.globalProperties.$isIn
-
+const author = JSON.parse(localStorage.author)
+const cslg=()=>{
+  console.log(JSON.parse(localStorage.author))
+}
+ 
 const items = reactive([
   {
     index: '/work-space',
-    title: '工作台',
-    viewable: author['工作台'] == "check" ? true : false
+    title: '工作台'
   },
   {
     index: '/school-management',
@@ -29,12 +31,12 @@ const items = reactive([
       {
         index: '/class-management',
         title: '班级管理',
-        viewable: '班级管理' in author
+        
       },
       {
         index: '/teacher-group-management',
         title: '教研组管理',
-        viewable: '教研组管理' in author
+        
       }
     ]
   },
@@ -45,34 +47,34 @@ const items = reactive([
       {
         index: '/account-role-managment',
         title: '角色管理',
-        viewable: '角色管理' in author
+        
       },
       {
         index: '/acount-equipment-management',
         title: '账号设备管理',
-        viewable: '账号设备管理' in author
+        
       },
       {
         index: '/account-teacher-managament',
         title: '老师管理',
-        viewable: '老师管理' in author
+        
       },
       {
         index: '/account-student-management',
         title: '学生管理',
-        viewable: '学生管理' in author
+        
       },
       {
         index: '/account-temoorary-student',
         title: '临时学生',
-        viewable: '临时学生' in author
+        
       }
     ]
   },
   {
     index: '/live-class',
     title: '实时课堂',
-    viewable: '实时课堂' in author
+    
   },
   {
     index: '/course-management-group',
@@ -81,19 +83,19 @@ const items = reactive([
       {
         index: '/course-approval',
         title: '微课审核',
-        viewable: '微课审核' in author
+        
       },
       {
         index: '/course-management',
         title: '课程包管理',
-        viewable: '课程包管理' in author
+        
       }
     ]
   },
   {
     index: '/shop-management',
     title: '商城管理',
-    viewable: '商城管理' in author
+    
   },
   {
     index: '',
@@ -102,19 +104,19 @@ const items = reactive([
       {
         index: '/question-bank-management',
         title: '好题包管理',
-        viewable: '好题包管理' in author
+        
       },
       {
         index: '/question-bank',
         title: '题库',
-        viewable: '题库' in author
+        
       }
     ]
   },
   {
     index: '/order-management',
     title: '订单管理',
-    viewable: '订单管理' in author
+    
   },
   {
     index: '/student-points-management',
@@ -123,12 +125,12 @@ const items = reactive([
       {
         index: '/student-points-management',
         title: '学生积分',
-        viewable: '学生积分' in author
+        
       },
       {
         index: '/student-tcoin-management',
         title: '学生T币',
-        viewable: '学生T币' in author
+        
       }
     ]
   },
@@ -139,50 +141,46 @@ const items = reactive([
       {
         index: '/category-management',
         title: '分类管理',
-        viewable: '分类管理' in author
+        
       },
       {
         index: '/tag-management',
         title: '标签管理',
-        viewable: '标签管理' in author
+        
       },
       {
         index: '/course-category',
         title: '课程类目',
-        viewable: '课程类目' in author
+        
       },
       {
         index: '/exam-info',
         title: '考试咨询',
-        viewable: '考试咨询' in author
+        
       },
       {
         index: '/exam-date',
         title: '考试时间',
-        viewable: '考试时间' in author
+        
       },
       {
         index: '/banner',
         title: 'banner',
-        viewable: 'banner' in author
+        
       },
       {
         index: '/info-center',
         title: '消息中心',
-        viewable: '消息中心' in author
+        
       },
       {
         index: '/family-report',
         title: '家长报告',
-        viewable: '家长报告' in author
+        
       }
     ]
   },
 ])
-
-watch(author, (newVal, oldVal) => {
-  console.log(newVal, oldVal)
-})
 
 const route = useRoute()
 
@@ -355,7 +353,7 @@ onUnmounted(() => {
 <template>
   <canvas class="sidebar-canvas"></canvas>
   <div v-if="isIn" class="sidebar">
-    <div class="sidebar-header" @click="{ console.log(items); console.log(author) }">管理后台</div>
+    <div class="sidebar-header" @click="cslg">管理后台</div>
     <el-menu :default-active="route.path" router>
       <template v-for="item in items" :key="item.index">
         <template v-if="item.subs">

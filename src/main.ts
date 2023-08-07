@@ -11,6 +11,7 @@ import router from '@/router'
 
 const app = createApp(App)
 app.config.globalProperties.$author = reactive({})
+app.config.globalProperties.$policy = reactive({})
 app.config.globalProperties.$isIn = true
 app.use(createPinia())
 app.use(router)
