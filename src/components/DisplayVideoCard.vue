@@ -2,10 +2,10 @@
 import { ElIcon } from 'element-plus';
 
 type Props = {
-    picture: string
-    title: string
-    time: string
-    videoduration: string
+    picture?: string
+    title?: string
+    time?: string
+    videoduration?: string
 }
 const props = defineProps<Props>()
 
@@ -17,7 +17,7 @@ const props = defineProps<Props>()
         <div class="displayvideocard-picture">
             <div class="img">
                 <el-icon><VideoPlay/></el-icon></div>
-            <div>{{ picture }}</div>
+            <img :src="picture" />
             <div class="time">{{ videoduration }}</div>
         </div>
         <el-icon><VideoPlay/></el-icon>

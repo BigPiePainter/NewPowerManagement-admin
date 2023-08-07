@@ -3,119 +3,125 @@ import DisplayVideoCard from '../components/DisplayVideoCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getTeacherCourse } from '@/apis/teacherCourses'
+import { videoToUrl } from '@/apis/videoIdToUrl'
 import { useRoute } from 'vue-router'
-import SearchBar from '@/components/SearchBar.vue'
 import { getMiniLessons } from '@/apis/minilessons'
-import { getTeacherGroup } from '@/apis/teacherGroup'
-import type { CheckboxValueType } from 'element-plus'
-import { ElCheckbox } from 'element-plus'
 
-const newTeacherGroupDialogShow = ref(false);
 const loading = ref(true)
 const input = ref('')
 const video = reactive<any>([])
 const route = useRoute()
-const addTeacherDialogShow = ref(false);
 console.log(route.query.id)
+const dialogShow = ref(false)
 
-
-const paginationInfo = reactive({
+const paginationInfoCourse = reactive({
   currentPage: 1,
-  pageSize: 20
+  pageSize: 20,
+  teacherId: route.query.id
 })
 
-const dialogSearchBarItems = reactive([
-  { name: "名称", value: "", },
-  { name: "标签", value: "", },
-  { name: "上传者", value: ""  },
-])
+const paginationInfoMiniLesson = reactive({
+  currentPage: 1,
+  pageSize: 20,
+  teacherCourseId: ''
+})
 
-const totalLength = ref<Number>()
-const teacherCourseid = ref<any>([])
-const tableData = ref<any>([])
-const CourseData = ref<any>([])
-
+const courseData = reactive<any>([])
+const totalNum2 = ref('')
 const loadTeacherData = () => {
+  courseData.length = 0
   loading.value = true
 
   var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    teacherId: route.query.id
+    pageNum: paginationInfoCourse.currentPage,
+    pageSize: paginationInfoCourse.pageSize,
+    teacherId: paginationInfoCourse.teacherId
   }
+  console.log(args)
   getTeacherCourse(args)
     .then((res) => {
       console.log(res)
-      tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalNum2.value = res.data.total
+      res.data.records.forEach((course: any) => {
+        var item = { id: course.id, picture: course.cover, title: course.name, time: course.createdAt }
+        courseData.push(item)
+      })
     })
     .catch(() => { })
     .finally(() => {
       loading.value = false
     })
+
 }
-
-
 loadTeacherData()
 
-const loadData = () => {
+const totalNum = ref('')
+const loadDialogData = (teacherCourseId: any) => {
+  video.length = 0
+
   loading.value = true
-  tableData.value.id = teacherCourseid.value
+
+  paginationInfoMiniLesson.teacherCourseId = teacherCourseId
   var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    teacherCourseId: teacherCourseid.value
+    pageNum: paginationInfoMiniLesson.currentPage,
+    pageSize: paginationInfoMiniLesson.pageSize,
+    teacherCourseId: paginationInfoMiniLesson.teacherCourseId
   }
   getMiniLessons(args)
-    .then((res) => {
-      console.log(tableData.value)
+    .then((res: any) => {
+      console.log(res)
+      totalNum.value = res.data.total
       res.data.records.forEach((item: any) => {
         video.push({
+          id: item.id,
+          videoId: item.videoId,
           title: item.name,
           picture: item.cover,
           time: item.updatedAt,
           videoduration: item.videoDuration
         })
       })
+      dialogShow.value = true
     })
     .catch(() => { })
     .finally(() => {
       loading.value = false
     })
-
-
-
 }
 
-
-
-const loadDialogData = () => {
-  loading.value = true
-
-  var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    teacherCourseId: teacherCourseid.value
-  }
-  getMiniLessons(args)
-    .then((res) => {
-      console.log(tableData.value)
-      res.data.records.forEach((item: any) => {
-        video.push({
-          title: item.name,
-          picture: item.cover,
-          time: item.updatedAt,
-          videoduration: item.videoDuration
-        })
-      })
-    })
-    .catch(() => { })
-    .finally(() => {
-      loading.value = false
-    })
-
+const videoShow = ref(false)
+const url = ref<any>('')
+const playVideo = (videoId: any) => {
+  var args = { videoId: videoId }
+  console.log(args)
+  videoToUrl(args).then((res: any) => {
+    console.log(res)
+    url.value = res.playURL
+    videoShow.value = true
+  })
 }
-loadData()
+
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`)
+  paginationInfoMiniLesson.pageSize = val
+  loadDialogData(paginationInfoMiniLesson.teacherCourseId)
+}
+const handleCurrentChange = (val: number) => {
+  console.log(`current page: ${val}`)
+  paginationInfoMiniLesson.currentPage = val
+  loadDialogData(paginationInfoMiniLesson.teacherCourseId)
+}
+
+const handleSizeChange2 = (val: number) => {
+  console.log(`${val} items per page`)
+  paginationInfoCourse.pageSize = val
+  loadTeacherData()
+}
+const handleCurrentChange2 = (val: number) => {
+  console.log(`current page: ${val}`)
+  paginationInfoCourse.currentPage = val
+  loadTeacherData()
+}
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -123,8 +129,6 @@ breadcrumbStore.data = [
   { name: '老师管理', path: '/account-teacher-managament' },
   { name: '老师详情', path: '/teacher-detail-managament' },
 ]
-
-
 
 </script>
 
@@ -143,7 +147,6 @@ breadcrumbStore.data = [
             <div><el-text>电话:15536996997</el-text></div>
           </div>
         </div>
-<el-button @click="console.log(tableData)"></el-button>
         <div class="topPart1-3">
           <div><el-text>创建时间:2022-2-13 13:00</el-text></div>
           <div class="topPart1-3-2"><el-text>最后登录:2023-6-5 12:00</el-text></div>
@@ -171,29 +174,39 @@ breadcrumbStore.data = [
         <div class="botPart1-1-3"><el-text>共23个微课</el-text></div>
       </div>
     </div>
+
     <div class="botPart1-2">
-  </div>
-
-
-
-  <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addTeacherDialogShow">
-    <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
-      <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
-    </TablePage>
-
-    <template #header>
-      <el-text>添加老师</el-text>
-    </template>
-    <template #footer>
-      <el-button type="primary" @click="confirmNewTeacher()">确定</el-button>
-      <el-button @click="cancelNewTeacher()">
-        取消
-      </el-button>
-    </template>
-  </el-dialog>
-
+      <div @click="loadDialogData(item.id)" v-for="item in courseData" :key="item.id">
+        <DisplayVideoCard :picture="item.picture" :title="item.title" :time="item.time"></DisplayVideoCard>
+      </div>
     </div>
 
+    <el-pagination style="margin-left: 15px;margin-top: 10px;margin-bottom: 10px;"
+      v-model:current-page="paginationInfoCourse.currentPage" v-model:page-size="paginationInfoCourse.pageSize"
+      :page-sizes="[10, 20, 30, 100]" layout="total, sizes, prev, pager, next, jumper" :total=totalNum2
+      @size-change="handleSizeChange2" @current-change="handleCurrentChange2" />
+
+    <el-dialog v-model="dialogShow">
+      <div class="botPart1-2">
+        <div @click="playVideo(item.videoId)" v-for="item in video" :key="item.id">
+          <DisplayVideoCard :picture="item.picture" :title="item.title" :time="item.time"
+            :videoduration="item.videoduration"></DisplayVideoCard>
+        </div>
+
+      </div>
+      <template #footer>
+        <el-pagination v-model:current-page="paginationInfoMiniLesson.currentPage"
+          v-model:page-size="paginationInfoMiniLesson.pageSize" :page-sizes="[10, 20, 30, 100]"
+          layout="total, sizes, prev, pager, next, jumper" :total=totalNum @size-change="handleSizeChange"
+          @current-change="handleCurrentChange" />
+      </template>
+    </el-dialog>
+
+    <el-dialog style="height: 1000px;width: 1650px;" v-model="videoShow">
+      <video v-if="videoShow" style="height: 900px;width: 1600px;" :src="url" controls autoplay></video>
+    </el-dialog>
+
+  </div>
 </template>
 
 <style scoped lang="scss">
