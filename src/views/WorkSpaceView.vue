@@ -4,6 +4,7 @@ import { loadTcoins, loadPoint, getStudentAmount } from '@/apis/student'
 import DisplayCard from '../components/DisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+import UploadVideo from '@/components/UploadVideo.vue'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '工作台' }]
@@ -74,6 +75,7 @@ LoadCoins()
 
 <template>
   <div class="page">
+    <UploadVideo></UploadVideo>
     <div class="card-container-header partA">
       <div class="divider"></div>
       历史累计
@@ -96,7 +98,7 @@ LoadCoins()
     </div>
   </div>
 
-  
+
 </template>
 
 <style scoped lang="scss">
