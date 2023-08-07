@@ -57,9 +57,8 @@ export const deleteProduct = (data:any) => {
 export const getProductContent = (data:any) => {
     const args = {
         url: '/api/management/product/content/page-content',
-        method: 'POST',
-        data,
-        mode: "json"
+        method: 'get',
+        params: data
     }
     return http.request(args)
 }
