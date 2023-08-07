@@ -97,7 +97,6 @@ const tableColumns = [
       title: '订单编号',
         width: 120
 },
-
 {
   dataKey: 'payTime',
     key: 'payTime',
@@ -223,9 +222,11 @@ const deleteTea = (item: any) => {
       loadData()
     })
 }
-
-
 loadData()
+
+
+
+
 </script>
 
 <template>
