@@ -4,7 +4,7 @@ import { ElButton, ElNotification } from 'element-plus'
 import SearchBar from '../components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
-import { getTeacherGroupTeachers, getTeacherGroup, createTeacherGroup, deleteTeacherGroups } from '@/apis/teacherGroup'
+import { getTeacherGroupTeachers , editTeacherGroups, getTeacherGroup, createTeacherGroup, deleteTeacherGroups } from '@/apis/teacherGroup'
 import { getAllTeachers, getTeachers } from '@/apis/teacher'
 const router = useRouter()
 
@@ -17,6 +17,11 @@ breadcrumbStore.data = [
 ]
 
 const allTeacher = ref<any>([])
+
+getAllTeachers().then((res)=>{
+  allTeacher.value=res.data
+})
+
 
 const searchBarItems = reactive([
   { name: "教研组名称", value: "" },
@@ -114,12 +119,13 @@ const clickDetail = (props: { rowData: { id: string } }) => {
 }
 
 const editTeacherGroupDialogShow = ref(false);
-const editTeacherGroupData = reactive<{ teacherGroupName: string, groupLeader: string }>({ teacherGroupName: '', groupLeader: '' });
+const editTeacherGroupData = reactive<{ id: string, leaderId: string,name:string }>({ leaderId: '', id: '',name:'' });
 const editTeacherGroup = (props: { rowData: { teacherGroupName: string, groupLeader: string } }) => {
   console.log(props)
   editTeacherGroupDialogShow.value = true;
-  editTeacherGroupData.teacherGroupName = props.rowData.teacherGroupName
-  editTeacherGroupData.groupLeader = props.rowData.groupLeader
+  editTeacherGroupData.name = props.rowData.teacherGroupName
+  editTeacherGroupData.leaderId = props.rowData.groupLeader
+  editTeacherGroupData.id=props.rowData.id
 }
 const preDeleteTea = (item: any) => {
   tableData.value.forEach((i: any) => {
@@ -184,8 +190,26 @@ const deleteTeacherGroup = (props: { rowData: { id: string, teacherGroupName: st
 }
 
 const confirmEditDialog = () => {
+  editTeacherGroups(editTeacherGroupData)
+    .then((res: any) => {
+      if (res.code == 20000){        ElNotification({
+          title: '成功',
+          message: '已成功修改',
+          type: 'success',
+        })
+        loadData()
+        editTeacherGroupDialogShow.value = false;}
+        else{
+          ElNotification({
+          title: '失败',
+          message: '修改失败',
+          type: 'warning',
+        })
+      }
+    })
+      .catch
+      editTeacherGroupDialogShow.value = false;
   console.log(editTeacherGroupData)
-  editTeacherGroupDialogShow.value = false;
 }
 const cancelEditDialog = () => {
   editTeacherGroupDialogShow.value = false;
@@ -307,14 +331,14 @@ const cancelNewTeacherGroup = () => {
         <span class="dialog-span">
           *教研组名称：
         </span>
-        <el-input class="dialog-input" v-model="editTeacherGroupData.teacherGroupName">
+        <el-input class="dialog-input" v-model="editTeacherGroupData.name">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           *教研组长：
         </span>
-        <el-select class="dialog-input" v-model="editTeacherGroupData.groupLeader">
+        <el-select class="dialog-input" v-model="editTeacherGroupData.leaderId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>

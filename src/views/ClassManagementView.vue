@@ -210,16 +210,16 @@ const clickDetail = (props: { rowData: { id: string } }) => {
 
 const editClassDialogShow = ref(false);
 const editClassData = reactive<{
+  id:string
   name: string,
-  teacher: string,
-  startDate: string,
+  teacherId: string,
   endDate: string,
   subjectId: string,
   gradeId: string,
 }>({
+  id:'',
   name: '',
-  teacher: '',
-  startDate: '',
+  teacherId: '',
   endDate: '',
   subjectId: '',
   gradeId: '',
@@ -236,39 +236,85 @@ const editClass = (props: {
     endDate: string,
     subjectId: string,
     gradeId: string,
+    id:string
   }
 
 }) => {
   console.log(props);
   editClassDialogShow.value = true;
   editClassData.name = props.rowData.name;
-  editClassData.teacher = props.rowData.teacher;
-  editClassData.startDate = props.rowData.startDate;
+  editClassData.teacherId = props.rowData.teacher;
   editClassData.endDate = props.rowData.endDate;
   editClassData.subjectId = props.rowData.subjectId;
   editClassData.gradeId = props.rowData.gradeId;
+  editClassData.id= props.rowData.id;
 }
 
 
 const deleteClassDialogShow = ref(false);
-const deleteClassData = reactive<{ name: string }>({ name: '' });
-const deleteClass = (props: { rowData: { id: string, name: string } }) => {
+const deleteClassData = reactive<{ id: string }>({ id:'' });
+
+const deleteClass = (props: { rowData: { id: string} }) => {
   console.log(props);
+
   deleteClassDialogShow.value = true;
-  deleteClassData.name = props.rowData.name
+  deleteClassData.id = props.rowData.id
 }
 
 const confirmEditDialog = () => {
   console.log(editClassData)
+  editClasses(editClassData)
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '成功',
+          message: '已成功编辑',
+          type: 'success'
+        })
+        loadData()
+      } else {
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning'
+        })
+      }
+    })
+    .catch()
   editClassDialogShow.value = false;
 }
+
+
 const cancelEditDialog = () => {
   editClassDialogShow.value = false;
 }
 const confirmDeleteDialog = () => {
   console.log(deleteClassData);
+  deleteClasses(deleteClassData)
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '成功',
+          message: '已成功编辑',
+          type: 'success'
+        })
+        loadData()
+      } else {
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning'
+        })
+      }
+    })
+    .catch()
+    
   deleteClassDialogShow.value = false;
 }
+
+
+
+
 const cancelDeleteDialog = () => {
   deleteClassDialogShow.value = false;
 }
@@ -395,22 +441,16 @@ loadAllTeacher()
         <span class="dialog-span">
           *负责老师：
         </span>
-        <el-input class="dialog-input" v-model="editClassData.teacher">
-        </el-input>
-      </div>
-      <div class="div-input-element">
-        <span class="dialog-span">
-          *起始时间：
-        </span>
-        <el-input class="dialog-input" placeholder="yyyy-mm-dd" v-model="editClassData.startDate">
-        </el-input>
+        <el-select class="dialog-input" v-model="editClassData.teacherId">
+          <el-option  v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           *到期时间：
         </span>
-        <el-input class="dialog-input" v-model="editClassData.endDate">
-        </el-input>
+        <el-date-picker class="dialog-input" placeholder="yyyy-mm-dd" v-model="editClassData.endDate">
+        </el-date-picker>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
@@ -446,7 +486,7 @@ loadAllTeacher()
       <el-text>确定删除班级</el-text>
     </template>
     <span>
-      {{ deleteClassData.name }}
+      {{ deleteClassData.id }}
     </span>
     <template #footer>
       <el-button type="danger" @click="confirmDeleteDialog()">确定</el-button>

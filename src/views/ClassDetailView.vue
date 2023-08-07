@@ -372,11 +372,14 @@ loadData()
 
 
 
-const detail=[
-
-
-
-]
+// const detail=[{
+// name:allDetail.value.name,
+// teacherName:allDetail.value.teacherName,
+// subjectName:allDetail.value.subjectName,
+// gradeName:allDetail.value.gradeName,
+// startDate:allDetail.value.startDate,
+// endDate:allDetail.value.endDate,
+// }]
 
 
 
@@ -400,21 +403,21 @@ const detail=[
             班级名称：{{ allDetail.value }}
           </el-text>
           <el-text class="el-text-detail">
-            负责老师：{{ allDetail.value }}
+            负责老师：{{ allDetail.value.teacherName }}
           </el-text>
           <el-text class="el-text-detail">
-            学科：{{ allDetail.value }}
+            学科：{{ allDetail.value.subjectName }}
           </el-text>
           <el-text class="el-text-detail">
-            学习阶段：{{ allDetail.value }}
+            学习阶段：{{ allDetail.value.gradeName }}
           </el-text>
         </div>
         <div class="detail-date">
           <el-text class="el-text-detail">
-            起始日期：{{ allDetail.value }}
+            起始日期：{{ allDetail.value.startDate }}
           </el-text>
           <el-text class="el-text-detail">
-            到期日期：{{ allDetail.value }}
+            到期日期：{{ allDetail.value.endDate }}
           </el-text>
         </div>
       </div>
