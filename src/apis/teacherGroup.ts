@@ -50,7 +50,7 @@ export const deleteTeacherFromGroup = (data:any) => {
 }
 
 
-export const editTeacherGroup = (data:any) => {
+export const editTeacherGroups = (data:any) => {
     const args = {
         url: '/api/management/teaching-research-group/edit-group',
         method: 'POST',
