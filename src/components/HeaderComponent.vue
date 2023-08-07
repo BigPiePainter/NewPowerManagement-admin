@@ -8,6 +8,8 @@ import { useRouter } from 'vue-router'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '工作台', path: '/' }]
 const router = useRouter()
+import { getCurrentInstance } from "vue";
+const author = getCurrentInstance()?.appContext.config.globalProperties.$author
 
 const fullScreen = () => {
   if (screenfull.isEnabled) {
@@ -15,7 +17,13 @@ const fullScreen = () => {
   }
 }
 
+const name = localStorage.account
+
 const quit = () => {
+  Object.keys(author).forEach((i)=>{
+    delete author[i]
+  })
+  console.log(author)
   localStorage.clear()
   router.push({ path: 'login'})
 }
@@ -46,7 +54,7 @@ const quit = () => {
     <div class="user-avatar"></div>
     <el-dropdown class="user-action">
       <span>
-        {localStorage.}
+        {{name}}
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>

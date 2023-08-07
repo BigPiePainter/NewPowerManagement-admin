@@ -1,58 +1,44 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import { userLogin, roleInfo } from '@/apis/login'
-import { ref, reactive, pushScopeId } from 'vue'
-import router from '@/router'
+import { userLogin } from '@/apis/login'
+import { ref } from 'vue'
 import { ElNotification } from 'element-plus'
-import { text } from 'stream/consumers'
 import { userAuthor } from '@/apis/manager'
+import router from '@/router'
 
 const account = ref('')
 const password = ref('')
-
-const pars = reactive({
-  account: account.value,
-  password: password.value,
-  device: {
-    deviceId: 'Web',
-    deviceModel: 'Web',
-    deviceName: 'Web',
-    version: 1
-  }
-})
-
-const enterAccount = () => {
-  pars.account = 'nick_young'
-  pars.password = '888888'
-}
 
 import { getCurrentInstance } from "vue";
 const author = getCurrentInstance()?.appContext.config.globalProperties.$author
 
 const enterHome = () => {
+  // Object.keys(author).forEach((key) => {
+  //   delete author[key]
+  //   console.log("初始化...",author)
+  // })
+
+  // console.log("权限初始化",author)
   var args = {
-    account: pars.account,
-    pageNum: 1,
-    pageSize: 1
+    account: account.value,
+    pageNum:1,
+    pageSize:1
   }
-  // localStorage.author = {}
+  console.log("账号",args.account)
   userAuthor(args)
     .then((res: any) => {
+      console.log("账号",args.account)
       if (res.code == 20000) {
+
         localStorage.account = res.data.records[0].account
         localStorage.avator = res.data.records[0].avator
         localStorage.remark = res.data.records[0].remark
         console.log(localStorage)
-        var menuObj: any = {}
         var items = res.data.records[0].menuList
         for (const key in items) {
           var menu = items[key].name
           console.log(key, menu)
           author[menu] = "check"
-          // localStorage.author[JSON.stringify(menu)] = "check"
-          menuObj[menu] = "check"
         }
-        // Object.assign(localStorage, { "author": menuObj })
       } else {
         ElNotification({
           title: 'Error',
@@ -60,14 +46,23 @@ const enterHome = () => {
           type: 'error'
         })
       }
-      console.log(author)
-      console.log(menuObj)
+      console.log("权限初始化",author)
       console.log(localStorage)
     })
   router.push({ path: 'work-space' })
 }
 
 const login = () => {
+  var pars = {
+    account: account.value,
+    password: password.value,
+    device: {
+      deviceId: 'Web',
+      deviceModel: 'Web',
+      deviceName: 'Web',
+      version: 1
+    }
+  }
   userLogin(pars)
     .then((res: any) => {
       console.log("THEN", res)
@@ -79,8 +74,8 @@ const login = () => {
         })
         return
       } else if (res.code == 20000) {
+        localStorage.clear()
         localStorage.token = res.data.token
-        localStorage.info = 111
         ElNotification({
           title: 'Success',
           message: '登陆成功',
@@ -104,14 +99,13 @@ const login = () => {
   <div class="login">
     <el-text class="title">锦鲤项目</el-text>
     <div class="account">
-      <el-text class="word">账号：</el-text> <el-input placeholder="" v-model="pars.account" />
+      <el-text class="word">账号：</el-text> <el-input placeholder="" v-model="account" />
     </div>
     <div class="account">
       <el-text class="word">密码：</el-text>
-      <el-input placeholder="" v-model="pars.password" show-password />
+      <el-input placeholder="" v-model="password" show-password />
     </div>
     <el-button type="primary" @click="login">登陆</el-button>
-    <el-button style="margin-top: 10px" type="primary" @click="enterAccount">烦人，立马登录</el-button>
   </div>
 </template>
 
@@ -146,5 +140,4 @@ const login = () => {
   font-size: 22px;
   margin: 10px;
 }
-
 </style>
