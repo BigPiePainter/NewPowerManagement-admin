@@ -75,7 +75,6 @@ LoadCoins()
 
 <template>
   <div class="page">
-    <UploadVideo></UploadVideo>
     <div class="card-container-header partA">
       <div class="divider"></div>
       历史累计

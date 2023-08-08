@@ -5,11 +5,9 @@ import { useRouter } from 'vue-router'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-// import SearchBar from '@/components/SearchBar.vue'
-// import { getGoodQuestionPack, createGoodQuestionPack } from '@/apis/questionStore'
 import RichTextEditor from '@/components/RichTextEditor.vue';
-import { ElCheckbox,ElNotification } from 'element-plus'
-import {createGoodQuestion} from '@/apis/questionStore'
+import { ElCheckbox, ElNotification } from 'element-plus'
+import { createGoodQuestion } from '@/apis/questionStore'
 
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
@@ -51,8 +49,8 @@ const newQuestionData = reactive<{
     id: string,
     subjectId: string,
     questionPrompt: string,
-    option:string,
-    answer:string
+    option: string,
+    answer: string
 
 }>({
 
@@ -62,8 +60,8 @@ const newQuestionData = reactive<{
     id: '',
     subjectId: '',
     questionPrompt: '',
-    option:'',
-    answer:''
+    option: '',
+    answer: ''
 
 
 });
@@ -199,12 +197,16 @@ const newSMultipleChoiceQuestion = reactive<any>({
 
 })
 
-const newSMultipleChoice = reactive<any>(
-[{"identifier":newSMultipleChoiceQuestion.a},
-{"identifier":newSMultipleChoiceQuestion.b},
-{"identifier":newSMultipleChoiceQuestion.c},
-{"identifier":newSMultipleChoiceQuestion.d}]    
-)
+const giveData = () => {
+    const newSMultipleChoice = reactive<any>([
+        { "identifier": newSMultipleChoiceQuestion.a },
+        { "identifier": newSMultipleChoiceQuestion.b },
+        { "identifier": newSMultipleChoiceQuestion.c },
+        { "identifier": newSMultipleChoiceQuestion.d }
+    ])
+    console.log(newSMultipleChoice)
+}
+
 
 const confirmCreate = () => {
     var args = {
@@ -214,27 +216,27 @@ const confirmCreate = () => {
         difficultyType: newQuestionData.difficultyType,
         subjectId: newQuestionData.subjectId,
         type: newQuestionData.type,
-        options:JSONoption.value,
-        answer:JSONanswer.value
+        options: JSONoption.value,
+        answer: JSONanswer.value
     }
     createGoodQuestion(args).then((res: any) => {
-    console.log(args)
-    if (res.code == 20000) {
-      console.log('删除成功')
-      ElNotification({
-          title: '成功',
-          message: '题目新建成功',
-          type: 'success'
-        })
-      } else {
-        ElNotification({
-          title: '删除失败',
-          message: '新建失败'+res.msg,
-          type: 'error'
-        })
-      }
+        console.log(args)
+        if (res.code == 20000) {
+            console.log('删除成功')
+            ElNotification({
+                title: '成功',
+                message: '题目新建成功',
+                type: 'success'
+            })
+        } else {
+            ElNotification({
+                title: '删除失败',
+                message: '新建失败' + res.msg,
+                type: 'error'
+            })
+        }
 
-  }).catch()
+    }).catch()
 }
 
 
@@ -245,18 +247,18 @@ const create = () => {
 
 
 
-const newAnswer=ref<any>([])
-const JSONoption=ref<any>([])
-const JSONanswer=ref<any>([])
+const newAnswer = ref<any>([])
+const JSONoption = ref<any>([])
+const JSONanswer = ref<any>([])
 
 
-const dataTransform =()=>{
+const dataTransform = () => {
 
-    JSONoption.value=JSON.stringify(newSMultipleChoiceQuestion)
-    JSONanswer.value=JSON.stringify(newAnswer)
- console.log(JSONoption)
- console.log(JSONanswer)
- console.log
+    JSONoption.value = JSON.stringify(newSMultipleChoiceQuestion)
+    JSONanswer.value = JSON.stringify(newAnswer)
+    console.log(JSONoption)
+    console.log(JSONanswer)
+    console.log
 }
 
 
@@ -312,7 +314,8 @@ const dataTransform =()=>{
 
 
 
-        <RichTextEditor :questionPrompt="newQuestionData.questionPrompt" :isShow="true" v-model="newQuestionData.questionPrompt">
+        <RichTextEditor :questionPrompt="newQuestionData.questionPrompt" :isShow="true"
+            v-model="newQuestionData.questionPrompt">
         </RichTextEditor>
 
 
@@ -325,16 +328,16 @@ const dataTransform =()=>{
                 c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
                 d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
 
-                <el-button @click="console.log(newSMultipleChoice)">确认题目选项</el-button>
+                <el-button @click="giveData">确认题目选项</el-button>
             </diV>
             <div style="margin-top: 20px;">答案：</div>
             <el-select placeholder="请选择答案" v-model="newAnswer">
-                <el-option v-for="(item,key) in newSMultipleChoice" :key="item" :label="key" :value="key"/>
+                <el-option v-for="(item, key) in newSMultipleChoiceQuestion" :key="item" :label="key" :value="key" />
             </el-select>
 
-            <el-button style="margin:15px" @click="console.log(newAnswer),dataTransform()">
-            确认:
-        </el-button>
+            <!-- <el-button style="margin:15px" @click="console.log(newAnswer), dataTransform()">
+                确认:
+            </el-button> -->
         </div>
 
 
@@ -348,15 +351,15 @@ const dataTransform =()=>{
                 c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
                 d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
 
-                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
+                <!-- <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button> -->
             </diV>
 
 
 
             <div style="margin-top: 20px;">答案：</div>
 
-            <el-select multiple placeholder="请选择答案"  v-model="newAnswer">
-                <el-option v-for="(item,key) in newSMultipleChoice" :key="item" :label="key" :value="key"/>
+            <el-select multiple placeholder="请选择答案" v-model="newAnswer">
+                <el-option v-for="(item, key) in newSMultipleChoiceQuestion" :key="item" :label="key" :value="key" />
             </el-select>
         </div>
 
@@ -373,15 +376,15 @@ const dataTransform =()=>{
                 c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
                 d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
 
-                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
+                <!-- <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button> -->
             </diV>
 
 
 
             <div style="margin-top: 20px;">答案：</div>
 
-            <el-select multiple placeholder="请选择答案"  v-model="newAnswer">
-                <el-option v-for="(item,key) in newSMultipleChoice" :key="item" :label="key" :value="key"/>
+            <el-select multiple placeholder="请选择答案" v-model="newAnswer">
+                <el-option v-for="(item, key) in newSMultipleChoiceQuestion" :key="item" :label="key" :value="key" />
             </el-select>
         </div>
 
@@ -393,8 +396,8 @@ const dataTransform =()=>{
 
             <div style="margin-top: 20px;">答案：</div>
 
-            <el-select placeholder="请选择答案"  v-model="newAnswer">
-                <el-option v-for="item in trueFlase" :key="item" :label="item.label" :value="item.id"/>
+            <el-select placeholder="请选择答案" v-model="newAnswer">
+                <el-option v-for="item in trueFlase" :key="item" :label="item.label" :value="item.id" />
             </el-select>
 
 
@@ -417,7 +420,7 @@ const dataTransform =()=>{
 
 
             <div style="margin-top: 20px;">答案：</div>
-            <el-input multiple placeholder="请输入答案"  v-model="newAnswer">
+            <el-input multiple placeholder="请输入答案" v-model="newAnswer">
             </el-input>
         </div>
 
