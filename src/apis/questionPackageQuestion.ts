@@ -30,3 +30,25 @@ export const editGoodQuestionPack = (data:any) => {
     }
     return http.request(args)
 }
+
+
+export const addGoodQuestionToPack = (data:any) => {
+    const args = {
+        url: '/api/management/question-package-question/create-question',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
+
+
+
+export const getGoodQuestions = (data: any) => {
+    const args = {
+        url: '/api/management/question-package-question/page-question',
+        method: 'GET',
+        params:data
+    }
+    return http.request(args)
+}

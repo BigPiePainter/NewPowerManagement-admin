@@ -31,7 +31,7 @@ breadcrumbStore.data = [
 const route = useRoute()
 const allStudents = ref<any>([])
 const allGrades = ref<any>([])
-const allDetail = reactive<any>({})
+const allDetail = reactive<any>([])
 
 const loading = ref(true)
 const searchBarItems = reactive([
@@ -50,6 +50,11 @@ const loadSelectOption = () => {
 
 loadSelectOption()
 
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+
 const loadDetail = () => {
   loading.value = true
 
@@ -61,14 +66,14 @@ const loadDetail = () => {
   }
 
   getClasses(args)
-    .then((res) => {allDetail.value=res.data.records[0]})
+    .then((res) => {allDetail.push(res.data.records[0])})
 
     .catch()
     .finally(() => {
       loading.value = false
     })
 }
-
+loadDetail()
 const activeName = ref('officalStudent')
 
 
@@ -298,10 +303,6 @@ const cancelNewStudent = () => {
   dialogTableData.value.forEach((i: any) => i.checked = false);
 }
 
-const paginationInfo = reactive({
-  currentPage: 1,
-  pageSize: 20
-})
 
 const totalLength = ref<Number>()
 const studentType = ref<number>()
@@ -400,25 +401,25 @@ loadData()
       <div class="div-card-left-detail">
         <div class="detail-info">
           <el-text class="el-text-detail">
-            班级名称：{{ allDetail.value }}
+            班级名称：
+          </el-text>
+          <!-- <el-text class="el-text-detail">
+            负责老师：{{ allDetail.value }}
           </el-text>
           <el-text class="el-text-detail">
-            负责老师：{{ allDetail.value.teacherName }}
+            学科：{{ allDetail.value }}
           </el-text>
           <el-text class="el-text-detail">
-            学科：{{ allDetail.value.subjectName }}
-          </el-text>
-          <el-text class="el-text-detail">
-            学习阶段：{{ allDetail.value.gradeName }}
+            学习阶段：{{ allDetail.value }}
           </el-text>
         </div>
         <div class="detail-date">
           <el-text class="el-text-detail">
-            起始日期：{{ allDetail.value.startDate }}
+            起始日期：{{ allDetail.value }}
           </el-text>
           <el-text class="el-text-detail">
-            到期日期：{{ allDetail.value.endDate }}
-          </el-text>
+            到期日期：{{ allDetail.value }}
+          </el-text> -->
         </div>
       </div>
     </div>

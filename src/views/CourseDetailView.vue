@@ -1,10 +1,13 @@
 <script setup lang="tsx">
 import DisplayVideoCard from '../components/DisplayVideoCard.vue'
 import { ref, reactive } from 'vue'
+import SearchBar from '@/components/SearchBar.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue';
 import { useRoute } from 'vue-router'
-import { getMiniLessons, deleteMiniLessons, editMiniLessons } from '@/apis/minilessons'
+import type { CheckboxValueType } from 'element-plus'
+import { getMiniLessons, deleteMiniLessons, addMiniLessons, getMiniLesson } from '@/apis/minilessons'
+import { ElCheckbox,ElNotification } from 'element-plus'
 
 
 
@@ -74,8 +77,8 @@ const tableColumns = [
   },
 
   {
-    dataKey: 'name',
-    key: 'name',
+    dataKey: 'miniLessonName',
+    key: 'miniLessonName',
     title: '名称',
     width: 200
   },
@@ -125,10 +128,10 @@ const loadData = () => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    teacherCourseId: route.query.id
+    courseId: route.query.id
   }
 
-  getMiniLessons(args).then((res) => {
+  getMiniLesson(args).then((res) => {
 
     console.log(args)
     console.log(res)
@@ -147,7 +150,122 @@ const concel=(item:any)=>{
 console.log(item)
 }
 
+loadData()
+
+
+
+
+
+
+
+  const dialogTableData = ref<any>([])
+  const dialogTableColumns = reactive<any>([
+  {
+    key: 'selection',
+    width: 50,
+    cellRenderer: (item: any) => {
+      const onChange = (value: CheckboxValueType) => item.rowData.checked = value
+      return <ElCheckbox modelValue={item.rowData.checked} onChange={onChange} />
+    },
+    headerCellRenderer: () => {
+      const onChange = (value: CheckboxValueType) => {
+        dialogTableData.value.forEach((i: any) => i.checked = value);
+      }
+      return <ElCheckbox onChange={onChange} modelValue={dialogTableData.value.every((i: any) => i.checked)} indeterminate={!dialogTableData.value.every((i: any) => i.checked) && dialogTableData.value.some((i: any) => i.checked)} />
+    },
+    checked: false,
+  },
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 200
+  },
+  {
+    dataKey: 'name',
+    key: 'name',
+    title: '课程名',
+    width: 200
+  },
+  {
+    dataKey: 'gradeName',
+    key: 'gradeName',
+    title: '学习阶段',
+    width: 200
+  },
+  {
+    dataKey: 'subjectName',
+    key: 'subjectName',
+    title: '学科',
+    width: 200
+  },
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '老师名',
+    width: 200
+  }
+  
+])
+
+const addDialogShow=ref(false)
+const newTeaData = ref<any>([])
+
+
   loadData()
+
+const confirmAdd = () => {
+  newTeaData.value = dialogTableData.value.filter((item: any) => item.checked)
+  let data = newTeaData.value.map((item: any) => item.id)
+  console.log(data)
+  addMiniLessons({
+    courseId: route.query.id,
+    miniLessonId: data
+  }).then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: '添加微课到课程包成功',
+          type: 'success'
+        })
+        addDialogShow.value = false
+      }else{
+        ElNotification({
+          title: '添加失败',
+          message: (res.msg),
+          type: 'warning'
+        })
+      }
+    
+loadData()
+  }).catch
+}
+
+const dialogSearchBarItems = reactive([
+  { name: "用户名", value: "", },
+  { name: "姓名", value: "", },
+  { name: "电话", value: "", },
+])
+
+const loadDialogData = () => {
+  loading.value = true
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+
+  }
+  getMiniLessons(args)
+    .then((res) => {
+      dialogTableData.value = res.data.records
+      totalLength.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+    loading.value = false
+    })
+}
+loadDialogData()
 
 </script>
 
@@ -189,13 +307,13 @@ console.log(item)
 
 
       <div class="topPart1">
-        <div class="topPart1-1"><el-button type="primary">编辑</el-button> <el-button>下发课程</el-button></div>
+        <div class="topPart1-1"> <el-button>下发课程</el-button></div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button type="primary">添加视频</el-button></div>
+        <div class="botPart1-1-1"><el-button type="primary" @click="addDialogShow=true">添加微课</el-button></div>
       </div>
     </div>
     <div class="botPart1-2">
@@ -222,6 +340,41 @@ console.log(item)
     </template>
   </el-dialog>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addDialogShow">
+    <TablePage   class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+      <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
+    </TablePage>
+
+    <template #header>
+      <el-text>添加课程/好题到商品</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="confirmAdd()">确定</el-button>
+      <el-button @click="addDialogShow=false">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
