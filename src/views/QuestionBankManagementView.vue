@@ -11,10 +11,6 @@ import { getCourseQuestionPackage } from '@/apis/coursequestionpackage'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '好题包管理', path: '' }]
-
-
-
-
 const loading = ref(true)
 
 const clickDetail = (props: { rowData: { id: string }})=>{

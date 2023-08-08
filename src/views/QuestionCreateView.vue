@@ -15,7 +15,6 @@ const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 
 const loadSelectOption = () => {
-
     getSubjects()
         .then((res) => (allSubjects.value = res.data))
         .catch()
@@ -24,15 +23,6 @@ const loadSelectOption = () => {
         .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
         .catch()
 }
-
-// const confirmDeleteGoodQuestion = () => {
-
-//     deleteGoodQuestion()
-
-// }
-
-
-
 
 const breadcrumbStore = useBreadcrumbStore()
 
@@ -58,7 +48,7 @@ const newQuestionData = reactive<{
     difficultyType: string,
     gradeId: string,
     type: string,
-    id:string,
+    id: string,
     subjectId: string,
 
 }>({
@@ -66,7 +56,7 @@ const newQuestionData = reactive<{
     difficultyType: '',
     gradeId: '',
     type: '',
-    id:'',
+    id: '',
     subjectId: '',
 
 
@@ -188,31 +178,26 @@ const confirmCreate = () => {
 
     confirmCreate(args)
         .then((res) => {
-
             res.data.records.forEach(item => {
-            tableData.push(item)
-
+                tableData.push(item)
             });
-
             console.log(tableData)
             totalLength.value = res.data.records.length
         })
-
-        .catch(() => {})
+        .catch(() => { })
         .finally(() => {
             loading.value = false
         })
-
     tableData.forEach(item => {
         console.log(item)
     })
 
-    centerDialogVisible.value=false
+    centerDialogVisible.value = false
 }
 
-const centerDialogVisible=ref(false)
-const create=()=>{
-  centerDialogVisible.value=true
+const centerDialogVisible = ref(false)
+const create = () => {
+    centerDialogVisible.value = true
 }
 
 
@@ -245,7 +230,7 @@ loadData()
                 <el-text style="margin-left: 15px;">科目:</el-text>
                 <el-select style="margin-left:5px" class="select-width" filterable place holder="请选择科目"
                     v-model="newQuestionData.subjectId">
-                    <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id"/>
+                    <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </div>
             <div class="margin-left">
@@ -305,34 +290,25 @@ loadData()
             </el-link>
         </div>
 
-
-
         <el-button style="margin:15px" @click="create">
             创建:
         </el-button>
-
-
-
     </div>
 
 
 
-    <el-dialog
-    v-model="centerDialogVisible"
-    title="待确认"
-    width="30%"
-    align-center
-  >
-    <span>是否确认新建好题</span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmCreate">
-          确认
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
+    <el-dialog v-model="centerDialogVisible" title="待确认" width="30%" align-center>
+        <span>是否确认新建好题</span>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="centerDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmCreate">
+                    确认
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
+
 </template>
 
 <style scoped>
@@ -355,15 +331,4 @@ loadData()
 .select-width {
     width: 70px
 }
-
-
-
-
-
-
-
-
-
-
-
 </style>

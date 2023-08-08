@@ -10,12 +10,11 @@ const editorRef = shallowRef();
 
 type Props = {
     questionPrompt: string
-    id:string
-    options: string
-    answer:string
-    id:string
+    id: string
+    // options: string
+    // answer: string
     // difficultyType: string
-    // isShow: boolean
+    isShow: boolean
     // type: string
 }
 const props = defineProps<Props>()
@@ -45,7 +44,7 @@ const toolbarConfig = {
         'fullScreen'
     ]
 }
-const editorConfig = { placeholder: '请输入内容...' };
+const editorConfig = { placeholder: '请输入内容...', readOnly:(!props.isShow) };
 
 // 组件销毁时，也及时销毁编辑器，重要！
 onBeforeUnmount(() => {
@@ -67,62 +66,46 @@ const handleDestroyed = (editor: any) => {
 const insertImage = () => {
     var tg = document.getElementById("file")
     tg?.click()
-
-    // editor.disable()
-    // console.log(editor)
 }
 
 const handleFileChange = (e: Event) => {
-    // const currentTarget = e.target as HTMLInputElement;
+    const currentTarget = e.target as HTMLInputElement;
 
-    // //图片上传到服务器返回url
-    // //url在res.data.url
-    // if (currentTarget.files) {
-    //     var formData = new FormData()
-    //     formData.append('file', currentTarget.files[0])
-    //     upload(formData)
-    //         .then((res: any) => {
-    //             if (res.data.url) {
-    //                 const editor = editorRef.value
-    //                 console.log(res)
-    //                 editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
-    //             } else {
-    //                 console.log("失败")
-    //             }
-    //         })
-    //         .catch()
+    //图片上传到服务器返回url
+    //url在res.data.url
+    if (currentTarget.files) {
+        var formData = new FormData()
+        formData.append('file', currentTarget.files[0])
+        upload(formData)
+            .then((res: any) => {
+                if (res.data.url) {
+                    const editor = editorRef.value
+                    console.log(res)
+                    editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
+                } else {
+                    console.log("失败")
+                }
+            })
+            .catch()
+    }
 }
-
-
-
-
-
 </script>
 
 <template>
-    <div  v-for="items in props.id" :key="items.id">
-        <input v-if="isShow" type="file" id="file" @change="handleFileChange"
-            style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
-        <div style="border: 1px solid #ccc; margin-top: 10px">
-            <Toolbar v-if="isShow" :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple"
-                style="border-bottom: 1px solid #ccc" />
-            <Editor :defaultConfig="editorConfig" mode="simple" v-model=valueHtml
-                style="height: 400px; overflow-y: hidden" @onCreated="handleCreated" @onDestroyed="handleDestroyed" />
-            <button v-if="isShow" style="margin-top: 10px;" @click="insertImage">插入图片</button>
-        </div>
-
-        <div style="display:flex; flex-direction:row">
-            <div style="margin-left:10px" v-for="items in JSON.parse(props.options)" :key="items.options">{{ items.identifier}}:{{ items.value }}</div>
-
+    <input v-if="isShow" type="file" id="file" @change="handleFileChange"
+        style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
+    <div style="border: 1px solid #ccc; margin-top: 10px">
+        <Toolbar v-if="isShow" :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple"
+            style="border-bottom: 1px solid #ccc" />
+        <Editor :defaultConfig="editorConfig" mode="simple" v-model=valueHtml style="height: 150px; overflow-y: hidden"
+            @onCreated="handleCreated" @onDestroyed="handleDestroyed" />
+        <button v-if="isShow" style="margin-top: 10px;" @click="insertImage">插入图片</button>
     </div>
-
-
-            <div style="float:right;"><el-button @click="console.log(props)">讲解视频</el-button></div>
-        </div>
-       
 </template>
   
 
-<style>.margin {
+<style>
+.margin {
     margin: 10px
-}</style>
+}
+</style>
