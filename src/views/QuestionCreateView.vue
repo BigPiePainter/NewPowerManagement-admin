@@ -8,6 +8,8 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 // import SearchBar from '@/components/SearchBar.vue'
 // import { getGoodQuestionPack, createGoodQuestionPack } from '@/apis/questionStore'
 import RichTextEditor from '@/components/RichTextEditor.vue';
+import { ElCheckbox,ElNotification } from 'element-plus'
+import {createGoodQuestion} from '@/apis/questionStore'
 
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
@@ -49,6 +51,8 @@ const newQuestionData = reactive<{
     id: string,
     subjectId: string,
     questionPrompt: string,
+    option:string,
+    answer:string
 
 }>({
 
@@ -57,7 +61,9 @@ const newQuestionData = reactive<{
     type: '',
     id: '',
     subjectId: '',
-    questionPrompt: ''
+    questionPrompt: '',
+    option:'',
+    answer:''
 
 
 });
@@ -136,7 +142,6 @@ const allDifficultyType = [
 
 
 
-
 // const questionCreateconfirm = () => {
 
 //     createGoodQuestionPack(newQuestionData).
@@ -166,10 +171,12 @@ const allDifficultyType = [
 // const loadedData = ref([])
 loadSelectOption()
 
-const trueFlase=[
-    {id:1,label:'正确'
+const trueFlase = [
+    {
+        id: 1, label: '正确'
     },
-    {id:2,label:'错误'
+    {
+        id: 2, label: '错误'
     }
 ]
 
@@ -177,38 +184,59 @@ const trueFlase=[
 
 const pushdata =
     (props: { rowData: { a: any, b: any, c: string, d: string } }) => {
-        newSMultipleChoiceQuestion.a = props.rowData.a;
-        newSMultipleChoiceQuestion.b = props.rowData.b;
-        newSMultipleChoiceQuestion.c = props.rowData.c;
-        newSMultipleChoiceQuestion.d = props.rowData.d;
+        newSMultipleChoiceQuestion.选项.a = props.rowData.a;
+        newSMultipleChoiceQuestion.选项.b = props.rowData.b;
+        newSMultipleChoiceQuestion.选项.c = props.rowData.c;
+        newSMultipleChoiceQuestion.选项.d = props.rowData.d;
     }
 
 const newSMultipleChoiceQuestion = reactive<any>({
-a:'',
-b:'',
-c:'',
-d:''
+
+    a: '',
+    b: '',
+    c: '',
+    d: ''
 
 })
 
-const newSMultipleChoice = reactive<any>({
-    a: newSMultipleChoiceQuestion.a,
-    b: newSMultipleChoiceQuestion.b,
-    c: newSMultipleChoiceQuestion.c,
-    d: newSMultipleChoiceQuestion.d
-})
+const newSMultipleChoice = reactive<any>(
+[{"identifier":newSMultipleChoiceQuestion.a},
+{"identifier":newSMultipleChoiceQuestion.b},
+{"identifier":newSMultipleChoiceQuestion.c},
+{"identifier":newSMultipleChoiceQuestion.d}]    
+)
 
 const confirmCreate = () => {
     var args = {
-        questionPrompt: newQuestionData.questionPrompt,
+
+        questionPrompt: "欧阳修,字____,自号____,晚年又号____,宋代文学家。",
         gradeId: newQuestionData.gradeId,
         difficultyType: newQuestionData.difficultyType,
         subjectId: newQuestionData.subjectId,
-        type: newQuestionData.type
+        type: newQuestionData.type,
+        options:JSONoption.value,
+        answer:JSONanswer.value
     }
+    createGoodQuestion(args).then((res: any) => {
     console.log(args)
-    centerDialogVisible.value = false
+    if (res.code == 20000) {
+      console.log('删除成功')
+      ElNotification({
+          title: '成功',
+          message: '题目新建成功',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: '删除失败',
+          message: '新建失败'+res.msg,
+          type: 'error'
+        })
+      }
+
+  }).catch()
 }
+
 
 const centerDialogVisible = ref(false)
 const create = () => {
@@ -216,18 +244,20 @@ const create = () => {
 }
 
 
-//------------------下载文档格式功能-----------------------
+
+const newAnswer=ref<any>([])
+const JSONoption=ref<any>([])
+const JSONanswer=ref<any>([])
 
 
+const dataTransform =()=>{
 
-
-
-
-
-
-//-------------------------------------------------------
-
-
+    JSONoption.value=JSON.stringify(newSMultipleChoiceQuestion)
+    JSONanswer.value=JSON.stringify(newAnswer)
+ console.log(JSONoption)
+ console.log(JSONanswer)
+ console.log
+}
 
 
 
@@ -243,6 +273,7 @@ const create = () => {
                     <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </div>
+
             <div class="margin-left">
                 <el-text style="margin-left: 10px;">学习阶段:</el-text>
                 <el-select style="margin-left:5px" class="select-width" filterable place holder="请选择学习阶段"
@@ -251,13 +282,16 @@ const create = () => {
                 </el-select>
             </div>
         </div>
+
         <div class="subandgrade" style="margin-top: 10px;">
             <div>
                 <el-text style="margin-left: 15px;">难度:</el-text>
+
                 <el-select style="margin-left:5px" class="select-width" filterable place holder="请选择科目"
                     v-model="newQuestionData.difficultyType">
                     <el-option v-for="item in allDifficultyType" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
+
             </div>
 
         </div>
@@ -276,13 +310,10 @@ const create = () => {
 
 
 
-        <RichTextEditor :isShow="true" v-model="newQuestionData.questionPrompt">
+
+
+        <RichTextEditor :questionPrompt="newQuestionData.questionPrompt" :isShow="true" v-model="newQuestionData.questionPrompt">
         </RichTextEditor>
-
-
-
-
-
 
 
         <div v-if="newQuestionData.type == '1'">
@@ -294,19 +325,17 @@ const create = () => {
                 c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
                 d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
 
-                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
+                <el-button @click="console.log(newSMultipleChoice)">确认题目选项</el-button>
             </diV>
-
-
-
             <div style="margin-top: 20px;">答案：</div>
-
-            <el-select placeholder="请选择答案">
-                <el-option v-for="item in newSMultipleChoice.value" :key=item.a />
+            <el-select placeholder="请选择答案" v-model="newAnswer">
+                <el-option v-for="(item,key) in newSMultipleChoice" :key="item" :label="key" :value="key"/>
             </el-select>
+
+            <el-button style="margin:15px" @click="console.log(newAnswer),dataTransform()">
+            确认:
+        </el-button>
         </div>
-
-
 
 
 
@@ -326,8 +355,8 @@ const create = () => {
 
             <div style="margin-top: 20px;">答案：</div>
 
-            <el-select multiple placeholder="请选择答案">
-                <el-option v-for="item in newSMultipleChoice.value" :key=item.a />
+            <el-select multiple placeholder="请选择答案"  v-model="newAnswer">
+                <el-option v-for="(item,key) in newSMultipleChoice" :key="item" :label="key" :value="key"/>
             </el-select>
         </div>
 
@@ -351,31 +380,25 @@ const create = () => {
 
             <div style="margin-top: 20px;">答案：</div>
 
-            <el-select multiple placeholder="请选择答案">
-                <el-option v-for="item in newSMultipleChoice.value" :key=item.a />
+            <el-select multiple placeholder="请选择答案"  v-model="newAnswer">
+                <el-option v-for="(item,key) in newSMultipleChoice" :key="item" :label="key" :value="key"/>
             </el-select>
         </div>
 
 
         <div v-if="newQuestionData.type == '4'">
 
-            <el-text>请输入判断选择选项</el-text>
-            <diV>
-                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
-            </diV>
-
+            <el-text>请输入判断题答案</el-text>
 
 
             <div style="margin-top: 20px;">答案：</div>
 
-            <el-select multiple placeholder="请选择答案">
-                <el-option v-for="item in trueFlase" :key="item.id" :label="item.label"/>
+            <el-select placeholder="请选择答案"  v-model="newAnswer">
+                <el-option v-for="item in trueFlase" :key="item" :label="item.label" :value="item.id"/>
             </el-select>
+
+
         </div>
-
-
-
-
 
 
 
@@ -383,8 +406,7 @@ const create = () => {
 
 
             <div style="margin-top: 20px;">答案：</div>
-
-            <el-input multiple placeholder="请输入答案">
+            <el-input multiple placeholder="请输入答案" v-model="newAnswer">
             </el-input>
         </div>
 
@@ -395,7 +417,7 @@ const create = () => {
 
 
             <div style="margin-top: 20px;">答案：</div>
-            <el-input multiple placeholder="请输入答案">
+            <el-input multiple placeholder="请输入答案"  v-model="newAnswer">
             </el-input>
         </div>
 
