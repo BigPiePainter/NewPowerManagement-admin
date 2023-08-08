@@ -11,7 +11,7 @@ export const getMiniLessons = (data: any) => {
 
   export const editMiniLessons = (data:any) => {
     const args = {
-        url: '/api/management/course-question-package/edit-course-question-package',
+        url: '/api/management/mini-lesson/edit-mini-lessons',
         method: 'POST',
         data,
         mode: "json"
