@@ -222,7 +222,7 @@ const createnewGoodQuestion = () => {
         </div>
 
         <div class="rich-text-area">
-            <el-button @click="createnewGoodQuestion">创建好题包</el-button>
+            <el-button @click="createnewGoodQuestion">添加好题</el-button>
         </div>
 
 

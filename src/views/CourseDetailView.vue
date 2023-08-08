@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import DisplayVideoCard from '../components/DisplayVideoCard.vue'
 import { ref, reactive } from 'vue'
+import { InputType } from '@/type'
 import SearchBar from '@/components/SearchBar.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue';
@@ -8,6 +9,7 @@ import { useRoute } from 'vue-router'
 import type { CheckboxValueType } from 'element-plus'
 import { getMiniLessons, deleteMiniLessons, addMiniLessons, getMiniLesson } from '@/apis/minilessons'
 import { ElCheckbox,ElNotification } from 'element-plus'
+import { getAllTeachers } from '@/apis/teacher'
 
 
 
@@ -240,12 +242,20 @@ const confirmAdd = () => {
 loadData()
   }).catch
 }
+const allTeacher=ref<any>([])
+
+getAllTeachers()
+    .then((res) => { (allTeacher.value = res.data), console.log(res) })
+    .catch()
 
 const dialogSearchBarItems = reactive([
-  { name: "用户名", value: "", },
-  { name: "姓名", value: "", },
-  { name: "电话", value: "", },
+  { name: "标题", value:"", },
+  { name: '老师', value: '', type: InputType.Select, label: '请选择', options: allTeacher }
 ])
+
+
+
+
 
 const loadDialogData = () => {
   loading.value = true
@@ -253,7 +263,8 @@ const loadDialogData = () => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-
+    name:dialogSearchBarItems[0].value,
+    ownerId:dialogSearchBarItems[1].value
   }
   getMiniLessons(args)
     .then((res) => {

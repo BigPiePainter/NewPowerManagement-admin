@@ -8,7 +8,7 @@ import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import SearchBar from '@/components/SearchBar.vue'
-import { getGoodQuestion } from '@/apis/questionStore'
+import { getGoodQuestions } from '@/apis/questionPackageQuestion'
 
 
 
@@ -155,26 +155,26 @@ const allDifficultyType = [
 
 
 
-const questionCreateconfirm = () => {
-  createGoodQuestionPack(newQuestionData).
-    then((res: any) => {
-      if (res.code == '20000') {
-        ElNotification({
-          title: '成功',
-          message: '学生编辑成功',
-          type: 'success'
-        })
-        loadData()
-      } else {
-        ElNotification({
-          title: '编辑失败',
-          message: '请求错误或删除被撤回',
-          type: 'error'
-        })
-      }
-    }).catch()
-  createQuestionDailogShow.value = false;
-}
+// const questionCreateconfirm = () => {
+//   getGoodQuestionss(newQuestionData).
+//     then((res: any) => {
+//       if (res.code == '20000') {
+//         ElNotification({
+//           title: '成功',
+//           message: '学生编辑成功',
+//           type: 'success'
+//         })
+//         loadData()
+//       } else {
+//         ElNotification({
+//           title: '编辑失败',
+//           message: '请求错误或删除被撤回',
+//           type: 'error'
+//         })
+//       }
+//     }).catch()
+//   createQuestionDailogShow.value = false;
+// }
 
 
 
@@ -186,10 +186,10 @@ const loadData = () => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    id: route.query.id
+    packageId: route.query.id
   }
 
-  getGoodQuestion(args)
+  getGoodQuestions(args)
     .then((res) => {
       console.log(res)
       tableData.value = res.data.records
@@ -245,7 +245,7 @@ loadData()
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button type="primary" @click="questionCreate">创建好题包</el-button></div>
+        <div class="botPart1-1-1"><el-button type="primary" @click="questionCreate">添加好题</el-button></div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
@@ -256,7 +256,7 @@ loadData()
   </div>
 
 
-  <el-dialog v-model="createQuestionDailogShow" width="400px">
+  <!-- <el-dialog v-model="createQuestionDailogShow" width="400px">
     <template #header>
       <el-text>添加好题包</el-text>
     </template>
@@ -313,7 +313,7 @@ loadData()
 
       <ElButton type="primary" @click="questionCreateconfirm">确认</ElButton>
     </template>
-  </el-dialog>
+  </el-dialog> -->
 </template>
 
 <style scoped lang="scss">
