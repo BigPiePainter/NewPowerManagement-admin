@@ -61,12 +61,12 @@ const loadDetail = () => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    id:route.query.id
+    id: route.query.id
 
   }
 
   getClasses(args)
-    .then((res) => {allDetail.push(res.data.records[0])})
+    .then((res) => { allDetail.push(res.data.records[0]) })
 
     .catch()
     .finally(() => {

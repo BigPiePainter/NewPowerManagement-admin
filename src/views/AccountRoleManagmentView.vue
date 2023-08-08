@@ -1,11 +1,12 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton, formContextKey,ElNotification } from 'element-plus'
+import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
-import { InputType } from '@/type'
 import { useRouter } from 'vue-router'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getManager, createManager, eidtManager, deleteManager } from '@/apis/manager'
+import { getAllMenu, createRole, getRole } from '@/apis/role'
+import { receiveMessageOnPort } from 'worker_threads'
 
 const breadcrumbStore = useBreadcrumbStore()
 
@@ -22,14 +23,14 @@ const paginationInfo = reactive({
   pageSize: 20
 })
 
+const newManager = () => {
+  var args = {}
+  createManager(args).then((res: any) => {
+
+  })
+}
+
 const totalLength = ref<Number>()
-
-
-
-
-
-
-
 
 const loadData = () => {
   loading.value = true
@@ -60,28 +61,28 @@ loadData()
 
 const editTeacherData = reactive<{
 
-id: string,
-account: string,
-phoneNumber: string,
-password:string,
-managerRoleId:string
+  id: string,
+  account: string,
+  phoneNumber: string,
+  password: string,
+  managerRoleId: string
 
 }>({
-id: '',
-account: '',
-phoneNumber: '',
-password:'',
-managerRoleId:''
+  id: '',
+  account: '',
+  phoneNumber: '',
+  password: '',
+  managerRoleId: ''
 });
 
-const editTeacherDialogShow=ref(false)
+const editTeacherDialogShow = ref(false)
 
 
 const editTeacher =
   (props: { rowData: { id: string, phoneNumber: string, account: string } }) => {
     editTeacherData.id = props.rowData.id;
     editTeacherData.phoneNumber = props.rowData.phoneNumber;
-    editTeacherData.account= props.rowData.account;
+    editTeacherData.account = props.rowData.account;
     console.log(props)
     editTeacherDialogShow.value = true;
   }
@@ -89,44 +90,30 @@ const editTeacher =
 const confirmEditDialog = () => {
 
   eidtManager(editTeacherData).
-  then((res: any) => {
-    if (res.code == '20000') {
-      ElNotification({
-        title: '成功',
-        message: '管理员编辑成功',
-        type: 'success'
-      })
-      loadData()
-    } else {
+    then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: '管理员编辑成功',
+          type: 'success'
+        })
+        loadData()
+      } else {
 
-      ElNotification({
-        title: '编辑失败',
-        message: '请求错误或删除被撤回',
-        type: 'error'
-      })
-    }
-  }).catch()
-
+        ElNotification({
+          title: '编辑失败',
+          message: res.msg,
+          type: 'error'
+        })
+      }
+    }).catch()
   loadData()
   editTeacherDialogShow.value = false;
-
 }
-
 
 const cancelEditDialog = () => {
   editTeacherDialogShow.value = false;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 const roleDetail = () => {
   router.push({ path: '/role-detail-managment' })
@@ -196,13 +183,7 @@ const tableColumns = [
   }
 ]
 
-const tableData=ref<any>([])
- 
-
-
-
-
-
+const tableData = ref<any>([])
 
 const preDeleteTea = (item: any) => {
   tableData.value.forEach((i: any) => {
@@ -224,7 +205,6 @@ const preDeleteTea = (item: any) => {
   })
 }
 
-
 const calcelDeleteTea = (item: any) => {
   item.rowData.id = null
 }
@@ -232,22 +212,22 @@ const calcelDeleteTea = (item: any) => {
 const deleteTea = (item: any) => {
   setTimeout(console.log, 0)
   deleteManager({ id: item.rowData.id }).then((res: any) => {
-      if (res.code == '20000') {
-        ElNotification({
-          title: '成功',
-          message: item.rowData.name + '管理员删除成功',
-          type: 'success'
-        })
-        loadData()
-      } else {
-        ElNotification({
-          title: '删除失败',
-          message: '请求错误或删除被撤回',
-          type: 'error'
-        })
-      }
-    })
-.catch(() => {
+    if (res.code == '20000') {
+      ElNotification({
+        title: '成功',
+        message: item.rowData.name + '管理员删除成功',
+        type: 'success'
+      })
+      loadData()
+    } else {
+      ElNotification({
+        title: '删除失败',
+        message: '请求错误或删除被撤回',
+        type: 'error'
+      })
+    }
+  })
+    .catch(() => {
       ElNotification({
         title: '未知错误',
         message: '管理员未成功删除',
@@ -256,29 +236,18 @@ const deleteTea = (item: any) => {
     })
 }
 
-
-
 </script>
 
 <template>
   <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
     :columns="tableColumns" :data="tableData">
     <div>
+      <el-button class="ARMbutton" type="primary" @click="newManager">新建管理员</el-button>
       <el-button class="ARMbutton" type="primary" @click="roleDetail">新建角色</el-button>
     </div>
   </TablePage>
 
-
-
-
-
   <el-dialog class="new-class-dialog" width="370px" v-model="editTeacherDialogShow">
-    <div class="div-input-element">
-      <span class="dialog-span">
-        <el-text disabled class="dialog-input" v-model="editTeacherData.id">
-        </el-text>
-      </span>
-    </div>
 
     <div class="div-input-element">
       <span class="dialog-span">
@@ -288,10 +257,6 @@ const deleteTea = (item: any) => {
       </el-input>
     </div>
 
-
-
-
-
     <div class="div-input-element">
       <span class="dialog-span">
         权限：
@@ -300,12 +265,11 @@ const deleteTea = (item: any) => {
       </el-input>
     </div>
 
-    
     <div class="div-input-element" style="margin-top: 10px;">
       <span class="dialog-span">
         密码：
       </span>
-      <el-input class="dialog-input" v-model="editTeacherData.password" >
+      <el-input class="dialog-input" v-model="editTeacherData.password">
       </el-input>
     </div>
 
@@ -313,7 +277,7 @@ const deleteTea = (item: any) => {
       <span class="dialog-span">
         手机：
       </span>
-      <el-input class="dialog-input" v-model="editTeacherData.phoneNumber" >
+      <el-input class="dialog-input" v-model="editTeacherData.phoneNumber">
       </el-input>
     </div>
 
@@ -328,8 +292,6 @@ const deleteTea = (item: any) => {
       </el-button>
     </template>
   </el-dialog>
-
-
 </template>
 
 <style scoped lang="scss">

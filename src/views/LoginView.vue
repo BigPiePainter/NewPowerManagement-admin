@@ -21,6 +21,7 @@ const enterHome = () => {
       if (res.code == 20000) {
         localStorage.account = res.data.records[0].account
         localStorage.avator = res.data.records[0].avator
+
         // localStorage.remark = res.data.records[0].remark
         console.log(localStorage)
         var author:any = {}
@@ -70,6 +71,7 @@ const login = () => {
       } else if (res.code == 20000) {
         localStorage.clear()
         localStorage.token = res.data.token
+        localStorage.id = res.data.id
         localStorage.reload = "true"
         ElNotification({
           title: 'Success',
