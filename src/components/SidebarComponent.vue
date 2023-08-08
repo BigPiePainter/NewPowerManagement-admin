@@ -173,11 +173,6 @@ const items = reactive([
         title: '消息中心',
         
       },
-      {
-        index: '/family-report',
-        title: '家长报告',
-        
-      }
     ]
   },
 ])

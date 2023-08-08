@@ -146,7 +146,7 @@ const pass = (item: any) => {
 }
 
 const reject = (item: any) => {
-
+ 
   editMiniLessons({ id: item.rowData.id, auditStatus: 4, }).then((res: any) => {
     if (res.code == '20000') {
       console.log('已通过')

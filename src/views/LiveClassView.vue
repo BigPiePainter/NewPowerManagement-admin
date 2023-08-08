@@ -63,18 +63,14 @@ const newClassData = reactive<{
   name: string
   startTime: string
   studentIds: string
-  studenstName: string
   teacherId: string
-  teacherName: string
   url: string
 }>({
   duration: '',
-  studenstName: '',
   name: '',
   studentIds: '',
   startTime: '',
   teacherId: '',
-  teacherName: '',
   url: '',
 })
 
@@ -383,9 +379,9 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *上课学生姓名： </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.studenstName">
+        <el-select class="dialog-input" placeholder="请输入" v-model="newClassData.studentIds">
           <el-option v-for="item in allStudent " :key="item.id" :label="item.name" :value="item.id" />
-        </el-input>
+        </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *开课时间： </span>
