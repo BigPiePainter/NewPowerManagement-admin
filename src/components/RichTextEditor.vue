@@ -9,13 +9,9 @@ import { upload } from '@/apis/upload';
 const editorRef = shallowRef();
 
 type Props = {
-    questionPrompt: string
-    id: string
-    // options: string
-    // answer: string
-    // difficultyType: string
+    questionPrompt?: string
+    id?: string
     isShow: boolean
-    // type: string
 }
 const props = defineProps<Props>()
 

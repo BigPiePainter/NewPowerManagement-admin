@@ -250,11 +250,8 @@ loadData()
     </div>
     <el-divider class="row-divider"></el-divider>
     <div class="botPart1-2">
-
     </div>
-
   </div>
-
 
   <!-- <el-dialog v-model="createQuestionDailogShow" width="400px">
     <template #header>
