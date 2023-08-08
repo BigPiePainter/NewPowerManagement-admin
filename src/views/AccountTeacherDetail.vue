@@ -8,7 +8,6 @@ import { useRoute } from 'vue-router'
 import { getMiniLessons } from '@/apis/minilessons'
 
 const loading = ref(true)
-const input = ref('')
 const video = reactive<any>([])
 const route = useRoute()
 console.log(route.query.id)
@@ -51,7 +50,7 @@ const loadTeacherData = () => {
     .finally(() => {
       loading.value = false
     })
-
+console.log(route.query)
 }
 loadTeacherData()
 
@@ -140,40 +139,44 @@ breadcrumbStore.data = [
           <div class="top-Part1-1-1"><el-text>老师信息</el-text></div>
         </div>
         <div class="topPart1-2">
-          <div class="top-Part1-2-1">Aaron</div>
+          <div class="top-Part1-2-1">{{ route.query.name }}</div>
           <div class="top-Part1-2-2">
-            <div><el-text>学习阶段:初一</el-text></div>
-            <div><el-text>学科:语文</el-text></div>
-            <div><el-text>电话:15536996997</el-text></div>
+            <div><el-text>学习阶段:{{ route.query.gradeName }}</el-text></div>
+            <div><el-text>学科:{{ route.query.subjectName }}</el-text></div>
+            <div><el-text>备注:{{ route.query.remark }}</el-text></div>
           </div>
         </div>
         <div class="topPart1-3">
-          <div><el-text>创建时间:2022-2-13 13:00</el-text></div>
-          <div class="topPart1-3-2"><el-text>最后登录:2023-6-5 12:00</el-text></div>
+          <div class="topPart1-3-2">
+            <el-text>最后登录:{{ route.query.lastLoginTime }}</el-text>
+          </div>
+          <div class="topPart1-3-2">
+            <el-text>创建时间:{{ route.query.createdAt }}</el-text>
+          </div>
         </div>
       </div>
 
       <el-divider direction="vertical" class="divider-height" />
 
       <div class="topPart1">
-        <div class="topPart1-1"><el-text>所带班级：</el-text></div>
-        <div class="topPart2-2"><el-text>学习阶段</el-text></div>
+        <div class="topPart1-1"><el-text>E-mail:{{ route.query.email }}</el-text></div>
+        <div class="topPart2-2"><el-text>电话:{{ route.query.phoneNumber }}</el-text></div>
       </div>
 
-      <el-divider direction="vertical" class="divider-height" />
+      <!-- <el-divider direction="vertical" class="divider-height" />
       <div class="topPart1">
         <div class="topPart1-1"><el-text>所在教研组</el-text></div>
         <div class="topPart2-2"><el-text>庄老师教研组</el-text></div>
-      </div>
+      </div> -->
     </div>
     <el-divider class="row-divider"></el-divider>
-    <div>
+    <!-- <div>
       <div class="botPart1-1">
         <div class="botPart1-1-1"><el-text>月度统计</el-text></div>
         <div class="botPart1-1-2"> <el-input v-model="input" placeholder="2023-07" /></div>
         <div class="botPart1-1-3"><el-text>共23个微课</el-text></div>
       </div>
-    </div>
+    </div> -->
 
     <div class="botPart1-2">
       <div @click="loadDialogData(item.id)" v-for="item in courseData" :key="item.id">

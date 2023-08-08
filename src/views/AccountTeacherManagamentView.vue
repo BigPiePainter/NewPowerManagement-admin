@@ -59,9 +59,6 @@ const editTeacherData = reactive<{
 
 const editTeacherDialogShow = ref(false);
 
-
-
-
 const conformCreate = () => {
   createTeacher(newTeacherData)
     .then((res: any) => {
@@ -84,7 +81,6 @@ const conformCreate = () => {
 
   console.log(newTeacherData)
   showDialog.value = false
- 
 }
 
 const searchBarItems = reactive([
@@ -109,7 +105,21 @@ const searchBarItems = reactive([
 
 const clickName = (props: any) => {
   console.log(props)
-  router.push({ path: 'teacher-detail-managament', query: { id: props.rowData.id } })
+  router.push({
+    path: 'teacher-detail-managament',
+    query: {
+      id: props.rowData.id,
+      name: props.rowData.name,
+      account: props.rowData.account,
+      phoneNumber: props.rowData.phoneNumber,
+      email: props.rowData.email,
+      remark: props.rowData.remark,
+      gradeName: props.rowData.gradeName,
+      subjectName: props.rowData.subjectName,
+      createdAt: props.rowData.createdAt,
+      lastLoginTime: props.rowData.lastLoginTime
+    }
+  })
 }
 
 const tableColumns = [
@@ -262,22 +272,22 @@ const calcelDeleteTea = (item: any) => {
 const deleteTea = (item: any) => {
   setTimeout(console.log, 0)
   deleteTeacher({ teacherId: item.rowData.id }).then((res: any) => {
-      if (res.code == '20000') {
-        ElNotification({
-          title: '成功',
-          message: item.rowData.name + '老师删除成功',
-          type: 'success'
-        })
-        loadData()
-      } else {
-        ElNotification({
-          title: '删除失败',
-          message: '请求错误或删除被撤回',
-          type: 'error'
-        })
-      }
-    })
-.catch(() => {
+    if (res.code == '20000') {
+      ElNotification({
+        title: '成功',
+        message: item.rowData.name + '老师删除成功',
+        type: 'success'
+      })
+      loadData()
+    } else {
+      ElNotification({
+        title: '删除失败',
+        message: '请求错误或删除被撤回',
+        type: 'error'
+      })
+    }
+  })
+    .catch(() => {
       ElNotification({
         title: '未知错误',
         message: '老师未成功删除',
@@ -323,22 +333,22 @@ const editTeacher =
 const confirmEditDialog = () => {
 
   editTeachers(editTeacherData).
-  then((res: any) => {
-    if (res.code == '20000') {
-      ElNotification({
-        title: '成功',
-        message: '老师编辑成功',
-        type: 'success'
-      })
-    } else {
+    then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: '老师编辑成功',
+          type: 'success'
+        })
+      } else {
 
-      ElNotification({
-        title: '编辑失败',
-        message: '请求错误或删除被撤回',
-        type: 'error'
-      })
-    }
-  }).catch()
+        ElNotification({
+          title: '编辑失败',
+          message: '请求错误或删除被撤回',
+          type: 'error'
+        })
+      }
+    }).catch()
 
   loadData()
   editTeacherDialogShow.value = false;
@@ -388,10 +398,6 @@ loadData()
       <el-button class="ARMbutton" type="primary" @click="createteachers">新建老师</el-button>
     </div>
   </TablePage>
-
-
-
-
 
   <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">
     <div>
@@ -445,7 +451,7 @@ loadData()
 
     <template #footer>
       <el-button @click="conformCreate" type="primary">确认</el-button>
-      <el-button @click="showDialog=false">取消</el-button>
+      <el-button @click="showDialog = false">取消</el-button>
     </template>
   </el-dialog>
 
@@ -468,12 +474,12 @@ loadData()
       </el-select>
     </div>
 
-    
+
     <div class="div-input-element" style="margin-top: 10px;">
       <span class="dialog-span">
         阶段：
       </span>
-      <el-select class="dialog-input" v-model="editTeacherData.gradeId" >
+      <el-select class="dialog-input" v-model="editTeacherData.gradeId">
         <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </div>
