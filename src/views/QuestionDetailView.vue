@@ -1,35 +1,41 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
 import { ElButton, ElNotification } from 'element-plus'
-import TablePage from '@/components/TablePage.vue'
-import { InputType } from '@/type'
 import { useRouter, useRoute } from 'vue-router'
-import { getGrades } from '@/apis/grade'
-import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import SearchBar from '@/components/SearchBar.vue'
-import { getGoodQuestions } from '@/apis/questionPackageQuestion'
+import RichTextEditor from '@/components/RichTextEditor.vue'
+import { getGoodQuestions, removeQuestionFromPack } from '@/apis/questionPackageQuestion'
 
+const router = useRouter()
+const totalNum = ref('')
 
-
-
-
-
-
-const allGrades = ref<any>([])
-const allSubjects = ref<any>([])
-
-const loadSelectOption = () => {
-
-  getSubjects()
-    .then((res) => (allSubjects.value = res.data))
-    .catch()
-
-  getGrades()
-    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-    .catch()
+const deleteQuestion = (id: any) => {
+  var args = {
+    id: id
+  }
+  removeQuestionFromPack(args).then((res: any) => {
+    if (res.code != 20000) {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error'
+      })
+    } else {
+      ElNotification({
+        title: '成功',
+        message: '删除成功',
+        type: 'success'
+      })
+      loadData()
+    }
+  }).catch((err) => {
+    ElNotification({
+      title: '未知错误',
+      message: err.msg,
+      type: 'error'
+    })
+  })
 }
-
 
 const breadcrumbStore = useBreadcrumbStore()
 
@@ -37,152 +43,27 @@ breadcrumbStore.data = [
   { name: '题库管理', path: '' },
   { name: '好题详情', path: '/question-detail' }
 ]
-const tableData = ref<any>([])
-const totalLength = ref<Number>()
+const tableData = reactive<any>([])
 const loading = ref(true)
-
-
 
 const route = useRoute()
 const createQuestionDailogShow = ref(false)
 
-const questionCreate = () => {
-  createQuestionDailogShow.value = true;
+const questionCreate = (id: any) => {
+  router.push({
+    path: 'put-question-into-pack',
+    query: { id: id }
+  });
 }
-
-
-
-const newQuestionData = reactive<{
-
-  answer: string,
-  difficultyType: number,
-  filePath: string,
-  gradeId: number,
-  mimeType: string,
-  options: string,
-  questionPrompt: string,
-  solution: number,
-  subjectId: number,
-  type: string,
-
-}>({
-
-  answer: '',
-  filePath: '',
-  difficultyType: 0,
-  gradeId: 0,
-  mimeType: '',
-  options: "",
-  questionPrompt: '',
-  solution: 0,
-  subjectId: 0,
-  type: '',
-
-
-});
 
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
 
-
-const allQuestionType = [
-  {
-    id: '1',
-    value: '1',
-    label: '单选题 ',
-  },
-  {
-    id: '2',
-    value: '2',
-    label: '多选题 ',
-  },
-  {
-    id: '3',
-    value: '3',
-    label: '不定项选择题',
-  },
-  {
-    id: '4',
-    value: '4',
-    label: '判断题 ',
-  },
-  {
-    id: '5',
-    value: '5',
-    label: '填空题',
-  },
-  {
-    id: '6',
-    value: '6',
-    label: '解答题',
-  },
-]
-
-
-
-
-const allDifficultyType = [
-  {
-    id: '1',
-    value: '1',
-    label: '容易  ',
-  },
-  {
-    id: '2',
-    value: '2',
-    label: '较易 ',
-  },
-  {
-    id: '3',
-    value: '3',
-    label: '一般',
-  },
-  {
-    id: '4',
-    value: '4',
-    label: '较难 ',
-  },
-  {
-    id: '5',
-    value: '5',
-    label: '困难',
-  }
-]
-
-
-
-
-
-// const questionCreateconfirm = () => {
-//   getGoodQuestionss(newQuestionData).
-//     then((res: any) => {
-//       if (res.code == '20000') {
-//         ElNotification({
-//           title: '成功',
-//           message: '学生编辑成功',
-//           type: 'success'
-//         })
-//         loadData()
-//       } else {
-//         ElNotification({
-//           title: '编辑失败',
-//           message: '请求错误或删除被撤回',
-//           type: 'error'
-//         })
-//       }
-//     }).catch()
-//   createQuestionDailogShow.value = false;
-// }
-
-
-
 const loadData = () => {
-
+  tableData.length = 0
   loading.value = true
-  loadSelectOption()
-
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
@@ -192,43 +73,57 @@ const loadData = () => {
   getGoodQuestions(args)
     .then((res) => {
       console.log(res)
-      tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalNum.value = res.data.total
+      res.data.records.forEach((item: any) => {
+        tableData.push(item)
+      })
     })
     .catch(() => { })
     .finally(() => {
       loading.value = false
     })
-
-
 }
-
-
 loadData()
+
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`)
+  paginationInfo.pageSize = val
+  loadData()
+}
+const handleCurrentChange = (val: number) => {
+  console.log(`current page: ${val}`)
+  paginationInfo.currentPage = val
+  loadData()
+}
 
 </script>
 
 <template>
-
-  <el-button @click="console.log(tableData)"></el-button>
   <div class="whole">
     <div class="topPart">
       <div class="topPart1">
         <div>
-          <el-image class="image" fit="scale-down" src={{}} className="shop-Preview"
-            preview-src-list={{}} preview-teleported />
+          <el-image class="image" fit="scale-down" :src="route.query.cover" className="shop-Preview" preview-src-list={{}}
+            preview-teleported />
 
-      </div>
+        </div>
         <div class="topPart1-3">
           <div class="topPart1-3-2">
             <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{}}</el-text></div>
-               <div class="topPart1-3-2"><el-text>学习阶段：三年级</el-text></div>
-               <div class="topPart1-3-2"><el-text>学科：语文</el-text></div>
-               <div class="topPart1-3-2"><el-text>难度：{{tableData.difficultyType}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>老师：庄老师</el-text></div>
+            <div class="topPart1-3-2"><el-text>学习阶段：{{ route.query.gradeName }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>学科：{{ route.query.subjectName }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>难度：
+                {{
+                  route.query.difficultyLevel as any == 1 ? "容易"
+                  : route.query.difficultyLevel as any == 2 ? "较易"
+                    : route.query.difficultyLevel as any == 3 ? "一般"
+                      : route.query.difficultyLevel as any == 4 ? "较难"
+                        : "困难"
+                }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>老师：{{ route.query.teacherName }}</el-text></div>
           </div>
         </div>
-       </div>
+      </div>
 
 
 
@@ -237,83 +132,81 @@ loadData()
         <div class="topPart2-2"><el-text></el-text></div>
       </div>
 
-
+<!-- 
       <div class="topPart1">
         <div class="topPart1-1"><el-button type="primary">编辑</el-button> <el-button>下发课程</el-button></div>
-      </div>
+      </div> -->
     </div>
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button type="primary" @click="questionCreate">添加好题</el-button></div>
+        <div class="botPart1-1-1"><el-button type="primary" @click="questionCreate(route.query.id)">添加好题</el-button></div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
-    <div class="botPart1-2">
 
+    <div>
+      <el-scrollbar height="1000px">
+
+        <el-card v-for="item in tableData" :key="item.id" style="margin-bottom: 10px;">
+          <div style="display: flex;">
+            <span style="margin-left: 5px;">
+              {{ item.difficultyType == 1 ? "容易"
+                : item.difficultyType == 2 ? "较易"
+                  : item.difficultyType == 3 ? "一般"
+                    : item.difficultyType == 4 ? "较难"
+                      : "困难" }}
+            </span>
+            <el-divider direction="vertical" />
+            <span style="margin-left: 5px;">
+              {{ item.type == 1 ? "单选题"
+                : item.type == 2 ? "多选题"
+                  : item.type == 3 ? "不定项选择题"
+                    : item.type == 4 ? "判断题"
+                      : item.type == 5 ? "填空题"
+                        : "解答题" }}
+            </span>
+            <div style="flex-grow: 1"></div>
+            <el-button @click="deleteQuestion(item.id)" type=primary>移除</el-button>
+          </div>
+
+
+          <RichTextEditor :questionPrompt="item.questionPrompt" :isShow="false" :id="item.id">
+          </RichTextEditor>
+
+          <div style="display:flex; flex-direction:row">
+            <div style="margin-left:10px;margin-top: 10px;" v-for="items in JSON.parse(item.options)"
+              :key="items.options">
+              {{ items.identifier }}: {{ items.value }}</div>
+          </div>
+
+          <div style="display:flex; flex-direction:row; margin-bottom: 10px;margin-top: 10px;">
+            <div style="margin-left:10px">
+              答案：{{ JSON.parse(item.answer).answers }}</div>
+          </div>
+        </el-card>
+        <el-pagination style="margin-left: 15px;margin-top: 10px;margin-bottom: 10px;"
+          v-model:current-page="paginationInfo.currentPage" v-model:page-size="paginationInfo.pageSize"
+          :page-sizes="[10, 20, 30, 100]" layout="total, sizes, prev, pager, next, jumper" :total=totalNum
+          @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+      </el-scrollbar>
     </div>
 
   </div>
 
 
-  <!-- <el-dialog v-model="createQuestionDailogShow" width="400px">
+  <el-dialog v-model="createQuestionDailogShow" width="400px">
     <template #header>
-      <el-text>添加好题包</el-text>
+      <el-text>添加好题</el-text>
+
     </template>
-    <div style="height: 400px">
-      <div class="input">
-        <div class="input-word">*用户名:</div>
-        <ElInput class="input-input" placeholder="请输入" v-model="newQuestionData.account" />
-      </div>
-      <div class="input">
-        <div class="input-word">*姓名:</div>
-        <ElInput class="input-input" placeholder="请输入" v-model="newQuestionData.name" />
-      </div>
 
-      <div class="input">
-        <div class="input-word">*学习阶段:</div>
-        <el-select placeholder="请选择" class="input-input" filterable v-model="newQuestionData.gradeId">
-          <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div>
-
-      <div class="input">
-        <div class="input-word">题目类型:</div>
-        <el-select class="input-input" placeholder="请选择" v-model="newQuestionData.type">
-          <el-option v-for="item in allQuestionType" :key="item.id" :label="item.label" :value="item.value" />
-        </el-select>
-      </div>
-
-      <div class="input">
-        <div class="input-word">题目难度:</div>
-        <el-select class="input-input" placeholder="请选择" v-model="newQuestionData.difficultyType">
-          <el-option v-for="item in allDifficultyType" :key="item.id" :label="item.label" :value="item.value" />
-        </el-select>
-      </div>
-
-      <div class="input">
-        <div class="input-word">密码:</div>
-        <ElInput class="input-input" placeholder="6-20位,建议包含数字与字母" v-model="newQuestionData.password" />
-      </div>
-
-      <div class="input">
-        <div class="input-word">学科:</div>
-        <el-select class="input-input" filterable placeholder="请输入" v-model="newQuestionData.subjectId">
-          <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div>
-
-      <div class="input">
-        <div class="input-word">手机号码:</div>
-        <ElInput class="input-input" placeholder="请输入" v-model="newQuestionData.phoneNumber" />
-      </div>
-    </div>
     <template #footer>
       <ElButton @click="createQuestionDailogShow = false">取消</ElButton>
 
-      <ElButton type="primary" @click="questionCreateconfirm">确认</ElButton>
+      <ElButton type="primary">确认</ElButton>
     </template>
-  </el-dialog> -->
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">

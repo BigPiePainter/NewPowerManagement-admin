@@ -9,6 +9,15 @@ export const getGoodQuestionPackage = (data: any) => {
     return http.request(args)
 }
 
+export const removeQuestionFromPack = (data:any) => {
+    const args = {
+        url: '/api/management/question-package-question/delete-question',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
 
 export const createGoodQuestionPack = (data:any) => {
     const args = {
@@ -30,7 +39,6 @@ export const editGoodQuestionPack = (data:any) => {
     }
     return http.request(args)
 }
-
 
 export const addGoodQuestionToPack = (data:any) => {
     const args = {
