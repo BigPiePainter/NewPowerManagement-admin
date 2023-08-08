@@ -1,7 +1,8 @@
 <script setup lang="tsx">
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getLabels, createLabel, deleteLabel } from '@/apis/label'
-
+import { ref, reactive } from 'vue'
+import { ElNotification } from 'element-plus'
 
 
 
@@ -27,21 +28,36 @@ const breadcrumbStore = useBreadcrumbStore()
 
 
 
+const newLabelData = reactive<{
+
+level: string,
+name: string,
+parentId: string,
+
+}>({
+level: '',
+name: '',
+parentId: ''
+});
 
 
-
+const labelData = ref<any>([])
 
 
 
 breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
 
+const loadData = () => {
+  getLabels().then((res) => {
+    labelData.value = res.data
+
+  }).catch
+}
 
 
 
-
-
-
+loadData()
 
 
 
@@ -53,6 +69,48 @@ breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 const tagMenu: any = ['语文', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史']
 const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史']
 
+const allLevel = [
+
+  {
+    id: '1',
+    name: '父级',
+    value: 1
+  },
+  {
+    id: '2',
+    name: '子级学习阶段',
+    value: 2
+  }
+]
+
+
+
+const confrimCreateNew = () => {
+console.log(newLabelData)
+  createLabel(newLabelData).then((res:any)=>{
+    if (res.code == 20000) {
+      console.log('添加成功')
+      ElNotification({
+          title: '成功',
+          message: '标签新建成功',
+          type: 'success'
+        })
+        loadData()
+      } else {
+        ElNotification({
+          title: '添加失败',
+          message: '添加失败'+res.msg,
+          type: 'error'
+        })
+      }
+      loadData()
+      createDialogShow.value=false
+
+  }).catch()
+}
+
+
+const createDialogShow = ref(false)
 
 
 
@@ -67,18 +125,28 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
 
 
 
+const deleteLab = (item: any) => {
+  deleteLabel(item).then((res:any)=>{
+    if (res.code == 20000) {
+      console.log('删除成功')
+      ElNotification({
+          title: '成功',
+          message: '标签删除成功',
+          type: 'success'
+        })
+        loadData()
+      } else {
+        ElNotification({
+          title: '删除失败',
+          message: '删除失败'+res.msg,
+          type: 'error'
+        })
+      }
+      loadData()
+      createDialogShow.value=false
 
-
-
-
-
-
-
-
-
-
-
-
+  }).catch()
+}
 
 
 
@@ -96,10 +164,10 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
       </div>
       <div class="test">
         <el-scrollbar class="scrollbar">
-          <div class="card-body" v-for="key in tagMenu" :key="key">
-            <el-button link type="primary">{{ key }}</el-button>
+          <div class="card-body" v-for="item in labelData" :key="item.name">
+            <el-button link type="primary">{{ item.name }}</el-button>
             <div style="flex-grow: 1;"></div>
-            <el-button link type="primary">删除</el-button>
+            <el-button link type="primary" @click="deleteLab(item.id)">删除</el-button>
           </div>
         </el-scrollbar>
       </div>
@@ -109,13 +177,12 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
 
       <div class="card-title-bar">
         <el-text>新标签：</el-text>
-        <el-input></el-input>
         <div style="flex-grow: 1;"></div>
-        <el-button type="primary" @click="">添加</el-button>
+        <el-button type="primary" @click="createDialogShow = true">添加</el-button>
       </div>
 
       <div class="card-body">
-        <el-tag class="tag-item" closable v-for="item in major" :key="item">{{ item }}</el-tag>
+        <el-tag class="tag-item" v-for="item in labelData" :key="item.name">{{ item.name }}</el-tag>
       </div>
 
     </div>
@@ -126,8 +193,64 @@ const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', 
 
 
 
-    
+
   </div>
+
+
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="createDialogShow">
+    <div class="div-input-element">
+    </div>
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text>
+        层级：
+      </el-text>
+      <div>
+        <el-select placeholder="例：初中为父级，初一为子级别" class="dialog-input" v-model="newLabelData.level" style="width: 256px;">
+          <el-option v-for="item in allLevel" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+
+      </div>
+
+    </div>
+
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text>
+        标签名称：
+      </el-text>
+      <div>
+        <el-input class="dialog-input" v-model="newLabelData.name" style="width: 256px;">
+        </el-input>
+      </div>
+    </div>
+
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text>
+        父级阶段：
+      </el-text>
+      <div>
+        <el-select type="datetime" placeholder="请选择" style="width:256px" v-model="newLabelData.parentId">
+          <el-option v-for="item in labelData" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </div>
+
+    </div>
+
+    <template #header>
+      <el-text>添加学习阶段</el-text>
+    </template>
+
+    <template #footer>
+      <el-button type="primary" @click="confrimCreateNew()">确定</el-button>
+      <el-button @click="createDialogShow = false">
+        取消
+      </el-button>
+    </template>
+
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">

@@ -10,6 +10,7 @@ import { createGoodQuestionPack } from '@/apis/questionPackageQuestion'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getGoodQuestion, } from '@/apis/questionStore'
 import { getAllTeachers } from '@/apis/teacher';
+import { upload } from '@/apis/upload'
 
 
 
@@ -85,12 +86,18 @@ const handleFileChange = (e: Event) => {
     const currentTarget = e.target as HTMLInputElement;
     if (currentTarget.files) {
         imageFile.file = currentTarget.files[0]
-        console.log(imageFile.file)
-        var reader = new FileReader();
-        reader.readAsDataURL(imageFile.file);
-        reader.onload = () => {
-            showImgSrc.value = reader.result as string;
-        }
+        var formData = new FormData()
+        formData.append('file', currentTarget.files[0])
+        upload(formData)
+            .then((res: any) => {
+                if (res.data.url) {
+                    console.log(res)
+                    showImgSrc.value = res.data.url
+                } else {
+                    console.log("失败")
+                }
+            })
+            .catch()
     }
 }
 

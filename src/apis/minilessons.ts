@@ -1,6 +1,6 @@
 import http from '@/libs/http'
 
-export const getMiniLessons = (data: object) => {
+export const getMiniLessons = (data: any) => {
     const args = {
         url: '/api/management/mini-lesson/page-mini-lessons',
         method: 'GET',
@@ -11,10 +11,19 @@ export const getMiniLessons = (data: object) => {
 
   export const editMiniLessons = (data:any) => {
     const args = {
-        url: '/api/management/mini-lesson/edit-mini-lessons',
+        url: '/api/management/course-question-package/edit-course-question-package',
         method: 'POST',
         data,
         mode: "json"
+    }
+    return http.request(args)
+  }
+  
+  export const getMiniLesson = (data:any) => {
+    const args = {
+        url: '/api/management/mini-lesson/page-mini-lesson',
+        method: 'GET',
+        params: data
     }
     return http.request(args)
   }
@@ -29,5 +38,13 @@ export const getMiniLessons = (data: object) => {
     return http.request(args)
   }
 
-
+  export const addMiniLessons = (data:any) => {
+    const args = {
+        url: '/api/management/mini-lesson/create-question',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+  }
   

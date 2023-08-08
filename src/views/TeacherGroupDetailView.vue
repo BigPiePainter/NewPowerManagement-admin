@@ -345,10 +345,10 @@ const cancelNewTeacher = () => {
       <div class="div-card-left-detail">
         <div class="detail-info">
           <el-text class="el-text-detail">
-            教研组名称：{{ detilData }}
+            教研组名称：{{ detilData.value.name }}
           </el-text>
           <el-text class="el-text-detail">
-            组长：{{ detilData }}
+            组长：{{ detilData.name }}
           </el-text>
         </div>
       </div>

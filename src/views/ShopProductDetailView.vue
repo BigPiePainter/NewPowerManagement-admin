@@ -1,5 +1,4 @@
 <script setup lang="tsx">
-import DisplayVideoCard from '../components/DisplayVideoCard.vue'
 import { ref, reactive } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'

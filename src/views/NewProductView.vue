@@ -261,7 +261,6 @@ const create = () => {
               <el-text>点击此处或拖拽上传海报</el-text>
               <el-text>只接受 *.png *.jpg *.jpeg</el-text>
             </div>
-
             <input class="upload-file-input" type="file" accept="image/png, image/jpeg, image/jpg"
               @change="handleFileChange" />
           </div>
@@ -294,9 +293,6 @@ const create = () => {
           </el-select>
         </div>
       </div>
-
-
-
       <div class="input-row">
         <div class="input-title">
           <el-text>详细：</el-text>
@@ -304,7 +300,7 @@ const create = () => {
         <el-select class="input-input" placeholder="请选择是否热门" v-model="newProductData.hot">
           <el-option v-for="item in allHot" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
-        <el-select class="input-input" placeholder="请选择版本种类" v-model="newProductData.versionType">
+        <el-select style="margin-left: 15px;" class="input-input" placeholder="请选择版本种类" v-model="newProductData.versionType">
           <el-option v-for="item in allversionType" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
 
@@ -395,7 +391,7 @@ const create = () => {
 
   .step-1 {
     >.image-row {
-      background-color: #ff000022;
+
       margin-bottom: 20px;
       display: flex;
       align-items: flex-end;
@@ -404,7 +400,7 @@ const create = () => {
         margin-left: 20px;
         width: 400px;
         height: calc(400px / 16 * 9);
-        background-color: #ff000022;
+  
       }
 
       >.image-row-button {
@@ -413,7 +409,7 @@ const create = () => {
     }
 
     >.input-row {
-      background-color: #ff000022;
+
       margin-bottom: 20px;
       min-height: 50px;
       display: flex;
@@ -421,13 +417,13 @@ const create = () => {
 
       >.input-title {
         min-width: 100px;
-        background-color: #ff000022;
+
         display: flex;
         justify-content: flex-end;
       }
 
       >.input-container {
-        background-color: #00ff0022;
+  
 
         >.input-input {
           width: 220px;
@@ -437,7 +433,7 @@ const create = () => {
     }
 
     >.next-button-row {
-      background-color: #00ff0022;
+
       flex-grow: 1;
 
       >.next-button-row-button {
