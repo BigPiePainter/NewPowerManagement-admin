@@ -6,8 +6,8 @@ import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { getLiveClasses, createLiveClass, deleteLiveclasses } from '@/apis/liveClass'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { getTeachers } from '@/apis/teacher'
-import { getStudent } from '@/apis/student'
+import { getAllTeachers } from '@/apis/teacher'
+import { getAllStudents } from '@/apis/student'
 import { editLiveclasses } from '@/apis/liveClass'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
@@ -47,17 +47,29 @@ getSubjects()
   .then((res) => (allSubjects.value = res.data))
   .catch()
 
-getTeachers(teacherName)
-  .then((res) => (allTeacher.value = res.data))
-  .catch()
+getAllTeachers()
+  .then((res) => {
+    allTeacher.value = res.data
+  }).catch()
 
-getStudent(studenstName)
+getAllStudents()
   .then((res) => (allStudent.value = res.data))
   .catch()
+
 
 getGrades()
   .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
   .catch()
+
+
+
+
+
+
+
+
+const studentIDS = ref([])
+
 const newClassData = reactive<{
   duration: string
   name: string
@@ -77,8 +89,15 @@ const newClassData = reactive<{
 const allStudentsDialogShow = ref(false)
 
 const conformCreate = () => {
+  var ids = ''
+  Object.keys(newClassData.studentIds).forEach((key: any) => {
+    ids = ids + newClassData.studentIds[key] + ','
+  })
+  newClassData.studentIds = ids
+  console.log(ids)
   createLiveClass(newClassData)
     .then((res: any) => {
+      console.log(newClassData)
       if (res.code == 20000) {
         ElNotification({
           title: '成功',
@@ -342,14 +361,7 @@ const loadData = () => {
     .finally(() => {
       loading.value = false
     })
-
 }
-
-
-
-
-
-
 loadData()
 
 </script>
@@ -373,14 +385,14 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span"> *老师姓名： </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
+        <el-select class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
-        </el-input>
+        </el-select>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"> *上课学生姓名： </span>
-        <el-select class="dialog-input" placeholder="请输入" v-model="newClassData.studentIds">
-          <el-option v-for="item in allStudent " :key="item.id" :label="item.name" :value="item.id" />
+        <span class="dialog-span"> *上课学生： </span>
+        <el-select multiple class="dialog-input" placeholder="请输入" v-model="newClassData.studentIds">
+          <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
@@ -406,7 +418,7 @@ loadData()
 
     <template #footer>
       <el-button @click="conformCreate" type="primary">确认</el-button>
-      <el-button @click="showDialog=false">取消</el-button>
+      <el-button @click="showDialog = false">取消</el-button>
     </template>
   </el-dialog>
 
@@ -427,8 +439,6 @@ loadData()
 
       </el-input>
     </div>
-
-
     <div class="div-input-element" style="margin-top: 10px;">
       <span class="dialog-span">
         学习阶段：
@@ -451,33 +461,24 @@ loadData()
   </el-dialog>
 
 
+  <el-dialog v-model="allStudentsDialogShow" class='dialog-container' style="width:630px">
 
-
-
-
-
-
-
-  <el-dialog v-model="allStudentsDialogShow" class='dialog-container' style="width:630px" >
-    
     <TablePage :data="classStudent" :columns="classstudentCloumn" class="dialog-container">
 
 
     </TablePage>
- 
-  <template #header>
+
+    <template #header>
       <el-text>上课学生名单</el-text>
     </template>
 
-  <template #footer>
-      <el-button type="primary" @click="allStudentsDialogShow=false">确定</el-button>
-      <el-button @click="allStudentsDialogShow=false">
+    <template #footer>
+      <el-button type="primary" @click="allStudentsDialogShow = false">确定</el-button>
+      <el-button @click="allStudentsDialogShow = false">
         取消
       </el-button>
     </template>
   </el-dialog>
-
-
 </template>
 
 <style scoped lang="scss">
