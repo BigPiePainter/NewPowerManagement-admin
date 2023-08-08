@@ -44,6 +44,7 @@ import QuestionDetailView from '@/views/QuestionDetailView.vue'
 import QuestionsManagementView from '@/views/QuestionsManagementView.vue'
 import CourseCreateView from '@/views/CourseCreateView.vue'
 import ShopProductDetailView from '@/views/ShopProductDetailView.vue'
+import PutQuestionIntoPackage from '@/views/PutQuestionIntoPackage.vue'
 
 
 import { userInfo } from '@/apis/manager'
@@ -319,6 +320,12 @@ const router = createRouter({
           path: 'student-report',
           name: 'student-report',
           component: StudentReport,
+          meta: { Protected: true }
+        },
+        {
+          path: 'put-question-into-pack',
+          name: 'put-question-into-pack',
+          component: PutQuestionIntoPackage,
           meta: { Protected: true }
         }
       ]

@@ -19,9 +19,22 @@ const editDialogShow = ref(false)
 
 const loading = ref(true)
 
-const clickDetail = (props: { rowData: { id: string } }) => {
+const clickDetail = (props:any) => {
 
-  router.push({ path: 'question-detail', query: { id: props.rowData.id } });
+  router.push({
+    path: 'question-detail',
+    query: {
+      id: props.rowData.id,
+      name: props.rowData.name,
+      cover: props.rowData.cover,
+      teacherName: props.rowData.teacherName,
+      gradeName: props.rowData.gradeName,
+      subjectName: props.rowData.subjectName,
+      description: props.rowData.description,
+      difficultyLevel: props.rowData.difficultyLevel,
+      createdAt: props.rowData.createdAt,
+    }
+  });
 
 }
 
@@ -136,15 +149,12 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <div>
-          <el-button link type="primary" class="">
+          {/* <el-button link type="primary" class="">
             下发
-          </el-button>
+          </el-button> */}
           <el-button link type="primary" class="" onClick={() => editCourse(item)}>
             编辑
           </el-button>
-
-
-
 
           <el-popconfirm
             hide-after={0}

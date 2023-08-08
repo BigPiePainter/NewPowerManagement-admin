@@ -1,24 +1,25 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
-// import { InputType } from '@/type'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { getGrades } from '@/apis/grade'
 import { ElNotification } from 'element-plus'
-
 import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-// import SearchBar from '@/components/SearchBar.vue'
-// import { getGoodQuestionPack, createGoodQuestionPack } from '@/apis/questionStore'
-import { getGoodQuestion, deleteGoodQuestion } from '@/apis/questionStore'
+import { getGoodQuestion } from '@/apis/questionStore'
+import { addGoodQuestionToPack } from '@/apis/questionPackageQuestion'
 import RichTextEditor from '@/components/RichTextEditor.vue';
-
+const route = useRoute()
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const totalNum = ref('')
 
-const deleteQuestion = (id: any) => (
-    deleteGoodQuestion(id)
+const putQuestion = (questionId: any) => {
+    var args = {
+        questionStoreId: questionId,
+        packageId: route.query.id
+    }
+    addGoodQuestionToPack(args)
         .then((res: any) => {
             if (res.code != 20000) {
                 ElNotification({
@@ -29,7 +30,7 @@ const deleteQuestion = (id: any) => (
             } else {
                 ElNotification({
                     title: '成功',
-                    message: '删除成功',
+                    message: '添加成功',
                     type: 'success'
                 })
                 loadData()
@@ -41,7 +42,7 @@ const deleteQuestion = (id: any) => (
                 type: 'error'
             })
         })
-)
+}
 
 const loadSubjectsOption = () => {
     getSubjects()
@@ -59,19 +60,13 @@ const breadcrumbStore = useBreadcrumbStore()
 
 breadcrumbStore.data = [
     { name: '题库管理', path: '' },
-    { name: '好题详情', path: '/question-detail' }
+    { name: '好题详情', path: '/question-detail' },
+    { name: '将好题添加到好题包', path: '/put-question-into-pack' }
 ]
 const tableData = reactive<any>([])
 const loading = ref(true)
 
-
-
-const router = useRouter()
 // const createQuestionDailogShow = ref(false)
-
-
-const questionCreate = () => { router.push({ path: 'question-create' }) }
-
 
 const searchQuestionData = reactive<{
 
@@ -138,11 +133,6 @@ const handleCurrentChange = (val: number) => {
     paginationInfo.currentPage = val
     loadData()
 }
-//------------------下载文档格式功能-----------------------
-
-const downloadFromatFile = () => { }
-
-//-------------------------------------------------------
 </script>
 
 <template>
@@ -166,17 +156,6 @@ const downloadFromatFile = () => { }
 
 
         <div class="margin">
-            <el-button type="primary" @click="questionCreate()">
-                新建好题
-            </el-button>
-            <!-- 
-            <el-button class="margin-left" type="primary">
-                文档导入
-            </el-button>
-
-            <el-link class="margin-left" type="primary" @click="downloadFromatFile">
-                下载文档格式
-            </el-link> -->
         </div>
 
         <div class="margin">
@@ -253,7 +232,7 @@ const downloadFromatFile = () => { }
                                             : "解答题" }}
                     </span>
                     <div style="flex-grow: 1"></div>
-                    <el-button @click="deleteQuestion(item.id)" type=primary>删除</el-button>
+                    <el-button @click="putQuestion(item.id)" type=primary>添加</el-button>
                 </div>
 
 
