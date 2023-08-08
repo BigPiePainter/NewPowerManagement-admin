@@ -87,7 +87,7 @@ const tableColumns = reactive([
 
 const tableData = reactive<any>([])
 const restPsw = (item: any) => {
-  var args = { studentId: item.rowData.id }
+  var args = { id: item.rowData.id }
   restStudentPsw(args)
     .then((res: any) => {
       if (res.msg == 'success') {
@@ -134,7 +134,7 @@ const calcelDeleteStu = (item: any) => {
 
 const deleteStu = (item: any) => {
   setTimeout(console.log, 0)
-  deleteStudent({ studentId: item.rowData.id })
+  deleteStudent({ id: item.rowData.id })
     .then((res: any) => {
       console.log(res)
       if (res.code == '20000') {
@@ -163,7 +163,7 @@ const deleteStu = (item: any) => {
 }
 
 const toNormalStu = (item: any) => {
-  var args = { studentId: item.rowData.id }
+  var args = { id: item.rowData.id }
   console.log(args)
   toNormalStudent(args)
     .then((res: any) => {
