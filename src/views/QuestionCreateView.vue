@@ -1,10 +1,8 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
-// import { InputType } from '@/type'
 import { useRouter } from 'vue-router'
 import { getGrades } from '@/apis/grade'
-
 import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 // import SearchBar from '@/components/SearchBar.vue'
@@ -50,6 +48,7 @@ const newQuestionData = reactive<{
     type: string,
     id: string,
     subjectId: string,
+    questionPrompt: string,
 
 }>({
 
@@ -58,6 +57,7 @@ const newQuestionData = reactive<{
     type: '',
     id: '',
     subjectId: '',
+    questionPrompt: ''
 
 
 });
@@ -68,67 +68,70 @@ const paginationInfo = reactive({
 })
 
 
-// const allQuestionType = [
-//     {
-//         id: '1',
-//         value: '1',
-//         label: '单选题 ',
-//     },
-//     {
-//         id: '2',
-//         value: '2',
-//         label: '多选题 ',
-//     },
-//     {
-//         id: '3',
-//         value: '3',
-//         label: '不定项选择题',
-//     },
-//     {
-//         id: '4',
-//         value: '4',
-//         label: '判断题 ',
-//     },
-//     {
-//         id: '5',
-//         value: '5',
-//         label: '填空题',
-//     },
-//     {
-//         id: '6',
-//         value: '6',
-//         label: '解答题',
-//     },
-// ]
 
 
-// const allDifficultyType = [
-//     {
-//         id: '1',
-//         value: '1',
-//         label: '容易  ',
-//     },
-//     {
-//         id: '2',
-//         value: '2',
-//         label: '较易 ',
-//     },
-//     {
-//         id: '3',
-//         value: '3',
-//         label: '一般',
-//     },
-//     {
-//         id: '4',
-//         value: '4',
-//         label: '较难 ',
-//     },
-//     {
-//         id: '5',
-//         value: '5',
-//         label: '困难',
-//     }
-// ]
+
+const allQuestionType = [
+    {
+        id: '1',
+        value: '1',
+        label: '单选题 ',
+    },
+    {
+        id: '2',
+        value: '2',
+        label: '多选题 ',
+    },
+    {
+        id: '3',
+        value: '3',
+        label: '不定项选择题',
+    },
+    {
+        id: '4',
+        value: '4',
+        label: '判断题 ',
+    },
+    {
+        id: '5',
+        value: '5',
+        label: '填空题',
+    },
+    {
+        id: '6',
+        value: '6',
+        label: '解答题',
+    },
+]
+
+
+const allDifficultyType = [
+    {
+        id: '1',
+        value: '1',
+        label: '容易  ',
+    },
+    {
+        id: '2',
+        value: '2',
+        label: '较易 ',
+    },
+    {
+        id: '3',
+        value: '3',
+        label: '一般',
+    },
+    {
+        id: '4',
+        value: '4',
+        label: '较难 ',
+    },
+    {
+        id: '5',
+        value: '5',
+        label: '困难',
+    }
+]
 
 
 
@@ -163,35 +166,47 @@ const paginationInfo = reactive({
 // const loadedData = ref([])
 loadSelectOption()
 
+const trueFlase=[
+    {id:1,label:'正确'
+    },
+    {id:2,label:'错误'
+    }
+]
 
 
+
+const pushdata =
+    (props: { rowData: { a: any, b: any, c: string, d: string } }) => {
+        newSMultipleChoiceQuestion.a = props.rowData.a;
+        newSMultipleChoiceQuestion.b = props.rowData.b;
+        newSMultipleChoiceQuestion.c = props.rowData.c;
+        newSMultipleChoiceQuestion.d = props.rowData.d;
+    }
+
+const newSMultipleChoiceQuestion = reactive<any>({
+a:'',
+b:'',
+c:'',
+d:''
+
+})
+
+const newSMultipleChoice = reactive<any>({
+    a: newSMultipleChoiceQuestion.a,
+    b: newSMultipleChoiceQuestion.b,
+    c: newSMultipleChoiceQuestion.c,
+    d: newSMultipleChoiceQuestion.d
+})
 
 const confirmCreate = () => {
     var args = {
-
+        questionPrompt: newQuestionData.questionPrompt,
         gradeId: newQuestionData.gradeId,
         difficultyType: newQuestionData.difficultyType,
         subjectId: newQuestionData.subjectId,
         type: newQuestionData.type
-
     }
-
-    confirmCreate(args)
-        .then((res) => {
-            res.data.records.forEach(item => {
-                tableData.push(item)
-            });
-            console.log(tableData)
-            totalLength.value = res.data.records.length
-        })
-        .catch(() => { })
-        .finally(() => {
-            loading.value = false
-        })
-    tableData.forEach(item => {
-        console.log(item)
-    })
-
+    console.log(args)
     centerDialogVisible.value = false
 }
 
@@ -206,17 +221,12 @@ const create = () => {
 
 
 
-const downloadFromatFile = () => {
-
-}
 
 
 
 
 //-------------------------------------------------------
 
-
-loadData()
 
 
 
@@ -241,54 +251,154 @@ loadData()
                 </el-select>
             </div>
         </div>
+        <div class="subandgrade" style="margin-top: 10px;">
+            <div>
+                <el-text style="margin-left: 15px;">难度:</el-text>
+                <el-select style="margin-left:5px" class="select-width" filterable place holder="请选择科目"
+                    v-model="newQuestionData.difficultyType">
+                    <el-option v-for="item in allDifficultyType" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+            </div>
 
-
-        <div class="margin">
-            <el-text>难度:</el-text>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.difficultyType = ''">
-                全部
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.difficultyType = '1'">
-                容易
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.difficultyType = '2'">
-                较易
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.difficultyType = '3'">
-                一般
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.difficultyType = '4'">
-                较难
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.difficultyType = '5'">
-                困难
-            </el-link>
         </div>
 
-        <div class="margin">
-            <el-text>题型:</el-text>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.type = ''">
-                全部
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.type = '1'">
-                单选题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.type = '2'">
-                多选题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.type = '3'">
-                不定项选择题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.type = '4'">
-                判断题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.type = '5'">
-                填空题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="newQuestionData.type = '6'">
-                解答题
-            </el-link>
+
+
+        <div class="subandgrade">
+
+            <div style="margin-left: 15px; margin-top: 10px;">
+                <el-text>题型:</el-text>
+                <el-select style="margin-left:5px" filterable place holder="请选择学习阶段" v-model="newQuestionData.type">
+                    <el-option if v-for="item in allQuestionType" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+            </div>
         </div>
+
+
+
+        <RichTextEditor :isShow="true" v-model="newQuestionData.questionPrompt">
+        </RichTextEditor>
+
+
+
+
+
+
+
+        <div v-if="newQuestionData.type == '1'">
+
+            <el-text>请输入单选题目选项</el-text>
+            <diV>
+                a:<el-input v-model="newSMultipleChoiceQuestion.a"></el-input>
+                b:<el-input v-model="newSMultipleChoiceQuestion.b"></el-input>
+                c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
+                d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
+
+                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
+            </diV>
+
+
+
+            <div style="margin-top: 20px;">答案：</div>
+
+            <el-select placeholder="请选择答案">
+                <el-option v-for="item in newSMultipleChoice.value" :key=item.a />
+            </el-select>
+        </div>
+
+
+
+
+
+        <div v-if="newQuestionData.type == '2'">
+
+            <el-text>请输入多选题目选项</el-text>
+            <diV>
+                a:<el-input v-model="newSMultipleChoiceQuestion.a"></el-input>
+                b:<el-input v-model="newSMultipleChoiceQuestion.b"></el-input>
+                c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
+                d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
+
+                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
+            </diV>
+
+
+
+            <div style="margin-top: 20px;">答案：</div>
+
+            <el-select multiple placeholder="请选择答案">
+                <el-option v-for="item in newSMultipleChoice.value" :key=item.a />
+            </el-select>
+        </div>
+
+
+
+
+
+        <div v-if="newQuestionData.type == '3'">
+
+            <el-text>请输入不定项选择选项</el-text>
+            <diV>
+                a:<el-input v-model="newSMultipleChoiceQuestion.a"></el-input>
+                b:<el-input v-model="newSMultipleChoiceQuestion.b"></el-input>
+                c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
+                d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
+
+                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
+            </diV>
+
+
+
+            <div style="margin-top: 20px;">答案：</div>
+
+            <el-select multiple placeholder="请选择答案">
+                <el-option v-for="item in newSMultipleChoice.value" :key=item.a />
+            </el-select>
+        </div>
+
+
+        <div v-if="newQuestionData.type == '4'">
+
+            <el-text>请输入判断选择选项</el-text>
+            <diV>
+                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
+            </diV>
+
+
+
+            <div style="margin-top: 20px;">答案：</div>
+
+            <el-select multiple placeholder="请选择答案">
+                <el-option v-for="item in trueFlase" :key="item.id" :label="item.label"/>
+            </el-select>
+        </div>
+
+
+
+
+
+
+
+        <div v-if="newQuestionData.type == '5'">
+
+
+            <div style="margin-top: 20px;">答案：</div>
+
+            <el-input multiple placeholder="请输入答案">
+            </el-input>
+        </div>
+
+
+
+
+        <div v-if="newQuestionData.type == '6'">
+
+
+            <div style="margin-top: 20px;">答案：</div>
+            <el-input multiple placeholder="请输入答案">
+            </el-input>
+        </div>
+
 
         <el-button style="margin:15px" @click="create">
             创建:
@@ -308,7 +418,6 @@ loadData()
             </span>
         </template>
     </el-dialog>
-
 </template>
 
 <style scoped>

@@ -172,6 +172,9 @@ loadData()
         <span class="dialog-span">
           *消息内容：
         </span>
+        <RichTextEditor :isShow="true"></RichTextEditor>
+        <!-- <el-input class="dialog-input" placeholder="请输入" v-model="msgContent.richText">
+        </el-input> -->
       </div>
     </div>
     <template #header>

@@ -60,3 +60,5 @@ export const getGoodQuestions = (data: any) => {
     }
     return http.request(args)
 }
+
+
