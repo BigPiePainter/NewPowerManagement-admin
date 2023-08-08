@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { useRouter } from 'vue-router'
 import { ref, reactive } from 'vue'
-import { createManager } from '@/apis/manager';
 import { ElButton, ElNotification } from 'element-plus'
+import { getAllMenu, createRole } from '@/apis/role'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -12,45 +11,62 @@ breadcrumbStore.data = [
     { name: '角色管理', path: '/account-role-managment' },
     { name: '角色详情', path: '/role-detail-managment' }
 ]
+const author = ref<any>([])
+const menus = reactive<any>([])
+const loadData = () => {
+    menus.length = 0
+    getAllMenu().then((res: any) => {
+        console.log(res)
+        res.data.forEach((item: any) => {
+            menus.push(item)
+        })
+        console.log(menus)
+    })
+}
+loadData()
 
 const newManagerData = reactive<{
-
-    account: string
-    avatar: string
-    managerRoleId: string
-    password: string
-    phoneNumber: string
+    roleName: string
     remark: string
 }>({
-    account: '',
-    avatar: '',
-    managerRoleId: '',
-    password: '',
-    phoneNumber: '',
+    roleName: '',
     remark: '',
 
 })
 const confirm = () => {
+    var ids = ''
+    menus.forEach((item: any) => {
+        ids = ids + item.id + ','
+    })
+    var args = {
+        creatorId: localStorage.id,
+        menuIds: ids,
+        enable: '1',
+        remark: newManagerData.remark,
+        roleName: newManagerData.roleName
+    }
 
-    createManager(newManagerData)
+    createRole(args)
         .then((res: any) => {
             if (res.code == '20000') {
                 ElNotification({
                     title: '成功',
-                    message: '新增管理员成功',
+                    message: '新增角色成功',
                     type: 'success'
                 })
             } else {
-
                 ElNotification({
                     title: '失败',
-                    message: '请求错误或删除被撤回',
+                    message: res.msg,
                     type: 'error'
                 })
             }
         })
         .catch(() => { })
         .finally(() => {
+            menus.length = 0
+            newManagerData.remark = ''
+            newManagerData.roleName = ''
         })
 }
 </script>
@@ -64,21 +80,25 @@ const confirm = () => {
                 <el-button type="primary" style="float:right;" @click="confirm">确认生成</el-button>
             </div>
             <div class="input line" style="font-weight:600;">
-                <el-text>*角色名称</el-text> <el-input class="input-i" v-model="newManagerData.account"></el-input>
+                <el-text>*角色名称</el-text> <el-input class="input-i" v-model="newManagerData.roleName"></el-input>
             </div>
-            <div class="line input" style="font-weight:300;">
-                <el-text class="tag">备注</el-text> <el-input class="input-i" v-model="newManagerData.remark" />
+            <div class="line input">
+                <el-text class="input" style="font-size:17px; margin-right: 10px;">备注</el-text> <el-input class="input-i"
+                    v-model="newManagerData.remark" />
 
             </div>
         </div>
 
         <div>
             <div class="input line">
-                <el-text class="input" style="font-size:17px">
+                <el-text class="input" style="font-size:17px; margin-right: 10px;">
                     *权限设置 </el-text>
+                <el-select style="width: 240px" filterable multiple placeholder="请选择" v-model="author">
+                    <el-option v-for="item in menus" :key="item.id" :label="item.name" :value="item.id" />
+                </el-select>
             </div>
-            <div class="line input botpart">
-            </div>
+            <!-- <div class="line input botpart">
+            </div> -->
         </div>
     </div>
 </template>
