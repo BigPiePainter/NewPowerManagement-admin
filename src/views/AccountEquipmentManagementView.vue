@@ -21,6 +21,17 @@ const searchBarItems = reactive([
 ])
 
 const loading = ref(true)
+const tableData = ref<any>([])
+  const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+
+const totalLength = ref<Number>()
+
+
+
+
 
 const tableColumns = [
   {
@@ -102,6 +113,13 @@ const tableColumns = [
   }
 ]
 
+
+
+
+
+
+
+//------------解绑设备---------------------
 const cancelEquip = (id: number) => {
   cancelEquipments({ id }).then(() => {
     ElNotification({
@@ -113,15 +131,10 @@ const cancelEquip = (id: number) => {
   }).catch
 }
 
-const tableData = ref<any>([])
 
-const paginationInfo = reactive({
-  currentPage: 1,
-  pageSize: 20
-})
 
-const totalLength = ref<Number>()
 
+//--------------获取设备数据------------------
 const loadData = () => {
   loading.value = true
   var args = {
@@ -149,6 +162,7 @@ const loadData = () => {
     })
 }
 loadData()
+
 </script>
 
 <template>

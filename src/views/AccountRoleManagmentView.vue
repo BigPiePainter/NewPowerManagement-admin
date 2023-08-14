@@ -17,31 +17,24 @@ breadcrumbStore.data = [
 
 const loading = ref(true)
 const router = useRouter()
+const tableData = ref<any>([])
 
+
+
+//-------------获取角色数据---------------------
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
 
-const newManager = () => {
-  var args = {}
-  createManager(args).then((res: any) => {
-
-  })
-}
-
 const totalLength = ref<Number>()
-
 const loadData = () => {
   loading.value = true
-
   var args = {
-
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
 
   }
-
   getManager(args)
 
     .then((res) => {
@@ -58,7 +51,7 @@ const loadData = () => {
 }
 loadData()
 
-
+//----------------更改角色数据-------------------
 const editTeacherData = reactive<{
 
   id: string,
@@ -115,6 +108,7 @@ const cancelEditDialog = () => {
   editTeacherDialogShow.value = false;
 }
 
+//------------新建角色数据------------------------
 const roleDetail = () => {
   router.push({ path: '/role-detail-managment' })
 }
@@ -183,8 +177,7 @@ const tableColumns = [
   }
 ]
 
-const tableData = ref<any>([])
-
+//-------------------删除角色--------------------------
 const preDeleteTea = (item: any) => {
   tableData.value.forEach((i: any) => {
     if (i.id == item.rowData.id) {
@@ -194,7 +187,7 @@ const preDeleteTea = (item: any) => {
   })
   var note: any = ElNotification({
     title: '点击撤回',
-    message: `撤回删除老师 ${item.rowData.name}`,
+    message: `撤回删除角色 ${item.rowData.name}`,
     duration: 5000,
     onClick: () => {
       calcelDeleteTea(item)
@@ -242,7 +235,6 @@ const deleteTea = (item: any) => {
   <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
     :columns="tableColumns" :data="tableData">
     <div>
-      <el-button class="ARMbutton" type="primary" @click="newManager">新建管理员</el-button>
       <el-button class="ARMbutton" type="primary" @click="roleDetail">新建角色</el-button>
     </div>
   </TablePage>

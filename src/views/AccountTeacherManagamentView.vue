@@ -23,8 +23,36 @@ breadcrumbStore.data = [
 const loading = ref(true)
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
-const value = ref('')
+const editTeacherDialogShow = ref(false);
+const tableData = ref<any>([])
+const showDialog = ref(false)
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const totalLength = ref<Number>()
 
+
+
+const searchBarItems = reactive([
+  { name: '用户名', value: '' },
+  { name: '姓名', value: '' },
+  { name: '手机号', value: '', label: '' },
+  {
+    name: '学习阶段',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options: allGrades
+  },
+  {
+    name: '学科',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options: allSubjects
+  }
+])
 
 const newTeacherData = reactive<{
   account: string
@@ -57,7 +85,13 @@ const editTeacherData = reactive<{
   gradeId: ''
 });
 
-const editTeacherDialogShow = ref(false);
+
+//--------------------创建老师---------------
+
+
+const createteachers = () => {
+  showDialog.value = true
+}
 
 const conformCreate = () => {
   createTeacher(newTeacherData)
@@ -83,26 +117,11 @@ const conformCreate = () => {
   showDialog.value = false
 }
 
-const searchBarItems = reactive([
-  { name: '用户名', value: '' },
-  { name: '姓名', value: '' },
-  { name: '手机号', value: '', label: '' },
-  {
-    name: '学习阶段',
-    value: '',
-    type: InputType.Select,
-    label: '请选择',
-    options: allGrades
-  },
-  {
-    name: '学科',
-    value: '',
-    type: InputType.Select,
-    label: '请选择',
-    options: allSubjects
-  }
-])
 
+
+
+
+//------------------------跳转传参------------
 const clickName = (props: any) => {
   console.log(props)
   router.push({
@@ -217,8 +236,8 @@ const tableColumns = [
   }
 ]
 
-const tableData = ref<any>([])
 
+//---------------重置密码------------------
 const restPsw = (item: any) => {
   resetTeacherPsw({ id: item.rowData.id })
     .then((res: any) => {
@@ -243,6 +262,11 @@ const restPsw = (item: any) => {
     })
 }
 
+
+
+
+
+//-----------------------删除老师---------------------
 const preDeleteTea = (item: any) => {
   tableData.value.forEach((i: any) => {
     if (i.id == item.rowData.id) {
@@ -296,31 +320,10 @@ const deleteTea = (item: any) => {
     })
 }
 
-const showDialog = ref(false)
-
-const createteachers = () => {
-  showDialog.value = true
-}
-
-const paginationInfo = reactive({
-  currentPage: 1,
-  pageSize: 20
-})
-
-const totalLength = ref<Number>()
-
-const loadSelectOption = () => {
-  getGrades()
-    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-    .catch()
-
-  getSubjects()
-    .then((res) => (allSubjects.value = res.data))
-    .catch()
-}
 
 
 
+//-------------------------编辑老师------------------------
 const editTeacher =
   (props: { rowData: { id: string, gradeId: string, subjectId: string } }) => {
     editTeacherData.id = props.rowData.id;
@@ -361,8 +364,19 @@ const cancelEditDialog = () => {
 }
 
 
+//-------------------------获取选项数据------------
+const loadSelectOption = () => {
+  getGrades()
+    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
+    .catch()
+
+  getSubjects()
+    .then((res) => (allSubjects.value = res.data))
+    .catch()
+}
 
 
+//-------------------------获取表格数据------------
 const loadData = () => {
   loading.value = true
   loadSelectOption()
@@ -388,6 +402,10 @@ const loadData = () => {
 }
 
 loadData()
+
+
+
+
 </script>
 
 <template>
