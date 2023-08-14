@@ -199,9 +199,9 @@ const tableColumns = reactive([
     align: 'center'
   }
 ])
-const clickDetail = (props: { rowData: { id: string } }) => {
+const clickDetail = (props: { rowData: { id: string,name:string } }) => {
   console.log(props);
-  router.push({ path: 'class-detail', query: { id: props.rowData.id } });
+  router.push({ path: 'class-detail', query: { id: props.rowData.id, name:props.rowData.name } });
 }
 
 const editClassDialogShow = ref(false);
