@@ -2,7 +2,7 @@
 import { userLogin } from '@/apis/login'
 import { ref } from 'vue'
 import { ElNotification } from 'element-plus'
-import { userAuthor } from '@/apis/manager'
+import { getManager } from '@/apis/manager'
 import router from '@/router'
 
 const account = ref('')
@@ -15,14 +15,15 @@ const enterHome = () => {
     pageSize: 1
   }
   console.log("账号", args.account)
-  userAuthor(args)
+  getManager(args)
     .then((res: any) => {
       console.log("账号", args.account)
       if (res.code == 20000) {
         localStorage.account = res.data.records[0].account
         localStorage.avator = res.data.records[0].avator
-
-        // localStorage.remark = res.data.records[0].remark
+        console.log(localStorage)
+        router.push({ path: 'work-space' })
+        localStorage.remark = res.data.records[0].remark
         console.log(localStorage)
         var author:any = {}
         var items = res.data.records[0].menuList
@@ -31,20 +32,14 @@ const enterHome = () => {
           console.log(key, menu)
           author[menu] = "check"
         }
-
-
-        return localStorage.setItem('author', JSON.stringify(author))
       } else {
         ElNotification({
           title: 'Error',
-          message: "权限出现错误",
+          message: res.msg,
           type: 'error'
         })
       }
-      console.log("权限初始化", author)
-      console.log(localStorage)
     })
-  router.push({ path: 'work-space' })
 }
 
 const login = () => {
@@ -71,8 +66,8 @@ const login = () => {
       } else if (res.code == 20000) {
         localStorage.clear()
         localStorage.token = res.data.token
+        console.log(res.data.token)
         localStorage.id = res.data.id
-        localStorage.reload = "true"
         ElNotification({
           title: 'Success',
           message: '登陆成功',

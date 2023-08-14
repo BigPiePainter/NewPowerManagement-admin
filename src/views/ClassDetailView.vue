@@ -1,7 +1,6 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ClickOutside, ElButton } from 'element-plus'
-import type { TabsPaneContext } from 'element-plus'
+import { ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
@@ -12,13 +11,8 @@ import type { CheckboxValueType } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllStudents, getStudent } from '@/apis/student'
 import { getClassesStudent, deleteClassStudent, createClassStudent } from '@/apis/classStudent'
-
-
-
 import { getClasses } from '@/apis/class'
 import router from '@/router'
-
-
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -26,7 +20,6 @@ breadcrumbStore.data = [
   { name: '班级管理', path: '/class-management' },
   { name: '班级详情', path: '/class-detail' }
 ]
-
 
 const route = useRoute()
 const allStudents = ref<any>([])
@@ -163,7 +156,6 @@ const preDeleteStu = (item: any) => {
   })
 }
 
-
 const deleteCS = (item: any) => {
   setTimeout(console.log, 0)
   deleteClassStudent({ id: item.rowData.id })
@@ -246,9 +238,6 @@ const tableColumns = [
   }
 ]
 
-
-
-
 const tableData = ref<any>([])
 
 const addStudentDialogShow = ref(false);
@@ -264,6 +253,7 @@ const dialogSearchBarRefresh = () => {
 const newStudentData = ref<any>([])
 
 const confirmNewStudent = () => {
+  addStudentDialogShow.value = false
   newStudentData.value = dialogTableData.value.filter((item: any) => item.checked)
   let data = newStudentData.value.map((item: any) => item.id)
   console.log(data)
@@ -289,14 +279,6 @@ const confirmNewStudent = () => {
     loadData()
   }).catch
 }
-
-
-
-
-
-
-
-
 
 const cancelNewStudent = () => {
   addStudentDialogShow.value = false;
@@ -369,23 +351,6 @@ const loadData = () => {
     })
 }
 loadData()
-
-
-
-
-// const detail=[{
-// name:allDetail.value.name,
-// teacherName:allDetail.value.teacherName,
-// subjectName:allDetail.value.subjectName,
-// gradeName:allDetail.value.gradeName,
-// startDate:allDetail.value.startDate,
-// endDate:allDetail.value.endDate,
-// }]
-
-
-
-
-
 
 </script>
 

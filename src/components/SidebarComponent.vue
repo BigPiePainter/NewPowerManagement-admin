@@ -12,12 +12,12 @@ console.log('超炫酷无敌动画依赖import加载完毕')
 import { useRoute } from 'vue-router'
 import { onMounted, onUnmounted } from 'vue'
 import { reactive } from 'vue';
-import { getCurrentInstance } from "vue";
-const isIn = getCurrentInstance()?.appContext.config.globalProperties.$isIn
-const author = JSON.parse(localStorage.author)
-const cslg=()=>{
-  console.log(JSON.parse(localStorage.author))
-}
+// import { getCurrentInstance } from "vue";
+// const isIn = getCurrentInstance()?.appContext.config.globalProperties.$isIn
+// const author = JSON.parse(localStorage.author)
+// const cslg=()=>{
+//   console.log(JSON.parse(localStorage.author))
+// }
  
 const items = reactive([
   {
@@ -347,8 +347,8 @@ onUnmounted(() => {
 
 <template>
   <canvas class="sidebar-canvas"></canvas>
-  <div v-if="isIn" class="sidebar">
-    <div class="sidebar-header" @click="cslg">管理后台</div>
+  <div class="sidebar">
+    <div class="sidebar-header">管理后台</div>
     <el-menu :default-active="route.path" router>
       <template v-for="item in items" :key="item.index">
         <template v-if="item.subs">
@@ -357,7 +357,7 @@ onUnmounted(() => {
               <span>{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs" :key="subItem.title">
-              <el-menu-item :disabled="!(subItem.title in author)" :index="subItem.index" class="sidebar-menu-item">
+              <el-menu-item :index="subItem.index" class="sidebar-menu-item">
                 {{ subItem.title }}
               </el-menu-item>
             </template>
@@ -365,7 +365,7 @@ onUnmounted(() => {
         </template>
         <template v-else>
           <app-link :to="item.index">
-            <el-menu-item :disabled="!(item.title in author)" :index="item.index" :key="item.index" class="sidebar-menu-item">
+            <el-menu-item :index="item.index" :key="item.index" class="sidebar-menu-item">
               <template #title>{{ item.title }}</template>
             </el-menu-item>
           </app-link>

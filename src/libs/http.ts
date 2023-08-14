@@ -6,7 +6,8 @@ class Http {
 
   constructor() {
     console.log('后端网址', import.meta.env.VITE_API_URL)
-    this.baseUrl = '/'
+    this.baseUrl = 'http://' + import.meta.env.VITE_API_URL
+    // this.baseUrl = '/'
   }
 
   request(options: any) {

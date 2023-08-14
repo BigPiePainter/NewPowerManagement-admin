@@ -30,15 +30,7 @@ const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const allTeacher = ref<any>([])
 
-const newClassData = reactive<{
-  creationType: number
-  endDate: string
-  gradeId: string
-  name: string
-  startDate: string
-  subjectId: string
-  teacherId: string
-}>({
+const newClassData = reactive<any>({
   creationType: 2,
   endDate: '',
   gradeId: '',
@@ -48,10 +40,6 @@ const newClassData = reactive<{
   teacherId: ''
 })
 
-
-
-
-
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
@@ -59,15 +47,13 @@ const paginationInfo = reactive({
 
 const totalLength = ref<Number>()
 
-
-
 const searchBarItems = reactive([
   { name: "班级名称", value: "", },
   {
     name: "负责老师", type: InputType.Select,
     single: true,
     value: "", options: allTeacher
-    
+
   },
   {
     name: "阶段",
@@ -87,8 +73,6 @@ const searchBarItems = reactive([
   },
 ])
 
-
-
 const getselection = () => {
   getGrades()
     .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
@@ -98,18 +82,30 @@ const getselection = () => {
     .then((res) => (allSubjects.value = res.data))
     .catch()
 }
-
 getselection()
 
 const newClassDialogShow = ref(false);
+
 const creatNewClass = () => {
+  loadAllTeacher()
+  // Object.keys(newClassData).forEach((key: any) => {
+  //   newClassData[key] = ''
+  // })
+  newClassData.creationType = 2
+  newClassData.endDate = ''
+  newClassData.gradeId = ''
+  newClassData.name = ''
+  newClassData.startDate = ''
+  newClassData.subjectId = ''
+  newClassData.teacherId = ''
   newClassDialogShow.value = true;
 }
-const confirmNewClass = () => {
 
+const confirmNewClass = () => {
   createClass(newClassData)
     .then((res: any) => {
       if (res.code == 20000) {
+        loadData()
         ElNotification({
           title: '成功',
           message: '已成功创建',
@@ -210,14 +206,14 @@ const clickDetail = (props: { rowData: { id: string } }) => {
 
 const editClassDialogShow = ref(false);
 const editClassData = reactive<{
-  id:string
+  id: string
   name: string,
   teacherId: string,
   endDate: string,
   subjectId: string,
   gradeId: string,
 }>({
-  id:'',
+  id: '',
   name: '',
   teacherId: '',
   endDate: '',
@@ -236,7 +232,7 @@ const editClass = (props: {
     endDate: string,
     subjectId: string,
     gradeId: string,
-    id:string
+    id: string
   }
 
 }) => {
@@ -247,14 +243,14 @@ const editClass = (props: {
   editClassData.endDate = props.rowData.endDate;
   editClassData.subjectId = props.rowData.subjectId;
   editClassData.gradeId = props.rowData.gradeId;
-  editClassData.id= props.rowData.id;
+  editClassData.id = props.rowData.id;
 }
 
 
 const deleteClassDialogShow = ref(false);
-const deleteClassData = reactive<{ id: string }>({ id:'' });
+const deleteClassData = reactive<{ id: string }>({ id: '' });
 
-const deleteClass = (props: { rowData: { id: string} }) => {
+const deleteClass = (props: { rowData: { id: string } }) => {
   console.log(props);
 
   deleteClassDialogShow.value = true;
@@ -308,7 +304,7 @@ const confirmDeleteDialog = () => {
       }
     })
     .catch()
-    
+
   deleteClassDialogShow.value = false;
 }
 
@@ -341,6 +337,8 @@ const loadData = () => {
       loading.value = false
     })
 }
+loadData()
+
 const loadAllTeacher = () => {
 
   getAllTeachers()
@@ -349,9 +347,6 @@ const loadAllTeacher = () => {
     })
     .catch()
 }
-
-
-loadData()
 loadAllTeacher()
 
 </script>
@@ -382,8 +377,9 @@ loadAllTeacher()
         <span class="dialog-span">
           *负责老师：
         </span>
-        <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
-        </el-input>
+        <el-select filterable class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
+          <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
@@ -441,8 +437,8 @@ loadAllTeacher()
         <span class="dialog-span">
           *负责老师：
         </span>
-        <el-select class="dialog-input" v-model="editClassData.teacherId">
-          <el-option  v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
+        <el-select filterable class="dialog-input" v-model="editClassData.teacherId">
+          <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
