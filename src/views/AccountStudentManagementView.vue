@@ -10,8 +10,6 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 import { getStudent, restStudentPsw, deleteStudent } from '@/apis/student'
 import { createStudent, editStudent } from '@/apis/student'
-
-
 const router = useRouter()
 
 const clickDetail = (props: { rowData: { id: string } }) => {
@@ -49,9 +47,6 @@ const tableColumns = [
       </ElButton>
     )
   },
-
-
-
   {
     dataKey: 'account',
     key: 'account',
