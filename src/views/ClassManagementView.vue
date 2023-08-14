@@ -199,9 +199,22 @@ const tableColumns = reactive([
     align: 'center'
   }
 ])
-const clickDetail = (props: { rowData: { id: string,name:string } }) => {
+const clickDetail = (props:any) => {
   console.log(props);
-  router.push({ path: 'class-detail', query: { id: props.rowData.id, name:props.rowData.name } });
+  router.push({
+    path: 'class-detail',
+    query: {
+      id: props.rowData.id,
+      startDate: props.rowData.startDate,
+      endDate: props.rowData.endDate,
+      gradeName: props.rowData.gradeName,
+      name: props.rowData.name,
+      createdAt: props.rowData.createdAt,
+      studentNumber: props.rowData.studentNumber,
+      subjectName: props.rowData.subjectName,
+      teacherName: props.rowData.teacherName
+    }
+  });
 }
 
 const editClassDialogShow = ref(false);
@@ -222,20 +235,7 @@ const editClassData = reactive<{
 
 });
 
-
-
-const editClass = (props: {
-  rowData: {
-    name: string,
-    teacher: string,
-    startDate: string,
-    endDate: string,
-    subjectId: string,
-    gradeId: string,
-    id: string
-  }
-
-}) => {
+const editClass = (props:any) => {
   console.log(props);
   editClassDialogShow.value = true;
   editClassData.name = props.rowData.name;
@@ -245,7 +245,6 @@ const editClass = (props: {
   editClassData.gradeId = props.rowData.gradeId;
   editClassData.id = props.rowData.id;
 }
-
 
 const deleteClassDialogShow = ref(false);
 const deleteClassData = reactive<{ id: string }>({ id: '' });

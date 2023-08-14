@@ -11,8 +11,8 @@ import type { CheckboxValueType } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllStudents, getStudent } from '@/apis/student'
 import { getClassesStudent, deleteClassStudent, createClassStudent } from '@/apis/classStudent'
-import { getClasses } from '@/apis/class'
 import router from '@/router'
+const route = useRoute()
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -21,7 +21,6 @@ breadcrumbStore.data = [
   { name: '班级详情', path: '/class-detail' }
 ]
 
-const route = useRoute()
 const allStudents = ref<any>([])
 const allGrades = ref<any>([])
 const allDetail = reactive<any>([])
@@ -48,25 +47,24 @@ const paginationInfo = reactive({
   pageSize: 20
 })
 
-const loadDetail = () => {
-  loading.value = true
+// const loadDetail = () => {
+//   loading.value = true
 
-  var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    id: route.query.id
+//   var args = {
+//     pageNum: paginationInfo.currentPage,
+//     pageSize: paginationInfo.pageSize,
+//     id: route.query.id
 
-  }
+//   }
 
-  getClasses(args)
-    .then((res) => { allDetail.push(res.data.records[0]) })
-
-    .catch()
-    .finally(() => {
-      loading.value = false
-    })
-}
-loadDetail()
+//   getClasses(args)
+//     .then((res) => { allDetail.push(res.data.records[0]) })
+//     .catch()
+//     .finally(() => {
+//       loading.value = false
+//     })
+// }
+// loadDetail()
 const activeName = ref('officalStudent')
 
 
@@ -298,9 +296,6 @@ const handleTabClick = (tab: any) => {
   loadData()
 }
 
-
-
-
 const loadDialogData = () => {
   loading.value = true
 
@@ -310,7 +305,6 @@ const loadDialogData = () => {
     type: studentType.value,
     name: normalDialogSearchBarItems[1].value,
     gradeIds: normalDialogSearchBarItems[0].value[0]
-
   }
 
   getStudent(args)
@@ -328,22 +322,17 @@ const loadDialogData = () => {
 const loadData = () => {
   loading.value = true
   loadDialogData()
-  loadDetail()
   var args = {
-
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     classId: route.query.id,
     studentId: searchBarItems[0].value[0],
   }
-
   getClassesStudent(args)
-
     .then((res) => {
       console.log(res)
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
-
     })
     .catch(() => { })
     .finally(() => {
@@ -351,7 +340,6 @@ const loadData = () => {
     })
 }
 loadData()
-
 </script>
 
 <template>
@@ -366,25 +354,25 @@ loadData()
       <div class="div-card-left-detail">
         <div class="detail-info">
           <el-text class="el-text-detail">
-            班级名称：
-          </el-text>
-          <!-- <el-text class="el-text-detail">
-            负责老师：{{ allDetail.value }}
+            班级名称：{{ route.query.name }}
           </el-text>
           <el-text class="el-text-detail">
-            学科：{{ allDetail.value }}
+            负责老师：{{ route.query.teacherName }}
           </el-text>
           <el-text class="el-text-detail">
-            学习阶段：{{ allDetail.value }}
+            学科：{{ route.query.subjectName }}
+          </el-text>
+          <el-text class="el-text-detail">
+            学习阶段：{{ route.query.gradeName }}
           </el-text>
         </div>
         <div class="detail-date">
           <el-text class="el-text-detail">
-            起始日期：{{ allDetail.value }}
+            起始日期：{{ route.query.startDate }}
           </el-text>
           <el-text class="el-text-detail">
-            到期日期：{{ allDetail.value }}
-          </el-text> -->
+            到期日期：{{ route.query.endDate }}
+          </el-text>
         </div>
       </div>
     </div>
