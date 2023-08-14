@@ -12,10 +12,44 @@ import { getStudent, restStudentPsw, deleteStudent } from '@/apis/student'
 import { createStudent, editStudent } from '@/apis/student'
 const router = useRouter()
 
-const clickDetail = (props: { rowData: { id: string } }) => {
-  console.log(props);
-  router.push({ path: 'student-detail-management', query: { id: props.rowData.id } });
+
+
+
+
+
+
+
+
+//-----------------跳转传参-----------------------
+
+const clickDetail = (props: any) => {
+  console.log(props)
+  router.push({
+    path: 'student-detail-management',
+    query: {
+      id: props.rowData.id,
+      name: props.rowData.name,
+      account: props.rowData.account,
+      phoneNumber: props.rowData.phoneNumber,
+      phoneNumberOfParent: props.rowData.phoneNumberOfParent,
+      gradeName: props.rowData.gradeName,
+      createdAt: props.rowData.createdAt,
+      expiration: props.rowData.expiration
+    }
+  })
 }
+
+
+
+
+
+
+
+
+
+
+
+
 const breadcrumbStore = useBreadcrumbStore()
 const createDialogShow = ref(false);
 const editStudentDialogShow = ref(false);

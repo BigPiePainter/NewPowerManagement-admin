@@ -8,7 +8,6 @@ import { getLiveClasses, createLiveClass, deleteLiveclasses } from '@/apis/liveC
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllTeachers } from '@/apis/teacher'
 import { getAllStudents } from '@/apis/student'
-import { editLiveclasses } from '@/apis/liveClass'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 
@@ -22,53 +21,61 @@ const loading = ref(true)
 const tableData = ref<any>([])
 const allTeacher = ref<any>([])
 const allStudent = ref<any>([])
-
-const teacherName = reactive<{
-  name: string
-  teacherId: string
-}>({
-  name: '',
-  teacherId: '',
-})
-
-const studenstName = reactive<{
-  name: string
-  studentIds: string
-}>({
-  name: '',
-  studentIds: '',
-})
-
+const showDialog = ref(false)
 const allSubjects = ref([])
-
-
-
-getSubjects()
-  .then((res) => (allSubjects.value = res.data))
-  .catch()
-
-getAllTeachers()
-  .then((res) => {
-    allTeacher.value = res.data
-  }).catch()
-
-getAllStudents()
-  .then((res) => (allStudent.value = res.data))
-  .catch()
-
-
-getGrades()
-  .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-  .catch()
+const allGrades = ref<any>([])
+const classStudent = ref([])
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
 
 
 
 
+const loadDetailData = () => {
+
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+  }
+
+  getSubjects()
+    .then((res) => (allSubjects.value = res.data))
+    .catch()
+
+  getAllTeachers()
+    .then((res) => {
+      allTeacher.value = res.data
+    }).catch()
+
+  getAllStudents()
+    .then((res) => (allStudent.value = res.data))
+    .catch()
+
+
+  getGrades()
+    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
+    .catch()
+
+  getLiveClasses(args)
+    .then((res) => {
+      res.data.records.forEach((item: any) => {
+        var dataSample = {
+          name: item.teacherId,
+          id: item.teacherId
+        }
+        teacherSelect.value.push(dataSample)
+      })
+      console.log(res)
+      console.log(teacherSelect.value)
+    })
+    .catch()
+
+}
 
 
 
-
-const studentIDS = ref([])
 
 const newClassData = reactive<{
   duration: string
@@ -131,63 +138,73 @@ const searchBarItems = reactive([
     value: '',
   }
 ])
-const editliveclassDialogshow = ref(false)
-
-const editliveclassData = reactive<{
-
-  id: string,
-  remark: string,
-  gradeId: string,
-  expiration: string
-}>({
-  id: '',
-  remark: '',
-  gradeId: '',
-  expiration: ''
-});
-
-const allGrades = ref<any>([])
-const editliveclass =
-  (props: { rowData: { id: string, gradeId: string, expiration: string, remark: string } }) => {
-    editliveclassData.id = props.rowData.id;
-    editliveclassData.expiration = props.rowData.expiration;
-    editliveclassData.gradeId = props.rowData.gradeId;
-    editliveclassData.remark = props.rowData.remark;
-
-    console.log(props)
-    editliveclassDialogshow.value = true;
-  }
-
-const confirmEditDialog = () => {
-  editLiveclasses(editliveclass).
-    then((res: any) => {
-      console.log(editliveclass)
-      if (res.code == '20000') {
-        ElNotification({
-          title: '成功',
-          message: '学生编辑成功',
-          type: 'success'
-        })
-      } else {
-        ElNotification({
-          title: '编辑失败',
-          message: '请求错误或删除被撤回',
-          type: 'error'
-        })
-      }
-    }).catch()
-  loadData()
-  editliveclassDialogshow.value = false;
-
-}
 
 
-const cancelEditDialog = () => {
-  editliveclassDialogshow.value = false;
-}
 
 
-const classStudent = ref([])
+
+
+
+
+
+
+
+//================编辑实时课堂=================
+
+
+//const editliveclassDialogshow = ref(false)
+//const editliveclassData = reactive<{
+
+// id: string,
+// remark: string,
+// gradeId: string,
+// expiration: string
+// }>({
+// id: '',
+// remark: '',
+// gradeId: '',
+// expiration: ''
+// });
+
+
+// const editliveclass =
+//   (props: { rowData: { id: string, gradeId: string, expiration: string, remark: string } }) => {
+//     editliveclassData.id = props.rowData.id;
+//     editliveclassData.expiration = props.rowData.expiration;
+//     editliveclassData.gradeId = props.rowData.gradeId;
+//     editliveclassData.remark = props.rowData.remark;
+
+//     console.log(props)
+//     editliveclassDialogshow.value = true;
+//   }
+
+// const confirmEditDialog = () => {
+//   editLiveclasses(editliveclass).
+//     then((res: any) => {
+//       console.log(editliveclass)
+//       if (res.code == '20000') {
+//         ElNotification({
+//           title: '成功',
+//           message: '学生编辑成功',
+//           type: 'success'
+//         })
+//       } else {
+//         ElNotification({
+//           title: '编辑失败',
+//           message: '请求错误或删除被撤回',
+//           type: 'error'
+//         })
+//       }
+//     }).catch()
+//   loadData()
+//   editliveclassDialogshow.value = false;
+// }
+// const cancelEditDialog = () => {
+//   editliveclassDialogshow.value = false;
+// }
+
+
+
 
 const classStudents = (item: any) => {
   classStudent.value = item.rowData.studentList
@@ -196,7 +213,6 @@ const classStudents = (item: any) => {
 }
 
 const classstudentCloumn = [
-
   {
     dataKey: 'id',
     key: 'id',
@@ -261,21 +277,18 @@ const tableColumns = [
 
     cellRenderer: (item: any) => (
       <>
-        <el-button link type="primary" class="" onClick={() => editliveclass(item)}>
-          编辑
-        </el-button>
         <el-button link type="danger" class="" onClick={() => deleteliveclass(item)}>
           删除
         </el-button>
       </>
     ),
 
-    width: 120,
+    width: 100,
     fixed: 'right',
     align: 'left'
   }
 ]
-const showDialog = ref(false)
+
 
 const createliveclass = () => {
   showDialog.value = true
@@ -304,20 +317,18 @@ const deleteliveclass = (cellData: any) => {
 }
 
 
-const paginationInfo = reactive({
-  currentPage: 1,
-  pageSize: 20
-})
 
 
-var args = {
-  pageNum: paginationInfo.currentPage,
-  pageSize: paginationInfo.pageSize,
-  name: searchBarItems[1].value,
-  teacherId: searchBarItems[0].value
-}
+
+
 
 const loadSelectOption = () => {
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    name: searchBarItems[1].value,
+    teacherId: searchBarItems[0].value
+  }
   getLiveClasses(args)
     .then((res) => {
       res.data.records.forEach((item: any) => {
@@ -343,8 +354,7 @@ loadSelectOption()
 
 const loadData = () => {
   loading.value = true
-  loadSelectOption()
-
+  loadDetailData()
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
@@ -424,7 +434,7 @@ loadData()
 
 
 
-  <el-dialog class="new-class-dialog" width="370px" v-model="editliveclassDialogshow">
+  <!-- <el-dialog class="new-class-dialog" width="370px" v-model="editliveclassDialogshow">
     <div class="div-input-element">
       <span class="dialog-span">
         <el-input disabled class="dialog-input" v-model="editliveclassData.id">
@@ -458,7 +468,7 @@ loadData()
         取消
       </el-button>
     </template>
-  </el-dialog>
+  </el-dialog> -->
 
 
   <el-dialog v-model="allStudentsDialogShow" class='dialog-container' style="width:630px">
