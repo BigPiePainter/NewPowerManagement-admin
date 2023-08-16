@@ -11,10 +11,6 @@ import { deleteProduct, editProduct, getProduct } from '@/apis/product'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 
-
-
-
-
 const router = useRouter()
 
 
@@ -37,17 +33,11 @@ const clickDetail = (props: any) => {
   });
 }
 
-
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '商城管理', path: '' }]
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const loading = ref(true)
-
-
-
-
-
 
 const allstatus = [
   {
@@ -149,23 +139,18 @@ const searchBarItems = reactive([
   { name: '版本', value: '', type: InputType.Select, options: allVersion },
 ])
 
-
-
-
-
-
-
 const tableColumns = [
   {
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 50
+    width: 80
   },
   {
     dataKey: 'cover',
     key: 'cover',
     title: '海报',
+    align: 'center',
     width: 100,
     cellRenderer: (item: any) => (
       <el-image
@@ -182,55 +167,77 @@ const tableColumns = [
     dataKey: 'name',
     key: 'name',
     title: '名称',
-    width: 120,
+    width: 230,
     cellRenderer: (cellData: any) => (
       <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
         {cellData.cellData}
       </ElButton>
     )
-
   },
   {
-    dataKey: 'grade_name',
-    key: 'grade_name',
+    dataKey: 'gradeName',
+    key: 'gradeName',
     title: '学习阶段',
+    align: 'center',
+    cellRenderer: (cellData: any) => (
+      <span>{cellData.cellData ? cellData.cellData : '无'}</span>
+    ),
     width: 80
   },
   {
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '学科',
+    cellRenderer: (cellData: any) => (
+      <span>{cellData.cellData ? cellData.cellData : '无'}</span>
+    ),
     width: 50
   },
   {
     dataKey: 'androidPoint',
     key: 'androidPoint',
     title: '安卓积分',
-    width: 50
+    align: 'center',
+    cellRenderer: (cellData: any) => (
+      <span>{cellData.cellData ? cellData.cellData : '无'}</span>
+    ),
+    width: 80
   },
   {
     dataKey: 'androidPrice',
     key: 'androidPrice',
     title: '安卓售价',
-    width: 50
+    align: 'center',
+    cellRenderer: (cellData: any) => (
+      <span>{cellData.cellData ? cellData.cellData + '￥' : '无'}</span>
+    ),
+    width: 80
   },
   {
     dataKey: 'iosPoint',
     key: 'iosPoint',
     title: 'ios积分',
+    align: 'center',
+    cellRenderer: (cellData: any) => (
+      <span>{cellData.cellData ? cellData.cellData : '无'}</span>
+    ),
     width: 80,
   },
   {
     dataKey: 'tcoin',
     key: 'tcoin',
     title: 'T币价格',
+    align: 'center',
+    cellRenderer: (cellData: any) => (
+      <span>{cellData.cellData ? cellData.cellData : '无'}</span>
+    ),
     width: 80,
   },
   {
     dataKey: 'type',
     key: 'type',
     title: '类型',
-    width: 80,
+    width: 50,
     cellRenderer: (cellData: any) => (
       <span>
         {cellData.cellData == 1 ? "课程" : "好题"}
@@ -240,7 +247,8 @@ const tableColumns = [
     dataKey: 'version',
     key: 'version',
     title: '版本',
-    width: 60,
+    align: 'center',
+    width: 100,
     cellRenderer: (cellData: any) => (
       <span>
         {cellData.cellData == 1 ? "课程/好题A" : cellData.cellData == 2 ? "课程/好题B" : cellData.cellData == 3 ? "课程/好题C" : "课程/好题D"}
@@ -250,6 +258,7 @@ const tableColumns = [
     dataKey: 'versionType',
     key: 'versionType',
     title: '版本类型',
+    align: 'center',
     width: 80,
     cellRenderer: (cellData: any) => (
       <span>
@@ -260,7 +269,8 @@ const tableColumns = [
     dataKey: 'salesQuantity',
     key: 'salesQuantity',
     title: '已售',
-    width: 60
+    align: 'center',
+    width: 50
   },
   {
     dataKey: 'status',
@@ -310,6 +320,8 @@ const tableColumns = [
 const deleteSlot = {
   reference: () => <el-button link type="danger">删除</el-button>
 }
+  reference: () => <el-button link type="danger">删除</el-button>
+}
 
 
 const paginationInfo = reactive({
@@ -322,28 +334,19 @@ const tableData = ref<any>([])
 
 const loadData = () => {
   loading.value = true
-  loadSelectOption()
-
   var args = {
-
-
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-
     name: searchBarItems[0].value,
     type: searchBarItems[1].value[0],
     status: searchBarItems[2].value[0],
     gradeId: searchBarItems[3].value[0],
     subjectId: searchBarItems[4].value[0],
     version: searchBarItems[5].value[0]
-
-
   }
-
-
   getProduct(args)
-
     .then((res) => {
+      loadSelectOption()
       console.log(args)
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
@@ -352,21 +355,28 @@ const loadData = () => {
     .finally(() => {
       loading.value = false
     })
-
-
 }
-
 loadData()
 
 console.log(tableData)
 
 
-
-
-
-
 //-------------------上下架----------------------//
 
+const editgoodOn = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
+  editProductData.id = props.rowData.id;
+  editProductData.iosPoint = props.rowData.iosPoint;
+  editProductData.tcoin = props.rowData.tcoin;
+  editProductData.androidPoint = props.rowData.androidPoint;
+  editProductData.androidPrice = props.rowData.androidPrice;
+  editProductData.name = props.rowData.name
+  editProductData.hot = props.rowData.hot
+  editProductData.subjectId = props.rowData.subjectId
+  editProductData.type = props.rowData.type
+  editProductData.version = props.rowData.version
+  editProductData.versionType = props.rowData.versionType
+  editProductData.status = props.rowData.status
+  console.log(props)
 const editgoodOn = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
   editProductData.id = props.rowData.id;
   editProductData.iosPoint = props.rowData.iosPoint;
@@ -542,6 +552,20 @@ const deleteStu = (item: any) => {
     })
 }
 //----------------------------添加热门----------
+const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
+  editProductData.id = props.rowData.id;
+  editProductData.iosPoint = props.rowData.iosPoint;
+  editProductData.tcoin = props.rowData.tcoin;
+  editProductData.androidPoint = props.rowData.androidPoint;
+  editProductData.androidPrice = props.rowData.androidPrice;
+  editProductData.name = props.rowData.name
+  editProductData.hot = props.rowData.hot
+  editProductData.subjectId = props.rowData.subjectId
+  editProductData.type = props.rowData.type
+  editProductData.version = props.rowData.version
+  editProductData.versionType = props.rowData.versionType
+  editProductData.status = props.rowData.status
+  console.log(props)
 const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
   editProductData.id = props.rowData.id;
   editProductData.iosPoint = props.rowData.iosPoint;

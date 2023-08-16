@@ -22,6 +22,7 @@ const props = defineProps<{
 console.log(props.items)
 
 const clickSearch = (): void => {
+  console.log(props.items)
   emit('change', props.items)
 }
 
