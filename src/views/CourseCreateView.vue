@@ -1,10 +1,7 @@
 <script setup lang="tsx">
-import RichTextEditor from '@/components/RichTextEditor.vue';
 import { ElButton, ElNotification } from 'element-plus'
 import { getSubjects } from '@/apis/subject'
 import { getGrades } from '@/apis/grade'
-import { InputType } from '@/type'
-import { useRoute } from 'vue-router'
 import { ref, reactive } from 'vue'
 import { createGoodQuestionPack } from '@/apis/questionPackageQuestion'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
@@ -12,12 +9,8 @@ import { getAllTeachers } from '@/apis/teacher';
 import { upload } from '@/apis/upload'
 import { getLabels } from '@/apis/label';
 
-
-
-
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '题库管理', path: '' }]
-
 
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
@@ -30,7 +23,6 @@ const newGoodQuestion = reactive<any>([])
 
 const showImgSrc = ref<string>('')
 
-const imageFile = reactive<{ file: Blob | null }>({ file: null })
 const mouseEnter = () => {
     bgc.value = '#BEC2CB'
 }
@@ -70,47 +62,82 @@ const allDifficultyType = [
 const loadSelectOption = () => {
 
     getGrades()
-        .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
+        .then((res) => {
+            allGrades.value.length = 0
+            allGrades.value = res.data.map((i: any) => i.subset).flat()
+            return getSubjects()
+        }).then((res) => {
+            allSubjects.value.length = 0
+            allSubjects.value = res.data
+            return getAllTeachers()
+        }).then((res) => {
+            allTeacher.value.length = 0
+            allTeacher.value = res.data
+            return getLabels()
+        }).then((res) => {
+            allLabel.value.length = 0
+            allLabel.value = res.data
+        })
         .catch()
 
-    getSubjects()
-        .then((res) => (allSubjects.value = res.data))
-        .catch()
+    // getSubjects()
+    //     .then((res) => {
+    //         allSubjects.value.length = 0
+    //         allSubjects.value = res.data
+    //     })
+    //     .catch()
 
-    getAllTeachers()
-        .then((res) => { (allTeacher.value = res.data), console.log(res) })
-        .catch()
+    // getAllTeachers()
+    //     .then((res) => {
+    //         allTeacher.value.length = 0
+    //         allTeacher.value = res.data
+    //         console.log(res)
+    //     })
+    //     .catch()
 
-    getLabels()
-        .then((res) => (allLabel.value = res.data))
-        .catch()
-
+    // getLabels()
+    //     .then((res) => {
+    //         allLabel.value.length = 0
+    //         allLabel.value = res.data
+    //     })
+    //     .catch()
 }
-
 loadSelectOption()
-
-
-
-
-
 
 //-----------------上传封面功能--------------
 const handleFileChange = (e: Event) => {
     const currentTarget = e.target as HTMLInputElement;
+    //图片上传到服务器返回url
+    //url在res.data.url
     if (currentTarget.files) {
-        imageFile.file = currentTarget.files[0]
+        var imageSize = currentTarget.files[0].size
         var formData = new FormData()
         formData.append('file', currentTarget.files[0])
-        upload(formData)
-            .then((res: any) => {
-                if (res.data.url) {
-                    console.log(res)
-                    showImgSrc.value = res.data.url
-                } else {
-                    console.log("失败")
-                }
+        if (imageSize < 1048576) {
+            upload(formData)
+                .then((res: any) => {
+                    if (res.code != 20000) {
+                        console.log(res)
+                        console.log("失败")
+                        ElNotification({
+                            title: '封面上传失败',
+                            message: res.msg,
+                            type: 'error'
+                        })
+                    } else {
+                        console.log(res)
+                        showImgSrc.value = res.data.url
+                    }
+                })
+                .catch()
+        } else {
+            console.log("too big")
+            ElNotification({
+                title: '图片不能大于1MB',
+                type: 'error'
             })
-            .catch()
+        }
+
     }
 }
 
@@ -124,9 +151,9 @@ const createnewGoodQuestion = () => {
         description: newGoodQuestion.description,
         difficultyLevel: newGoodQuestion.difficultyLevel,
         gradeId: newGoodQuestion.gradeId,
-        labelId:newGoodQuestion.labelId,
+        subjectId: newGoodQuestion.subjectId,
+        labelId: newGoodQuestion.labelId,
         type: 1
-
     }
 
     createGoodQuestionPack(args)
@@ -149,18 +176,13 @@ const createnewGoodQuestion = () => {
         })
         .finally(() => {
             loading.value = false
-
         })
 }
-
-
-
 </script>
 
 <template>
     <div class="div-input-element">
         <div>
-
             <div class="top-part">
                 <el-text class="dialog-el-text">
                     *名称：
@@ -169,13 +191,12 @@ const createnewGoodQuestion = () => {
                 </el-input>
             </div>
 
-
             <div class="top-part">
                 <el-text class="dialog-el-text">
                     *学科：
                 </el-text>
-                <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.gradeId">
-                    <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+                <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.subjectId">
+                    <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </div>
 
@@ -183,11 +204,9 @@ const createnewGoodQuestion = () => {
                 <el-text class="dialog-el-text">
                     *阶段：
                 </el-text>
-                <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.subjectId">
-                    <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
+                <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.gradeId">
+                    <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
-
-
             </div>
 
             <div class="div-input-element">
@@ -200,6 +219,7 @@ const createnewGoodQuestion = () => {
                     <div class="upload-file-area-text">
                         <!-- <div>icon</div> -->
                         <el-text>点击此处或拖拽上传封面</el-text>
+                        <el-text>图片不大于1MB</el-text>
                         <el-text>只接受 *.png *.jpg *.jpeg</el-text>
                     </div>
 
@@ -235,7 +255,6 @@ const createnewGoodQuestion = () => {
             </el-select>
         </div>
 
-
         <div class="div-input-element">
             <el-text class="dialog-el-text">
                 *标签：
@@ -248,9 +267,6 @@ const createnewGoodQuestion = () => {
         <div class="rich-text-area">
             <el-button @click="createnewGoodQuestion">添加课程包</el-button>
         </div>
-
-
-
     </div>
 </template>
   

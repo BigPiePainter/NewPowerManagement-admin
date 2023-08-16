@@ -4,145 +4,104 @@ import { getLabels, createLabel, deleteLabel } from '@/apis/label'
 import { ref, reactive } from 'vue'
 import { ElNotification } from 'element-plus'
 
-
-
-
-
-
-
-
-
-
 const breadcrumbStore = useBreadcrumbStore()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const newLabelData = reactive<{
-
-level: string,
-name: string,
-parentId: string,
-
-}>({
-level: '',
-name: '',
-parentId: ''
-});
-
+breadcrumbStore.data = [{ name: '设置' }, { name: '标签管理' }]
 
 const labelData = reactive<any>([])
 
+const supLabels = reactive<any>([])
+const subLabels = reactive<any>([])
+const supLabelId = ref()
+const changeSupLabelId = (id: any) => {
+  supLabelId.value = id
+}
+const dataCompute = (props: any) => {
+  supLabels.length = 0
+  subLabels.length = 0
+  props.forEach((label: any) => {
+    if (label.level == 1) {
+      supLabels.push(label)
+    } else if (label.level == 2) {
+      subLabels.push(label)
+    }
+  })
+}
 
-
-breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
-
+const createLabelInfo = reactive<any>({
+  parentId: '',
+  level: '',
+  name: ''
+})
+const addSupLabel = () => {
+  createLabelInfo.parentId = 1
+  createLabelInfo.level = 1
+  createLabelInfo.name = ''
+  createDialogShow.value = true
+}
+const addSubLabel = () => {
+  createLabelInfo.parentId = supLabelId
+  createLabelInfo.level = 2
+  createLabelInfo.name = ''
+  createDialogShow.value = true
+}
 
 const loadData = () => {
-  getLabels().then((res:any) => {
-  labelData.length=0
-    res.data.forEach((item:any)=>{
+  getLabels().then((res: any) => {
+    labelData.length = 0
+    res.data.forEach((item: any) => {
       labelData.push(item)
     })
+    dataCompute(labelData)
   }).catch
 }
 loadData()
 
-
-
-const allLevel = [
-
-  {
-    id: '1',
-    name: '父级',
-    value: 1
-  },
-  {
-    id: '2',
-    name: '子级',
-    value: 2
-  }
-]
-
-
-
 const confrimCreateNew = () => {
-console.log(newLabelData)
-  createLabel(newLabelData).then((res:any)=>{
-    if(newLabelData.level=='1'){
-      newLabelData.parentId=='1'
-    }
+  console.log(createLabelInfo)
+  createLabel(createLabelInfo).then((res: any) => {
     if (res.code == 20000) {
       console.log('添加成功')
       ElNotification({
-          title: '成功',
-          message: '标签新建成功',
-          type: 'success'
-        })
-        loadData()
-      } else {
-        ElNotification({
-          title: '添加失败',
-          message: '添加失败'+res.msg,
-          type: 'error'
-        })
-      }
+        title: '成功',
+        message: '标签新建成功',
+        type: 'success'
+      })
       loadData()
-      createDialogShow.value=false
-
+    } else {
+      ElNotification({
+        title: '添加失败',
+        message: '添加失败' + res.msg,
+        type: 'error'
+      })
+    }
+    loadData()
+    createDialogShow.value = false
   }).catch()
 }
-
 
 const createDialogShow = ref(false)
 
-
-
-
-
-
-
-
-
-
-
-
 const deleteLab = (item: any) => {
-  deleteLabel(item).then((res:any)=>{
+  deleteLabel(item).then((res: any) => {
     if (res.code == 20000) {
       console.log('删除成功')
       ElNotification({
-          title: '成功',
-          message: '标签删除成功',
-          type: 'success'
-        })
-        loadData()
-      } else {
-        ElNotification({
-          title: '删除失败',
-          message: '删除失败'+res.msg,
-          type: 'error'
-        })
-      }
+        title: '成功',
+        message: '标签删除成功',
+        type: 'success'
+      })
       loadData()
-      createDialogShow.value=false
-
+    } else {
+      ElNotification({
+        title: '删除失败',
+        message: '删除失败' + res.msg,
+        type: 'error'
+      })
+    }
+    loadData()
+    createDialogShow.value = false
   }).catch()
 }
-
-
-
-
 </script>
 
 <template>
@@ -150,16 +109,16 @@ const deleteLab = (item: any) => {
     <div class="card-left">
 
       <div class="card-title-bar">
-        <el-text>标签菜单</el-text>
+        <el-text>一级标签菜单</el-text>
         <div style="flex-grow: 1;"></div>
-        <el-button type="primary">添加</el-button>
+        <el-button type="primary" @click="addSupLabel">添加</el-button>
       </div>
       <div class="test">
         <el-scrollbar class="scrollbar">
-          <div class="card-body" v-for="item in labelData" :key="item.name">
-            <el-button link type="primary">{{ item.name }}</el-button>
+          <div class="card-body" v-for="item in supLabels" :key="item.name">
+            <el-button link type="primary" @click="changeSupLabelId(item.id)">{{ item.name }}</el-button>
             <div style="flex-grow: 1;"></div>
-            <el-button link type="primary" @click="deleteLab(item.id)">删除</el-button>
+            <el-button link type="danger" @click="deleteLab(item.id)">删除</el-button>
           </div>
         </el-scrollbar>
       </div>
@@ -168,73 +127,33 @@ const deleteLab = (item: any) => {
     <div class="card-right">
 
       <div class="card-title-bar">
-        <el-text>新标签：</el-text>
+        <el-text>二级标签菜单</el-text>
         <div style="flex-grow: 1;"></div>
-        <el-button type="primary" @click="createDialogShow = true">添加</el-button>
+        <el-button type="primary" @click="addSubLabel">添加</el-button>
       </div>
 
       <div class="card-body">
-        <el-tag class="tag-item" v-for="item in labelData" :key="item.name">{{ item.name }}</el-tag>
+        <div class="tag-item" v-for="item in subLabels" :key="item.id">
+          <el-tag closable @close="deleteLab(item.id)" v-if="item.parentId == supLabelId">{{
+            item.name }}</el-tag>
+        </div>
       </div>
-
     </div>
-
-
-
-
-
-
-
-
   </div>
 
-
-
   <el-dialog class="new-class-dialog" width="370px" v-model="createDialogShow">
-    <div class="div-input-element">
-    </div>
-
-    <div class="div-input-element" style="margin-top: 10px;">
-      <el-text>
-        层级：
-      </el-text>
-      <div>
-        <el-select placeholder="例：初中为父级，初一为子级别" class="dialog-input" v-model="newLabelData.level" style="width: 256px;">
-          <el-option v-for="item in allLevel" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-
-      </div>
-
-    </div>
-
-
     <div class="div-input-element" style="margin-top: 10px;">
       <el-text>
         标签名称：
       </el-text>
       <div>
-        <el-input class="dialog-input" v-model="newLabelData.name" style="width: 256px;">
+        <el-input class="dialog-input" v-model="createLabelInfo.name" style="width: 256px;">
         </el-input>
       </div>
     </div>
-
-
-    <div class="div-input-element" style="margin-top: 10px;"  v-if="newLabelData.level=='2'">
-      <el-text>
-        父级标签：
-      </el-text>
-      <div>
-        <el-select type="datetime" placeholder="请选择" style="width:256px" v-model="newLabelData.parentId">
-          <el-option v-for="item in labelData" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div>
-
-    </div>
-
     <template #header>
-      <el-text>添加学习阶段</el-text>
+      <el-text>添加标签</el-text>
     </template>
-
     <template #footer>
       <el-button type="primary" @click="confrimCreateNew()">确定</el-button>
       <el-button @click="createDialogShow = false">
@@ -296,12 +215,12 @@ const deleteLab = (item: any) => {
     }
 
     >.card-body {
-      margin: 20px;
-
+      margin: 10px;
+      display: flex;
       >.tag-item {
         line-height: 2;
-        margin-bottom: 20px;
-        margin-right: 20px;
+        margin-bottom: 3px;
+        margin-right: 5px;
       }
     }
   }

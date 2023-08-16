@@ -7,12 +7,6 @@ import { getGrades } from '@/apis/grade';
 import { getSubjects } from '@/apis/subject';
 import { createProduct } from '@/apis/product';
 import { ElButton, ElNotification } from 'element-plus'
-import SearchBar from '@/components/SearchBar.vue'
-import TablePage from '@/components/TablePage.vue'
-import { InputType } from '@/type'
-import { useRoute } from 'vue-router'
-import { ElCheckbox } from 'element-plus'
-import type { CheckboxValueType } from 'element-plus'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -128,12 +122,6 @@ const allHot: any = [
 const newCoverUrl = ref('')
 const showImgSrc = ref<string>('')
 const active = ref(0)
-
-const dialogSearchBarItems = reactive([
-  { name: "用户名", value: "", },
-  { name: "姓名", value: "", },
-  { name: "电话", value: "", },
-])
 
 const bgc = ref('#e2e5ec')
 const mouseEnter = () => {

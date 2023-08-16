@@ -129,19 +129,19 @@ const tableColumns = [
     cellRenderer: (cellData: any) => {
       return (
         <div>
-          <el-button link type="primary" onClick={() => console.log(cellData)}>
+          {/* <el-button link type="primary" onClick={() => console.log(cellData)}>
             预览
           </el-button>
           <el-button link type="primary" onClick={() => console.log(cellData)}>
             禁止快进
-          </el-button>
+          </el-button> */}
           <el-button link type="danger" onClick={() => warningDialog(cellData.rowData.id)}>
             删除
           </el-button>
         </div>
       )
     },
-    width: 250,
+    width: 50,
     fixed: 'right',
     align: 'left'
   }
