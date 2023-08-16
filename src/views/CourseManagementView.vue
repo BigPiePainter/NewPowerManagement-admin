@@ -117,7 +117,6 @@ const couseDetail = (props: any) => {
       teacherName: props.rowData.teacherName,
       gradeName: props.rowData.gradeName,
       updatedAt: props.rowData.updatedAt,
-      
     }
   })
 }

@@ -99,13 +99,15 @@ const tableColumns = [
     dataKey: 'gradeName',
     key: 'gradeName',
     title: '学习阶段',
-    width: 100
+    width: 100,
+    single:true
   },
   {
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '学科',
-    width: 100
+    width: 100,
+    single:true
   },
   {
     dataKey: 'teacherName',
@@ -384,31 +386,43 @@ const loadData = () => {
 
 }
 
-const confirmEditDialog = () => {
-
-  editCourseQuestionPackage(newCourseData)
-    .then((res: any) => {
-      if (res.code == 20000) {
-        ElNotification({
-          title: '成功',
-          message: '已成功编辑',
-          type: 'success'
-        })
-        loadData()
-      } else {
-        ElNotification({
-          title: 'Warning',
-          message: res.msg,
-          type: 'warning'
-        })
-      }
-    })
-    .catch()
-  editDialogShow.value = false
-}
-
 loadData()
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+const confirmEditDialog = () => {
+
+editCourseQuestionPackage(newCourseData)
+  .then((res: any) => {
+    if (res.code == 20000) {
+      ElNotification({
+        title: '成功',
+        message: '已成功编辑',
+        type: 'success'
+      })
+      loadData()
+    } else {
+      ElNotification({
+        title: 'Warning',
+        message: res.msg,
+        type: 'warning'
+      })
+    }
+  })
+  .catch()
+editDialogShow.value = false
+}
 </script>
 
 <template>

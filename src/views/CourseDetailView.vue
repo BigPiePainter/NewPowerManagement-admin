@@ -8,35 +8,38 @@ import TablePage from '@/components/TablePage.vue';
 import { useRoute } from 'vue-router'
 import type { CheckboxValueType } from 'element-plus'
 import { getMiniLessons, deleteMiniLessons, addMiniLessons, getMiniLesson } from '@/apis/minilessons'
-import { ElCheckbox,ElNotification } from 'element-plus'
+import { ElCheckbox, ElNotification } from 'element-plus'
 import { getAllTeachers } from '@/apis/teacher'
 
 const route = useRoute()
 const warningDialogshow = ref(false)
 const deleteItemid = ref<any>()
 
-const warningDialog=(cellData2:any)=>{
+const warningDialog = (cellData2: any) => {
   console.log(cellData2)
   warningDialogshow.value = true
-  deleteItemid.value=cellData2
+  deleteItemid.value = cellData2
   console.log(deleteItemid.value)
 }
 
 const ConfirmdeleteMiniLesson = () => {
-  deleteMiniLessons({id:deleteItemid.value}).then((res: any) => {
+  deleteMiniLessons({ id: deleteItemid.value }).then((res: any) => {
     console.log(deleteItemid)
     if (res.code == 20000) {
       console.log('删除成功')
 
       loadData()
-      warningDialogshow.value=false
+      warningDialogshow.value = false
     }
     else {
-      warningDialogshow.value=false
+      warningDialogshow.value = false
       console.log('删除失败')
     }
   }).catch()
 }
+
+const addDialogShow = ref(false)
+const newTeaData = ref<any>([])
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -66,12 +69,11 @@ const tableColumns = [
   },
 
   {
-    dataKey: 'createdAt',
-    key: 'createdAt',
-    title: '创建时间',
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '老师姓名',
     width: 200
   },
-
   {
     key: 'option',
     title: '操作',
@@ -95,7 +97,11 @@ const tableColumns = [
     align: 'left'
   }
 ]
-
+const loadTeacherData=()=>{
+getAllTeachers()
+  .then((res) => { (allTeacher.value = res.data), console.log(res) })
+  .catch()
+}
 
 
 const paginationInfo = reactive({
@@ -106,7 +112,7 @@ const paginationInfo = reactive({
 
 const loadData = () => {
   loading.value = true
-
+  loadTeacherData()
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
@@ -124,7 +130,7 @@ const loadData = () => {
     .finally(() => {
       loading.value = false
     })
-  }
+}
 
 
 
@@ -137,8 +143,8 @@ loadData()
 
 
 
-  const dialogTableData = ref<any>([])
-  const dialogTableColumns = reactive<any>([
+const dialogTableData = ref<any>([])
+const dialogTableColumns = reactive<any>([
   {
     key: 'selection',
     width: 50,
@@ -158,40 +164,33 @@ loadData()
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 250
   },
   {
     dataKey: 'name',
     key: 'name',
     title: '课程名',
-    width: 200
-  },
-  {
-    dataKey: 'gradeName',
-    key: 'gradeName',
-    title: '学习阶段',
-    width: 200
-  },
-  {
-    dataKey: 'subjectName',
-    key: 'subjectName',
-    title: '学科',
-    width: 200
+    width: 250
   },
   {
     dataKey: 'teacherName',
     key: 'teacherName',
-    title: '老师名',
-    width: 200
+    title: '老师姓名',
+    width: 250,
+  },
+  {
+    dataKey: 'teacherCourseId',
+    key: 'teacherCourseId',
+    title: '老师课程编号',
+    width: 250,
   }
+
+
   
 ])
 
-const addDialogShow=ref(false)
-const newTeaData = ref<any>([])
 
-
-  loadData()
+loadData()
 
 const confirmAdd = () => {
   newTeaData.value = dialogTableData.value.filter((item: any) => item.checked)
@@ -201,33 +200,31 @@ const confirmAdd = () => {
     courseId: route.query.id,
     miniLessonId: data
   }).then((res: any) => {
-      if (res.code == '20000') {
-        ElNotification({
-          title: '成功',
-          message: '添加微课到课程包成功',
-          type: 'success'
-        })
-        addDialogShow.value = false
-      }else{
-        ElNotification({
-          title: '添加失败',
-          message: (res.msg),
-          type: 'warning'
-        })
-      }
-    
-loadData()
+    if (res.code == '20000') {
+      ElNotification({
+        title: '成功',
+        message: '添加微课到课程包成功',
+        type: 'success'
+      })
+      addDialogShow.value = false
+    } else {
+      ElNotification({
+        title: '添加失败',
+        message: (res.msg),
+        type: 'warning'
+      })
+    }
+
+    loadData()
   }).catch
 }
-const allTeacher=ref<any>([])
+const allTeacher = ref<any>([])
 
-getAllTeachers()
-    .then((res) => { (allTeacher.value = res.data), console.log(res) })
-    .catch()
 
 const dialogSearchBarItems = reactive([
-  { name: "标题", value:"", },
-  { name: '老师', value: '', type: InputType.Select, label: '请选择', options: allTeacher }
+  { name: "微课名称", value: "", },
+  { name: "老师课程编号", value: "", },
+  { name: '老师姓名', value: '', type: InputType.Select, label: '请选择', options: allTeacher,single:true }
 ])
 
 
@@ -235,13 +232,19 @@ const dialogSearchBarItems = reactive([
 
 
 const loadDialogData = () => {
+
+  
+
+
   loading.value = true
 
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    name:dialogSearchBarItems[0].value,
-    ownerId:dialogSearchBarItems[1].value
+    name: dialogSearchBarItems[0].value,
+    ownerId: dialogSearchBarItems[2].value,
+    auditStatus:'3',
+    teacherCourseId: dialogSearchBarItems[1].value,
   }
   getMiniLessons(args)
     .then((res) => {
@@ -250,7 +253,7 @@ const loadDialogData = () => {
     })
     .catch(() => { })
     .finally(() => {
-    loading.value = false
+      loading.value = false
     })
 }
 loadDialogData()
@@ -268,11 +271,11 @@ loadDialogData()
         </div>
         <div class="topPart1-3">
           <div class="topPart1-3-2">
-            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{route.query.name}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>更新时间:{{route.query.updatedAt}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>阶段：{{route.query.gradeName}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>学科：{{route.query.subjectName}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>老师：{{route.query.teacherName}}</el-text></div>
+            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{ route.query.name }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>更新时间:{{ route.query.updatedAt }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>阶段：{{ route.query.gradeName }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>学科：{{ route.query.subjectName }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>老师：{{ route.query.teacherName }}</el-text></div>
           </div>
         </div>
 
@@ -294,7 +297,7 @@ loadDialogData()
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button type="primary" @click="addDialogShow=true">添加微课</el-button></div>
+        <div class="botPart1-1-1"><el-button type="primary" @click="addDialogShow = true">添加微课</el-button></div>
       </div>
     </div>
     <div class="botPart1-2">
@@ -313,7 +316,7 @@ loadDialogData()
     </el-text>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="warningDialogshow=false">Cancel</el-button>
+        <el-button @click="warningDialogshow = false">Cancel</el-button>
         <el-button type="primary" @click="ConfirmdeleteMiniLesson">
           Confirm
         </el-button>
@@ -342,16 +345,16 @@ loadDialogData()
 
 
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addDialogShow">
-    <TablePage   class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+    <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
       <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
     </TablePage>
 
     <template #header>
-      <el-text>添加课程/好题到商品</el-text>
+      <el-text>添加微课到课程包（只展示已通过审核微课）</el-text>
     </template>
     <template #footer>
       <el-button type="primary" @click="confirmAdd()">确定</el-button>
-      <el-button @click="addDialogShow=false">
+      <el-button @click="addDialogShow = false">
         取消
       </el-button>
     </template>

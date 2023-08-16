@@ -25,7 +25,7 @@ const searchBarItems = reactive([
 ])
 
 const dialogSearchBarItems = reactive([
-  { name: "用户名", value: "", },
+  { name: "Id", value: "", },
   { name: "姓名", value: "", },
   { name: "电话", value: "", },
 ])
@@ -68,6 +68,12 @@ const dialogTableColumns = reactive<any>([
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '学科',
+    width: 200
+  },
+  {
+    dataKey: 'phoneNumber',
+    key: 'phoneNumber',
+    title: '电话',
     width: 200
   },
 ])
@@ -176,8 +182,8 @@ const loadData = () => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     groupId: route.query.id,
-    name: dialogSearchBarItems[0].value,
-    phoneNumber: dialogSearchBarItems[0].value,
+    name: dialogSearchBarItems[1].value,
+    phoneNumber: dialogSearchBarItems[2].value,
     account: dialogSearchBarItems[0].value,
   }
   getTeacherGroupTeachers(args)

@@ -8,9 +8,9 @@ import { useRoute } from 'vue-router'
 import { ref, reactive } from 'vue'
 import { createGoodQuestionPack } from '@/apis/questionPackageQuestion'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { getGoodQuestion, } from '@/apis/questionStore'
 import { getAllTeachers } from '@/apis/teacher';
 import { upload } from '@/apis/upload'
+import { getLabels } from '@/apis/label';
 
 
 
@@ -22,6 +22,7 @@ breadcrumbStore.data = [{ name: '题库管理', path: '' }]
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const allTeacher = ref<any>([])
+const allLabel = ref<any>([])
 const loading = ref(true)
 const bgc = ref('#e2e5ec')
 const newGoodQuestion = reactive<any>([])
@@ -77,7 +78,10 @@ const loadSelectOption = () => {
         .then((res) => { (allTeacher.value = res.data), console.log(res) })
         .catch()
 
-        
+    getLabels()
+        .then((res) => (allLabel.value = res.data))
+        .catch()
+
 }
 
 loadSelectOption()
@@ -224,6 +228,16 @@ const createnewGoodQuestion = () => {
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.teacherId">
                 <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+        </div>
+
+
+        <div class="div-input-element">
+            <el-text class="dialog-el-text">
+                *标签：
+            </el-text>
+            <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.labelId">
+                <el-option v-for="item in allLabel" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
         </div>
 

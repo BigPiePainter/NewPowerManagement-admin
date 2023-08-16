@@ -108,6 +108,8 @@ const cancelEditDialog = () => {
   editTeacherDialogShow.value = false;
 }
 
+
+
 //------------新建角色数据------------------------
 const roleDetail = () => {
   router.push({ path: '/role-detail-managment' })
@@ -126,20 +128,14 @@ const tableColumns = [
     width: 200
   },
   {
-    dataKey: 'name',
-    key: 'name',
-    title: '创建者',
-    width: 200
-  },
-  {
     dataKey: 'phoneNumber',
     key: 'phoneNumber',
     title: '手机号码',
     width: 200
   },
   {
-    dataKey: 'msg',
-    key: 'msg',
+    dataKey: 'roleRemark',
+    key: 'roleRemark',
     title: '备注',
     width: 200
   },
