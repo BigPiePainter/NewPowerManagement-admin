@@ -8,14 +8,11 @@ import { getLiveClasses, createLiveClass, deleteLiveclasses } from '@/apis/liveC
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllTeachers } from '@/apis/teacher'
 import { getAllStudents } from '@/apis/student'
-import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '实时课程', path: '' }]
 
-
-const teacherSelect = ref<any>([])
 const totalLength = ref<Number>()
 const loading = ref(true)
 const tableData = ref<any>([])
@@ -24,19 +21,13 @@ const allStudent = ref<any>([])
 const showDialog = ref(false)
 const allSubjects = ref([])
 
-  getSubjects()
-    .then((res) => (allSubjects.value = res.data))
-    .catch()
+getSubjects()
+  .then((res) => (allSubjects.value = res.data))
+  .catch()
 
 getAllStudents()
   .then((res) => (allStudent.value = res.data))
   .catch()
-
-getGrades()
-  .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-  .catch()
-
-const studentIDS = ref([])
 
 const newClassData = reactive<{
   duration: string
@@ -101,46 +92,7 @@ const searchBarItems = reactive([
   }
 ])
 
-
-
-
-
-
-
-
-
-
-
-//================编辑实时课堂=================
-
-
-const confirmEditDialog = () => {
-  editLiveclasses(editliveclass).
-    then((res: any) => {
-      console.log(editliveclass)
-      if (res.code == '20000') {
-        ElNotification({
-          title: '成功',
-          message: '学生编辑成功',
-          type: 'success'
-        })
-      } else {
-        ElNotification({
-          title: '编辑失败',
-          message: '请求错误或删除被撤回',
-          type: 'error'
-        })
-      }
-    }).catch()
-  loadData()
-  editliveclassDialogshow.value = false;
-}
-
-const cancelEditDialog = () => {
-  editliveclassDialogshow.value = false;
-}
-
-
+const classStudent = ref([])
 const classStudents = (item: any) => {
   classStudent.value = item.rowData.studentList
   allStudentsDialogShow.value = true
