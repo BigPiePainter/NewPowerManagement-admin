@@ -125,10 +125,7 @@ const allHot: any = [
   },
 ]
 
-
-const newBannerContext = reactive({
-  title: '', url: ''
-})
+const newCoverUrl = ref('')
 const showImgSrc = ref<string>('')
 const active = ref(0)
 
@@ -148,53 +145,55 @@ const mouseLeave = () => {
 const imageFile = reactive<{ file: Blob | null }>({ file: null })
 const handleFileChange = (e: Event) => {
   const currentTarget = e.target as HTMLInputElement;
-
   //图片上传到服务器返回url
   //url在res.data.url
   if (currentTarget.files) {
     imageFile.file = currentTarget.files[0]
+    var imageSize = currentTarget.files[0].size
     var formData = new FormData()
     formData.append('file', currentTarget.files[0])
-    upload(formData)
-      .then((res: any) => {
-        if (res.data.url) {
-          console.log(res)
-          newBannerContext.url = res.data.url
-        } else {
-          console.log("失败")
-        }
+    if (imageSize < 1048576) {
+      console.log("ok")
+      upload(formData)
+        .then((res: any) => {
+          if (res.code != 20000) {
+            console.log(res)
+            console.log("失败")
+            ElNotification({
+              title: '封面上传失败',
+              message: res.msg,
+              type: 'error'
+            })
+          } else {
+            console.log(res)
+            newCoverUrl.value = res.data.url
+          }
+        })
+        .catch(res => {
+          ElNotification({
+            title: '封面上传失败',
+            message: res.msg,
+            type: 'error'
+          })
+        })
+      console.log(imageFile.file)
+      var reader = new FileReader();
+      reader.readAsDataURL(imageFile.file);
+      reader.onload = () => {
+        showImgSrc.value = reader.result as string;
+      }
+    } else {
+      console.log("too big")
+      imageFile.file = null
+      ElNotification({
+        title: '图片不能大于1MB',
+        type: 'error'
       })
-      .catch()
-
-    console.log(imageFile.file)
-    var reader = new FileReader();
-    reader.readAsDataURL(imageFile.file);
-    reader.onload = () => {
-      showImgSrc.value = reader.result as string;
     }
   }
 }
 
-
-
-const newProductData = reactive<{
-
-  id: string,
-  iosPoint: string,
-  androidPoint: string,
-  androidPrice: string,
-  hot: string,
-  name: string,
-  status: string,
-  subjectId: string,
-  tcoin: string,
-  type: string,
-  version: string,
-  versionType: string,
-  gradeId: string
-
-}>({
-
+const newProductData = reactive<any>({
   id: '',
   iosPoint: '',
   androidPoint: '',
@@ -207,8 +206,8 @@ const newProductData = reactive<{
   type: '',
   version: '',
   versionType: '',
-  gradeId: ''
-
+  gradeId: '',
+  cover: newCoverUrl.value
 });
 
 const create = () => {
@@ -216,8 +215,8 @@ const create = () => {
     .then((res: any) => {
       if (res.code == '20000') {
         ElNotification({
-          title: '重置成功',
-          message: '新建商品成功，下一步请返回商城管理页面点击商品名向其中添加课程/好题',
+          title: '新建商品成功',
+          message: '下一步请返回商城管理页面点击商品名向其中添加课程/好题',
           type: 'success',
         })
       } else {
@@ -234,11 +233,6 @@ const create = () => {
       })
     })
 }
-
-
-
-
-
 </script>
 
 <template>
@@ -258,7 +252,8 @@ const create = () => {
             @dragleave="mouseLeave">
             <img class="show-img" id="show_img" :src="showImgSrc" />
             <div class="upload-file-area-text">
-              <el-text>点击此处或拖拽上传海报</el-text>
+              <el-text>点击此处或拖拽上传封面</el-text>
+              <el-text>图片不大于1MB</el-text>
               <el-text>只接受 *.png *.jpg *.jpeg</el-text>
             </div>
             <input class="upload-file-input" type="file" accept="image/png, image/jpeg, image/jpg"
@@ -300,14 +295,11 @@ const create = () => {
         <el-select class="input-input" placeholder="请选择是否热门" v-model="newProductData.hot">
           <el-option v-for="item in allHot" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
-        <el-select style="margin-left: 15px;" class="input-input" placeholder="请选择版本种类" v-model="newProductData.versionType">
+        <el-select style="margin-left: 15px;" class="input-input" placeholder="请选择版本种类"
+          v-model="newProductData.versionType">
           <el-option v-for="item in allversionType" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
-
       </div>
-
-
-
 
       <div class="next-button-row">
         <el-button class="next-button-row-button" type="text" @click="next">下一步<el-icon class="el-icon--right">
@@ -315,11 +307,6 @@ const create = () => {
           </el-icon></el-button>
       </div>
     </div>
-
-
-
-
-
 
 
 
@@ -332,10 +319,10 @@ const create = () => {
       <div class="part2" style="margin-top: 20px; margin-left: 160px;">
 
 
-        <el-text style="margin-left: 15px;">商品价格*：</el-text>
+        <el-text style="margin-left: 15px;">商品价格*: </el-text>
 
         <div>
-          <el-text>安卓:</el-text>
+          <el-text>安卓: </el-text>
           <el-input class="input-length" placeholder="请输入(元)" v-model="newProductData.androidPrice">元</el-input>
           /<el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.androidPoint">积分</el-input>
         </div>
@@ -344,20 +331,12 @@ const create = () => {
           <el-text>IOS:</el-text>
           <el-input class="input-length" placeholder="请输入T币价格" v-model="newProductData.tcoin">T币</el-input>
           /<el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.iosPoint">积分</el-input>
-
         </div>
-
-
-
-
-
-
-
       </div>
 
 
       <div style="margin-left: 175px; margin-top:50px">
-        <el-text >是否上架*：</el-text>
+        <el-text>是否上架*: </el-text>
 
         <el-select style="margin-left: 27px;" input-length class="input-input" placeholder="请选择是否立即上架"
           v-model="newProductData.status">
@@ -365,12 +344,8 @@ const create = () => {
         </el-select>
       </div>
 
-
-
       <div style="margin-top: 200px;margin-right: 40px;">
-
         <el-button type="primary" @click="up()">上一页</el-button>
-
         <el-button type="primary" @click="create()">确认添加商品</el-button>
       </div>
     </div>
@@ -379,6 +354,45 @@ const create = () => {
 </template>
 
 <style scoped lang="scss">
+.upload-file-area {
+  width: 300px;
+  min-height: 200px;
+  background-color: v-bind(bgc);
+  margin-bottom: 15px;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  >.show-img {
+    width: 300px;
+    height: auto;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  >.upload-file-area-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  >.upload-file-input {
+    position: absolute;
+    opacity: 0;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+}
+
 .page {
   width: $page-width;
   height: $page-height;
@@ -391,25 +405,20 @@ const create = () => {
 
   .step-1 {
     >.image-row {
-
       margin-bottom: 20px;
       display: flex;
       align-items: flex-end;
-
       >.image-row-image {
         margin-left: 20px;
         width: 400px;
         height: calc(400px / 16 * 9);
-  
       }
-
       >.image-row-button {
         margin-left: 20px;
       }
     }
 
     >.input-row {
-
       margin-bottom: 20px;
       min-height: 50px;
       display: flex;
@@ -417,14 +426,11 @@ const create = () => {
 
       >.input-title {
         min-width: 100px;
-
         display: flex;
         justify-content: flex-end;
       }
 
       >.input-container {
-  
-
         >.input-input {
           width: 220px;
           margin: 9px;
@@ -433,9 +439,7 @@ const create = () => {
     }
 
     >.next-button-row {
-
       flex-grow: 1;
-
       >.next-button-row-button {
         margin-left: 20px;
       }

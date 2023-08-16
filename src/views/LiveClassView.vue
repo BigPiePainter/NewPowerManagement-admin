@@ -20,7 +20,7 @@ const teacherSelect = ref<any>([])
 const totalLength = ref<Number>()
 const loading = ref(true)
 const tableData = ref<any>([])
-const allTeacher = ref<any>([])
+const allTeacher = reactive<any>([])
 const allStudent = ref<any>([])
 
 const teacherName = reactive<{
@@ -41,32 +41,17 @@ const studenstName = reactive<{
 
 const allSubjects = ref([])
 
-
-
 getSubjects()
   .then((res) => (allSubjects.value = res.data))
   .catch()
-
-getAllTeachers()
-  .then((res) => {
-    allTeacher.value = res.data
-  }).catch()
 
 getAllStudents()
   .then((res) => (allStudent.value = res.data))
   .catch()
 
-
 getGrades()
   .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
   .catch()
-
-
-
-
-
-
-
 
 const studentIDS = ref([])
 
@@ -124,7 +109,8 @@ const searchBarItems = reactive([
     value: '',
     type: InputType.Select,
     label: '请选择',
-    options: teacherSelect.value
+    options: allTeacher,
+    single: true
   },
   {
     name: '课堂名称',
@@ -178,25 +164,20 @@ const confirmEditDialog = () => {
     }).catch()
   loadData()
   editliveclassDialogshow.value = false;
-
 }
-
 
 const cancelEditDialog = () => {
   editliveclassDialogshow.value = false;
 }
-
 
 const classStudent = ref([])
 
 const classStudents = (item: any) => {
   classStudent.value = item.rowData.studentList
   allStudentsDialogShow.value = true
-
 }
 
 const classstudentCloumn = [
-
   {
     dataKey: 'id',
     key: 'id',
@@ -243,7 +224,7 @@ const tableColumns = [
     width: 200,
     cellRenderer: (item: any) => {
       return (
-        <el-button link onClick={() => classStudents(item)} style='width:100px'>
+        <el-button type="primary" onClick={() => classStudents(item)} style='width:100px'>
           查看上课学生
         </el-button>
       )
@@ -253,7 +234,7 @@ const tableColumns = [
     dataKey: 'url',
     key: 'url',
     title: '课程地址',
-    width: 500
+    width: 200
   },
   {
     key: 'option',
@@ -261,9 +242,9 @@ const tableColumns = [
 
     cellRenderer: (item: any) => (
       <>
-        <el-button link type="primary" class="" onClick={() => editliveclass(item)}>
+        {/* <el-button link type="primary" class="" onClick={() => editliveclass(item)}>
           编辑
-        </el-button>
+        </el-button> */}
         <el-button link type="danger" class="" onClick={() => deleteliveclass(item)}>
           删除
         </el-button>
@@ -300,57 +281,50 @@ const deleteliveclass = (cellData: any) => {
         })
       }
     }).catch()
-
 }
-
 
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
 
-
-var args = {
-  pageNum: paginationInfo.currentPage,
-  pageSize: paginationInfo.pageSize,
-  name: searchBarItems[1].value,
-  teacherId: searchBarItems[0].value
-}
+// var args = {
+//   pageNum: paginationInfo.currentPage,
+//   pageSize: paginationInfo.pageSize,
+//   name: searchBarItems[1].value,
+//   teacherId: searchBarItems[0].value
+// }
 
 const loadSelectOption = () => {
-  getLiveClasses(args)
+  allTeacher.length = 0
+  getAllTeachers()
     .then((res) => {
-      res.data.records.forEach((item: any) => {
-        var dataSample = {
-          name: item.name,
-          id: item.id
-        }
-        teacherSelect.value.push(dataSample)
+      res.data.forEach((item: any) => {
+        allTeacher.push(item)
       })
-      console.log(res)
-      console.log(teacherSelect.value)
-    })
-    .catch(() => {
-      ElNotification({
-        title: '未知错误',
-        message: "搜索框选项未成功加载",
-        type: 'error',
-      })
-    })
-
+      console.log(allTeacher)
+    }).catch()
 }
-loadSelectOption()
 
 const loadData = () => {
   loading.value = true
   loadSelectOption()
+  var args
+  searchBarItems[0].value == '' ?
+    args = {
+      pageNum: paginationInfo.currentPage,
+      pageSize: paginationInfo.pageSize,
+      name: searchBarItems[1].value
+    }
+    :
+    args = {
+      pageNum: paginationInfo.currentPage,
+      pageSize: paginationInfo.pageSize,
+      name: searchBarItems[1].value,
+      teacherId: searchBarItems[0].value
+    }
 
-  var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    name: searchBarItems[1].value
-  }
-
+  console.log(args)
   getLiveClasses(args)
     .then((res) => {
       tableData.value = res.data.records
@@ -401,7 +375,7 @@ loadData()
           value-format="YYYY-MM-DD HH:MM:00" style="width: 200px;" />
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"> *时长： </span>
+        <span class="dialog-span"> *时长（分钟）： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.duration">
         </el-input>
       </div>
