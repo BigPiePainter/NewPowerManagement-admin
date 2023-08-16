@@ -7,12 +7,65 @@ import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
 import { deleteProduct, editProduct, getProduct } from '@/apis/product'
-
+import { freeOrderCreate } from '@/apis/freeOrder'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
+import { getAllStudents } from '@/apis/student'
 
 const router = useRouter()
 
+//------------下发免费订单---------------
+const freeOrderDialogShow = ref(false)
+const freeOrderInfo = reactive<any>({
+  productId: '',
+  studentId: '',
+  totalAmount: ''
+})
+const allStudent = reactive<any>([])
+const freeOrderClick = (item: any) => {
+  freeOrderInfo.productId = item.rowData.id
+  freeOrderInfo.studentId = ''
+  freeOrderInfo.totalAmount = item.rowData.androidPrice
+  getAllStudents()
+    .then((res: any) => {
+      res.data.forEach((item: any) => {
+        allStudent.push(item)
+      })
+    })
+  freeOrderDialogShow.value = true
+}
+const freeOrderCreateConfirm = () => {
+  freeOrderDialogShow.value = false
+  var args = {
+    productId: freeOrderInfo.productId,
+    studentId: freeOrderInfo.studentId,
+    totalAmount: freeOrderInfo.totalAmount
+  }
+  freeOrderCreate(args)
+    .then((res: any) => {
+      if (res.code != 20000) {
+        ElNotification({
+          title: '赠送失败',
+          message: res.msg,
+          type: 'error'
+        })
+      } else {
+        ElNotification({
+          title: '成功',
+          message: '商品赠送成功',
+          type: 'success'
+        })
+      }
+    })
+    .catch((res: any) => {
+      ElNotification({
+        title: '赠送失败',
+        message: res.msg,
+        type: 'error'
+      })
+    })
+}
+//--------------------------------------
 
 const clickDetail = (props: any) => {
   console.log(props);
@@ -249,10 +302,25 @@ const tableColumns = [
     title: '版本',
     align: 'center',
     width: 100,
-    cellRenderer: (cellData: any) => (
-      <span>
-        {cellData.cellData == 1 ? "课程/好题A" : cellData.cellData == 2 ? "课程/好题B" : cellData.cellData == 3 ? "课程/好题C" : "课程/好题D"}
-      </span>)
+    cellRenderer: (item: any) => {
+      return (
+        <>
+          <span>
+            {
+              item.rowData.type == 1 && item.rowData.version == 1 ? '课程A'
+                : item.rowData.type == 2 && item.rowData.version == 1 ? '好题A'
+                  : item.rowData.type == 1 && item.rowData.version == 2 ? '课程B'
+                    : item.rowData.type == 2 && item.rowData.version == 2 ? '好题B'
+                      : item.rowData.type == 1 && item.rowData.version == 3 ? '课程C'
+                        : item.rowData.type == 2 && item.rowData.version == 3 ? '好题C'
+                          : item.rowData.type == 1 && item.rowData.version == 4 ? '课程D'
+                            : '好题D'
+            }
+          </span>
+        </>
+      )
+    }
+
   },
   {
     dataKey: 'versionType',
@@ -289,7 +357,7 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <>
-          <el-button link type="primary" onClick={() => console.log(item)}>
+          <el-button link type="primary" onClick={() => freeOrderClick(item)}>
             赠送
           </el-button>
 
@@ -404,9 +472,6 @@ const editgoodOn = (props: { rowData: { status: string, id: string, iosPoint: st
   loadData()
   editDialogShow.value = false;
 }
-
-
-
 //------------------------编辑商品--------------
 const editProductData = reactive<{
 
@@ -580,8 +645,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
   editDialogShow.value = false;
 }
 
-
-
 </script>
 
 <template>
@@ -597,9 +660,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
 
   <el-dialog class="teacher-group-dialog" width="600px" v-model="editDialogShow">
     <div>
-
-
-
       <div class="div-input-element">
         <span class="dialog-span">
           *商品名称：
@@ -607,8 +667,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
         <el-input class="dialog-input" v-model="editProductData.name">
         </el-input>
       </div>
-
-
 
       <div class="div-input-element">
         <span class="dialog-span">
@@ -618,7 +676,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
         </el-input>
       </div>
 
-
       <div class="div-input-element">
         <span class="dialog-span">
           *商品T币价格：
@@ -627,7 +684,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
         </el-input>
       </div>
 
-
       <div class="div-input-element">
         <span class="dialog-span">
           *商品安卓积分价格：
@@ -635,7 +691,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
         <el-input class="dialog-input" v-model="editProductData.androidPoint">
         </el-input>
       </div>
-
 
       <div class="div-input-element">
         <span class="dialog-span">
@@ -664,8 +719,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
         </el-select>
       </div>
 
-
-
       <div class="div-input-element">
         <span class="dialog-span">
           商品种类
@@ -674,8 +727,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
           <el-option v-for="item in allType" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
-
-
 
       <div class="div-input-element">
         <span class="dialog-span">
@@ -686,7 +737,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
         </el-select>
       </div>
 
-
       <div class="div-input-element">
         <span class="dialog-span">
           商品版本类型
@@ -695,16 +745,7 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
           <el-option v-for="item in allversionType" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
-
-
-
-
-
     </div>
-
-
-
-
 
     <template #header>
       <el-text>编辑商品</el-text>
@@ -712,6 +753,28 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
     <template #footer>
       <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
       <el-button @click="editDialogShow = false">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
+
+  <el-dialog class="teacher-group-dialog" width="400px" v-model="freeOrderDialogShow">
+    <div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *选择学生：
+        </span>
+        <el-select filterable class="dialog-input" v-model="freeOrderInfo.studentId">
+          <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </div>
+    </div>
+    <template #header>
+      <el-text>赠送商品</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="freeOrderCreateConfirm()">确定</el-button>
+      <el-button @click="freeOrderDialogShow = false">
         取消
       </el-button>
     </template>
@@ -743,4 +806,5 @@ $gap: 15px;
   .el-image {
     width: 59px;
   }
-}</style>
+}
+</style>

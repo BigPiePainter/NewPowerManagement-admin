@@ -11,15 +11,8 @@ import { getMiniLessons, deleteMiniLessons, addMiniLessons, getMiniLesson } from
 import { ElCheckbox,ElNotification } from 'element-plus'
 import { getAllTeachers } from '@/apis/teacher'
 
-
-
-
-
 const route = useRoute()
-
-
 const warningDialogshow = ref(false)
-
 const deleteItemid = ref<any>()
 
 const warningDialog=(cellData2:any)=>{
@@ -45,17 +38,6 @@ const ConfirmdeleteMiniLesson = () => {
   }).catch()
 }
 
-
-
-
-
-
-
-
-
-
-
-
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
@@ -63,12 +45,10 @@ breadcrumbStore.data = [
   { name: '课程详情', path: '' },
 ]
 
-
 const tableData = ref<any>([])
 
 const loading = ref(true)
 const totalLength = ref<Number>()
-
 const tableColumns = [
 
   {
