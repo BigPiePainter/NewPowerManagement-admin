@@ -18,9 +18,23 @@ import { getSubjects } from '@/apis/subject'
 const router = useRouter()
 
 
-const clickDetail = (props: { rowData: { id: string, type: string } }) => {
+const clickDetail = (props: any) => {
   console.log(props);
-  router.push({ path: 'product-detail', query: { id: props.rowData.id, type: props.rowData.type } });
+  router.push({
+    path: 'product-detail',
+    query: {
+      id: props.rowData.id,
+      type: props.rowData.type,
+      cover: props.rowData.cover,
+      createdAt: props.rowData.createdAt,
+      subjectName: props.rowData.subjectName,
+      teacherName: props.rowData.teacherName,
+      gradeName: props.rowData.gradeName,
+      updatedAt: props.rowData.updatedAt,
+      name: props.rowData.name,
+      categoryName: props.rowData.categoryName,
+    }
+  });
 }
 
 
@@ -276,8 +290,8 @@ const tableColumns = [
           <el-button link type="primary" onClick={() => editGoodsHot(item)}>
             添加为热门
           </el-button>
-          
-          <el-button link type="primary" onClick={() =>editgoodOn(item)}>
+
+          <el-button link type="primary" onClick={() => editgoodOn(item)}>
             上架/下架
           </el-button>
 
@@ -294,8 +308,8 @@ const tableColumns = [
 
 
 const deleteSlot = {
-        reference: () => <el-button link type="danger">删除</el-button>
-      }
+  reference: () => <el-button link type="danger">删除</el-button>
+}
 
 
 const paginationInfo = reactive({
@@ -353,29 +367,29 @@ console.log(tableData)
 
 //-------------------上下架----------------------//
 
-const editgoodOn =   (props: { rowData: { status:string ,id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
-    editProductData.id = props.rowData.id;
-    editProductData.iosPoint = props.rowData.iosPoint;
-    editProductData.tcoin = props.rowData.tcoin;
-    editProductData.androidPoint = props.rowData.androidPoint;
-    editProductData.androidPrice = props.rowData.androidPrice;
-    editProductData.name = props.rowData.name
-    editProductData.hot = props.rowData.hot
-    editProductData.subjectId = props.rowData.subjectId
-    editProductData.type = props.rowData.type
-    editProductData.version = props.rowData.version
-    editProductData.versionType = props.rowData.versionType
-    editProductData.status= props.rowData.status
-    console.log(props)
+const editgoodOn = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
+  editProductData.id = props.rowData.id;
+  editProductData.iosPoint = props.rowData.iosPoint;
+  editProductData.tcoin = props.rowData.tcoin;
+  editProductData.androidPoint = props.rowData.androidPoint;
+  editProductData.androidPrice = props.rowData.androidPrice;
+  editProductData.name = props.rowData.name
+  editProductData.hot = props.rowData.hot
+  editProductData.subjectId = props.rowData.subjectId
+  editProductData.type = props.rowData.type
+  editProductData.version = props.rowData.version
+  editProductData.versionType = props.rowData.versionType
+  editProductData.status = props.rowData.status
+  console.log(props)
 
-  if (props.rowData.status=='1'){
-    editProductData.status='2'
+  if (props.rowData.status == '1') {
+    editProductData.status = '2'
   }
-  else if (props.rowData.status=='2'){
-    editProductData.status='1'
+  else if (props.rowData.status == '2') {
+    editProductData.status = '1'
   }
   editProduct(editProductData).
-  then((res: any) => {
+    then((res: any) => {
       console.log(editProductData)
       if (res.code == '20000') {
         ElNotification({
@@ -528,29 +542,29 @@ const deleteStu = (item: any) => {
     })
 }
 //----------------------------添加热门----------
-const editGoodsHot =   (props: { rowData: { status:string ,id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
-    editProductData.id = props.rowData.id;
-    editProductData.iosPoint = props.rowData.iosPoint;
-    editProductData.tcoin = props.rowData.tcoin;
-    editProductData.androidPoint = props.rowData.androidPoint;
-    editProductData.androidPrice = props.rowData.androidPrice;
-    editProductData.name = props.rowData.name
-    editProductData.hot = props.rowData.hot
-    editProductData.subjectId = props.rowData.subjectId
-    editProductData.type = props.rowData.type
-    editProductData.version = props.rowData.version
-    editProductData.versionType = props.rowData.versionType
-    editProductData.status= props.rowData.status
-    console.log(props)
+const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
+  editProductData.id = props.rowData.id;
+  editProductData.iosPoint = props.rowData.iosPoint;
+  editProductData.tcoin = props.rowData.tcoin;
+  editProductData.androidPoint = props.rowData.androidPoint;
+  editProductData.androidPrice = props.rowData.androidPrice;
+  editProductData.name = props.rowData.name
+  editProductData.hot = props.rowData.hot
+  editProductData.subjectId = props.rowData.subjectId
+  editProductData.type = props.rowData.type
+  editProductData.version = props.rowData.version
+  editProductData.versionType = props.rowData.versionType
+  editProductData.status = props.rowData.status
+  console.log(props)
 
-  if (props.rowData.hot=='1'){
-    editProductData.hot='1'
+  if (props.rowData.hot == '1') {
+    editProductData.hot = '1'
   }
-  else if (props.rowData.hot=='2'){
-    editProductData.hot='1'
+  else if (props.rowData.hot == '2') {
+    editProductData.hot = '1'
   }
   editProduct(editProductData).
-  then((res: any) => {
+    then((res: any) => {
       console.log(editProductData)
       if (res.code == '20000') {
         ElNotification({
@@ -734,5 +748,4 @@ $gap: 15px;
   .el-image {
     width: 59px;
   }
-}
-</style>
+}</style>

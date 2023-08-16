@@ -59,8 +59,8 @@ const ConfirmdeleteMiniLesson = () => {
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
-  { name: '老师管理', path: '/account-teacher-managament' },
-  { name: '老师详情', path: '/teacher-detail-managament' },
+  { name: '课程管理', path: '/course-management' },
+  { name: '课程详情', path: '' },
 ]
 
 
@@ -148,9 +148,6 @@ const loadData = () => {
 
 
 
-const concel=(item:any)=>{
-console.log(item)
-}
 
 loadData()
 
@@ -285,24 +282,17 @@ loadDialogData()
     <div class="topPart">
       <div class="topPart1">
         <div>
-          <el-image
-        class="image"
-        fit="scale-down"
-        src={{tableData.cover}}
-        className="shop-Preview"
-        preview-src-list={{tableData.cover}}
-        preview-teleported
-        
-      />
+          <el-image class="image" fit="scale-down" :src="route.query.cover" className="shop-Preview" preview-src-list={{}}
+            preview-teleported />
 
         </div>
         <div class="topPart1-3">
           <div class="topPart1-3-2">
-            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{tableData.cover}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>学习阶段：</el-text></div>
-            <div class="topPart1-3-2"><el-text>学科：语文</el-text></div>
-            <div class="topPart1-3-2"><el-text>标签：难系数很高</el-text></div>
-            <div class="topPart1-3-2"><el-text @click="concel(tableData)">老师：庄老师</el-text></div>
+            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{route.query.name}}</el-text></div>
+            <div class="topPart1-3-2"><el-text>更新时间:{{route.query.updatedAt}}</el-text></div>
+            <div class="topPart1-3-2"><el-text>阶段：{{route.query.gradeName}}</el-text></div>
+            <div class="topPart1-3-2"><el-text>学科：{{route.query.subjectName}}</el-text></div>
+            <div class="topPart1-3-2"><el-text>老师：{{route.query.teacherName}}</el-text></div>
           </div>
         </div>
 

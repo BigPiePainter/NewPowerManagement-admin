@@ -106,7 +106,20 @@ const editDialogShow = ref(false)
 
 const couseDetail = (props: any) => {
   console.log(props)
-  router.push({ path: 'course-detail', query: { id: props.rowData.id } })
+  router.push({
+    path: 'course-detail',
+    query: {
+      id: props.rowData.id,
+      name: props.rowData.name,
+      cover: props.rowData.cover,
+      createdAt: props.rowData.createdAt,
+      subjectName: props.rowData.subjectName,
+      teacherName: props.rowData.teacherName,
+      gradeName: props.rowData.gradeName,
+      updatedAt: props.rowData.updatedAt,
+      
+    }
+  })
 }
 
 const tableColumns = [
@@ -139,12 +152,34 @@ const tableColumns = [
       />
     )
   },
+
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '负责老师',
+    width: 200
+  },
   {
     dataKey: 'createdAt',
     key: 'createdAt',
     title: '创建时间',
     width: 200
   },
+  {
+    dataKey: 'subjectName',
+    key: 'subjectName',
+    title: '学科',
+    width: 200
+  },
+  {
+    dataKey: 'gradeName',
+    key: 'gradeName',
+    title: '阶段',
+    width: 200
+  },
+  
+
+
   {
     key: 'option',
     title: '操作',

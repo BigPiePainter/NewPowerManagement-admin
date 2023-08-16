@@ -15,7 +15,6 @@ const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '实时课程', path: '' }]
 
 
-const teacherSelect = ref<any>([])
 const totalLength = ref<Number>()
 const loading = ref(true)
 const tableData = ref<any>([])
@@ -35,11 +34,6 @@ const paginationInfo = reactive({
 
 const loadDetailData = () => {
 
-  var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-  }
-
   getSubjects()
     .then((res) => (allSubjects.value = res.data))
     .catch()
@@ -53,24 +47,10 @@ const loadDetailData = () => {
     .then((res) => (allStudent.value = res.data))
     .catch()
 
-
   getGrades()
     .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
     .catch()
 
-  getLiveClasses(args)
-    .then((res) => {
-      res.data.records.forEach((item: any) => {
-        var dataSample = {
-          name: item.teacherId,
-          id: item.teacherId
-        }
-        teacherSelect.value.push(dataSample)
-      })
-      console.log(res)
-      console.log(teacherSelect.value)
-    })
-    .catch()
 
 }
 
@@ -131,7 +111,8 @@ const searchBarItems = reactive([
     value: '',
     type: InputType.Select,
     label: '请选择',
-    options: teacherSelect.value
+    options: allTeacher,
+    single: true
   },
   {
     name: '课堂名称',
@@ -322,47 +303,19 @@ const deleteliveclass = (cellData: any) => {
 
 
 
-const loadSelectOption = () => {
-  var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    name: searchBarItems[1].value,
-    teacherId: searchBarItems[0].value
-  }
-  getLiveClasses(args)
-    .then((res) => {
-      res.data.records.forEach((item: any) => {
-        var dataSample = {
-          name: item.name,
-          id: item.id
-        }
-        teacherSelect.value.push(dataSample)
-      })
-      console.log(res)
-      console.log(teacherSelect.value)
-    })
-    .catch(() => {
-      ElNotification({
-        title: '未知错误',
-        message: "搜索框选项未成功加载",
-        type: 'error',
-      })
-    })
-
-}
-loadSelectOption()
-
 const loadData = () => {
   loading.value = true
   loadDetailData()
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    name: searchBarItems[1].value
+    name: searchBarItems[1].value,
+    teacherId: searchBarItems[0].value
   }
 
   getLiveClasses(args)
     .then((res) => {
+      console.log(args)
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
       console.log(res)

@@ -304,24 +304,17 @@ loadData()
     <div class="topPart">
       <div class="topPart1">
         <div>
-          <el-image
-        class="image"
-        fit="scale-down"
-        src={{tableData.cover}}
-        className="shop-Preview"
-        preview-src-list={{tableData.cover}}
-        preview-teleported
-        
-      />
+          <el-image class="image" fit="scale-down" :src="route.query.cover" className="shop-Preview" preview-src-list={{}}
+            preview-teleported />
 
         </div>
         <div class="topPart1-3">
           <div class="topPart1-3-2">
-            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{tableData.cover}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>学习阶段：</el-text></div>
-            <div class="topPart1-3-2"><el-text>学科：语文</el-text></div>
-            <div class="topPart1-3-2"><el-text>标签：难系数很高</el-text></div>
-            <div class="topPart1-3-2"><el-text @click="concel(tableData)">老师：庄老师</el-text></div>
+            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{route.query.name}}</el-text></div>
+            <div class="topPart1-3-2"><el-text>更新时间:{{route.query.updatedAt}}</el-text></div>
+            <div class="topPart1-3-2"><el-text>阶段：{{route.query.gradeName}}</el-text></div>
+            <div class="topPart1-3-2"><el-text>科目：{{route.query.categoryName}}</el-text></div>
+            <div class="topPart1-3-2"><el-text>老师：{{route.query.teacherName}}</el-text></div>
           </div>
         </div>
 
@@ -343,7 +336,7 @@ loadData()
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button @click="addProductDialog=true" type="primary">添加课程/好题</el-button></div>
+        <div class="botPart1-1-1"><el-button style="margin-left: 18px;" @click="addProductDialog=true" type="primary">添加课程/好题</el-button></div>
       </div>
     </div>
     <div class="botPart1-2">
