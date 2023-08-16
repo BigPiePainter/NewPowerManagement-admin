@@ -277,10 +277,10 @@ const calcelDeleteTea = (item: any) => {
 
 const deleteTea = (item: any) => {
   setTimeout(console.log, 0)
-  deleteTeacher({ teacherId: item.rowData.id }).then((res: any) => {
+  deleteTeacher({ id: item.rowData.id }).then((res: any) => {
     if (res.code == '20000') {
       ElNotification({
-        title: '成功',
+        title: '成功',  
         message: item.rowData.name + '老师删除成功',
         type: 'success'
       })

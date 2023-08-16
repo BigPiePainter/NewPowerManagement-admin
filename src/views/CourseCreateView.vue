@@ -76,6 +76,8 @@ const loadSelectOption = () => {
     getAllTeachers()
         .then((res) => { (allTeacher.value = res.data), console.log(res) })
         .catch()
+
+        
 }
 
 loadSelectOption()
