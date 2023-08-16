@@ -179,40 +179,56 @@ const trueFlase = [
 ]
 
 
-const pushdata =
-    (props: { rowData: { a: any, b: any, c: string, d: string } }) => {
-        newSMultipleChoiceQuestion.选项.a = props.rowData.a;
-        newSMultipleChoiceQuestion.选项.b = props.rowData.b;
-        newSMultipleChoiceQuestion.选项.c = props.rowData.c;
-        newSMultipleChoiceQuestion.选项.d = props.rowData.d;
-    }
 
-
+const showlist = ref<any>(0)
 const newSMultipleChoiceQuestion = reactive<any>({
 
-    // identifier: 'A',value=''}
-    // b: '',
-    // c: '',
-    // d: ''
+    A: '',
+    B: '',
+    C: '',
+    D: ''
 
 })
 
+const newAnswer = reactive<any>([])
+
+
+const giveAnswerData = () => {
+    showlist.value = 1
+    var newSMultipleChoice = reactive<any>([
+        { "correct": "A", value: newAnswer.A },
+        { "identifier": "B", value: newSMultipleChoiceQuestion.B },
+        { "identifier": "C", value: newSMultipleChoiceQuestion.C },
+        { "identifier": "D", value: newSMultipleChoiceQuestion.D }
+    ])
+
+    questionData.value = newSMultipleChoice
+    console.log(questionData.value)
+}
+
+
+const questionData = ref<any>([])
 
 const giveData = () => {
-    const newSMultipleChoice = reactive<any>([
-        { "identifier": newSMultipleChoiceQuestion.a },
-        { "identifier": newSMultipleChoiceQuestion.b },
-        { "identifier": newSMultipleChoiceQuestion.c },
-        { "identifier": newSMultipleChoiceQuestion.d }
+    showlist.value = 1
+    var newSMultipleChoice = reactive<any>([
+        { "identifier": "A", value: newSMultipleChoiceQuestion.A },
+        { "identifier": "B", value: newSMultipleChoiceQuestion.B },
+        { "identifier": "C", value: newSMultipleChoiceQuestion.C },
+        { "identifier": "D", value: newSMultipleChoiceQuestion.D }
     ])
-    console.log(newSMultipleChoice)
+
+    questionData.value = newSMultipleChoice
+    console.log(questionData.value)
 }
+
+
 
 
 const confirmCreate = () => {
     var args = {
 
-        questionPrompt:  newQuestionData.questionPrompt,
+        questionPrompt: newQuestionData.questionPrompt,
         gradeId: newQuestionData.gradeId,
         difficultyType: newQuestionData.difficultyType,
         subjectId: newQuestionData.subjectId,
@@ -247,23 +263,20 @@ const create = () => {
 }
 
 
-
-const newAnswer = ref<any>([])
 const JSONoption = ref<any>([])
 const JSONanswer = ref<any>([])
 
 
 const dataTransform = () => {
 
-    JSONoption.value = JSON.stringify(newSMultipleChoiceQuestion)
-    JSONanswer.value = JSON.stringify(newAnswer)
+    JSONoption.value = JSON.stringify(questionData.value)
+    JSONanswer.value = JSON.stringify(newAnswer.value)
     console.log(JSONoption)
     console.log(JSONanswer)
-    console.log
 }
 
-const change=(valueHtml:any)=>{
-    newQuestionData.questionPrompt=valueHtml
+const change = (valueHtml: any) => {
+    newQuestionData.questionPrompt = valueHtml
 }
 
 </script>
@@ -271,6 +284,7 @@ const change=(valueHtml:any)=>{
 <template>
     <div class="margin">
         <div class="subandgrade">
+
             <div>
                 <el-text style="margin-left: 15px;">科目:</el-text>
                 <el-select style="margin-left:5px" class="select-width" filterable place holder="请选择科目"
@@ -286,6 +300,7 @@ const change=(valueHtml:any)=>{
                     <el-option if v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </div>
+
         </div>
 
         <div class="subandgrade" style="margin-top: 10px;">
@@ -317,7 +332,7 @@ const change=(valueHtml:any)=>{
 
 
 
-        <RichTextEditor  :questionPrompt="newQuestionData.questionPrompt" :isShow="true" @change="change"
+        <RichTextEditor :questionPrompt="newQuestionData.questionPrompt" :isShow="true" @change="change"
             v-model="newQuestionData.questionPrompt">
         </RichTextEditor>
 
@@ -326,23 +341,24 @@ const change=(valueHtml:any)=>{
 
             <el-text>请输入单选题目选项</el-text>
             <diV>
-                a:<el-input v-model="newSMultipleChoiceQuestion.a"></el-input>
-                b:<el-input v-model="newSMultipleChoiceQuestion.b"></el-input>
-                c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
-                d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
-
-                <el-button @click="giveData">确认题目选项</el-button>
+                a:<el-input v-model="newSMultipleChoiceQuestion.A"></el-input>
+                b:<el-input v-model="newSMultipleChoiceQuestion.B"></el-input>
+                c:<el-input v-model="newSMultipleChoiceQuestion.C"></el-input>
+                d:<el-input v-model="newSMultipleChoiceQuestion.D"></el-input>
+            <el-button @click="giveData">确认题目选项</el-button>
             </diV>
-            <div style="margin-top: 20px;">答案：</div>
-            <el-select placeholder="请选择答案" v-model="newAnswer">
-                <el-option v-for="(item, key) in newSMultipleChoiceQuestion" :key="item" :label="key" :value="key" />
-            </el-select>
 
-            <el-button style="margin:15px" @click="console.log(newAnswer), dataTransform()">
-                确认:
-            </el-button>
+            <div v-if="showlist == 1">
+                <div style="margin-top: 20px;">答案：</div>
+                <el-select placeholder="请选择答案" v-model="newAnswer">
+                    <el-option v-for="item in questionData" :key="item" :label="item.identifier" :value="item.value" />
+                </el-select>
+
+                <el-button style="margin:15px" @click="console.log(newAnswer), dataTransform()">
+                    确认答案:
+                </el-button>
+            </div>
         </div>
-
 
 
         <div v-if="newQuestionData.type == '2'">
@@ -354,7 +370,7 @@ const change=(valueHtml:any)=>{
                 c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
                 d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
 
-                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
+                <el-button @click="giveData">确认题目选项</el-button>
             </diV>
 
 
@@ -363,6 +379,11 @@ const change=(valueHtml:any)=>{
 
             <el-select multiple placeholder="请选择答案" v-model="newAnswer">
                 <el-option v-for="(item, key) in newSMultipleChoiceQuestion" :key="item" :label="key" :value="key" />
+
+
+                <el-button style="margin:15px" @click="console.log(newAnswer), dataTransform()">
+                    确认答案:
+                </el-button>
             </el-select>
         </div>
 
@@ -379,7 +400,7 @@ const change=(valueHtml:any)=>{
                 c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
                 d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
 
-                <!-- <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button> -->
+                <el-button @click="giveData">确认题目选项</el-button>
             </diV>
 
 
