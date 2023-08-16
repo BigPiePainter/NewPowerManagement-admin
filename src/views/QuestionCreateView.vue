@@ -66,10 +66,6 @@ const newQuestionData = reactive<{
 
 });
 
-const paginationInfo = reactive({
-    currentPage: 1,
-    pageSize: 20
-})
 
 
 
@@ -181,6 +177,7 @@ const trueFlase = [
 
 
 const showlist = ref<any>(0)
+
 const newSMultipleChoiceQuestion = reactive<any>({
 
     A: '',
@@ -190,21 +187,24 @@ const newSMultipleChoiceQuestion = reactive<any>({
 
 })
 
-const newAnswer = reactive<any>([])
+const newAnswer = ref<any>({
+
+    answers: 'questionData.identifier', correct: null
 
 
-const giveAnswerData = () => {
-    showlist.value = 1
-    var newSMultipleChoice = reactive<any>([
-        { "correct": "A", value: newAnswer.A },
-        { "identifier": "B", value: newSMultipleChoiceQuestion.B },
-        { "identifier": "C", value: newSMultipleChoiceQuestion.C },
-        { "identifier": "D", value: newSMultipleChoiceQuestion.D }
-    ])
+})
 
-    questionData.value = newSMultipleChoice
-    console.log(questionData.value)
-}
+const answerData = ref<any>([{
+
+    answers: '', 'correct': null
+}])
+
+
+
+
+
+
+
 
 
 const questionData = ref<any>([])
@@ -219,6 +219,8 @@ const giveData = () => {
     ])
 
     questionData.value = newSMultipleChoice
+
+    answerData.value = newAnswer
     console.log(questionData.value)
 }
 
@@ -268,16 +270,54 @@ const JSONanswer = ref<any>([])
 
 
 const dataTransform = () => {
+    var args={answers:[newAnswer.value.identifier],
+correct:null
+    }
 
     JSONoption.value = JSON.stringify(questionData.value)
-    JSONanswer.value = JSON.stringify(newAnswer.value)
+    JSONanswer.value = JSON.stringify(args)
     console.log(JSONoption)
     console.log(JSONanswer)
+
 }
 
 const change = (valueHtml: any) => {
     newQuestionData.questionPrompt = valueHtml
 }
+
+
+
+
+
+const dataTransformMu = () => {
+    var args = {
+  answers: newAnswer.value.map((item:any) => item.identifier),
+  correct: null
+}
+    
+    JSONoption.value = JSON.stringify(questionData.value)
+    JSONanswer.value = JSON.stringify(args)
+    console.log(JSONoption)
+    console.log(JSONanswer)
+
+}
+
+
+const dataTransformMBo = () => {
+
+    var args={answers:[newAnswer.value],
+correct:null}
+    
+    JSONoption.value = JSON.stringify(questionData.value)
+    JSONanswer.value = JSON.stringify(args)
+    console.log(JSONoption)
+    console.log(JSONanswer)
+
+}
+
+
+
+
 
 </script>
 
@@ -345,17 +385,16 @@ const change = (valueHtml: any) => {
                 b:<el-input v-model="newSMultipleChoiceQuestion.B"></el-input>
                 c:<el-input v-model="newSMultipleChoiceQuestion.C"></el-input>
                 d:<el-input v-model="newSMultipleChoiceQuestion.D"></el-input>
-            <el-button @click="giveData">确认题目选项</el-button>
+                <el-button @click="giveData">确认题目选项</el-button>
             </diV>
 
             <div v-if="showlist == 1">
                 <div style="margin-top: 20px;">答案：</div>
-                <el-select placeholder="请选择答案" v-model="newAnswer">
-                    <el-option v-for="item in questionData" :key="item" :label="item.identifier" :value="item.value" />
+                <el-select  placeholder="请先确认题目选项" v-model="newAnswer">
+                    <el-option v-for="item in questionData" :key="item.identifier" :label="item.identifier" :value="item" />
                 </el-select>
-
-                <el-button style="margin:15px" @click="console.log(newAnswer), dataTransform()">
-                    确认答案:
+                <el-button type="primary" style="margin:15px" @click="console.log(newAnswer), dataTransform()">
+                    确认答案
                 </el-button>
             </div>
         </div>
@@ -365,27 +404,23 @@ const change = (valueHtml: any) => {
 
             <el-text>请输入多选题目选项</el-text>
             <diV>
-                a:<el-input v-model="newSMultipleChoiceQuestion.a"></el-input>
-                b:<el-input v-model="newSMultipleChoiceQuestion.b"></el-input>
-                c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
-                d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
-
+                a:<el-input v-model="newSMultipleChoiceQuestion.A"></el-input>
+                b:<el-input v-model="newSMultipleChoiceQuestion.B"></el-input>
+                c:<el-input v-model="newSMultipleChoiceQuestion.C"></el-input>
+                d:<el-input v-model="newSMultipleChoiceQuestion.D"></el-input>
                 <el-button @click="giveData">确认题目选项</el-button>
             </diV>
 
-
-
+            <div v-if="newSMultipleChoiceQuestion !== ''">
             <div style="margin-top: 20px;">答案：</div>
-
-            <el-select multiple placeholder="请选择答案" v-model="newAnswer">
-                <el-option v-for="(item, key) in newSMultipleChoiceQuestion" :key="item" :label="key" :value="key" />
-
-
-                <el-button style="margin:15px" @click="console.log(newAnswer), dataTransform()">
-                    确认答案:
+                <el-select multiple  placeholder="请先确认题目选项" v-model="newAnswer">
+                    <el-option v-for="item in questionData" :key="item.identifier" :label="item.identifier" :value="item" />
+                </el-select>
+                <el-button type="primary" style="margin:15px" @click="console.log(newAnswer), dataTransformMu()">
+                    确认答案
                 </el-button>
-            </el-select>
-        </div>
+            </div>
+</div>
 
 
 
@@ -406,11 +441,13 @@ const change = (valueHtml: any) => {
 
 
             <div style="margin-top: 20px;">答案：</div>
-
-            <el-select multiple placeholder="请选择答案" v-model="newAnswer">
-                <el-option v-for="(item, key) in newSMultipleChoiceQuestion" :key="item" :label="key" :value="key" />
-            </el-select>
-        </div>
+                <el-select multiple  placeholder="请先确认题目选项" v-model="newAnswer">
+                    <el-option v-for="item in questionData" :key="item.identifier" :label="item.identifier" :value="item" />
+                </el-select>
+                <el-button type="primary" style="margin:15px" @click="console.log(newAnswer), dataTransformMu()">
+                    确认答案
+                </el-button>
+            </div>
 
 
         <div v-if="newQuestionData.type == '4'">
@@ -420,10 +457,12 @@ const change = (valueHtml: any) => {
 
             <div style="margin-top: 20px;">答案：</div>
 
-            <el-select placeholder="请选择答案" v-model="newAnswer">
-                <el-option v-for="item in trueFlase" :key="item" :label="item.label" :value="item.id" />
+            <el-select placeholder="请先确认题目选项" v-model="newAnswer">
+                <el-option v-for="item in trueFlase" :key="item" :label="item.label" :value="item.label" />
             </el-select>
-
+            <el-button type="primary" style="margin:15px" @click="console.log(newAnswer), dataTransformMBo()">
+                    确认答案
+                </el-button>
 
         </div>
 
@@ -433,8 +472,11 @@ const change = (valueHtml: any) => {
 
 
             <div style="margin-top: 20px;">答案：</div>
-            <el-input multiple placeholder="请输入答案" v-model="newAnswer">
+            <el-input placeholder="请输入答案" v-model="newAnswer">
             </el-input>
+            <el-button type="primary" style="margin:15px" @click="console.log(newAnswer), dataTransformMBo()">
+                    确认答案
+                </el-button>
         </div>
 
 
@@ -444,13 +486,16 @@ const change = (valueHtml: any) => {
 
 
             <div style="margin-top: 20px;">答案：</div>
-            <el-input multiple placeholder="请输入答案" v-model="newAnswer">
+            <el-input placeholder="请输入答案" v-model="newAnswer">
             </el-input>
+            <el-button type="primary" style="margin:15px" @click="console.log(newAnswer), dataTransformMBo()">
+                    确认答案
+                </el-button>
         </div>
 
 
-        <el-button style="margin:15px" @click="create">
-            创建:
+        <el-button type="primary" style="margin:15px" @click="create">
+            创建（请先确定答案)
         </el-button>
     </div>
 
