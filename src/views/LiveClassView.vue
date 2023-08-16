@@ -230,7 +230,7 @@ const loadSelectOption = () => {
 const loadData = () => {
   loading.value = true
   loadSelectOption()
-  var args
+  var args:any
   searchBarItems[0].value == '' ?
     args = {
       pageNum: paginationInfo.currentPage,
