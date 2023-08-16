@@ -1,12 +1,12 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton,ElNotification } from 'element-plus'
+import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useRouter } from 'vue-router'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import SearchBar from '@/components/SearchBar.vue'
-import { getCourseQuestionPackage,editCourseQuestionPackage,deleteCourseQuestionPackage } from '@/apis/coursequestionpackage'
+import { getCourseQuestionPackage, editCourseQuestionPackage, deleteCourseQuestionPackage } from '@/apis/coursequestionpackage'
 import { getAllTeachers } from '@/apis/teacher'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
@@ -61,7 +61,7 @@ const newCourseData = reactive<{
   type: string,
   subjectId: string,
   teacherId: string,
-  cover:string
+  cover: string
 
 }>({
 
@@ -73,7 +73,7 @@ const newCourseData = reactive<{
   type: '',
   subjectId: '',
   teacherId: '',
-  cover:''
+  cover: ''
 });
 const allDifficultyType = [
   {
@@ -117,7 +117,6 @@ const couseDetail = (props: any) => {
       teacherName: props.rowData.teacherName,
       gradeName: props.rowData.gradeName,
       updatedAt: props.rowData.updatedAt,
-      
     }
   })
 }
@@ -134,7 +133,22 @@ const tableColumns = [
     key: 'name',
     title: '课程名称',
     width: 200,
-    cellRenderer: (cellData: any) => <ElButton link type='primary' onClick={() => couseDetail(cellData)} class="detailed">{cellData.cellData}</ElButton>
+    cellRenderer: (item: any) => {
+      if (item.rowData.labelName != null) {
+        return (
+          <>
+            <ElButton link type='primary' onClick={() => couseDetail(item)} class="detailed">{item.rowData.name}</ElButton>
+            <el-tag>{item.rowData.labelName}</el-tag>
+          </>
+        )
+      } else {
+        return (
+          <>
+            <ElButton link type='primary' onClick={() => couseDetail(item)} class="detailed">{item.rowData.name}</ElButton>
+          </>
+        )
+      }
+    },
   },
   {
     dataKey: 'cover',
@@ -152,7 +166,6 @@ const tableColumns = [
       />
     )
   },
-
   {
     dataKey: 'teacherName',
     key: 'teacherName',
@@ -177,9 +190,6 @@ const tableColumns = [
     title: '阶段',
     width: 200
   },
-  
-
-
   {
     key: 'option',
     title: '操作',
@@ -192,9 +202,6 @@ const tableColumns = [
           <el-button link type="primary" onClick={() => editCourse(item)}>
             编辑
           </el-button>
-
-
-
 
           <el-popconfirm
             hide-after={0}
@@ -251,25 +258,25 @@ const deleteTea = (item: any) => {
     id: item.rowData.id,
     type: 1
   }
-  
+
   deleteCourseQuestionPackage(args).then((res: any) => {
-      if (res.code == '20000') {
-        console.log(args)
-        ElNotification({
-          title: '成功',
-          message: item.rowData.name + '课程包删除成功',
-          type: 'success'
-        })
-        loadData()
-      } else {
-        ElNotification({
-          title: '删除失败',
-          message: '请求错误或删除被撤回',
-          type: 'error'
-        })
-      }
-    })
-.catch(() => {
+    if (res.code == '20000') {
+      console.log(args)
+      ElNotification({
+        title: '成功',
+        message: item.rowData.name + '课程包删除成功',
+        type: 'success'
+      })
+      loadData()
+    } else {
+      ElNotification({
+        title: '删除失败',
+        message: '请求错误或删除被撤回',
+        type: 'error'
+      })
+    }
+  })
+    .catch(() => {
       ElNotification({
         title: '未知错误',
         message: '课程包未成功删除',
@@ -281,24 +288,24 @@ const deleteTea = (item: any) => {
 const confirmEditDialog = () => {
 
   editCourseQuestionPackage(newCourseData)
-  .then((res: any) => {
-    if (res.code == 20000) {
-      ElNotification({
-        title: '成功',
-        message: '已成功编辑',
-        type: 'success'
-      })
-      loadData()
-    } else {
-      ElNotification({
-        title: 'Warning',
-        message: res.msg,
-        type: 'warning'
-      })
-    }
-  })
-  .catch()
-  editDialogShow.value=false
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '成功',
+          message: '已成功编辑',
+          type: 'success'
+        })
+        loadData()
+      } else {
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning'
+        })
+      }
+    })
+    .catch()
+  editDialogShow.value = false
 }
 
 const editCourse = (props: {
@@ -307,10 +314,10 @@ const editCourse = (props: {
     teacherId: string,
     subjectId: string,
     gradeId: string,
-    id:string
-    description:string,
-    difficultyLevel:string,
-    cover:string
+    id: string
+    description: string,
+    difficultyLevel: string,
+    cover: string
   }
 
 }) => {
@@ -321,9 +328,9 @@ const editCourse = (props: {
   newCourseData.teacherId = props.rowData.teacherId;
   newCourseData.difficultyLevel = props.rowData.difficultyLevel;
   newCourseData.gradeId = props.rowData.gradeId;
-  newCourseData.subjectId= props.rowData.subjectId;
-  newCourseData.gradeId= props.rowData.gradeId;
-  newCourseData.id= props.rowData.id;
+  newCourseData.subjectId = props.rowData.subjectId;
+  newCourseData.gradeId = props.rowData.gradeId;
+  newCourseData.id = props.rowData.id;
 }
 
 
@@ -340,7 +347,7 @@ const loadData = () => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     name: searchBarItems[0].value,
-    type:1
+    type: 1
   }
   getCourseQuestionPackage(args)
     .then((res) => {
@@ -385,7 +392,7 @@ loadData()
   <el-dialog class="new-class-dialog" width="370px" v-model="editDialogShow">
 
 
-    
+
     <div>
 
 
