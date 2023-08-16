@@ -1,13 +1,11 @@
 <script setup lang="tsx">
 import { getBanners, createBanner, deleteBanner } from '@/apis/banner'
-import { ref, reactive, h } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { useRouter } from 'vue-router'
 import { upload } from '@/apis/upload';
 
-const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: 'banner' }]
 const loading = ref(true)
@@ -29,7 +27,7 @@ const tableColumns = [
         src={item.rowData.poster}
         //onClick={()=>console.log(item)}
         className="shop-Preview"
-        preview-src-list={['/1.jpg']}
+        preview-src-list={[item.poster]}
         preview-teleported
       />
     )
@@ -76,11 +74,9 @@ const newBannerContext = reactive({
 })
 const newBannerDialogShow = ref(false)
 const showImgSrc = ref<string>('')
-const imageFile = reactive<{ file: Blob | null }>({ file: null })
 
 const newBanner = () => {
   newBannerDialogShow.value = true
-  imageFile.file = null
   newBannerContext.title = ''
   newBannerContext.url = ''
   showImgSrc.value = 'test'
@@ -111,7 +107,6 @@ const confirmNewBanner = () => {
       loadData()
     })
     .catch()
-
   newBannerDialogShow.value = false
 }
 
@@ -152,29 +147,35 @@ const mouseLeave = () => {
 
 const handleFileChange = (e: Event) => {
   const currentTarget = e.target as HTMLInputElement;
-
   //图片上传到服务器返回url
   //url在res.data.url
   if (currentTarget.files) {
-    imageFile.file = currentTarget.files[0]
+    var imageSize = currentTarget.files[0].size
     var formData = new FormData()
     formData.append('file', currentTarget.files[0])
-    upload(formData)
-      .then((res: any) => {
-        if (res.data.url) {
-          console.log(res)
-          newBannerContext.url = res.data.url
-        }else{
-          console.log("失败")
-        }
+    if (imageSize < 1048576) {
+      upload(formData)
+        .then((res: any) => {
+          if (res.code != 20000) {
+            console.log(res)
+            console.log("失败")
+            ElNotification({
+              title: '封面上传失败',
+              message: res.msg,
+              type: 'error'
+            })
+          } else {
+            console.log(res)
+            newBannerContext.url = res.data.url
+          }
+        })
+        .catch()
+    } else {
+      console.log("too big")
+      ElNotification({
+        title: '图片不能大于1MB',
+        type: 'error'
       })
-      .catch()
-      
-    console.log(imageFile.file)
-    var reader = new FileReader();
-    reader.readAsDataURL(imageFile.file);
-    reader.onload = () => {
-      showImgSrc.value = reader.result as string;
     }
   }
 }
@@ -214,9 +215,10 @@ loadData()
 
         <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
           @dragleave="mouseLeave">
-          <img class="show-img" id="show_img" :src="showImgSrc" />
+          <img class="show-img" id="show_img" :src="newBannerContext.url" />
           <div class="upload-file-area-text">
             <el-text>点击此处或拖拽上传海报</el-text>
+            <el-text>图片不大于1MB</el-text>
             <el-text>只接受 *.png *.jpg *.jpeg</el-text>
           </div>
 
