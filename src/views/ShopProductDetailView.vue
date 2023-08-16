@@ -4,20 +4,13 @@ import SearchBar from '@/components/SearchBar.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue';
 import { useRoute } from 'vue-router'
+import { InputType } from '@/type'
 import { getProductContent, addProduct, deleteProductContent } from '@/apis/product';
 import type { CheckboxValueType } from 'element-plus'
 import { ElCheckbox, ElNotification } from 'element-plus'
 import { getCourseQuestionPackage } from '@/apis/coursequestionpackage';
-
-
-
-
-const dialogSearchBarItems = reactive([
-  { name: "用户名", value: "", },
-  { name: "姓名", value: "", },
-  { name: "电话", value: "", },
-])
-
+import { getGrades } from '@/apis/grade';
+import { getSubjects } from '@/apis/subject';
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -43,12 +36,9 @@ const paginationInfo = reactive({
   pageSize: 20
 })
 
-
 const dialogTableData = ref<any>([])
 const addProductDialog = ref(false)
 const newTeaData = ref<any>([])
-
-
 
 const confirmDelete = () => {
   deleteProductContent({ id: deleteItemid.value }).then((res: any) => {
@@ -74,35 +64,34 @@ const confirmDelete = () => {
   }).catch()
 }
 
-
-
-
-
-
-
-
-
 const tableColumns = [
-
   {
     dataKey: 'id',
     key: 'id',
     title: 'ID',
     width: 200
   },
-
   {
     dataKey: 'packageName',
     key: 'packageName',
     title: '名称',
-    width: 200
-  },
-
-  {
-    dataKey: 'packageName',
-    key: 'packageName',
-    title: '名称',
-    width: 200
+    width: 500,
+    cellRenderer: (item: any) => {
+      if (item.rowData.labelName != null) {
+        return (
+          <>
+            <span>{item.rowData.packageName}</span>
+            <el-tag style="margin-left:5px">{item.rowData.labelName}</el-tag>
+          </>
+        )
+      } else {
+        return (
+          <>
+            <span>{item.rowData.packageName}</span>
+          </>
+        )
+      }
+    }
   },
   {
     dataKey: 'packageDifficultyLevel',
@@ -111,14 +100,15 @@ const tableColumns = [
     width: 80,
     cellRenderer: (cellData: any) => (
       <span>
-        {cellData.cellData == 0 ? "容易" : cellData.cellData == 1 ? "较易" : cellData.cellData == 2 ? "普通" : cellData.cellData == 3 ? "较难" : cellData.cellData == 4 ? "难" : '困难'}
+        {
+          cellData.cellData == 0 ? "无"
+            : cellData.cellData == 1 ? "容易"
+              : cellData.cellData == 2 ? "较易"
+                : cellData.cellData == 3 ? "普通"
+                  : cellData.cellData == 4 ? "较难"
+                    : '困难'
+        }
       </span>)
-  },
-  {
-    dataKey: 'packageName',
-    key: 'packageName',
-    title: '名称',
-    width: 200
   },
   {
     dataKey: 'createdAt',
@@ -157,25 +147,77 @@ const tableColumns = [
   }
 ]
 
-
-
-
 //---------------获取dialog内数据-----------
+
+const dialogPaginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const dialogTotalLength = ref()
+const allGrades = reactive<any>([])
+const allSubjects = reactive<any>([])
+const dialogSearchBarItems = reactive([
+  { name: "课程名", value: "", },
+  {
+    name: "学习阶段",
+    type: InputType.Select,
+    value: "",
+    label: "请选择",
+    options: allGrades,
+    single: true
+  },
+  {
+    name: "学科",
+    type: InputType.Select,
+    value: "",
+    label: "请选择",
+    options: allSubjects,
+    single: true
+  },
+  {
+    name: "难度系数",
+    type: InputType.Select,
+    value: "",
+    label: "请选择",
+    options: [
+      { name: "容易", id: 1 },
+      { name: "较易", id: 2 },
+      { name: "普通", id: 3 },
+      { name: "较难", id: 4 },
+      { name: "困难", id: 5 }
+    ],
+    single: true
+  },
+])
 const loadDialogData = () => {
-  loading.value = true
-
+  getGrades().then((res: any) => {
+    allGrades.length = 0
+    res.data.forEach((item: any) => {
+      allGrades.push(item)
+    })
+  })
+  getSubjects().then((res: any) => {
+    allSubjects.length = 0
+    res.data.forEach((item: any) => {
+      allSubjects.push(item)
+    })
+  })
+  addProductDialog.value = true
   var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    type: route.query.type
-
+    pageNum: dialogPaginationInfo.currentPage,
+    pageSize: dialogPaginationInfo.pageSize,
+    type: route.query.type,
+    name: dialogSearchBarItems[0].value,
+    gradeId: dialogSearchBarItems[1].value,
+    subjectId: dialogSearchBarItems[2].value,
+    difficultyLevel: dialogSearchBarItems[3].value,
   }
   getCourseQuestionPackage(args)
     .then((res) => {
       console.log(dialogSearchBarItems)
       console.log(res)
       dialogTableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      dialogTotalLength.value = res.data.records.length
     })
     .catch(() => { })
     .finally(() => {
@@ -183,20 +225,15 @@ const loadDialogData = () => {
     })
 }
 
-loadDialogData()
-
-
 //---------------获取表格数据-----------
 const loadData = () => {
   loading.value = true
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    productId: route.query.id
+    productId: route.query.id,
   }
-
   getProductContent(args).then((res) => {
-
     console.log(args)
     console.log(res)
     tableData.value = res.data.records
@@ -207,7 +244,7 @@ const loadData = () => {
       loading.value = false
     })
 }
-
+loadData()
 
 
 const dialogTableColumns = reactive<any>([
@@ -226,47 +263,85 @@ const dialogTableColumns = reactive<any>([
     },
     checked: false,
   },
-  {
-    dataKey: 'id',
-    key: 'id',
-    title: 'ID',
-    width: 200
-  },
+  // {
+  //   dataKey: 'id',
+  //   key: 'id',
+  //   title: 'ID',
+  //   width: 200
+  // },
   {
     dataKey: 'name',
     key: 'name',
-    title: '课程名',
+    title: '名称',
+    cellRenderer: (item: any) => {
+      if (item.rowData.labelName != null) {
+        return (
+          <>
+            <span>{item.rowData.name}</span>
+            <el-tag>{item.rowData.labelName}</el-tag>
+          </>
+        )
+      } else {
+        return (
+          <>
+            <span>{item.rowData.name}</span>
+          </>
+        )
+      }
+    },
     width: 200
   },
   {
     dataKey: 'gradeName',
     key: 'gradeName',
     title: '学习阶段',
-    width: 200
+    algin: 'center',
+    width: 100
   },
   {
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '学科',
+    algin: 'center',
+    width: 100
+  },
+  {
+    dataKey: 'difficultyLevel',
+    key: 'difficultyLevel',
+    title: '难度',
+    cellRenderer: (cellData: any) => (
+      <span>
+        {
+          cellData.cellData == 0 ? "无"
+            : cellData.cellData == 1 ? "容易"
+              : cellData.cellData == 2 ? "较易"
+                : cellData.cellData == 3 ? "普通"
+                  : cellData.cellData == 4 ? "较难"
+                    : '困难'
+        }
+      </span>),
+    algin: 'center',
+    width: 100
+  },
+  {
+    dataKey: 'description',
+    key: 'description',
+    title: '描述',
     width: 200
   },
   {
     dataKey: 'teacherName',
     key: 'teacherName',
     title: '老师名',
-    width: 200
+    algin: 'center',
+    width: 100
   }
-
 ])
-
-
-
-
-loadData()
 
 const confirmAdd = () => {
   newTeaData.value = dialogTableData.value.filter((item: any) => item.checked)
   let data = newTeaData.value.map((item: any) => item.id)
+  addProductDialog.value = false
   console.log(data)
   addProduct({
     productId: route.query.id,
@@ -275,10 +350,9 @@ const confirmAdd = () => {
     if (res.code == '20000') {
       ElNotification({
         title: '成功',
-        message: '添加课程/题包到商品成功',
+        message: '添加成功',
         type: 'success'
       })
-      addProductDialog.value = false
     } else {
       ElNotification({
         title: '添加失败',
@@ -286,12 +360,9 @@ const confirmAdd = () => {
         type: 'warning'
       })
     }
-
     loadData()
   }).catch
 }
-
-
 </script>
 
 <template>
@@ -301,8 +372,8 @@ const confirmAdd = () => {
         <div>
           <el-image class="image" fit="scale-down" :src="route.query.cover" className="shop-Preview" preview-src-list={{}}
             preview-teleported />
-
         </div>
+
         <div class="topPart1-3">
           <div class="topPart1-3-2">
             <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{ route.query.name }}</el-text></div>
@@ -312,73 +383,50 @@ const confirmAdd = () => {
             <div class="topPart1-3-2"><el-text>老师：{{ route.query.teacherName }}</el-text></div>
           </div>
         </div>
-
-
       </div>
-
-
 
       <div class="topPart1">
         <div class="topPart1-1"><el-text></el-text></div>
         <div class="topPart2-2"><el-text></el-text></div>
       </div>
-
-
-      <div class="topPart1">
-        <div class="topPart1-1"><el-button>下发课程</el-button></div>
-      </div>
     </div>
+
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button style="margin-left: 18px;" @click="addProductDialog = true"
-            type="primary">添加课程/好题</el-button></div>
+        <div class="botPart1-1-1"><el-button style="margin-left: 18px;" @click="loadDialogData()" type="primary">
+            {{ route.query.type == '1' ? '添加课程' : '添加好题' }}</el-button></div>
       </div>
     </div>
     <div class="botPart1-2">
-      <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
-        :columns="tableColumns" :data="tableData">
+      <TablePage style="height: 620px;" :loading="loading" class="page-container" :itemsTotalLength="totalLength"
+        @paginationChange="loadData" :columns="tableColumns" :data="tableData">
       </TablePage>
     </div>
   </div>
 
-
-
   <el-dialog v-model="warningDialogshow" title="Warning" width="30%" center>
     <el-text disabled style="display: flex;align-items: center;justify-content: center;">
-      是否确认从商品内删除课程
+      {{ route.query.type == '1' ? '是否确认从商品内删除课程' : '是否确认从商品内删除好题' }}
     </el-text>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="warningDialogshow = false">Cancel</el-button>
+        <el-button @click="warningDialogshow = false">取消</el-button>
         <el-button type="primary" @click="confirmDelete">
-          Confirm
+          确定
         </el-button>
       </span>
     </template>
   </el-dialog>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addProductDialog">
-    <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+    <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="loadDialogData"
+      :columns="dialogTableColumns" :data="dialogTableData">
       <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
     </TablePage>
 
     <template #header>
-      <el-text>添加课程/好题到商品</el-text>
+      <el-text>{{ route.query.type == '1' ? '添加课程到商品' : '添加好题到商品' }}</el-text>
     </template>
     <template #footer>
       <el-button type="primary" @click="confirmAdd()">确定</el-button>
@@ -388,9 +436,6 @@ const confirmAdd = () => {
     </template>
   </el-dialog>
 </template>
-
-
-
 
 <style scoped lang="scss">
 $scale: 0.88;
