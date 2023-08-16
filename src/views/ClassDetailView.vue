@@ -58,7 +58,8 @@ const normalDialogSearchBarItems = reactive([
     value: "",
     label: "请选择",
     type: InputType.Select,
-    options: allGrades
+    options: allGrades,
+    single:true 
   },
   { name: "姓名", value: "", },
 

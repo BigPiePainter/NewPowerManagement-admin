@@ -179,7 +179,6 @@ const trueFlase = [
 ]
 
 
-
 const pushdata =
     (props: { rowData: { a: any, b: any, c: string, d: string } }) => {
         newSMultipleChoiceQuestion.选项.a = props.rowData.a;
@@ -188,14 +187,16 @@ const pushdata =
         newSMultipleChoiceQuestion.选项.d = props.rowData.d;
     }
 
+
 const newSMultipleChoiceQuestion = reactive<any>({
 
-    a: '',
-    b: '',
-    c: '',
-    d: ''
+    // identifier: 'A',value=''}
+    // b: '',
+    // c: '',
+    // d: ''
 
 })
+
 
 const giveData = () => {
     const newSMultipleChoice = reactive<any>([
@@ -211,7 +212,7 @@ const giveData = () => {
 const confirmCreate = () => {
     var args = {
 
-        questionPrompt: "欧阳修,字____,自号____,晚年又号____,宋代文学家。",
+        questionPrompt:  newQuestionData.questionPrompt,
         gradeId: newQuestionData.gradeId,
         difficultyType: newQuestionData.difficultyType,
         subjectId: newQuestionData.subjectId,
@@ -261,7 +262,9 @@ const dataTransform = () => {
     console.log
 }
 
-
+const change=(valueHtml:any)=>{
+    newQuestionData.questionPrompt=valueHtml
+}
 
 </script>
 
@@ -314,7 +317,7 @@ const dataTransform = () => {
 
 
 
-        <RichTextEditor :questionPrompt="newQuestionData.questionPrompt" :isShow="true"
+        <RichTextEditor  :questionPrompt="newQuestionData.questionPrompt" :isShow="true" @change="change"
             v-model="newQuestionData.questionPrompt">
         </RichTextEditor>
 
@@ -335,9 +338,9 @@ const dataTransform = () => {
                 <el-option v-for="(item, key) in newSMultipleChoiceQuestion" :key="item" :label="key" :value="key" />
             </el-select>
 
-            <!-- <el-button style="margin:15px" @click="console.log(newAnswer), dataTransform()">
+            <el-button style="margin:15px" @click="console.log(newAnswer), dataTransform()">
                 确认:
-            </el-button> -->
+            </el-button>
         </div>
 
 
@@ -351,7 +354,7 @@ const dataTransform = () => {
                 c:<el-input v-model="newSMultipleChoiceQuestion.c"></el-input>
                 d:<el-input v-model="newSMultipleChoiceQuestion.d"></el-input>
 
-                <!-- <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button> -->
+                <el-button @click="console.log(newSMultipleChoiceQuestion)">确认题目选项</el-button>
             </diV>
 
 

@@ -55,6 +55,12 @@ const handleCreated = (editor: any) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
 };
 
+const emit = defineEmits(['change'])
+const handleCurrentChange = () => {
+    // console.log('change', valueHtml.value);
+    emit('change', valueHtml.value)
+};
+
 const handleDestroyed = (editor: any) => {
     console.log('destroyed', editor);
 };
@@ -94,7 +100,7 @@ const handleFileChange = (e: Event) => {
         <Toolbar v-if="isShow" :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple"
             style="border-bottom: 1px solid #ccc" />
         <Editor :defaultConfig="editorConfig" mode="simple" v-model=valueHtml style="height: 150px; overflow-y: hidden"
-            @onCreated="handleCreated" @onDestroyed="handleDestroyed" />
+            @onCreated="handleCreated" @onDestroyed="handleDestroyed" @onChange="handleCurrentChange" />
         <button v-if="isShow" style="margin-top: 10px;" @click="insertImage">插入图片</button>
     </div>
 </template>

@@ -31,7 +31,8 @@ const searchBarItems = reactive([
     value: '',
     type: InputType.Select,
     label: '请选择',
-    options: receiverType
+    options: receiverType,
+    string:true
   }
 ])
 
@@ -148,7 +149,7 @@ loadData()
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
     </div>
     <div>
-      <el-button @click="sendMsg" class="new-msg-button" type="primary">发消息</el-button>
+      <el-button @click="sendMsg" style="margin-top: 15px;" class="new-msg-button" type="primary">发消息</el-button>
     </div>
   </TablePage>
 

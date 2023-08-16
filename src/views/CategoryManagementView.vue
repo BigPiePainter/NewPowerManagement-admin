@@ -4,6 +4,7 @@ import { ref, reactive } from 'vue'
 import { getGrades, createGrades, deleteGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject';
 import { ElNotification } from 'element-plus'
+import { createSubject, deleteSubject } from '@/apis/subject'
 
 
 
@@ -11,41 +12,32 @@ const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
 
-const allTheGrades=ref<any>([])
+const allTheGrades = ref<any>([])
 const allGrades = ref<any[]>([])
+const createSubjectDialogShow = ref(false)
 
 
+
+const newSubjectdata = reactive<{
+
+name: string
+
+}>({
+name: ''
+});
 
 const loadGrade = () => {
   getGrades().then((res: any) => {
     allGrades.value = res.data
     console.log(res)
-    // console.log(res)
-    // for (var i in res.data) {
-    //   console.log(res.data[i].name)
-
-    //   mainState.push(res.data[i].name)
-
-    //   for (var j in res.data[i].subset)
-
-    //     console.log(res.data[i].subset[j].name)
-
-    // }
-
-    // console.log(mainState)
-    // console.log(studyState)
   }).catch()
 }
 
-
 getGrades()
-    .then((res) => (allTheGrades.value = res.data.map((i: any) => i.subset).flat()))
-    .catch()
+  .then((res) => (allTheGrades.value = res.data.map((i: any) => i.subset).flat()))
+  .catch()
 
-
-
-
-const loadData=()=>{
+const loadData = () => {
   loadGrade()
   getGrades()
 
@@ -74,24 +66,25 @@ const createNew = () => {
 
 const confrimCreateNew = () => {
   loadData()
-  createGrades(newGradedata).then((res:any)=>{
-    if(res.code==20000){
-    ElNotification({
-          title: '成功',
-          message: '已成功创建',
-          type: 'success'
-        })
-        createDialogShow.value = false
-        loadData()
-      }
-        else{
-          ElNotification({
-          title: '失败',
-          message: '创建失败',
-          type: 'warning'
-        })
-      }}).catch()
+  createGrades(newGradedata).then((res: any) => {
+    if (res.code == 20000) {
+      ElNotification({
+        title: '成功',
+        message: '已成功创建',
+        type: 'success'
+      })
+      createDialogShow.value = false
+      loadData()
     }
+    else {
+      ElNotification({
+        title: '失败',
+        message: '创建失败',
+        type: 'warning'
+      })
+    }
+  }).catch()
+}
 
 const major = ref<any[]>([])
 
@@ -116,36 +109,71 @@ const allLevel = [
 
 
 
-const deleteGradedata = reactive<{
+const deleteGradeData = reactive<{
+  id: string,
+}>({
+  id: '',
+});
+
+const deleteSubjectdata = reactive<{
   id: string,
 }>({
   id: '',
 });
 
 
-const confrimDelete = () => {
-  deleteGrades(deleteGradedata).then((res:any)=>{
-    if(res.code==20000){
-    ElNotification({
-          title: '成功',
-          message: '已成功删除',
-          type: 'success'
-        })
-        deletDialogShow.value = false
-        loadData()
-      }
 
-        else{
-          ElNotification({
-          title: '失败',
-          message: '删除失败',
-          type: 'warning'
-        })
-        loadData()
-      }
-        
-        })
- .catch()
+
+const confrimDeleteSub = () => {
+  deleteSubject(deleteSubjectdata).then((res: any) => {
+    if (res.code == 20000) {
+      ElNotification({
+        title: '成功',
+        message: '已成功删除',
+        type: 'success'
+      })
+      deletSubDialogShow.value = false
+      getSubjects().then((res) =>
+  major.value = res.data).catch()
+
+    }
+
+    else {
+      ElNotification({
+        title: '失败',
+        message: '删除失败',
+        type: 'warning'
+      })
+      loadData()
+    }
+
+  })
+    .catch()
+}
+
+const confrimDelete = () => {
+  deleteGrades(deleteGradeData).then((res: any) => {
+    if (res.code == 20000) {
+      ElNotification({
+        title: '成功',
+        message: '已成功删除',
+        type: 'success'
+      })
+      deletDialogShow.value = false
+      loadData()
+    }
+
+    else {
+      ElNotification({
+        title: '失败',
+        message: '删除失败',
+        type: 'warning'
+      })
+      loadData()
+    }
+
+  })
+    .catch()
 }
 
 
@@ -153,6 +181,40 @@ const deleteGrade = () => {
   loadData()
   deletDialogShow.value = true
 }
+
+
+
+const confrimCreateSub = () => {
+  createSubject(newSubjectdata).then((res: any) => {
+    if (res.code == 20000) {
+      ElNotification({
+        title: '成功',
+        message: '已成功创建',
+        type: 'success'
+      })
+      createDialogShow.value = false
+      getSubjects().then((res) =>
+  major.value = res.data).catch()
+    }
+    else {
+      ElNotification({
+        title: '失败',
+        message: '创建失败',
+        type: 'warning'
+      })
+    }
+
+  }).catch()
+}
+
+
+
+
+
+const deletSubDialogShow = ref(false)
+
+
+
 
 
 </script>
@@ -188,10 +250,10 @@ const deleteGrade = () => {
       <div class="card-title-bar">
         <el-text class="card-title-text">学科大全</el-text>
         <div style="flex-grow: 1;"></div>
-        <!-- <el-text style="margin-right: 20px;" link type="primary" @click="createSubjectDialogShow = true">设置</el-text>
-        <el-text link type="primary">新增</el-text> -->
+        <el-button type="primary" @click="createSubjectDialogShow = true">新增学科</el-button>
+        <el-button type="primary" @click="deletSubDialogShow = true">删除学科</el-button>
       </div>
-
+      
       <div class="card-body">
         <div class="div-major-items">
 
@@ -202,6 +264,51 @@ const deleteGrade = () => {
 
     </div>
   </div>
+
+
+
+
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="createSubjectDialogShow">
+    <div class="div-input-element">
+    </div>
+
+
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text>
+        学科名称：
+      </el-text>
+      <div>
+        <el-input class="dialog-input" v-model="newSubjectdata.name" @change="console.log(newSubjectdata.name)" style="width: 256px;">
+        </el-input>
+      </div>
+    </div>
+
+
+    <template #header>
+      <el-text>添加学科</el-text>
+    </template>
+
+    <template #footer>
+      <el-button type="primary" @click="confrimCreateSub()">确定</el-button>
+      <el-button @click="createDialogShow = false">
+        取消
+      </el-button>
+    </template>
+
+  </el-dialog>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -276,8 +383,6 @@ const deleteGrade = () => {
 
 
 
-
-
   <el-dialog class="new-class-dialog" width="370px" v-model="deletDialogShow">
     <div class="div-input-element">
     </div>
@@ -287,7 +392,7 @@ const deleteGrade = () => {
         要删除的学习阶段：
       </el-text>
       <div>
-        <el-select placeholder="例：初中为父级，初一为子级别" class="dialog-input" v-model="deleteGradedata.id" style="width: 256px;">
+        <el-select placeholder="例：初中为父级，初一为子级别" class="dialog-input" v-model="deleteGradeData.id" style="width: 256px;">
           <el-option v-for="item in allTheGrades" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
 
@@ -302,6 +407,63 @@ const deleteGrade = () => {
     <template #footer>
       <el-button type="primary" @click="confrimDelete()">确定</el-button>
       <el-button @click="createDialogShow = false">
+        取消
+      </el-button>
+    </template>
+
+  </el-dialog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <el-dialog class="new-class-dialog" width="370px" v-model="deletSubDialogShow">
+    <div class="div-input-element">
+    </div>
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <el-text>
+        要删除的学科：
+      </el-text>
+      <div>
+        <el-select placeholder="请选择" class="dialog-input" v-model="deleteSubjectdata.id" style="width: 256px;">
+          <el-option v-for="item in major" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+
+      </div>
+
+    </div>
+
+    <template #header>
+      <el-text>删除科目</el-text>
+    </template>
+
+    <template #footer>
+      <el-button type="primary" @click="confrimDeleteSub()">确定</el-button>
+      <el-button @click="deletSubDialogShow = false">
         取消
       </el-button>
     </template>

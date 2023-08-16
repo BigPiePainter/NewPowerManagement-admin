@@ -41,7 +41,7 @@ parentId: ''
 });
 
 
-const labelData = ref<any>([])
+const labelData = reactive<any>([])
 
 
 
@@ -49,25 +49,16 @@ breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
 
 const loadData = () => {
-  getLabels().then((res) => {
-    labelData.value = res.data
-
+  getLabels().then((res:any) => {
+  labelData.length=0
+    res.data.forEach((item:any)=>{
+      labelData.push(item)
+    })
   }).catch
 }
-
-
-
 loadData()
 
 
-
-
-
-
-
-
-const tagMenu: any = ['语文', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史']
-const major: any = ['语文', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史', '数学', '英语', '历史']
 
 const allLevel = [
 
@@ -78,7 +69,7 @@ const allLevel = [
   },
   {
     id: '2',
-    name: '子级学习阶段',
+    name: '子级',
     value: 2
   }
 ]
@@ -88,6 +79,9 @@ const allLevel = [
 const confrimCreateNew = () => {
 console.log(newLabelData)
   createLabel(newLabelData).then((res:any)=>{
+    if(newLabelData.level=='1'){
+      newLabelData.parentId=='1'
+    }
     if (res.code == 20000) {
       console.log('添加成功')
       ElNotification({
@@ -111,8 +105,6 @@ console.log(newLabelData)
 
 
 const createDialogShow = ref(false)
-
-
 
 
 
@@ -227,9 +219,9 @@ const deleteLab = (item: any) => {
     </div>
 
 
-    <div class="div-input-element" style="margin-top: 10px;">
+    <div class="div-input-element" style="margin-top: 10px;"  v-if="newLabelData.level=='2'">
       <el-text>
-        父级阶段：
+        父级标签：
       </el-text>
       <div>
         <el-select type="datetime" placeholder="请选择" style="width:256px" v-model="newLabelData.parentId">

@@ -185,11 +185,11 @@ const allHot: any = [
 
 const searchBarItems = reactive([
   { name: '商品名称', value: '' },
-  { name: '类型', value: '', type: InputType.Select, options: allType, },
-  { name: '状态', value: '', type: InputType.Select, options: allstatus },
-  { name: '阶段', value: '', type: InputType.Select, options: allGrades },
-  { name: '学科', value: '', type: InputType.Select, options: allSubjects },
-  { name: '版本', value: '', type: InputType.Select, options: allVersion },
+  { name: '类型', value: '', type: InputType.Select, options: allType, single:true },
+  { name: '状态', value: '', type: InputType.Select, options: allstatus,single:true  },
+  { name: '阶段', value: '', type: InputType.Select, options: allGrades,single:true  },
+  { name: '学科', value: '', type: InputType.Select, options: allSubjects,single:true  },
+  { name: '版本', value: '', type: InputType.Select, options: allVersion,single:true  },
 ])
 
 const tableColumns = [

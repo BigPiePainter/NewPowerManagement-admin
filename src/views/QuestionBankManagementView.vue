@@ -307,7 +307,8 @@ const searchBarItems = reactive([
     value: '',
     type: InputType.Select,
     label: '请选择',
-    options: allSubjects
+    options: allSubjects,
+    single:true 
   },
   {
     name: '难度',

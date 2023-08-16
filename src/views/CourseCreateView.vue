@@ -25,8 +25,11 @@ const allTeacher = ref<any>([])
 const allLabel = ref<any>([])
 const loading = ref(true)
 const bgc = ref('#e2e5ec')
+
 const newGoodQuestion = reactive<any>([])
+
 const showImgSrc = ref<string>('')
+
 const imageFile = reactive<{ file: Blob | null }>({ file: null })
 const mouseEnter = () => {
     bgc.value = '#BEC2CB'
@@ -121,6 +124,7 @@ const createnewGoodQuestion = () => {
         description: newGoodQuestion.description,
         difficultyLevel: newGoodQuestion.difficultyLevel,
         gradeId: newGoodQuestion.gradeId,
+        labelId:newGoodQuestion.labelId,
         type: 1
 
     }
@@ -161,7 +165,7 @@ const createnewGoodQuestion = () => {
                 <el-text class="dialog-el-text">
                     *名称：
                 </el-text>
-                <el-input style="width: 217px;" class="dialog-input" placeholder="请输入好题包名称" v-model="newGoodQuestion.name">
+                <el-input style="width: 217px;" class="dialog-input" placeholder="请输入课程包名称" v-model="newGoodQuestion.name">
                 </el-input>
             </div>
 
@@ -171,7 +175,7 @@ const createnewGoodQuestion = () => {
                     *学科：
                 </el-text>
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.gradeId">
-                    <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
+                    <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </div>
 
@@ -180,7 +184,7 @@ const createnewGoodQuestion = () => {
                     *阶段：
                 </el-text>
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.subjectId">
-                    <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+                    <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
 
 

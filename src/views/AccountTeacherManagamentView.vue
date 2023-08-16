@@ -41,14 +41,16 @@ const searchBarItems = reactive([
     value: '',
     type: InputType.Select,
     label: '请选择',
-    options: allGrades
+    options: allGrades,
+    single:true 
   },
   {
     name: '学科',
     value: '',
     type: InputType.Select,
     label: '请选择',
-    options: allSubjects
+    options: allSubjects,
+    single:true 
   }
 ])
 
