@@ -11,7 +11,6 @@ import type { CheckboxValueType } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllStudents, getStudent } from '@/apis/student'
 import { getClassesStudent, deleteClassStudent, createClassStudent } from '@/apis/classStudent'
-import router from '@/router'
 const route = useRoute()
 
 const breadcrumbStore = useBreadcrumbStore()
@@ -23,50 +22,35 @@ breadcrumbStore.data = [
 
 const allStudents = ref<any>([])
 const allGrades = ref<any>([])
-const allDetail = reactive<any>([])
 
 const loading = ref(true)
 const searchBarItems = reactive([
-  { name: "用户", type: InputType.Select, value: "", options: allStudents, single: true, },
+  { name: "学生姓名", type: InputType.Select, value: "", options: allStudents, single: true, },
 ])
 
-const loadSelectOption = () => {
+const loadGradeOption = () => {
   getGrades()
     .then((res) => allGrades.value = res.data.map((i: any) => i.subset).flat())
     .catch()
+}
 
+const loadStudentOption = () => {
   getAllStudents()
     .then((res) => allStudents.value = res.data)
     .catch()
 }
-
-loadSelectOption()
 
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
 
-// const loadDetail = () => {
-//   loading.value = true
+const dialogPaginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
 
-//   var args = {
-//     pageNum: paginationInfo.currentPage,
-//     pageSize: paginationInfo.pageSize,
-//     id: route.query.id
-
-//   }
-
-//   getClasses(args)
-//     .then((res) => { allDetail.push(res.data.records[0]) })
-//     .catch()
-//     .finally(() => {
-//       loading.value = false
-//     })
-// }
-// loadDetail()
 const activeName = ref('officalStudent')
-
 
 const normalDialogSearchBarItems = reactive([
   {
@@ -241,11 +225,8 @@ const tableData = ref<any>([])
 const addStudentDialogShow = ref(false);
 
 const addStudent = () => {
+  loadDialogData()
   addStudentDialogShow.value = true;
-}
-
-const dialogSearchBarRefresh = () => {
-  loadSelectOption()
 }
 
 const newStudentData = ref<any>([])
@@ -285,32 +266,33 @@ const cancelNewStudent = () => {
 
 
 const totalLength = ref<Number>()
+const dialogTotalLength = ref<Number>()
 const studentType = ref<number>()
 const handleTabClick = (tab: any) => {
 
   if (tab.props.name == 'officalStudent') {
     studentType.value = 1
-    loadData()
+    loadDialogData()
   }
   else studentType.value = 2
-  loadData()
+  loadDialogData()
 }
 
 const loadDialogData = () => {
   loading.value = true
 
   var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
+    pageNum: dialogPaginationInfo.currentPage,
+    pageSize: dialogPaginationInfo.pageSize,
     type: studentType.value,
     name: normalDialogSearchBarItems[1].value,
-    gradeIds: normalDialogSearchBarItems[0].value[0]
+    gradeIds: normalDialogSearchBarItems[0].value
   }
 
   getStudent(args)
     .then((res) => {
       dialogTableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      dialogTotalLength.value = res.data.records.length
       loading.value = false
     })
     .catch(() => { })
@@ -321,7 +303,6 @@ const loadDialogData = () => {
 
 const loadData = () => {
   loading.value = true
-  loadDialogData()
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
@@ -330,6 +311,8 @@ const loadData = () => {
   }
   getClassesStudent(args)
     .then((res) => {
+      loadStudentOption()
+      loadGradeOption()
       console.log(res)
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
@@ -391,13 +374,13 @@ loadData()
   <el-dialog class="class-detail-dialog" width="850px" v-model="addStudentDialogShow">
     <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleTabClick">
       <el-tab-pane label="正式学生" name="officalStudent">
-        <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+        <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="loadDialogData" :columns="dialogTableColumns" :data="dialogTableData">
           <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="loadDialogData()">
           </SearchBar>
         </TablePage>
       </el-tab-pane>
       <el-tab-pane label="临时学生" name="inofficalStudent">
-        <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+        <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="loadDialogData" :columns="dialogTableColumns" :data="dialogTableData">
           <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="loadDialogData()">
           </SearchBar>
         </TablePage>

@@ -4,8 +4,8 @@ import { ElButton, ElNotification } from 'element-plus'
 import SearchBar from '../components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
-import { getTeacherGroupTeachers , editTeacherGroups, getTeacherGroup, createTeacherGroup, deleteTeacherGroups } from '@/apis/teacherGroup'
-import { getAllTeachers, getTeachers } from '@/apis/teacher'
+import { editTeacherGroups, getTeacherGroup, createTeacherGroup, deleteTeacherGroups } from '@/apis/teacherGroup'
+import { getAllTeachers } from '@/apis/teacher'
 const router = useRouter()
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
@@ -18,8 +18,8 @@ breadcrumbStore.data = [
 
 const allTeacher = ref<any>([])
 
-getAllTeachers().then((res)=>{
-  allTeacher.value=res.data
+getAllTeachers().then((res) => {
+  allTeacher.value = res.data
 })
 
 
@@ -32,23 +32,19 @@ const loading = ref(true)
 
 const newTeacherGroupDialogShow = ref(false);
 
-const newTeacherGroupData = reactive<
+const newTeacherGroupData = reactive<any>(
   {
-    leaderId: string,
-    name: string
-  }>(
-    {
-      leaderId: '',
-      name: ''
+    leaderId: '',
+    name: ''
   });
 
 const creatNewTeacherGroup = () => {
+  newTeacherGroupData.leaderId = ''
+  newTeacherGroupData.name = ''
   newTeacherGroupDialogShow.value = true;
 }
 
-
 const tableData = ref<any>([])
-
 
 const tableColumns = reactive<any[]>([
   {
@@ -113,19 +109,26 @@ const tableColumns = reactive<any[]>([
   }
 ])
 //将教研组id传参到教研组详情页面，用于获取this.教研组
-const clickDetail = (props: { rowData: { id: string } }) => {
-  console.log(props.rowData.id)
-  router.push({ path: 'teacher-group-detail', query: { id: props.rowData.id } })
+const clickDetail = (props: any) => {
+  console.log(props.rowData)
+  router.push({
+    path: 'teacher-group-detail',
+    query: {
+      id: props.rowData.id,
+      name: props.rowData.name,
+      teacherName: props.rowData.teacherName,
+    }
+  })
 }
 
 const editTeacherGroupDialogShow = ref(false);
-const editTeacherGroupData = reactive<{ id: string, leaderId: string,name:string }>({ leaderId: '', id: '',name:'' });
-const editTeacherGroup = (props: { rowData: { teacherGroupName: string, groupLeader: string } }) => {
+const editTeacherGroupData = reactive<any>({ leaderId: '', id: '', name: '' });
+const editTeacherGroup = (props: any) => {
   console.log(props)
   editTeacherGroupDialogShow.value = true;
   editTeacherGroupData.name = props.rowData.teacherGroupName
   editTeacherGroupData.leaderId = props.rowData.groupLeader
-  editTeacherGroupData.id=props.rowData.id
+  editTeacherGroupData.id = props.rowData.id
 }
 const preDeleteTea = (item: any) => {
   tableData.value.forEach((i: any) => {
@@ -183,32 +186,29 @@ const calcelDeleteTea = (item: any) => {
 
 const deleteTeacherGroupDialogShow = ref(false);
 const deleteTeacherGroupData = reactive<{ teacherGroupName: string }>({ teacherGroupName: '' });
-const deleteTeacherGroup = (props: { rowData: { id: string, teacherGroupName: string } }) => {
-  console.log(props)
-  deleteTeacherGroupDialogShow.value = true;
-  deleteTeacherGroupData.teacherGroupName = props.rowData.teacherGroupName
-}
 
 const confirmEditDialog = () => {
   editTeacherGroups(editTeacherGroupData)
     .then((res: any) => {
-      if (res.code == 20000){        ElNotification({
+      if (res.code == 20000) {
+        ElNotification({
           title: '成功',
           message: '已成功修改',
           type: 'success',
         })
         loadData()
-        editTeacherGroupDialogShow.value = false;}
-        else{
-          ElNotification({
+        editTeacherGroupDialogShow.value = false;
+      }
+      else {
+        ElNotification({
           title: '失败',
           message: '修改失败',
           type: 'warning',
         })
       }
     })
-      .catch
-      editTeacherGroupDialogShow.value = false;
+    .catch
+  editTeacherGroupDialogShow.value = false;
   console.log(editTeacherGroupData)
 }
 const cancelEditDialog = () => {
@@ -230,14 +230,12 @@ const totalLength = ref<Number>()
 
 const loadData = () => {
   loading.value = true
-
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     name: searchBarItems[0].value,
     leaderId: searchBarItems[1].value[0]
   }
-
   getTeacherGroup(args)
     .then((res) => {
       tableData.value = res.data.records
@@ -249,9 +247,6 @@ const loadData = () => {
     })
 
 }
-
-
-
 loadData()
 
 const confirmNewTeacherGroup = () => {
@@ -327,6 +322,7 @@ const cancelNewTeacherGroup = () => {
 
   <el-dialog class="teacher-group-dialog" width="370px" v-model="editTeacherGroupDialogShow">
     <div>
+
       <div class="div-input-element">
         <span class="dialog-span">
           *教研组名称：
@@ -334,6 +330,7 @@ const cancelNewTeacherGroup = () => {
         <el-input class="dialog-input" v-model="editTeacherGroupData.name">
         </el-input>
       </div>
+
       <div class="div-input-element">
         <span class="dialog-span">
           *教研组长：

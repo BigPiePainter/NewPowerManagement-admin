@@ -3,10 +3,9 @@ import { ref, reactive } from 'vue'
 import { ElButton, ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
-import { InputType } from '@/type'
 import { useRoute } from 'vue-router'
 import { ElCheckbox } from 'element-plus'
-import { getTeacherGroupTeachers, addTeacherTogroup, deleteTeacherFromGroup,getTeacherGroup } from '@/apis/teacherGroup'
+import { getTeacherGroupTeachers, addTeacherTogroup, deleteTeacherFromGroup } from '@/apis/teacherGroup'
 import { getTeachers } from '@/apis/teacher'
 import type { CheckboxValueType } from 'element-plus'
 
@@ -140,14 +139,19 @@ const paginationInfo = reactive({
   pageSize: 20
 })
 
+const dialogPaginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+
 const totalLength = ref<Number>()
+const dialogTotalLength = ref<Number>()
 
 const loadDialogData = () => {
   loading.value = true
-
   var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
+    pageNum: dialogPaginationInfo.currentPage,
+    pageSize: dialogPaginationInfo.pageSize,
     account: dialogSearchBarItems[0].value,
     name: dialogSearchBarItems[1].value,
     phoneNumber: dialogSearchBarItems[2].value,
@@ -157,35 +161,13 @@ const loadDialogData = () => {
       console.log(dialogSearchBarItems)
       console.log(res)
       dialogTableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      dialogTotalLength.value = res.data.records.length
     })
     .catch(() => { })
     .finally(() => {
-    loading.value = false
+      loading.value = false
     })
 }
-const detilData = reactive<any>({})
-
-const loadDetail = () => {
-
-  var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
-    id: route.query.id
-    
-  }
-
-  getTeacherGroup(args)
-    .then((res) => {
-    detilData.value = res.data.records
-    console.log(detilData)
-    })
-    .catch(() => { })
-    .finally(() => {
-    })
-
-  }
-  loadDetail()
 
 const loadData = () => {
   loading.value = true
@@ -208,22 +190,17 @@ const loadData = () => {
       loading.value = false
     })
 }
-
-
 loadData()
-loadDialogData()
+
 console.log(route.query.id)
 const tableData = ref<any>([])
 
-
 const addTeacherDialogShow = ref(false);
 
-
-
 const addTeacher = () => {
+  loadDialogData()
   addTeacherDialogShow.value = true;
 }
-
 
 const newTeaData = ref<any>([])
 
@@ -236,7 +213,7 @@ const preDeleteStu = (item: any) => {
   })
   var note: any = ElNotification({
     title: '点击撤回',
-    message: `撤回移除学生 ${item.rowData.name}`,
+    message: `撤回移除老师 ${item.rowData.teacherName}`,
     duration: 5000,
     onClick: () => {
       calcelDeleteTea(item)
@@ -246,7 +223,6 @@ const preDeleteStu = (item: any) => {
     type: 'warning'
   })
 }
-
 
 const deleteCS = (item: any) => {
   setTimeout(console.log, 0)
@@ -281,7 +257,6 @@ const calcelDeleteTea = (item: any) => {
   item.rowData.id = null
 }
 
-
 const confirmNewTeacher = () => {
   newTeaData.value = dialogTableData.value.filter((item: any) => item.checked)
   let data = newTeaData.value.map((item: any) => item.id)
@@ -291,40 +266,24 @@ const confirmNewTeacher = () => {
     groupId: route.query.id,
     teacherIdArr: data
   }).then((res: any) => {
-      if (res.code == '20000') {
-        ElNotification({
-          title: '成功',
-          message: '添加老师成功',
-          type: 'success'
-        })
-        addTeacherDialogShow.value = false
-      }else{
-        ElNotification({
-          title: '失败',
-          message: '添加老师失败',
-          type: 'warning'
-        })
-      }
-    
-loadData()
+    if (res.code == '20000') {
+      ElNotification({
+        title: '成功',
+        message: '添加老师成功',
+        type: 'success'
+      })
+      addTeacherDialogShow.value = false
+    } else {
+      ElNotification({
+        title: '失败',
+        message: '添加老师失败',
+        type: 'warning'
+      })
+    }
+
+    loadData()
   }).catch
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
 
 const cancelNewTeacher = () => {
   addTeacherDialogShow.value = false;
@@ -336,19 +295,20 @@ const cancelNewTeacher = () => {
 <template>
   <div class="div-teacher-group-detail">
     <div class="card-left">
+
       <div class="div-card-left-title">
         <el-text style=";">
           基本信息
         </el-text>
       </div>
-<el-button @click="console.log(detilData.value.id)">aa</el-button>
+
       <div class="div-card-left-detail">
         <div class="detail-info">
           <el-text class="el-text-detail">
-            教研组名称：{{ detilData.value.name }}
+            教研组名称：{{ route.query.name }}
           </el-text>
           <el-text class="el-text-detail">
-            组长：{{ detilData.name }}
+            组长：{{ route.query.teacherName }}
           </el-text>
         </div>
       </div>
@@ -371,7 +331,8 @@ const cancelNewTeacher = () => {
   </div>
 
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addTeacherDialogShow">
-    <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+    <TablePage class="dialog-table-page" @paginationChange="loadDialogData" :columns="dialogTableColumns"
+      :itemsTotalLength="dialogTotalLength" :data="dialogTableData">
       <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
     </TablePage>
 

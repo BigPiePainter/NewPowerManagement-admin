@@ -32,8 +32,6 @@ const paginationInfo = reactive({
 })
 const totalLength = ref<Number>()
 
-
-
 const searchBarItems = reactive([
   { name: '用户名', value: '' },
   { name: '姓名', value: '' },
@@ -54,16 +52,7 @@ const searchBarItems = reactive([
   }
 ])
 
-const newTeacherData = reactive<{
-  account: string
-  name: string
-  password: string
-  phoneNumber: string
-  gradeId: string
-  subjectId: string
-  remark: string
-  email: string
-}>({
+const newTeacherData = reactive<any>({
   account: '',
   name: '',
   password: '',
@@ -75,7 +64,6 @@ const newTeacherData = reactive<{
 })
 
 const editTeacherData = reactive<{
-
   id: string,
   subjectId: string,
   gradeId: string
@@ -85,11 +73,16 @@ const editTeacherData = reactive<{
   gradeId: ''
 });
 
-
 //--------------------创建老师---------------
-
-
 const createteachers = () => {
+  newTeacherData.account = ''
+  newTeacherData.name = ''
+  newTeacherData.password = ''
+  newTeacherData.phoneNumber = ''
+  newTeacherData.gradeId = ''
+  newTeacherData.subjectId = ''
+  newTeacherData.remark = ''
+  newTeacherData.email = ''
   showDialog.value = true
 }
 
@@ -116,10 +109,6 @@ const conformCreate = () => {
   console.log(newTeacherData)
   showDialog.value = false
 }
-
-
-
-
 
 //------------------------跳转传参------------
 const clickName = (props: any) => {
@@ -236,7 +225,6 @@ const tableColumns = [
   }
 ]
 
-
 //---------------重置密码------------------
 const restPsw = (item: any) => {
   resetTeacherPsw({ id: item.rowData.id })
@@ -262,10 +250,6 @@ const restPsw = (item: any) => {
     })
 }
 
-
-
-
-
 //-----------------------删除老师---------------------
 const preDeleteTea = (item: any) => {
   tableData.value.forEach((i: any) => {
@@ -290,8 +274,6 @@ const preDeleteTea = (item: any) => {
 const calcelDeleteTea = (item: any) => {
   item.rowData.id = null
 }
-
-
 
 const deleteTea = (item: any) => {
   setTimeout(console.log, 0)
@@ -320,9 +302,6 @@ const deleteTea = (item: any) => {
     })
 }
 
-
-
-
 //-------------------------编辑老师------------------------
 const editTeacher =
   (props: { rowData: { id: string, gradeId: string, subjectId: string } }) => {
@@ -334,7 +313,6 @@ const editTeacher =
   }
 
 const confirmEditDialog = () => {
-
   editTeachers(editTeacherData).
     then((res: any) => {
       if (res.code == '20000') {
@@ -351,18 +329,14 @@ const confirmEditDialog = () => {
           type: 'error'
         })
       }
+      loadData()
     }).catch()
-
-  loadData()
   editTeacherDialogShow.value = false;
-
 }
-
 
 const cancelEditDialog = () => {
   editTeacherDialogShow.value = false;
 }
-
 
 //-------------------------获取选项数据------------
 const loadSelectOption = () => {
@@ -375,11 +349,9 @@ const loadSelectOption = () => {
     .catch()
 }
 
-
 //-------------------------获取表格数据------------
 const loadData = () => {
   loading.value = true
-  loadSelectOption()
 
   var args = {
     pageNum: paginationInfo.currentPage,
@@ -392,6 +364,7 @@ const loadData = () => {
   }
   getTeachers(args)
     .then((res) => {
+      loadSelectOption()
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
     })
@@ -400,12 +373,7 @@ const loadData = () => {
       loading.value = false
     })
 }
-
 loadData()
-
-
-
-
 </script>
 
 <template>

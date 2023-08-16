@@ -61,8 +61,6 @@ breadcrumbStore.data = [
 
 const loading = ref(true)
 
-
-
 const tableColumns = [
   {
     dataKey: 'id',
@@ -170,34 +168,16 @@ const tableColumns = [
 
 const tableData = ref<object[]>([])
 
-
-const newStudentData = reactive<{
-
-  account: string,
-  expiration: string,
-  name: string,
-  password: string,
-  phoneNumber: number,
-  gradeId: number,
-  subjectId: number,
-  sex: number,
-  phoneNumberOfParent: string,
-  remark: string
-
-}>({
-
+const newStudentData = reactive<any>({
   account: '',
   name: '',
   expiration: '',
   password: '',
-  phoneNumber: 0,
-  gradeId: 0,
-  subjectId: 0,
-  sex: 0,
+  phoneNumber: '',
+  gradeId: '',
+  sex: '',
   phoneNumberOfParent: '',
   remark: '',
-
-
 });
 
 const allGrades = ref<any>([])
@@ -213,8 +193,6 @@ const loadSelectOptionDialog = () => {
     .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
     .catch()
 }
-
-loadSelectOptionDialog()
 
 const restPsw = (item: any) => {
   var args = { studentId: item.rowData.id }
@@ -264,7 +242,7 @@ const calcelDeleteStu = (item: any) => {
 
 const deleteStu = (item: any) => {
   setTimeout(console.log, 0)
-  deleteStudent({ studentId: item.rowData.id })
+  deleteStudent({ id: item.rowData.id })
     .then((res: any) => {
       if (res.code == '20000') {
         ElNotification({
@@ -279,7 +257,7 @@ const deleteStu = (item: any) => {
           type: 'error',
         })
       }
-      loadData(paginationInfo)
+      loadData()
     })
     .catch(() => {
       ElNotification({
@@ -289,8 +267,6 @@ const deleteStu = (item: any) => {
       })
     })
 }
-
-
 
 const conformCreate = () => {
   createStudent(newStudentData).then((res: any) => {
@@ -302,7 +278,6 @@ const conformCreate = () => {
       })
       createDialogShow.value = false
     }
-
     else {
       ElNotification({
         title: 'Warning',
@@ -311,10 +286,11 @@ const conformCreate = () => {
       })
       createDialogShow.value = false
     }
+    loadData()
   }).catch()
-
   createDialogShow.value = false
 }
+
 const cancel = () => {
   createDialogShow.value = false
 }
@@ -340,20 +316,10 @@ const dataCompute = (items: any) => {
   tableData.value = items
 }
 
-
-
-
-
-
-
-
-
 const totalLength = ref<Number>()
 
-const loadData = (prop: any) => {
+const loadData = () => {
   loading.value = true
-  paginationInfo.currentPage = prop.currentPage
-  paginationInfo.pageSize = prop.pageSize
 
   var args = {
     pageNum: paginationInfo.currentPage,
@@ -373,7 +339,7 @@ const loadData = (prop: any) => {
     })
     .catch()
 }
-loadData(paginationInfo)
+loadData()
 
 const loadSelectOption = () => {
   getGrades()
@@ -416,8 +382,6 @@ const allGender = [
   },
 ]
 
-
-
 const editStudentData = reactive<{
 
   id: string,
@@ -454,32 +418,33 @@ const confirmEditDialog = () => {
       } else {
         ElNotification({
           title: '编辑失败',
-          message: '请求错误或删除被撤回',
+          message: res.msg,
           type: 'error'
         })
       }
+      loadData()
     }).catch()
-  loadData((paginationInfo))
   editStudentDialogShow.value = false;
-
 }
 
 const createStudents = () => {
+  newStudentData.account = ''
+  newStudentData.name = ''
+  newStudentData.expiration = ''
+  newStudentData.password = ''
+  newStudentData.phoneNumber = ''
+  newStudentData.gradeId = ''
+  newStudentData.sex = ''
+  newStudentData.phoneNumberOfParent = ''
+  newStudentData.remark = ''
+  loadSelectOptionDialog()
   createDialogShow.value = true;
   console.log(createDialogShow.value)
 }
 
-
 const cancelEditDialog = () => {
   editStudentDialogShow.value = false;
 }
-
-
-
-
-
-
-
 </script>
 
 <template>
@@ -520,12 +485,6 @@ const cancelEditDialog = () => {
       </div>
 
       <div class="input">
-        <div class="input-word">学科:</div>
-        <el-select class="input-input" filterable placeholder="请输入" v-model="newStudentData.subjectId">
-          <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div>
-      <div class="input">
         <div class="input-word">手机号码:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumber" />
       </div>
@@ -545,10 +504,6 @@ const cancelEditDialog = () => {
     </template>
   </el-dialog>
 
-
-
-
-
   <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
@@ -556,9 +511,6 @@ const cancelEditDialog = () => {
       <el-button class="ARMbutton" type="primary" @click="createStudents">新建学生</el-button>
     </div>
   </TablePage>
-
-
-
 
   <el-dialog class="new-class-dialog" width="370px" v-model="editStudentDialogShow">
     <div class="div-input-element">
