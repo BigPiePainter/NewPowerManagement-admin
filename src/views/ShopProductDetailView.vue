@@ -4,52 +4,10 @@ import SearchBar from '@/components/SearchBar.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue';
 import { useRoute } from 'vue-router'
-import { getProductContent,addProduct,deleteProductContent } from '@/apis/product';
+import { getProductContent, addProduct, deleteProductContent } from '@/apis/product';
 import type { CheckboxValueType } from 'element-plus'
-import { ElCheckbox,ElNotification } from 'element-plus'
+import { ElCheckbox, ElNotification } from 'element-plus'
 import { getCourseQuestionPackage } from '@/apis/coursequestionpackage';
-
-
-
-
-
-const route = useRoute()
-
-
-const warningDialogshow = ref(false)
-
-const deleteItemid = ref<any>()
-
-const warningDialog=(cellData2:any)=>{
-  console.log(cellData2)
-  warningDialogshow.value = true
-  deleteItemid.value=cellData2
-  console.log(deleteItemid.value)
-}
-
-const confirmDelete = () => {
-  deleteProductContent({id:deleteItemid.value}).then((res: any) => {
-    console.log(deleteItemid)
-    if (res.code == 20000) {
-      console.log('删除成功')
-      ElNotification({
-          title: '成功',
-          message: '课程删除成功',
-          type: 'success'
-        })
-        loadData()
-      } else {
-        ElNotification({
-          title: '删除失败',
-          message: '删除失败'+res.msg,
-          type: 'error'
-        })
-      }
-      loadData()
-      warningDialogshow.value=false
-
-  }).catch()
-}
 
 
 
@@ -61,24 +19,68 @@ const dialogSearchBarItems = reactive([
 ])
 
 
-
-
-
-
-
-
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '商城管理', path: 'shop-management' },
   { name: '商品详情', path: '/teacher-detail-managament' },
 ]
 
-
-  
+const route = useRoute()
+const warningDialogshow = ref(false)
+const deleteItemid = ref<any>()
 const tableData = ref<any>([])
-
 const loading = ref(true)
 const totalLength = ref<Number>()
+
+const warningDialog = (cellData2: any) => {
+  console.log(cellData2)
+  warningDialogshow.value = true
+  deleteItemid.value = cellData2
+  console.log(deleteItemid.value)
+}
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+
+
+const dialogTableData = ref<any>([])
+const addProductDialog = ref(false)
+const newTeaData = ref<any>([])
+
+
+
+const confirmDelete = () => {
+  deleteProductContent({ id: deleteItemid.value }).then((res: any) => {
+    console.log(deleteItemid)
+    if (res.code == 20000) {
+      console.log('删除成功')
+      ElNotification({
+        title: '成功',
+        message: '课程删除成功',
+        type: 'success'
+      })
+      loadData()
+    } else {
+      ElNotification({
+        title: '删除失败',
+        message: '删除失败' + res.msg,
+        type: 'error'
+      })
+    }
+    loadData()
+    warningDialogshow.value = false
+
+  }).catch()
+}
+
+
+
+
+
+
+
+
 
 const tableColumns = [
 
@@ -109,7 +111,7 @@ const tableColumns = [
     width: 80,
     cellRenderer: (cellData: any) => (
       <span>
-        {cellData.cellData == 0 ? "容易" :cellData.cellData == 1 ? "较易":cellData.cellData == 2 ? "普通":cellData.cellData == 3 ? "较难":cellData.cellData == 4 ? "难":'困难' }
+        {cellData.cellData == 0 ? "容易" : cellData.cellData == 1 ? "较易" : cellData.cellData == 2 ? "普通" : cellData.cellData == 3 ? "较难" : cellData.cellData == 4 ? "难" : '困难'}
       </span>)
   },
   {
@@ -156,12 +158,9 @@ const tableColumns = [
 ]
 
 
-const paginationInfo = reactive({
-  currentPage: 1,
-  pageSize: 20
-})
 
 
+//---------------获取dialog内数据-----------
 const loadDialogData = () => {
   loading.value = true
 
@@ -180,19 +179,20 @@ const loadDialogData = () => {
     })
     .catch(() => { })
     .finally(() => {
-    loading.value = false
+      loading.value = false
     })
 }
 
 loadDialogData()
 
+
+//---------------获取表格数据-----------
 const loadData = () => {
   loading.value = true
-
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    productId:route.query.id
+    productId: route.query.id
   }
 
   getProductContent(args).then((res) => {
@@ -206,12 +206,11 @@ const loadData = () => {
     .finally(() => {
       loading.value = false
     })
-  }
-
-  const dialogTableData = ref<any>([])
+}
 
 
-  const dialogTableColumns = reactive<any>([
+
+const dialogTableColumns = reactive<any>([
   {
     key: 'selection',
     width: 50,
@@ -257,17 +256,13 @@ const loadData = () => {
     title: '老师名',
     width: 200
   }
-  
+
 ])
 
 
-const addProductDialog=ref(false)
-const newTeaData = ref<any>([])
-const concel=(item:any)=>{
-console.log(item)
-}
 
-  loadData()
+
+loadData()
 
 const confirmAdd = () => {
   newTeaData.value = dialogTableData.value.filter((item: any) => item.checked)
@@ -277,22 +272,22 @@ const confirmAdd = () => {
     productId: route.query.id,
     coursesQuestionPackagesIds: data
   }).then((res: any) => {
-      if (res.code == '20000') {
-        ElNotification({
-          title: '成功',
-          message: '添加课程/题包到商品成功',
-          type: 'success'
-        })
-        addProductDialog.value = false
-      }else{
-        ElNotification({
-          title: '添加失败',
-          message: (res.msg),
-          type: 'warning'
-        })
-      }
-    
-loadData()
+    if (res.code == '20000') {
+      ElNotification({
+        title: '成功',
+        message: '添加课程/题包到商品成功',
+        type: 'success'
+      })
+      addProductDialog.value = false
+    } else {
+      ElNotification({
+        title: '添加失败',
+        message: (res.msg),
+        type: 'warning'
+      })
+    }
+
+    loadData()
   }).catch
 }
 
@@ -310,11 +305,11 @@ loadData()
         </div>
         <div class="topPart1-3">
           <div class="topPart1-3-2">
-            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{route.query.name}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>更新时间:{{route.query.updatedAt}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>阶段：{{route.query.gradeName}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>科目：{{route.query.categoryName}}</el-text></div>
-            <div class="topPart1-3-2"><el-text>老师：{{route.query.teacherName}}</el-text></div>
+            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{ route.query.name }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>更新时间:{{ route.query.updatedAt }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>阶段：{{ route.query.gradeName }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>科目：{{ route.query.categoryName }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>老师：{{ route.query.teacherName }}</el-text></div>
           </div>
         </div>
 
@@ -336,7 +331,8 @@ loadData()
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button style="margin-left: 18px;" @click="addProductDialog=true" type="primary">添加课程/好题</el-button></div>
+        <div class="botPart1-1-1"><el-button style="margin-left: 18px;" @click="addProductDialog = true"
+            type="primary">添加课程/好题</el-button></div>
       </div>
     </div>
     <div class="botPart1-2">
@@ -354,7 +350,7 @@ loadData()
     </el-text>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="warningDialogshow=false">Cancel</el-button>
+        <el-button @click="warningDialogshow = false">Cancel</el-button>
         <el-button type="primary" @click="confirmDelete">
           Confirm
         </el-button>
@@ -377,7 +373,7 @@ loadData()
 
 
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addProductDialog">
-    <TablePage   class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+    <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
       <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
     </TablePage>
 
@@ -386,7 +382,7 @@ loadData()
     </template>
     <template #footer>
       <el-button type="primary" @click="confirmAdd()">确定</el-button>
-      <el-button @click="addProductDialog=false">
+      <el-button @click="addProductDialog = false">
         取消
       </el-button>
     </template>

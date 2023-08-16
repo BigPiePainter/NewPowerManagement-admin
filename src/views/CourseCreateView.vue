@@ -22,33 +22,17 @@ breadcrumbStore.data = [{ name: '题库管理', path: '' }]
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const allTeacher = ref<any>([])
-
-const loadSelectOption = () => {
-
-    getGrades()
-        .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-        .catch()
-
-    getSubjects()
-        .then((res) => (allSubjects.value = res.data))
-        .catch()
-
-    getAllTeachers()
-        .then((res) => { (allTeacher.value = res.data), console.log(res) })
-        .catch()
-}
-
-loadSelectOption()
-
 const loading = ref(true)
 const bgc = ref('#e2e5ec')
+const newGoodQuestion = reactive<any>([])
+const showImgSrc = ref<string>('')
+const imageFile = reactive<{ file: Blob | null }>({ file: null })
 const mouseEnter = () => {
     bgc.value = '#BEC2CB'
 }
 const mouseLeave = () => {
     bgc.value = '#e2e5ec'
 }
-
 
 const allDifficultyType = [
     {
@@ -78,10 +62,30 @@ const allDifficultyType = [
     }
 ]
 
-const newGoodQuestion = reactive<any>([])
-const showImgSrc = ref<string>('')
-const imageFile = reactive<{ file: Blob | null }>({ file: null })
+//------------------获取选项数据--------------
+const loadSelectOption = () => {
 
+    getGrades()
+        .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
+        .catch()
+
+    getSubjects()
+        .then((res) => (allSubjects.value = res.data))
+        .catch()
+
+    getAllTeachers()
+        .then((res) => { (allTeacher.value = res.data), console.log(res) })
+        .catch()
+}
+
+loadSelectOption()
+
+
+
+
+
+
+//-----------------上传封面功能--------------
 const handleFileChange = (e: Event) => {
     const currentTarget = e.target as HTMLInputElement;
     if (currentTarget.files) {
@@ -101,6 +105,7 @@ const handleFileChange = (e: Event) => {
     }
 }
 
+//-----------------创建新课程包--------------
 const createnewGoodQuestion = () => {
     loading.value = true
     var args = {
@@ -113,7 +118,6 @@ const createnewGoodQuestion = () => {
         type: 1
 
     }
-
 
     createGoodQuestionPack(args)
         .then((res: any) => {
@@ -178,7 +182,7 @@ const createnewGoodQuestion = () => {
 
             <div class="div-input-element">
                 <el-text class="dialog-el-text">
-                    *好题封面：
+                    *课程包封面：
                 </el-text>
                 <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
                     @dragleave="mouseLeave">
@@ -222,7 +226,7 @@ const createnewGoodQuestion = () => {
         </div>
 
         <div class="rich-text-area">
-            <el-button @click="createnewGoodQuestion">添加好题</el-button>
+            <el-button @click="createnewGoodQuestion">添加课程包</el-button>
         </div>
 
 

@@ -41,7 +41,7 @@ const breadcrumbStore = useBreadcrumbStore()
 
 breadcrumbStore.data = [
   { name: '题库管理', path: '' },
-  { name: '好题详情', path: '/question-detail' }
+  { name: '好题详情', path: '/question-bank' }
 ]
 const tableData = reactive<any>([])
 const loading = ref(true)

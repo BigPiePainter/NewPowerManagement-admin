@@ -13,6 +13,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getGoodQuestion, deleteGoodQuestion } from '@/apis/questionStore'
 import RichTextEditor from '@/components/RichTextEditor.vue';
 
+const disabled = ref(false)
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const totalNum = ref('')
@@ -59,7 +60,7 @@ const breadcrumbStore = useBreadcrumbStore()
 
 breadcrumbStore.data = [
     { name: '题库管理', path: '' },
-    { name: '好题详情', path: '/question-detail' }
+    { name: '好题详情', path: '/question-bank' }
 ]
 const tableData = reactive<any>([])
 const loading = ref(true)
@@ -181,6 +182,8 @@ const downloadFromatFile = () => { }
 
         <div class="margin">
             <el-text>难度:</el-text>
+
+
             <el-link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = ''">
                 全部
             </el-link>
@@ -261,7 +264,7 @@ const downloadFromatFile = () => { }
                 </RichTextEditor>
 
                 <div style="display:flex; flex-direction:row">
-                    <div style="margin-left:10px;margin-top: 10px;" v-for="items in JSON.parse(item.options)"
+                    <div class="a.active" style="margin-left:10px;margin-top: 10px;" v-for="items in JSON.parse(item.options)"
                         :key="items.options">
                         {{ items.identifier }}: {{ items.value }}</div>
                 </div>
@@ -305,5 +308,11 @@ const downloadFromatFile = () => { }
 
 .select-width {
     width: 70px
+}
+
+
+a:active
+{
+	background-color:yellow;
 }
 </style>
