@@ -1,28 +1,32 @@
 <script setup lang="ts">
-import {getStudentCouse} from '@/apis/studentCourse'
+import { getStudentCouse } from '@/apis/studentCourse'
 import DisplayQuestionCard from '@/components/DisplayQuestionCard.vue'
 import QuestionDisplayCard from '@/components/QuestionDisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import type { TabsPaneContext } from 'element-plus'
 import { useRoute } from 'vue-router'
-import  {getStudentQuestions } from '@/apis/studentQuestion'
-import  {getStudentHomework } from '@/apis/studentHomework'
+import { getStudentQuestions } from '@/apis/studentQuestion'
+import { getStudentHomework } from '@/apis/studentHomework'
 import HomeworkQuestionDisplayCard from '@/components/HomeworkQuestionDisplayCard.vue'
-import { ITEM_RENDER_EVT } from 'element-plus/es/components/virtual-list/src/defaults'
+
+
+const breadcrumbStore = useBreadcrumbStore()
 
 const route = useRoute()
-
+const activeName = ref('first')
+const studentData = ref<any>([])
+const questionPackage = reactive<any>({})
+const lessons = reactive<any>([])
+const homeWork = reactive<any>([])
 const loading = ref(true)
-const breadcrumbStore = useBreadcrumbStore()
+
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)
 }
 
-const activeName = ref('first')
 
-const studentData=ref<any>([])
 
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
@@ -30,59 +34,64 @@ breadcrumbStore.data = [
   { name: '学生详情', path: '/student-detail-managament' },
 ]
 
-const questionPackage = reactive<any>({})
 
-const lessons = reactive<any>([])
-const question = reactive<any>([])
-const homeWork = reactive<any>([])
+
+
+
+//-------------------加载学生数据--------------
 const loadData = () => {
   loading.value = true
 
   var args = {
-    studentId:1
+    studentId: route.query.id
   }
-
 
   getStudentCouse(args)
     .then((res) => {
-      res.data.forEach((item:any)=>{
-        lessons.push({ 
+      res.data.forEach((item: any) => {
+        lessons.push({
           title: item.miniLessonName,
-          picture: '', 
-          tag: '好题', 
-          time: item.watchedTime, 
+          picture: '',
+          tag: '好题',
+          time: item.watchedTime,
           classfiction: '普通课',
-          time2:item.miniLessonDuration 
-          })
+          time2: item.miniLessonDuration
+        })
       })
 
-      (studentData.value = res.data[0])
-
-    
-      console.log(studentData)
+        (studentData.value = res.data[0])
     })
     .catch(() => { })
     .finally(() => {
       loading.value = false
     })
 
-    getStudentQuestions(args)
+
+
+
+
+
+
+
+
+  
+  getStudentQuestions(args)
     .then((res) => {
       console.log(res)
-      res.data.forEach((item:any)=>{
-        if(item.difficultyLevel== 0 ){
+      res.data.forEach((item: any) => {
+        if (item.difficultyLevel == 0) {
           item.difficultyLevel = '※'
-      }
+        }
 
         if (item.questionPackageId in questionPackage) {
           questionPackage[item.questionPackageId].push(item)
         } else {
-          questionPackage[item.questionPackageId]=[];
+          questionPackage[item.questionPackageId] = [];
           // {id:[]}
           questionPackage[item.questionPackageId].push(item)
         }
       })
-      
+
     })
     .catch(() => { })
     .finally(() => {
@@ -91,71 +100,61 @@ const loadData = () => {
 
 
 
-    getStudentHomework(args)
+
+
+
+  getStudentHomework(args)
     .then((res) => {
       console.log(res)
-      res.data.forEach((item:any)=>{
-       console.log(item)
-        if(item.isFinished == 0){
+      res.data.forEach((item: any) => {
+        console.log(item)
+        if (item.isFinished == 0) {
 
-        homeWork.push({ 
+          homeWork.push({
 
-          homeworkName: item.homeworkName,
-          teacherName: item.teacherName,
-          isFinished: '未完成'
+            homeworkName: item.homeworkName,
+            teacherName: item.teacherName,
+            isFinished: '未完成'
 
-        })
-      } else {
+          })
+        } else {
 
-          homeWork.push({ 
-          homeworkName: item.homeworkName,
-          teacherName: item.teacherName,
-          isFinished: '已完成'
+          homeWork.push({
+            homeworkName: item.homeworkName,
+            teacherName: item.teacherName,
+            isFinished: '已完成'
           })
 
-    }
+        }
 
-})
-})
+      })
+    })
     .catch(() => { })
     .finally(() => {
       loading.value = false
     })
-  }
-
-const cal =()=>{
-
-Object.keys(questionPackage).forEach((item:any)=>{
-  var count = 0
-   questionPackage[item].forEach((i:any)=>{
-    if (i.outcomeType!=3){
-            count = count + 1
-          }
-          // console.log(count)
-   })
-   questionPackage[item].unshift(count)
-})
-console.log(questionPackage)
 }
-
-
-
-
 loadData()
 
+// const cal =()=>{
 
-
-
-
-// question.forEach((i) => {
-//     i.convertedTime = convert(i.time)
+// Object.keys(questionPackage).forEach((item:any)=>{
+//   var count = 0
+//    questionPackage[item].forEach((i:any)=>{
+//     if (i.outcomeType!=3){
+//             count = count + 1
+//           }
+//    })
+//    questionPackage[item].unshift(count)
 // })
-
-// for (let index = 0; index < question.values.length; index++) {
-//   const element = (question.new.time);
-
-  
+// console.log(questionPackage)
 // }
+
+
+
+
+
+
 
 </script>
 
@@ -164,88 +163,88 @@ loadData()
     <div class="topPart">
       <div class="topPart1">
         <div class="topPart1-1">
-          <div class="top-Part1-1-1" @click="cal"><el-text>老师信息</el-text></div>
+          <div class="top-Part1-1-1"><el-text>学生信息</el-text></div>
         </div>
         <div class="topPart1-2">
-          <div class="top-Part1-2-1">{{studentData.teacherName}}</div>
+          <div class="top-Part1-2-1">{{ route.query.name }}</div>
           <div class="top-Part1-2-2">
-            <div><el-text>学习阶段:初一</el-text></div>
-            <div><el-text>学科:语文</el-text></div>
-            <div><el-text>电话:15536996997</el-text></div>
+            <div><el-text>学生id:{{ route.query.id }}</el-text></div>
+            <div><el-text>学习阶段:{{ route.query.gradeName }}</el-text></div>
+            <div><el-text>电话:{{ route.query.phoneNumber }}</el-text></div>
           </div>
         </div>
 
         <div class="topPart1-3">
-          <div><el-text>studentData</el-text></div>
-          <div class="topPart1-3-2"><el-text>最后登录:2023-6-5 12:00</el-text></div>
+          <div><el-text>用户名：{{ route.query.account }}</el-text></div>
+          <div class="topPart1-3-2"><el-text>到期时间:{{ route.query.expiration }}</el-text></div>
         </div>
       </div>
 
       <el-divider direction="vertical" class="divider-height" />
 
       <div class="topPart1--1">
-        <div class="topPart1-1"><el-text>⭐</el-text></div>
-        <div class="topPart2-2"><el-text>初一</el-text></div>
+        <div class="topPart1-1"><el-text>家长电话:{{ route.query.phoneNumberOfParent }}</el-text></div>
+        <div class="topPart2-2"><el-text>创建时间：{{ route.query.createdAt }}</el-text></div>
       </div>
       <el-divider direction="vertical" class="divider-height" />
       <div>
       </div>
     </div>
 
-   
 
+
+  </div>
+
+
+
+  <el-divider class="row-divider"></el-divider>
+
+
+  <div class="downpart">
+
+    <div>
+      <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick" type="card">
+
+        <el-tab-pane label="课程" name="courses">
+          <div class="botPart1-2">
+            <DisplayQuestionCard class="postion" v-for="item in lessons" :key="item.title" :title="item.title"
+              :picture="item.picture" :tag="item.tag" :classfiction="item.classfiction" :time="item.time"
+              :time2="item.time2">
+            </DisplayQuestionCard>
+          </div>
+
+        </el-tab-pane>
+        <el-tab-pane label="好题演练" name="questions">
+          <div class="botPart1-2">
+            <QuestionDisplayCard v-for="(key, val) in questionPackage" :key="val"
+              :questionName="key[0].coursesQuestionPackageName" :questionCount="(key.length - 1)"
+              :questionFinished="key[0][0]" :difficultyLevel="(key[0].difficultyLevel)">
+            </QuestionDisplayCard>
+          </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="作业巩固" name="homework">
+          <div class="botPart1-2">
+            <HomeworkQuestionDisplayCard v-for="item in homeWork" :key="item.title" :homeworkName="item.homeworkName"
+              :teacherName="item.teacherName" :isFinished="item.isFinished">
+            </HomeworkQuestionDisplayCard>
+          </div>
+        </el-tab-pane>
+
+      </el-tabs>
     </div>
-
-
-
- <el-divider class="row-divider"></el-divider>
-
-
-    <div class="downpart">
-
-<div>
-      <el-tabs  v-model="activeName" class="tabs-page" @tab-click="handleClick" type="card">
-
-      <el-tab-pane label="课程" name="courses">
-        <div class="botPart1-2">
-      <DisplayQuestionCard class="postion" v-for="item in lessons" :key="item.title" :title="item.title" :picture="item.picture"
-        :tag="item.tag" :classfiction="item.classfiction" :time="item.time" :time2="item.time2">     
-      </DisplayQuestionCard>  
-      </div>
-   
-    </el-tab-pane>
-      <el-tab-pane label="好题演练" name="questions">
-        <div class="botPart1-2">
-        <QuestionDisplayCard
-    v-for="(key,val) in questionPackage" :key="val" :questionName="key[0].coursesQuestionPackageName" :questionCount="(key.length-1)" :questionFinished="key[0][0]" :difficultyLevel="(key[0].difficultyLevel)">
-    </QuestionDisplayCard>
-    </div>
-      </el-tab-pane>
-      
-      <el-tab-pane label="作业巩固" name="homework"> 
-        <div class="botPart1-2">
-        <HomeworkQuestionDisplayCard
-    v-for="item in homeWork" :key="item.title" :homeworkName="item.homeworkName" :teacherName="item.teacherName" :isFinished="item.isFinished">
-    </HomeworkQuestionDisplayCard>
-    </div>
-      </el-tab-pane>
-
-    </el-tabs>
-    </div>
-</div>
-
+  </div>
 </template>
 
 <style scoped lang="scss">
 $scale: 0.88;
 
-.downpart{
+.downpart {}
 
-}
 .whole {
   display: flex;
   flex-direction: column;
-  
+
 }
 
 .topPart {
@@ -377,15 +376,16 @@ $scale: 0.88;
   box-sizing: border-box;
 }
 
-.playbar{
+.playbar {
   position: absolute;
-    height: 4px;
-    width: 80%;
-    left: 0px;
-    top: 0px;
-    background-color: rgb(213, 10, 10);
+  height: 4px;
+  width: 80%;
+  left: 0px;
+  top: 0px;
+  background-color: rgb(213, 10, 10);
 }
-.postion{
+
+.postion {
   position: relative;
 }
 </style>

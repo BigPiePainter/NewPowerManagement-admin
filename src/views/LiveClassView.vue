@@ -8,7 +8,6 @@ import { getLiveClasses, createLiveClass, deleteLiveclasses } from '@/apis/liveC
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllTeachers } from '@/apis/teacher'
 import { getAllStudents } from '@/apis/student'
-import { editLiveclasses } from '@/apis/liveClass'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 
@@ -22,28 +21,12 @@ const loading = ref(true)
 const tableData = ref<any>([])
 const allTeacher = reactive<any>([])
 const allStudent = ref<any>([])
-
-const teacherName = reactive<{
-  name: string
-  teacherId: string
-}>({
-  name: '',
-  teacherId: '',
-})
-
-const studenstName = reactive<{
-  name: string
-  studentIds: string
-}>({
-  name: '',
-  studentIds: '',
-})
-
+const showDialog = ref(false)
 const allSubjects = ref([])
 
-getSubjects()
-  .then((res) => (allSubjects.value = res.data))
-  .catch()
+  getSubjects()
+    .then((res) => (allSubjects.value = res.data))
+    .catch()
 
 getAllStudents()
   .then((res) => (allStudent.value = res.data))
@@ -117,32 +100,19 @@ const searchBarItems = reactive([
     value: '',
   }
 ])
-const editliveclassDialogshow = ref(false)
 
-const editliveclassData = reactive<{
 
-  id: string,
-  remark: string,
-  gradeId: string,
-  expiration: string
-}>({
-  id: '',
-  remark: '',
-  gradeId: '',
-  expiration: ''
-});
 
-const allGrades = ref<any>([])
-const editliveclass =
-  (props: { rowData: { id: string, gradeId: string, expiration: string, remark: string } }) => {
-    editliveclassData.id = props.rowData.id;
-    editliveclassData.expiration = props.rowData.expiration;
-    editliveclassData.gradeId = props.rowData.gradeId;
-    editliveclassData.remark = props.rowData.remark;
 
-    console.log(props)
-    editliveclassDialogshow.value = true;
-  }
+
+
+
+
+
+
+
+//================编辑实时课堂=================
+
 
 const confirmEditDialog = () => {
   editLiveclasses(editliveclass).
@@ -170,7 +140,6 @@ const cancelEditDialog = () => {
   editliveclassDialogshow.value = false;
 }
 
-const classStudent = ref([])
 
 const classStudents = (item: any) => {
   classStudent.value = item.rowData.studentList
@@ -251,12 +220,12 @@ const tableColumns = [
       </>
     ),
 
-    width: 120,
+    width: 100,
     fixed: 'right',
     align: 'left'
   }
 ]
-const showDialog = ref(false)
+
 
 const createliveclass = () => {
   showDialog.value = true
@@ -398,7 +367,7 @@ loadData()
 
 
 
-  <el-dialog class="new-class-dialog" width="370px" v-model="editliveclassDialogshow">
+  <!-- <el-dialog class="new-class-dialog" width="370px" v-model="editliveclassDialogshow">
     <div class="div-input-element">
       <span class="dialog-span">
         <el-input disabled class="dialog-input" v-model="editliveclassData.id">
@@ -432,7 +401,7 @@ loadData()
         取消
       </el-button>
     </template>
-  </el-dialog>
+  </el-dialog> -->
 
 
   <el-dialog v-model="allStudentsDialogShow" class='dialog-container' style="width:630px">
