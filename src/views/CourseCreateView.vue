@@ -23,7 +23,6 @@ const newGoodQuestion = reactive<any>([])
 
 const showImgSrc = ref<string>('')
 
-const imageFile = reactive<{ file: Blob | null }>({ file: null })
 const mouseEnter = () => {
     bgc.value = '#BEC2CB'
 }
@@ -111,7 +110,6 @@ const handleFileChange = (e: Event) => {
     //图片上传到服务器返回url
     //url在res.data.url
     if (currentTarget.files) {
-        imageFile.file = currentTarget.files[0]
         var imageSize = currentTarget.files[0].size
         var formData = new FormData()
         formData.append('file', currentTarget.files[0])
@@ -134,7 +132,6 @@ const handleFileChange = (e: Event) => {
                 .catch()
         } else {
             console.log("too big")
-            imageFile.file = null
             ElNotification({
                 title: '图片不能大于1MB',
                 type: 'error'
@@ -186,7 +183,6 @@ const createnewGoodQuestion = () => {
 <template>
     <div class="div-input-element">
         <div>
-
             <div class="top-part">
                 <el-text class="dialog-el-text">
                     *名称：
@@ -194,7 +190,6 @@ const createnewGoodQuestion = () => {
                 <el-input style="width: 217px;" class="dialog-input" placeholder="请输入课程包名称" v-model="newGoodQuestion.name">
                 </el-input>
             </div>
-
 
             <div class="top-part">
                 <el-text class="dialog-el-text">

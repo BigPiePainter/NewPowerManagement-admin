@@ -3,6 +3,7 @@ import '@wangeditor/editor/dist/css/style.css';
 import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { upload } from '@/apis/upload';
+import { ElNotification } from 'element-plus'
 
 
 // 编辑器实例，必须用 shallowRef，重要！
@@ -40,7 +41,7 @@ const toolbarConfig = {
         'fullScreen'
     ]
 }
-const editorConfig = { placeholder: '请输入内容...', readOnly:(!props.isShow) };
+const editorConfig = { placeholder: '请输入内容...', readOnly: (!props.isShow) };
 
 // 组件销毁时，也及时销毁编辑器，重要！
 onBeforeUnmount(() => {
@@ -72,29 +73,42 @@ const insertImage = () => {
 
 const handleFileChange = (e: Event) => {
     const currentTarget = e.target as HTMLInputElement;
-
     //图片上传到服务器返回url
     //url在res.data.url
     if (currentTarget.files) {
+        var imageSize = currentTarget.files[0].size
         var formData = new FormData()
         formData.append('file', currentTarget.files[0])
-        upload(formData)
-            .then((res: any) => {
-                if (res.data.url) {
-                    const editor = editorRef.value
-                    console.log(res)
-                    editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
-                } else {
-                    console.log("失败")
-                }
+        if (imageSize < 1048576) {
+            upload(formData)
+                .then((res: any) => {
+                    if (res.code != 20000) {
+                        ElNotification({
+                            title: '图片上传失败',
+                            message: res.msg,
+                            type: 'error'
+                        })
+                    } else {
+                        const editor = editorRef.value
+                        console.log(res)
+                        editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
+                    }
+                })
+                .catch()
+        } else {
+            console.log("too big")
+            ElNotification({
+                title: '图片不能大于1MB',
+                type: 'error'
             })
-            .catch()
+        }
+
     }
 }
 </script>
 
 <template>
-    <input v-if="isShow" type="file" id="file" @change="handleFileChange"
+    <input v-if="isShow" type="file" accept="image/png, image/jpeg, image/jpg" id="file" @change="handleFileChange"
         style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
     <div style="border: 1px solid #ccc; margin-top: 10px">
         <Toolbar v-if="isShow" :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple"
