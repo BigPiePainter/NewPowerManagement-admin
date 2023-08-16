@@ -320,8 +320,6 @@ const tableColumns = [
 const deleteSlot = {
   reference: () => <el-button link type="danger">删除</el-button>
 }
-  reference: () => <el-button link type="danger">删除</el-button>
-}
 
 
 const paginationInfo = reactive({
@@ -377,20 +375,7 @@ const editgoodOn = (props: { rowData: { status: string, id: string, iosPoint: st
   editProductData.versionType = props.rowData.versionType
   editProductData.status = props.rowData.status
   console.log(props)
-const editgoodOn = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
-  editProductData.id = props.rowData.id;
-  editProductData.iosPoint = props.rowData.iosPoint;
-  editProductData.tcoin = props.rowData.tcoin;
-  editProductData.androidPoint = props.rowData.androidPoint;
-  editProductData.androidPrice = props.rowData.androidPrice;
-  editProductData.name = props.rowData.name
-  editProductData.hot = props.rowData.hot
-  editProductData.subjectId = props.rowData.subjectId
-  editProductData.type = props.rowData.type
-  editProductData.version = props.rowData.version
-  editProductData.versionType = props.rowData.versionType
-  editProductData.status = props.rowData.status
-  console.log(props)
+
 
   if (props.rowData.status == '1') {
     editProductData.status = '2'
@@ -552,20 +537,6 @@ const deleteStu = (item: any) => {
     })
 }
 //----------------------------添加热门----------
-const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
-  editProductData.id = props.rowData.id;
-  editProductData.iosPoint = props.rowData.iosPoint;
-  editProductData.tcoin = props.rowData.tcoin;
-  editProductData.androidPoint = props.rowData.androidPoint;
-  editProductData.androidPrice = props.rowData.androidPrice;
-  editProductData.name = props.rowData.name
-  editProductData.hot = props.rowData.hot
-  editProductData.subjectId = props.rowData.subjectId
-  editProductData.type = props.rowData.type
-  editProductData.version = props.rowData.version
-  editProductData.versionType = props.rowData.versionType
-  editProductData.status = props.rowData.status
-  console.log(props)
 const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
   editProductData.id = props.rowData.id;
   editProductData.iosPoint = props.rowData.iosPoint;
