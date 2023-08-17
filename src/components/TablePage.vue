@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, reactive, watch } from 'vue'
+import { reactive } from 'vue'
 
 type Props = {
   columns: object[]
@@ -12,7 +12,6 @@ const props = defineProps<Props>()
 
 const emit = defineEmits(['paginationChange'])
 
-// const totalPage = ref<Number>(400)
 const paginationInfo = reactive({
   currentPage:1,
   pageSize: 20,
@@ -20,13 +19,11 @@ const paginationInfo = reactive({
 const handleSizeChange = (val: number) => { 
   console.log(`${val} items per page`)
   paginationInfo.pageSize = val
-  // console.log(paginationInfo)
   emit('paginationChange', paginationInfo)
 }
 const handleCurrentChange = (val: number) => { 
   console.log(`current page: ${val}`)
   paginationInfo.currentPage = val
-  // console.log(paginationInfo)
   emit('paginationChange', paginationInfo)
 }
 
