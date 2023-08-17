@@ -88,18 +88,18 @@ const clickDetail = (props: any) => {
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '商城管理', path: '' }]
-const allGrades = ref<any>([])
-const allSubjects = ref<any>([])
+const allGrades = reactive<any>([])
+const allSubjects = reactive<any>([])
 const loading = ref(true)
 
 const allstatus = [
   {
-    id: '1',
+    id: 1,
     value: 1,
     name: '已上架',
   },
   {
-    id: '2',
+    id: 2,
     value: 2,
     name: '未上架',
   },
@@ -107,64 +107,67 @@ const allstatus = [
 
 const allVersion = [
   {
-    id: '1',
-    value: '1',
+    id: 1,
+    value: 1,
     name: '课程/好题A',
   },
   {
-    id: '2',
-    value: '2',
+    id: 2,
+    value: 2,
     name: '课程/好题B',
   },
   {
-    id: '3',
-    value: '3',
+    id: 3,
+    value: 3,
     name: '课程/好题C',
   },
   {
-    id: '4',
-    value: '4',
+    id: 4,
+    value: 4,
     name: '课程/好题D',
   },
 ]
 
 const allversionType = [
   {
-    id: '1',
-    value: '1',
+    id: 1,
+    value: 1,
     name: '基础版',
   },
   {
-    id: '2',
-    value: '2',
+    id: 2,
+    value: 2,
     name: '培优版',
   },
   {
-    id: '3',
-    value: '3',
+    id: 3,
+    value: 3,
     name: '创新版',
   }
 ]
 
 
-const loadSelectOption = () => {
-  getGrades()
-    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-    .catch()
+// const loadSelectOption = () => {
+//   getGrades()
+//     .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
+//     .catch()
 
-  getSubjects()
-    .then((res) => (allSubjects.value = res.data))
-    .catch()
-}
+//   getSubjects()
+//     .then((res) => {
+//       (allSubjects.value = res.data)
+//       console.log(allSubjects)
+//     })
+//     .catch()
+// }
 
 const allType: any = [
   {
-    id: '1',
+    id: 1,
     value: 1,
     name: '课程',
   },
   {
-    id: '2',
+    id: 2,
     value: 2,
     name: '好题',
   },
@@ -172,12 +175,12 @@ const allType: any = [
 
 const allHot: any = [
   {
-    id: '1',
+    id: 1,
     value: 1,
     name: '热门',
   },
   {
-    id: '2',
+    id: 2,
     value: 2,
     name: '非热门',
   },
@@ -185,11 +188,11 @@ const allHot: any = [
 
 const searchBarItems = reactive([
   { name: '商品名称', value: '' },
-  { name: '类型', value: '', type: InputType.Select, options: allType, single:true },
-  { name: '状态', value: '', type: InputType.Select, options: allstatus,single:true  },
-  { name: '阶段', value: '', type: InputType.Select, options: allGrades,single:true  },
-  { name: '学科', value: '', type: InputType.Select, options: allSubjects,single:true  },
-  { name: '版本', value: '', type: InputType.Select, options: allVersion,single:true  },
+  { name: '类型', value: '', type: InputType.Select, options: allType, single: true },
+  { name: '状态', value: '', type: InputType.Select, options: allstatus, single: true },
+  { name: '阶段', value: '', type: InputType.Select, options: allGrades, single: true },
+  { name: '学科', value: '', type: InputType.Select, options: allSubjects, single: true },
+  { name: '版本', value: '', type: InputType.Select, options: allVersion, single: true },
 ])
 
 const tableColumns = [
@@ -412,14 +415,36 @@ const loadData = () => {
   }
   getProduct(args)
     .then((res) => {
-      loadSelectOption()
       console.log(args)
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
+      return getGrades()
+    }).then((res: any) => {
+      res.data.forEach((item: any) => {
+        item.subset.forEach((item: any) => {
+          var dataSample: { id: number, level: number, name: string } = {
+            id: item.id,
+            level: item.level,
+            name: item.name
+          }
+          allGrades.push(dataSample)
+        })
+      })
+      return getSubjects()
+    }).then((res: any) => {
+      res.data.forEach((item: any) => {
+        var dataSample: { id: number, name: string } = {
+            id: Number(item.id),
+            name: item.name
+          }
+        allSubjects.push(dataSample)
+      })
     })
     .catch(() => { })
     .finally(() => {
       loading.value = false
+      console.log(allGrades)
+      console.log(allSubjects)
     })
 }
 loadData()
@@ -429,7 +454,7 @@ console.log(tableData)
 
 //-------------------上下架----------------------//
 
-const editgoodOn = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
+const editgoodOn = (props: any) => {
   editProductData.id = props.rowData.id;
   editProductData.iosPoint = props.rowData.iosPoint;
   editProductData.tcoin = props.rowData.tcoin;
@@ -473,22 +498,7 @@ const editgoodOn = (props: { rowData: { status: string, id: string, iosPoint: st
   editDialogShow.value = false;
 }
 //------------------------编辑商品--------------
-const editProductData = reactive<{
-
-  id: string,
-  iosPoint: string,
-  androidPoint: string,
-  androidPrice: string,
-  hot: string,
-  name: string,
-  status: string,
-  subjectId: string,
-  tcoin: string,
-  type: string,
-  version: string,
-  versionType: string,
-
-}>({
+const editProductData = reactive<any>({
 
   id: '',
   iosPoint: '',
@@ -746,7 +756,6 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
         </el-select>
       </div>
     </div>
-
     <template #header>
       <el-text>编辑商品</el-text>
     </template>

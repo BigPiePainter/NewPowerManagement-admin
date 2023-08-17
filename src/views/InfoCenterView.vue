@@ -16,7 +16,7 @@ const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: '消息中心' }]
 
 const loading = ref(true)
-const totalLength = ref<Number>()
+const totalLength = ref<any>('')
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
@@ -199,8 +199,9 @@ const cancelSendMsg = () => {
 
 const dataCompute = (props: any) => {
   console.log(props)
+  totalLength.value = props.data.total
   props.data.records.forEach((item: any) => {
-    var sampleData:any = {
+    var sampleData: any = {
       id: item.id,
       senderId: item.senderId,
       type: item.type,
@@ -230,9 +231,8 @@ const loadData = () => {
   }
   console.log(args)
   getMessages(args)
-    .then((res:any) => {
+    .then((res: any) => {
       tableData.length = 0
-      totalLength.value = res.total
       dataCompute(res)
     })
     .catch()
@@ -294,7 +294,7 @@ const createMsg = () => {
     </div>
   </TablePage>
 
-  <el-dialog class="send-msg-dialog" width="1000px" v-model="sendMsgDialogShow">
+  <el-dialog class="send-msg-dialog" width="600px" v-model="sendMsgDialogShow">
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
@@ -365,9 +365,13 @@ const createMsg = () => {
 <style lang="scss" scoped>
 $gap: 15px;
 
+.page-table-pagination {
+  height: 20px;
+}
+
 .msg-table {
   width: calc($page-width - $gap);
-  height: $page-height;
+  height: calc($page-height - $gap);
   margin-left: $gap;
   margin-top: $gap;
 

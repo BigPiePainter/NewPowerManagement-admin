@@ -19,7 +19,7 @@ const editDialogShow = ref(false)
 
 const loading = ref(true)
 
-const clickDetail = (props:any) => {
+const clickDetail = (props: any) => {
 
   router.push({
     path: 'question-detail',
@@ -39,19 +39,7 @@ const clickDetail = (props:any) => {
 }
 
 
-const newCourseData = reactive<{
-
-  id: string,
-  name: string,
-  description: string,
-  difficultyLevel: string,
-  gradeId: string,
-  type: string,
-  subjectId: string,
-  teacherId: string,
-  cover: string
-}>({
-
+const newCourseData = reactive<any>({
   id: '',
   name: '',
   description: '',
@@ -100,14 +88,14 @@ const tableColumns = [
     key: 'gradeName',
     title: '学习阶段',
     width: 100,
-    single:true
+    single: true
   },
   {
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '学科',
     width: 100,
-    single:true
+    single: true
   },
   {
     dataKey: 'teacherName',
@@ -241,39 +229,39 @@ const deleteTea = (item: any) => {
 }
 
 
-const allGrades = ref<any>([])
-const allSubjects = ref<any>([])
-const allTeacher = ref<any>([])
+const allGrades = reactive<any>([])
+const allSubjects = reactive<any>([])
+const allTeacher = reactive<any>([])
 const router = useRouter()
 
 const clickCreate = () => {
   router.push({ path: 'question-package-create' });
 }
 
-const loadSelectOption = () => {
-  getGrades()
-    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-    .catch()
+// const loadSelectOption = () => {
+//   getGrades()
+//     .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
+//     .catch()
 
-  getSubjects()
-    .then((res) => (allSubjects.value = res.data))
-    .catch()
+//   getSubjects()
+//     .then((res) => (allSubjects.value = res.data))
+//     .catch()
 
-  getAllTeachers()
-    .then((res) => { (allTeacher.value = res.data), console.log(res) })
-    .catch()
-}
+//   getAllTeachers()
+//     .then((res) => { (allTeacher.value = res.data), console.log(res) })
+//     .catch()
+// }
 
 
 const editCourse = (props: {
   rowData: {
     name: string,
-    teacherId: string,
-    subjectId: string,
-    gradeId: string,
-    id: string
+    teacherId: number,
+    subjectId: number,
+    gradeId: number,
+    id: number
     description: string,
-    difficultyLevel: string,
+    difficultyLevel: number,
     cover: string
   }
 
@@ -282,16 +270,13 @@ const editCourse = (props: {
   editDialogShow.value = true;
   newCourseData.cover = props.rowData.cover;
   newCourseData.description = props.rowData.description;
-  newCourseData.teacherId = props.rowData.teacherId;
-  newCourseData.difficultyLevel = props.rowData.difficultyLevel;
-  newCourseData.gradeId = props.rowData.gradeId;
-  newCourseData.subjectId = props.rowData.subjectId;
-  newCourseData.gradeId = props.rowData.gradeId;
+  newCourseData.teacherId = Number(props.rowData.teacherId);
+  newCourseData.difficultyLevel = Number(props.rowData.difficultyLevel);
+  newCourseData.gradeId = Number(props.rowData.gradeId);
+  newCourseData.subjectId = Number(props.rowData.subjectId);
+  newCourseData.gradeId = Number(props.rowData.gradeId);
   newCourseData.id = props.rowData.id;
 }
-
-
-loadSelectOption()
 
 const searchBarItems = reactive([
   {
@@ -308,7 +293,7 @@ const searchBarItems = reactive([
     type: InputType.Select,
     label: '请选择',
     options: allSubjects,
-    single:true 
+    single: true
   },
   {
     name: '难度',
@@ -333,28 +318,33 @@ const paginationInfo = reactive({
 
 const allDifficultyType = [
   {
-    id: '1',
-    value: '1',
-    label: '容易  ',
+    id: 0,
+    value: 0,
+    label: '无',
   },
   {
-    id: '2',
-    value: '2',
-    label: '较易 ',
+    id: 1,
+    value: 1,
+    label: '容易',
   },
   {
-    id: '3',
-    value: '3',
+    id: 2,
+    value: 2,
+    label: '较易',
+  },
+  {
+    id: 3,
+    value: 3,
     label: '一般',
   },
   {
-    id: '4',
-    value: '4',
-    label: '较难 ',
+    id: 4,
+    value: 4,
+    label: '较难',
   },
   {
-    id: '5',
-    value: '5',
+    id: 5,
+    value: 5,
     label: '困难',
   }
 ]
@@ -378,51 +368,64 @@ const loadData = () => {
     .then((res) => {
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
-
+      return getGrades()
+    }).then((res: any) => {
+      res.data.forEach((item: any) => {
+        item.subset.forEach((item: any) => {
+          var dataSample: { id: number, level: number, name: string } = {
+            id: Number(item.id),
+            level: item.level,
+            name: item.name
+          }
+          allGrades.push(dataSample)
+        })
+      })
+      return getSubjects()
+    }).then((res: any) => {
+      res.data.forEach((item: any) => {
+        var dataSample: { id: number, name: string } = {
+          id: Number(item.id),
+          name: item.name
+        }
+        allSubjects.push(dataSample)
+      })
+      return getAllTeachers()
+    }).then((res: any) => {
+      res.data.forEach((item: any) => {
+        var dataSample: { id: number, name: string } = {
+          id: Number(item.id),
+          name: item.name
+        }
+        allTeacher.push(dataSample)
+      })
     })
     .catch(() => { })
     .finally(() => {
       loading.value = false
     })
-
 }
-
 loadData()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 const confirmEditDialog = () => {
-
-editCourseQuestionPackage(newCourseData)
-  .then((res: any) => {
-    if (res.code == 20000) {
-      ElNotification({
-        title: '成功',
-        message: '已成功编辑',
-        type: 'success'
-      })
-      loadData()
-    } else {
-      ElNotification({
-        title: 'Warning',
-        message: res.msg,
-        type: 'warning'
-      })
-    }
-  })
-  .catch()
-editDialogShow.value = false
+  editCourseQuestionPackage(newCourseData)
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '成功',
+          message: '已成功编辑',
+          type: 'success'
+        })
+        loadData()
+      } else {
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning'
+        })
+      }
+    })
+    .catch()
+  editDialogShow.value = false
 }
 </script>
 
@@ -500,7 +503,7 @@ editDialogShow.value = false
       </div>
     </div>
     <template #header>
-      <el-text>编辑班级</el-text>
+      <el-text>编辑好题包</el-text>
     </template>
 
     <template #footer>
