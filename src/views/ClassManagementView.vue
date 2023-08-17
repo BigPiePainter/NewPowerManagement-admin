@@ -247,18 +247,19 @@ const editClass = (props:any) => {
 }
 
 const deleteClassDialogShow = ref(false);
-const deleteClassData = reactive<{ id: string }>({ id: '' });
+const deleteClassData = reactive<{ id: string,name:string }>({ id: '',name: '' });
 
-const deleteClass = (props: { rowData: { id: string } }) => {
+const deleteClass = (props: { rowData: { id: string, name:string } }) => {
   console.log(props);
 
   deleteClassDialogShow.value = true;
   deleteClassData.id = props.rowData.id
+  deleteClassData.name= props.rowData.name
 }
 
 const confirmEditDialog = () => {
   console.log(editClassData)
-  editClasses(editClassData)
+  editClasses({id:editClassData.id})
     .then((res: any) => {
       if (res.code == 20000) {
         ElNotification({
@@ -433,7 +434,7 @@ loadAllTeacher()
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span">
+        <span class="dialog-span" style="color:red;">
           *负责老师：
         </span>
         <el-select filterable class="dialog-input" v-model="editClassData.teacherId">
@@ -481,7 +482,7 @@ loadAllTeacher()
       <el-text>确定删除班级</el-text>
     </template>
     <span>
-      {{ deleteClassData.id }}
+      {{ deleteClassData.name }}
     </span>
     <template #footer>
       <el-button type="danger" @click="confirmDeleteDialog()">确定</el-button>

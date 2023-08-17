@@ -87,17 +87,7 @@ const tableColumnsPending = [
       </span>
     )
   },
-  {
-    dataKey: 'isTrial',
-    key: 'isTrial',
-    title: '是否支持试看',
-    width: 200,
-    cellRenderer: (cellData: any) => (
-      <span>
-        {cellData.cellData == 1 ? "支持" : "不支持"}
-      </span>
-    )
-  },
+
   {
     key: 'option',
     title: '操作',
