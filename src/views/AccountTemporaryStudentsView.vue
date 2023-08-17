@@ -2,10 +2,10 @@
 import { getStudent, restStudentPsw, deleteStudent, toNormalStudent } from '@/apis/student'
 import { getGrades } from '@/apis/grade'
 import { ref, reactive, h } from 'vue'
-import { ElNotification } from 'element-plus'
+import { ElNotification,ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
-
+import { useRouter } from 'vue-router'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -20,7 +20,7 @@ const searchBarItems = reactive([
 ])
 
 const loading = ref(true)
-
+const router = useRouter()
 const tableColumns = reactive([
   {
     dataKey: 'id',
@@ -32,7 +32,12 @@ const tableColumns = reactive([
     dataKey: 'name',
     key: 'name',
     title: '姓名',
-    width: 100
+    width: 100,
+    cellRenderer: (cellData: any) => (
+      <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
+        {cellData.cellData}
+      </ElButton>
+    )
   },
   {
     dataKey: 'phoneNumber',
@@ -84,6 +89,23 @@ const tableColumns = reactive([
   }
 ])
 
+
+const clickDetail = (props: any) => {
+  console.log(props)
+  router.push({
+    path: 'student-detail-management',
+    query: {
+      id: props.rowData.id,
+      name: props.rowData.name,
+      account: props.rowData.account,
+      phoneNumber: props.rowData.phoneNumber,
+      phoneNumberOfParent: props.rowData.phoneNumberOfParent,
+      gradeName: props.rowData.gradeName,
+      createdAt: props.rowData.createdAt,
+      expiration: props.rowData.expiration
+    }
+  })
+}
 
 const tableData = reactive<any>([])
 const restPsw = (item: any) => {
