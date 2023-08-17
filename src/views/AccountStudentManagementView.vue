@@ -174,7 +174,6 @@ const newStudentData = reactive<any>({
   expiration: '',
   password: '',
   phoneNumber: '',
-  gradeId: '',
   sex: '',
   phoneNumberOfParent: '',
   remark: '',
@@ -428,15 +427,7 @@ const confirmEditDialog = () => {
 }
 
 const createStudents = () => {
-  newStudentData.account = ''
-  newStudentData.name = ''
-  newStudentData.expiration = ''
-  newStudentData.password = ''
-  newStudentData.phoneNumber = ''
-  newStudentData.gradeId = ''
-  newStudentData.sex = ''
-  newStudentData.phoneNumberOfParent = ''
-  newStudentData.remark = ''
+
   loadSelectOptionDialog()
   createDialogShow.value = true;
   console.log(createDialogShow.value)
@@ -452,7 +443,7 @@ const cancelEditDialog = () => {
     <template #header>
       <el-text>新建学生</el-text>
     </template>
-    <div style="height: 400px">
+    <div style="height: 350px;margin-left: 20px;">
       <div class="input">
         <div class="input-word"  style="color: #fa1010;">用户名:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.account" />
@@ -465,12 +456,6 @@ const cancelEditDialog = () => {
         <div class="input-word"  style="color: #fa1010;">到期时间:</div>
         <el-date-picker type="datetime" placeholder="请选择" style="width:200px" v-model="newStudentData.expiration"
           value-format="YYYY-MM-DD HH:MM:00" />
-      </div>
-      <div class="input">
-        <div class="input-word"  style="color: #fa1010;">学习阶段:</div>
-        <el-select placeholder="请选择" class="input-input" filterable v-model="newStudentData.gradeId">
-          <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
       </div>
 
       <div class="input">
@@ -493,7 +478,7 @@ const cancelEditDialog = () => {
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.remark" />
       </div>
       <div class="input">
-        <div class="input-word">父母手机号:</div>
+        <div class="input-word"  style="color: #fa1010;">父母手机号:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumberOfParent" />
       </div>
     </div>
