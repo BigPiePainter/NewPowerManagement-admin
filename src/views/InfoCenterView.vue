@@ -1,7 +1,8 @@
 <script setup lang="tsx">
 import RichTextEditor from '@/components/RichTextEditor.vue';
 import { getMessages, createMessage } from '@/apis/message';
-import { ref, reactive, ElNotification } from 'vue'
+import { ref, reactive } from 'vue'
+import { ElNotification } from 'element-plus'
 import { ElButton } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import SearchBar from '@/components/SearchBar.vue'
@@ -134,45 +135,68 @@ const recieverListDialogColumn = reactive([
   },
 ])
 
-const readNum = ref<number>()
-const unReadNum = ref<number>()
+const readNum = ref<number>(0)
+const unReadNum = ref<number>(0)
 const receiverListDialog = (data: any) => {
+  recieverListTableData.length = 0
   readNum.value = 0
   unReadNum.value = 0
   data.receiverList.forEach((item: any) => {
-    if (item.isRead)
-      recieverListTableData.push(item)
+    if (item.isRead == true) {
+      readNum.value = readNum.value + 1
+      console.log(1)
+    } else {
+      unReadNum.value = unReadNum.value + 1
+      console.log(2)
+    }
+    console.log(3)
+    recieverListTableData.push(item)
   })
-  readNum.value = data.readNum
-  unReadNum.value = data.unReadNum
   console.log(recieverListTableData)
+  console.log(readNum)
+  console.log(unReadNum)
   receiverListDialogShow.value = true
 }
 
 const tableData = reactive([])
 
+const allTeachers = reactive([])
+const allStudents = reactive([])
 const userId = ref<any>('')
 const sendMsgDialogShow = ref(false)
 const sendMsg = () => {
-  userInfo().then((res: any) => {
-    userId.value = res.data.id
-  })
+  recieverTypeDialog.value = false
+  userInfo()
+    .then((res: any) => {
+      userId.value = res.data.id
+      return getAllStudents()
+    })
+    .then((res: any) => {
+      allStudents.length = 0
+      res.data.forEach((item: any) => {
+        allStudents.push(item)
+      })
+      return getAllTeachers()
+    })
+    .then((res: any) => {
+      allTeachers.length = 0
+      res.data.forEach((item: any) => {
+        allTeachers.push(item)
+      })
+    })
   sendMsgDialogShow.value = true
 }
 
-const msgContent = reactive({ title: '', recievers: '', richText: '' })
-const confirmSendMsg = () => {
-  console.log(msgContent)
-  msgContent.title = ''
-  msgContent.recievers = ''
-  msgContent.richText = ''
-}
+// const msgContent = reactive({ title: '', recievers: '', richText: '' })
+// const confirmSendMsg = () => {
+//   console.log(msgContent)
+//   msgContent.title = ''
+//   msgContent.recievers = ''
+//   msgContent.richText = ''
+// }
 
 const cancelSendMsg = () => {
   sendMsgDialogShow.value = false
-  msgContent.title = ''
-  msgContent.recievers = ''
-  msgContent.richText = ''
 }
 
 const dataCompute = (data: any) => {
@@ -219,8 +243,10 @@ const loadData = () => {
 }
 loadData()
 
+const recieverTypeDialog = ref(false)
 const msgCtx = ref('')
 const receiverIds = ref('')
+const receiverIdArr = ref<any>([])
 const title = ref('')
 const type = ref<number>()
 const change = (val: any) => {
@@ -228,6 +254,10 @@ const change = (val: any) => {
 }
 
 const createMsg = () => {
+  receiverIds.value = ''
+  receiverIdArr.value.forEach((item: any) => {
+    receiverIds.value = receiverIds.value + item + ','
+  })
   var args = {
     content: msgCtx.value,
     receiverIds: receiverIds.value,
@@ -260,7 +290,8 @@ const createMsg = () => {
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
     </div>
     <div>
-      <el-button @click="sendMsg" style="margin-top: 15px;" class="new-msg-button" type="primary">发消息</el-button>
+      <el-button @click="recieverTypeDialog = true" style="margin-top: 15px;" class="new-msg-button"
+        type="primary">发消息</el-button>
     </div>
   </TablePage>
 
@@ -270,15 +301,23 @@ const createMsg = () => {
         <span class="dialog-span">
           *消息标题：
         </span>
-        <el-input class="dialog-input" placeholder="输入消息标题" v-model="msgContent.title">
+        <el-input class="dialog-input" placeholder="输入消息标题" v-model="title">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           *接收对象：
         </span>
-        <el-input class="dialog-input" placeholder="请选择消息接收对象" v-model="msgContent.recievers">
-        </el-input>
+        <div v-if="type == 1">
+          <el-select filterable multiple class="dialog-input" placeholder="请选择消息接收对象" v-model="receiverIdArr">
+            <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </div>
+        <div v-else-if="type == 2">
+          <el-select filterable multiple class="dialog-input" placeholder="请选择消息接收对象" v-model="receiverIdArr">
+            <el-option v-for="item in allTeachers" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </div>
       </div>
       <div>
         <span class="dialog-span">
@@ -293,7 +332,7 @@ const createMsg = () => {
       <el-text>发消息</el-text>
     </template>
     <template #footer>
-      <el-button type="primary" @click="confirmSendMsg()">确定</el-button>
+      <el-button type="primary" @click="createMsg()">确定</el-button>
       <el-button @click="cancelSendMsg()">
         取消
       </el-button>
@@ -310,6 +349,16 @@ const createMsg = () => {
       <el-button @click="receiverListDialogShow.value = false">
         关闭
       </el-button>
+    </template>
+  </el-dialog>
+
+  <el-dialog style="align:center" width="200px" v-model="recieverTypeDialog">
+    <div style="display:flex">
+      <el-button type="primary" @click="{ type = 2; sendMsg() }">老师</el-button>
+      <el-button type="primary" @click="{ type = 1; sendMsg() }">学生</el-button>
+    </div>
+    <template #header>
+      <el-text>选择消息接收对象</el-text>
     </template>
   </el-dialog>
 </template>

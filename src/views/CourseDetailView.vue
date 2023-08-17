@@ -287,9 +287,9 @@ loadDialogData()
       </div>
 
 
-      <div class="topPart1">
+      <!-- <div class="topPart1">
         <div class="topPart1-1"> <el-button>下发课程</el-button></div>
-      </div>
+      </div> -->
     </div>
     <el-divider class="row-divider"></el-divider>
     <div>
