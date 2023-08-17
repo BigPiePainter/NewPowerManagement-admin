@@ -454,20 +454,20 @@ const cancelEditDialog = () => {
     </template>
     <div style="height: 400px">
       <div class="input">
-        <div class="input-word">*用户名:</div>
+        <div class="input-word"  style="color: #fa1010;">用户名:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.account" />
       </div>
       <div class="input">
-        <div class="input-word">*姓名:</div>
+        <div class="input-word"  style="color: #fa1010;">姓名:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.name" />
       </div>
       <div class="input">
-        <div class="input-word">*到期时间:</div>
+        <div class="input-word"  style="color: #fa1010;">到期时间:</div>
         <el-date-picker type="datetime" placeholder="请选择" style="width:200px" v-model="newStudentData.expiration"
           value-format="YYYY-MM-DD HH:MM:00" />
       </div>
       <div class="input">
-        <div class="input-word">*学习阶段:</div>
+        <div class="input-word"  style="color: #fa1010;">学习阶段:</div>
         <el-select placeholder="请选择" class="input-input" filterable v-model="newStudentData.gradeId">
           <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
@@ -480,12 +480,12 @@ const cancelEditDialog = () => {
         </el-select>
       </div>
       <div class="input">
-        <div class="input-word">密码:</div>
+        <div class="input-word"  style="color: #fa1010;">密码:</div>
         <ElInput class="input-input" placeholder="6-20位,建议包含数字与字母" v-model="newStudentData.password" />
       </div>
 
       <div class="input">
-        <div class="input-word">手机号码:</div>
+        <div class="input-word"  style="color: #fa1010;">手机号码:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumber" />
       </div>
       <div class="input">
