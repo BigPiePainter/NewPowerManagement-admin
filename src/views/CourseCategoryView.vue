@@ -306,7 +306,7 @@ const handleFileChange = (e: Event) => {
   </el-dialog>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 $gap: 15px;
 
 .upload-file-area {
