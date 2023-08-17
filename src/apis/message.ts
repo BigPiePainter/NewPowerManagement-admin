@@ -8,3 +8,13 @@ export const getMessages = (data:any) => {
     }
     return http.request(args)
 }
+
+export const createMessage = (data:any) => {
+    const args = {
+        url: '/api/management/message/create-messages',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}

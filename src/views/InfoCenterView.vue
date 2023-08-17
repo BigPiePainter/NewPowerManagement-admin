@@ -1,14 +1,16 @@
 <script setup lang="tsx">
 import RichTextEditor from '@/components/RichTextEditor.vue';
-import { getMessages } from '@/apis/message';
-import { ref, reactive } from 'vue'
+import { getMessages, createMessage } from '@/apis/message';
+import { ref, reactive, ElNotification } from 'vue'
 import { ElButton } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import SearchBar from '@/components/SearchBar.vue'
 import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { getAllTeachers } from '@/apis/teacher'
+import { getAllStudents } from '@/apis/student'
+import { userInfo } from '@/apis/manager';
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: '消息中心' }]
 
@@ -19,9 +21,9 @@ const paginationInfo = reactive({
   pageSize: 20
 })
 const receiverType = reactive([
-  {id:'1', name:'学生'},
-  {id:'2', name:'老师'},
-  {id:'3', name:'后台'},
+  { id: '1', name: '学生' },
+  { id: '2', name: '老师' },
+  { id: '3', name: '后台' },
 ])
 const searchBarItems = reactive([
   { name: '发送者', value: '' },
@@ -32,7 +34,7 @@ const searchBarItems = reactive([
     type: InputType.Select,
     label: '请选择',
     options: receiverType,
-    string:true
+    string: true
   }
 ])
 
@@ -53,31 +55,33 @@ const tableColumns = [
     dataKey: 'content',
     key: 'content',
     title: '内容',
-    width: 550
-  },
-  {
-    dataKey: 'read',
-    key: 'read',
-    title: '已读',
-    width: 50
-  },
-  {
-    dataKey: 'unread',
-    key: 'unread',
-    title: '未读',
-    width: 50
+    width: 450
   },
   {
     dataKey: 'type',
     key: 'type',
     title: '接收者类型',
-    width: 100
+    cellRenderer: (item: any) => {
+      return (
+        <>
+          <span>{item.rowData.type == 1 ? '学生' : '老师'}</span>
+        </>
+      )
+    },
+    width: 90
   },
   {
-    dataKey: 'reciver',
-    key: 'reciver',
+    dataKey: 'receiverList',
+    key: 'receiverList',
     title: '接收对象',
-    width: 80
+    cellRenderer: (item: any) => {
+      return (
+        <>
+          <ElButton type="primary" onClick={() => receiverListDialog(item.rowData)}>查看接收对象</ElButton>
+        </>
+      )
+    },
+    width: 140
   },
   {
     key: 'option',
@@ -97,10 +101,62 @@ const tableColumns = [
   }
 ]
 
-const tableData: object[] = []
+const recieverListTableData = reactive<any>([])
+const receiverListDialogShow = ref(false)
+const recieverListDialogColumn = reactive([
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 150
+  },
+  {
+    dataKey: 'name',
+    key: 'name',
+    title: '姓名',
+    cellRenderer: (item: any) => {
+      if (item.rowData.isRead) {
+        return (
+          <>
+            <span>{item.rowData.name + ' '}<el-tag>已读</el-tag></span>
+          </>
+        )
+      } else {
+        return (
+          <>
+            <span>{item.rowData.name + ' '}<el-tag type="danger">未读</el-tag></span>
+          </>
+        )
+      }
+    },
+    width: 350,
+    align: 'center'
+  },
+])
 
+const readNum = ref<number>()
+const unReadNum = ref<number>()
+const receiverListDialog = (data: any) => {
+  readNum.value = 0
+  unReadNum.value = 0
+  data.receiverList.forEach((item: any) => {
+    if (item.isRead)
+      recieverListTableData.push(item)
+  })
+  readNum.value = data.readNum
+  unReadNum.value = data.unReadNum
+  console.log(recieverListTableData)
+  receiverListDialogShow.value = true
+}
+
+const tableData = reactive([])
+
+const userId = ref<any>('')
 const sendMsgDialogShow = ref(false)
 const sendMsg = () => {
+  userInfo().then((res: any) => {
+    userId.value = res.data.id
+  })
   sendMsgDialogShow.value = true
 }
 
@@ -121,6 +177,25 @@ const cancelSendMsg = () => {
 
 const dataCompute = (data: any) => {
   console.log(data)
+  data.data.records.forEach((item: any) => {
+    var sampleData = {
+      id: item.id,
+      senderId: item.senderId,
+      type: item.type,
+      title: item.title,
+      content: item.content,
+      receiverList: []
+    }
+    item.receiverList.forEach((i: any) => {
+      if (item.readList.indexOf(i) != -1) {
+        sampleData.receiverList.push({ id: i.id, name: i.name, isRead: true })
+      } else {
+        sampleData.receiverList.push({ id: i.id, name: i.name, isRead: false })
+      }
+    })
+    tableData.push(sampleData)
+  })
+  console.log(tableData)
 }
 
 const loadData = () => {
@@ -128,10 +203,13 @@ const loadData = () => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
+    title: '',
+    type: '',
+    content: ''
   }
   getMessages(args)
     .then((res) => {
-      totalLength.value = res.data.records.totalLength
+      totalLength.value = res.total
       dataCompute(res)
     })
     .catch()
@@ -140,6 +218,39 @@ const loadData = () => {
     })
 }
 loadData()
+
+const msgCtx = ref('')
+const receiverIds = ref('')
+const title = ref('')
+const type = ref<number>()
+const change = (val: any) => {
+  msgCtx.value = val
+}
+
+const createMsg = () => {
+  var args = {
+    content: msgCtx.value,
+    receiverIds: receiverIds.value,
+    senderId: userId.value,
+    title: title.value,
+    type: type.value,
+  }
+  createMessage(args)
+    .then((res: any) => {
+      if (res.code != 20000) {
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning'
+        })
+      } else {
+        ElNotification({
+          title: '发送成功',
+          type: 'success'
+        })
+      }
+    })
+}
 </script>
 
 <template>
@@ -173,7 +284,7 @@ loadData()
         <span class="dialog-span">
           *消息内容：
         </span>
-        <RichTextEditor :isShow="true"></RichTextEditor>
+        <RichTextEditor :isShow="true" @change="change"></RichTextEditor>
         <!-- <el-input class="dialog-input" placeholder="请输入" v-model="msgContent.richText">
         </el-input> -->
       </div>
@@ -185,6 +296,19 @@ loadData()
       <el-button type="primary" @click="confirmSendMsg()">确定</el-button>
       <el-button @click="cancelSendMsg()">
         取消
+      </el-button>
+    </template>
+  </el-dialog>
+
+  <el-dialog width="640px" v-model="receiverListDialogShow">
+    <el-table-v2 :header-height="0" :columns="recieverListDialogColumn" :data="recieverListTableData" :width="610"
+      :height="550" />
+    <template #header>
+      <el-text>接收者 已读{{ readNum }}人 未读{{ unReadNum }}人</el-text>
+    </template>
+    <template #footer>
+      <el-button @click="receiverListDialogShow.value = false">
+        关闭
       </el-button>
     </template>
   </el-dialog>
