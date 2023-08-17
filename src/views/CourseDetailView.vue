@@ -60,14 +60,23 @@ const tableColumns = [
     title: 'ID',
     width: 200
   },
-
   {
     dataKey: 'miniLessonName',
     key: 'miniLessonName',
     title: '名称',
     width: 200
   },
-
+  {
+    dataKey: 'miniLessonIsTrial',
+    key: 'miniLessonIsTrial',
+    title: '是否支持试看',
+    width: 200,
+    cellRenderer: (cellData: any) => (
+      <span>
+        {cellData.cellData == 1 ? "支持" : "不支持"}
+      </span>
+    )
+  },
   {
     dataKey: 'teacherName',
     key: 'teacherName',
@@ -80,9 +89,6 @@ const tableColumns = [
     cellRenderer: (cellData: any) => {
       return (
         <div>
-          {/* <el-button link type="primary" onClick={() => console.log(cellData)}>
-            预览
-          </el-button> */}
           <el-button link type="danger" onClick={() => warningDialog(cellData.rowData.id)}>
             删除
           </el-button>
@@ -175,6 +181,7 @@ const dialogTableColumns = reactive<any>([
     title: '老师姓名',
     width: 250,
   },
+  
   {
     dataKey: 'teacherCourseId',
     key: 'teacherCourseId',

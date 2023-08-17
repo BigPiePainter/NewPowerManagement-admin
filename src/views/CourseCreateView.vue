@@ -8,9 +8,10 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllTeachers } from '@/apis/teacher';
 import { upload } from '@/apis/upload'
 import { getLabels } from '@/apis/label';
+import RichTextEditor from '@/components/RichTextEditor.vue';
 
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '题库管理', path: '' }]
+breadcrumbStore.data = [{ name: '课程包管理', path: '' }]
 
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
@@ -178,13 +179,22 @@ const createnewGoodQuestion = () => {
             loading.value = false
         })
 }
+
+
+
+
+
+
+const change = (valueHtml: any) => {
+            newGoodQuestion.description = valueHtml
+}
 </script>
 
 <template>
     <div class="div-input-element">
         <div>
             <div class="top-part">
-                <el-text class="dialog-el-text" style="color: #fa1010;">
+                <el-text class="dialog-el-text" >
                     名称：
                 </el-text>
                 <el-input style="width: 217px;" class="dialog-input" placeholder="请输入课程包名称" v-model="newGoodQuestion.name">
@@ -192,7 +202,7 @@ const createnewGoodQuestion = () => {
             </div>
 
             <div class="top-part">
-                <el-text class="dialog-el-text" style="color: #fa1010;">
+                <el-text class="dialog-el-text" >
                     学科：
                 </el-text>
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.subjectId">
@@ -201,7 +211,7 @@ const createnewGoodQuestion = () => {
             </div>
 
             <div class="top-part">
-                <el-text class="dialog-el-text" style="color: #fa1010;">
+                <el-text class="dialog-el-text" >
                     阶段：
                 </el-text>
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.gradeId">
@@ -211,7 +221,7 @@ const createnewGoodQuestion = () => {
 
             <div class="div-input-element">
                 <el-text class="dialog-el-text">
-                    *课程包封面：
+                    课程包封面：
                 </el-text>
                 <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
                     @dragleave="mouseLeave">
@@ -229,13 +239,7 @@ const createnewGoodQuestion = () => {
             </div>
         </div>
 
-        <div class="div-input-element">
-            <el-text class="dialog-el-text" >
-                详情描述：
-            </el-text>
-            <el-input class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.description">
-            </el-input>
-        </div>
+
 
         <div class="div-input-element">
             <el-text class="dialog-el-text" >
@@ -247,7 +251,7 @@ const createnewGoodQuestion = () => {
         </div>
 
         <div class="div-input-element">
-            <el-text class="dialog-el-text" style="color: #fa1010;">
+            <el-text class="dialog-el-text" >
                 老师：
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.teacherId">
@@ -264,6 +268,18 @@ const createnewGoodQuestion = () => {
             </el-select>
         </div>
 
+        <div class="div-input-element">
+            <el-text class="dialog-el-text" >
+                详情描述：
+            </el-text>
+                <RichTextEditor :questionPrompt="newGoodQuestion.description" :isShow="true" @change="change"
+                v-model="newGoodQuestion.description">
+            </RichTextEditor>
+        </div>
+
+
+
+
         <div class="rich-text-area">
             <el-button @click="createnewGoodQuestion">添加课程包</el-button>
         </div>
@@ -272,7 +288,6 @@ const createnewGoodQuestion = () => {
   
 <style scoped lang="scss">
 .div-input-element {
-    max-width: 260px;
     margin-top: 15px;
     margin-left: 15px;
 }
