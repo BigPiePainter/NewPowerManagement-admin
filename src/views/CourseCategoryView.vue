@@ -4,6 +4,7 @@ import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getGrades } from '@/apis/grade'
+import { upload } from '@/apis/upload'
 import {
   getCourseCategory,
   createCourseCategory,
@@ -102,11 +103,11 @@ const deleteCategory = (id: any) => {
     })
 }
 
-const newCourseCategoryContext = reactive({
+const newCourseCategoryContext = reactive<any>({
   title: '', url: ''
 })
 const newCourseCategoryDialogShow = ref(false)
-const allGrades = reactive([])
+const allGrades = reactive<any>([])
 const newCourseCategory = () => {
   action.value = 1
   allGrades.length = 0
@@ -192,7 +193,7 @@ const cancelNewCourseCategory = () => {
   newCourseCategoryDialogShow.value = false
 }
 
-const tableData = reactive([])
+const tableData = reactive<any>([])
 
 const loadData = () => {
   getCourseCategory()

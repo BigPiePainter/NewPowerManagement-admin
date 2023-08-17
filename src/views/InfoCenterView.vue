@@ -21,21 +21,19 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-const receiverType = reactive([
-  { id: '1', name: '学生' },
-  { id: '2', name: '老师' },
-  { id: '3', name: '后台' },
-])
+
 const searchBarItems = reactive([
-  { name: '发送者', value: '' },
   { name: '标题', value: '' },
   {
     name: '接收者类型',
     value: '',
     type: InputType.Select,
     label: '请选择',
-    options: receiverType,
-    string: true
+    options: [
+      { id: '1', name: '学生' },
+      { id: '2', name: '老师' }
+    ],
+    single: true
   }
 ])
 
@@ -158,10 +156,10 @@ const receiverListDialog = (data: any) => {
   receiverListDialogShow.value = true
 }
 
-const tableData = reactive([])
+const tableData = reactive<any>([])
 
-const allTeachers = reactive([])
-const allStudents = reactive([])
+const allTeachers = reactive<any>([])
+const allStudents = reactive<any>([])
 const userId = ref<any>('')
 const sendMsgDialogShow = ref(false)
 const sendMsg = () => {
@@ -199,10 +197,10 @@ const cancelSendMsg = () => {
   sendMsgDialogShow.value = false
 }
 
-const dataCompute = (data: any) => {
-  console.log(data)
-  data.data.records.forEach((item: any) => {
-    var sampleData = {
+const dataCompute = (props: any) => {
+  console.log(props)
+  props.data.records.forEach((item: any) => {
+    var sampleData:any = {
       id: item.id,
       senderId: item.senderId,
       type: item.type,
@@ -227,12 +225,13 @@ const loadData = () => {
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
-    title: '',
-    type: '',
-    content: ''
+    title: searchBarItems[0].value,
+    type: searchBarItems[1].value[0]
   }
+  console.log(args)
   getMessages(args)
-    .then((res) => {
+    .then((res:any) => {
+      tableData.length = 0
       totalLength.value = res.total
       dataCompute(res)
     })
@@ -310,7 +309,7 @@ const createMsg = () => {
         </span>
         <div v-if="type == 1">
           <el-select filterable multiple class="dialog-input" placeholder="请选择消息接收对象" v-model="receiverIdArr">
-            <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
+            <el-option v-for="item in allStudents" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </div>
         <div v-else-if="type == 2">
@@ -346,7 +345,7 @@ const createMsg = () => {
       <el-text>接收者 已读{{ readNum }}人 未读{{ unReadNum }}人</el-text>
     </template>
     <template #footer>
-      <el-button @click="receiverListDialogShow.value = false">
+      <el-button @click="receiverListDialogShow = false">
         关闭
       </el-button>
     </template>
