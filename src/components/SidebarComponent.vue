@@ -350,7 +350,7 @@ onUnmounted(() => {
   <div class="sidebar">
     <div class="sidebar-header"><el-image :src="url" style="width: 27px; height: 25px"></el-image><el-text style="margin-left: 15px;color: #FFFFFF;font-size: 20px;font-family: -, ;width: 80px;height=25px">满分智慧</el-text></div>
 
-    <el-menu :default-active="route.path" router>
+    <el-menu  :unique-opened="true" :default-active="route.path" router>
       <template v-for="item in items" :key="item.index">
         <template v-if="item.subs">
           <el-sub-menu :index="item.index" :key="item.index" class="sidebar-sub-menu">
