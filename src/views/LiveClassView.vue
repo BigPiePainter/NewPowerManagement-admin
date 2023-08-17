@@ -275,34 +275,34 @@ loadData()
   <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">
     <div>
       <div class="div-input-element">
-        <span class="dialog-span"> *课堂名称: </span>
+        <span class="dialog-span"  style="color: #fa1010;"> 课堂名称: </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.name">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"> *老师姓名： </span>
+        <span class="dialog-span"  style="color: #fa1010;"> 老师姓名： </span>
         <el-select class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"> *上课学生： </span>
+        <span class="dialog-span"  style="color: #fa1010;"> 上课学生： </span>
         <el-select multiple class="dialog-input" placeholder="请输入" v-model="newClassData.studentIds">
           <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
-      <div class="div-input-element">
-        <span class="dialog-span"> *开课时间： </span>
+      <div class="div-input-element"  style="color: #fa1010;">
+        <span class="dialog-span"> 开课时间： </span>
         <el-date-picker type="datetime" placeholder="请选择" v-model="newClassData.startTime"
           value-format="YYYY-MM-DD HH:MM:00" style="width: 200px;" />
       </div>
-      <div class="div-input-element">
-        <span class="dialog-span"> *时长（分钟）： </span>
+      <div class="div-input-element"  style="color: #fa1010;">
+        <span class="dialog-span"> 时长（分钟）： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.duration">
         </el-input>
       </div>
-      <div class="div-input-element">
-        <span class="dialog-span"> *链接 </span>
+      <div class="div-input-element"  style="color: #fa1010;">
+        <span class="dialog-span"> 课程链接 </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.url">
         </el-input>
       </div>

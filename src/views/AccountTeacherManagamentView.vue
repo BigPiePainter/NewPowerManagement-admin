@@ -390,35 +390,35 @@ loadData()
   <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">
     <div>
       <div class="div-input-element">
-        <span class="dialog-span"> *用户名： </span>
+        <span class="dialog-span"  style="color: #fa1010;"> 用户名： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.account">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"> *姓名： </span>
+        <span class="dialog-span"  style="color: #fa1010;"> 姓名： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.name">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"> *密码： </span>
+        <span class="dialog-span"  style="color: #fa1010;"> 密码： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.password">
         </el-input>
       </div>
-      <div class="div-input-element">
-        <span class="dialog-span"> *学习阶段： </span>
+      <div class="div-input-element"  style="color: #fa1010;">
+        <span class="dialog-span"> 学习阶段： </span>
         <el-select filterable class="dialog-input" placeholder="请选择" v-model="newTeacherData.gradeId">
           <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
-      <div class="div-input-element">
-        <span class="dialog-span"> *学科： </span>
+      <div class="div-input-element"  style="color: #fa1010;">
+        <span class="dialog-span"> 学科： </span>
         <el-select filterable class="dialog-input" place holder="请选择" v-model="newTeacherData.subjectId">
           <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
 
         </el-select>
       </div>
-      <div class="div-input-element">
-        <span class="dialog-span"> *手机号码： </span>
+      <div class="div-input-element"  style="color: #fa1010;">
+        <span class="dialog-span"> 手机号码： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.phoneNumber">
         </el-input>
       </div>

@@ -294,15 +294,15 @@ const cancelNewTeacherGroup = () => {
   <el-dialog class="teacher-group-dialog" width="370px" v-model="newTeacherGroupDialogShow">
     <div>
       <div class="div-input-element">
-        <span class="dialog-span">
-          *教研组名称：
+        <span class="dialog-span" style="color: #fa1010;">
+          教研组名称：
         </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherGroupData.name">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span">
-          *教研组长：
+        <span class="dialog-span"  style="color: #fa1010;">
+          教研组长：
         </span>
         <el-select class="dialog-input" placeholder="请输入" v-model="newTeacherGroupData.leaderId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
@@ -325,7 +325,7 @@ const cancelNewTeacherGroup = () => {
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *教研组名称：
+          教研组名称：
         </span>
         <el-input class="dialog-input" v-model="editTeacherGroupData.name">
         </el-input>
@@ -333,7 +333,7 @@ const cancelNewTeacherGroup = () => {
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *教研组长：
+          教研组组长：
         </span>
         <el-select class="dialog-input" v-model="editTeacherGroupData.leaderId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />

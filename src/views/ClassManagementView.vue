@@ -367,30 +367,30 @@ loadAllTeacher()
   <el-dialog class="new-class-dialog" width="370px" v-model="newClassDialogShow">
     <div>
       <div class="div-input-element">
-        <span class="dialog-span">
-          *班级名称：
+        <span class="dialog-span"  style="color: #fa1010;">
+          班级名称：
         </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.name">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span">
-          *负责老师：
+        <span class="dialog-span"  style="color: #fa1010;">
+          负责老师：
         </span>
         <el-select filterable class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span">
-          *起始时间：
+        <span class="dialog-span"  style="color: #fa1010;">
+          起始时间：
         </span>
         <el-date-picker class="dialog-input" placeholder="yyyy-mm-dd" v-model="newClassData.startDate">
         </el-date-picker>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span">
-          *到期时间：
+        <span class="dialog-span"  style="color: #fa1010;">
+          到期时间：
         </span>
         <el-date-picker class="dialog-input" placeholder="请输入" v-model="newClassData.endDate">
         </el-date-picker>
@@ -428,22 +428,22 @@ loadAllTeacher()
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *班级名称：
+          班级名称：
         </span>
         <el-input class="dialog-input" v-model="editClassData.name">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span" style="color:red;">
-          *负责老师：
+        <span class="dialog-span" >
+          负责老师：
         </span>
         <el-select filterable class="dialog-input" v-model="editClassData.teacherId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span">
-          *到期时间：
+        <span class="dialog-span"  >
+          到期时间：
         </span>
         <el-date-picker class="dialog-input" placeholder="yyyy-mm-dd" v-model="editClassData.endDate">
         </el-date-picker>

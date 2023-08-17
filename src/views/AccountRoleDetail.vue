@@ -85,21 +85,21 @@ const confirm = () => {
         <div>
 
             <div class="line">
-                <el-text style="font-size:17px;">基本信息</el-text>
+                <el-text  style="font-size:17px;">基本信息</el-text>
                 <el-button type="primary" style="float:right;" @click="confirm">确认生成</el-button>
             </div>
             <div class="input line" style="font-weight:600;">
-                <el-text>*管理员名称</el-text> <el-input class="input-i" v-model="newManagerData.account"></el-input>
+                <el-text  style="color: #fa1010;">管理员名称</el-text> <el-input class="input-i" v-model="newManagerData.account"></el-input>
             </div>
             <div class="line input" style="font-weight:600;">
-                <el-text>*管理员备注</el-text>  <el-input class="input-i" v-model="newManagerData.remark" />
+                <el-text  style="color: #fa1010;">管理员备注</el-text>  <el-input class="input-i" v-model="newManagerData.remark" />
 
             </div>
             <div class="input line" style="font-weight:600;">
-                <el-text>*管理员密码</el-text> <el-input class="input-i" v-model="newManagerData.password"></el-input>
+                <el-text  style="color: #fa1010;">管理员密码</el-text> <el-input class="input-i" v-model="newManagerData.password"></el-input>
             </div>
             <div class="input line" style="font-weight:600;">
-                <el-text>*管理员电话</el-text> <el-input class="input-i" v-model="newManagerData.phoneNumber"></el-input>
+                <el-text  style="color: #fa1010;">管理员电话</el-text> <el-input class="input-i" v-model="newManagerData.phoneNumber"></el-input>
             </div>
         </div>
 
