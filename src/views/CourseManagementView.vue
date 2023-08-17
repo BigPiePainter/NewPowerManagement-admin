@@ -410,7 +410,7 @@ loadData()
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *封面名称：
+          封面名称：
         </span>
         <el-input class="dialog-input" v-model="newCourseData.cover">
         </el-input>
@@ -420,8 +420,8 @@ loadData()
 
 
       <div class="div-input-element">
-        <span class="dialog-span">
-          *课程名称：
+        <span class="dialog-span" >
+          课程名称：
         </span>
         <el-input class="dialog-input" v-model="newCourseData.name">
         </el-input>
@@ -429,14 +429,14 @@ loadData()
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *课程描述：
+          课程描述：
         </span>
         <el-input class="dialog-input" v-model="newCourseData.description">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *老师：
+          老师：
         </span>
         <el-select class="dialog-input" v-model="newCourseData.difficultyLevel">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
@@ -444,7 +444,7 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *难度：
+          难度：
         </span>
         <el-select class="dialog-input" v-model="newCourseData.teacherId">
           <el-option v-for="item in allDifficultyType" :key="item.id" :label="item.label" :value="item.id" />
