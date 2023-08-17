@@ -12,7 +12,7 @@ const breadcrumbStore = useBreadcrumbStore()
 
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
-  { name: '角色管理', path: '/account-role-managment' }
+  { name: '管理员管理', path: '/account-role-managment' }
 ]
 
 const loading = ref(true)
@@ -72,7 +72,7 @@ const editTeacherDialogShow = ref(false)
 
 
 const editTeacher =
-  (props: { rowData: { id: string, phoneNumber: string, account: string } }) => {
+  (props:any) => {
     editTeacherData.id = props.rowData.id;
     editTeacherData.phoneNumber = props.rowData.phoneNumber;
     editTeacherData.account = props.rowData.account;
@@ -148,9 +148,6 @@ const tableColumns = [
           <el-button link type="primary" onClick={() => editTeacher(item)}>
             编辑
           </el-button>
-          <el-button link type="primary" onClick={() => console.log(item)}>
-            关闭
-          </el-button>
           <el-popconfirm
             hide-after={0}
             width="170"
@@ -167,7 +164,7 @@ const tableColumns = [
         </div>
       )
     },
-    width: 150,
+    width: 100,
     fixed: 'right',
     align: 'left'
   }

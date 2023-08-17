@@ -7,7 +7,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue';
 import { useRoute } from 'vue-router'
 import type { CheckboxValueType } from 'element-plus'
-import { getMiniLessons, deleteMiniLessons, addMiniLessons, getMiniLesson } from '@/apis/minilessons'
+import { getMiniLessons, deleteMiniLesson, addMiniLessons, getMiniLesson } from '@/apis/minilessons'
 import { ElCheckbox, ElNotification } from 'element-plus'
 import { getAllTeachers } from '@/apis/teacher'
 
@@ -23,7 +23,7 @@ const warningDialog = (cellData2: any) => {
 }
 
 const ConfirmdeleteMiniLesson = () => {
-  deleteMiniLessons({ id: deleteItemid.value }).then((res: any) => {
+  deleteMiniLesson({ id: deleteItemid.value }).then((res: any) => {
     console.log(deleteItemid)
     if (res.code == 20000) {
       console.log('删除成功')
@@ -80,19 +80,16 @@ const tableColumns = [
     cellRenderer: (cellData: any) => {
       return (
         <div>
-          <el-button link type="primary" onClick={() => console.log(cellData)}>
+          {/* <el-button link type="primary" onClick={() => console.log(cellData)}>
             预览
-          </el-button>
-          <el-button link type="primary" onClick={() => console.log(cellData)}>
-            禁止快进
-          </el-button>
+          </el-button> */}
           <el-button link type="danger" onClick={() => warningDialog(cellData.rowData.id)}>
             删除
           </el-button>
         </div>
       )
     },
-    width: 250,
+    width: 100,
     fixed: 'right',
     align: 'left'
   }
@@ -312,7 +309,7 @@ loadDialogData()
 
   <el-dialog v-model="warningDialogshow" title="Warning" width="30%" center>
     <el-text disabled style="display: flex;align-items: center;justify-content: center;">
-      是否确认删除课程
+      是否确认从课程包中删除微课
     </el-text>
     <template #footer>
       <span class="dialog-footer">

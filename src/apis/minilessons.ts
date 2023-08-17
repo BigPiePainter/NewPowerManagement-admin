@@ -48,3 +48,13 @@ export const getMiniLessons = (data: any) => {
     return http.request(args)
   }
   
+
+  export const deleteMiniLesson = (data:any) => {
+    const args = {
+        url: '/api/management/mini-lesson/delete-mini-lesson',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+  }
