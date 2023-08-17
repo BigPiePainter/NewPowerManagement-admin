@@ -143,7 +143,7 @@ const deleteLab = (item: any) => {
 
   <el-dialog class="new-class-dialog" width="370px" v-model="createDialogShow">
     <div class="div-input-element" style="margin-top: 10px;">
-      <el-text>
+      <el-text style="color: #fa1010;">
         标签名称：
       </el-text>
       <div>

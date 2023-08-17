@@ -276,7 +276,7 @@ const deletSubDialogShow = ref(false)
 
 
     <div class="div-input-element" style="margin-top: 10px;">
-      <el-text>
+      <el-text style="color: #fa1010;">
         学科名称：
       </el-text>
       <div>
@@ -320,10 +320,10 @@ const deletSubDialogShow = ref(false)
 
     <div class="div-input-element" style="margin-top: 10px;">
       <el-text>
-        层级：
+        阶段层级：
       </el-text>
       <div>
-        <el-select placeholder="例：初中为父级，初一为子级别" class="dialog-input" v-model="newGradedata.level" style="width: 256px;">
+        <el-select placeholder="只允许添加初中与高中的子集" class="dialog-input" v-model="newGradedata.level" style="width: 256px;">
           <el-option v-for="item in allLevel" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
 
@@ -333,7 +333,7 @@ const deletSubDialogShow = ref(false)
 
 
     <div class="div-input-element" style="margin-top: 10px;">
-      <el-text>
+      <el-text style="color: #fa1010;">
         阶段名称：
       </el-text>
       <div>
@@ -344,7 +344,7 @@ const deletSubDialogShow = ref(false)
 
 
     <div class="div-input-element" style="margin-top: 10px;">
-      <el-text>
+      <el-text style="color: #fa1010;">
         父级阶段：
       </el-text>
       <div>

@@ -184,16 +184,16 @@ const createnewGoodQuestion = () => {
     <div class="div-input-element">
         <div>
             <div class="top-part">
-                <el-text class="dialog-el-text">
-                    *名称：
+                <el-text class="dialog-el-text" style="color: #fa1010;">
+                    名称：
                 </el-text>
                 <el-input style="width: 217px;" class="dialog-input" placeholder="请输入课程包名称" v-model="newGoodQuestion.name">
                 </el-input>
             </div>
 
             <div class="top-part">
-                <el-text class="dialog-el-text">
-                    *学科：
+                <el-text class="dialog-el-text" style="color: #fa1010;">
+                    学科：
                 </el-text>
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.subjectId">
                     <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
@@ -201,8 +201,8 @@ const createnewGoodQuestion = () => {
             </div>
 
             <div class="top-part">
-                <el-text class="dialog-el-text">
-                    *阶段：
+                <el-text class="dialog-el-text" style="color: #fa1010;">
+                    阶段：
                 </el-text>
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.gradeId">
                     <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
@@ -230,7 +230,7 @@ const createnewGoodQuestion = () => {
         </div>
 
         <div class="div-input-element">
-            <el-text class="dialog-el-text">
+            <el-text class="dialog-el-text" >
                 详情描述：
             </el-text>
             <el-input class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.description">
@@ -238,7 +238,7 @@ const createnewGoodQuestion = () => {
         </div>
 
         <div class="div-input-element">
-            <el-text class="dialog-el-text">
+            <el-text class="dialog-el-text" >
                 难度：
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.difficultyType">
@@ -247,8 +247,8 @@ const createnewGoodQuestion = () => {
         </div>
 
         <div class="div-input-element">
-            <el-text class="dialog-el-text">
-                *老师：
+            <el-text class="dialog-el-text" style="color: #fa1010;">
+                老师：
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.teacherId">
                 <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
@@ -256,8 +256,8 @@ const createnewGoodQuestion = () => {
         </div>
 
         <div class="div-input-element">
-            <el-text class="dialog-el-text">
-                *标签：
+            <el-text class="dialog-el-text" >
+                标签：
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.labelId">
                 <el-option v-for="item in allLabel" :key="item.id" :label="item.name" :value="item.id" />

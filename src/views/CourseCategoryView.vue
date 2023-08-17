@@ -279,15 +279,15 @@ const handleFileChange = (e: Event) => {
           @change="handleFileChange" />
       </div>
       <div class="div-input-element">
-        <span class="dialog-span">
-          *类目名称：
+        <span class="dialog-span" style="color: #fa1010;">
+          类目名称：
         </span>
         <el-input class="dialog-input" v-model="newCourseCategoryContext.name">
         </el-input>
       </div>
-      <div v-if="action == 1" class="div-input-element">
+      <div v-if="action == 1" class="div-input-element" style="color: #fa1010;">
         <span class="dialog-span">
-          *学习阶段：
+          学习阶段：
         </span>
         <el-select class="dialog-input" placeholder="请选择学习阶段" v-model="newCourseCategoryContext.gradeId">
           <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />

@@ -227,15 +227,15 @@ loadData()
         </div>
 
         <div class="div-input-element">
-          <span class="dialog-span">
-            *标题：
+          <span class="dialog-span" style="color: #fa1010;">
+            标题：
           </span>
           <el-input class="dialog-input" v-model="newBannerContext.title">
           </el-input>
         </div>
         <div class="div-input-element">
-          <span class="dialog-span">
-            *跳转链接：
+          <span class="dialog-span" style="color: #fa1010;">
+            跳转链接：
           </span>
           <el-input class="dialog-input" v-model="newBannerContext.url">
           </el-input>

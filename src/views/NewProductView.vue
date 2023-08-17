@@ -119,6 +119,23 @@ const allHot: any = [
   },
 ]
 
+
+
+
+const a = [
+  { identifier: 'B', value: '2' },
+  { identifier: 'C', value: '3' }
+];
+
+const result = {
+  answers: a.map(item => item.identifier),
+  correct: null
+};
+
+
+
+
+
 const newCoverUrl = ref('')
 const showImgSrc = ref<string>('')
 const active = ref(0)
@@ -251,7 +268,7 @@ const create = () => {
       </div>
       <div class="input-row">
         <div class="input-title">
-          <el-text>*商品名称：</el-text>
+          <el-text style="color: #fa1010;">商品名称：</el-text>
         </div>
         <div class="input-container">
           <el-input class="input-input" v-model="newProductData.name" />
@@ -259,7 +276,7 @@ const create = () => {
       </div>
       <div class="input-row">
         <div class="input-title">
-          <el-text>*分类：</el-text>
+          <el-text style="color: #fa1010;">分类：</el-text>
         </div>
         <div class="input-container">
           <el-select class="input-input" placeholder="请选择学习阶段" v-model="newProductData.gradeId">
@@ -307,15 +324,15 @@ const create = () => {
       <div class="part2" style="margin-top: 20px; margin-left: 160px;">
 
 
-        <el-text style="margin-left: 15px;">商品价格*: </el-text>
+        <el-text style="margin-left: 15px;color: #fa1010;">商品价格: </el-text>
 
-        <div>
+        <div style="margin-top:3px" >
           <el-text>安卓: </el-text>
           <el-input class="input-length" placeholder="请输入(元)" v-model="newProductData.androidPrice">元</el-input>
           /<el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.androidPoint">积分</el-input>
         </div>
 
-        <div style="margin-left: 30px;">
+        <div style="margin-left: 30px;color: #fa1010;">
           <el-text>IOS:</el-text>
           <el-input class="input-length" placeholder="请输入T币价格" v-model="newProductData.tcoin">T币</el-input>
           /<el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.iosPoint">积分</el-input>
@@ -323,8 +340,8 @@ const create = () => {
       </div>
 
 
-      <div style="margin-left: 175px; margin-top:50px">
-        <el-text>是否上架*: </el-text>
+      <div style="margin-left: 175px; margin-top:50px;color: #fa1010;">
+        <el-text>是否上架: </el-text>
 
         <el-select style="margin-left: 27px;" input-length class="input-input" placeholder="请选择是否立即上架"
           v-model="newProductData.status">
