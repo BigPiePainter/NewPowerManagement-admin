@@ -108,14 +108,14 @@ const handleFileChange = (e: Event) => {
 </script>
 
 <template>
-    <input v-if="isShow" type="file" accept="image/png, image/jpeg, image/jpg" id="file" @change="handleFileChange"
-        style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
     <div style="border: 1px solid #ccc; margin-top: 10px">
         <Toolbar v-if="isShow" :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple"
             style="border-bottom: 1px solid #ccc" />
         <Editor :defaultConfig="editorConfig" mode="simple" v-model=valueHtml style="height: 150px; overflow-y: hidden"
             @onCreated="handleCreated" @onDestroyed="handleDestroyed" @onChange="handleCurrentChange" />
         <button v-if="isShow" style="margin-top: 10px;" @click="insertImage">插入图片</button>
+        <input v-if="isShow" type="file" accept="image/png, image/jpeg, image/jpg" id="file" @change="handleFileChange"
+            style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
     </div>
 </template>
   
