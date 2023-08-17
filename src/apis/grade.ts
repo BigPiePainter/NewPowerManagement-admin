@@ -8,8 +8,6 @@ export const getGrades = () => {
     return http.request(args)
 }
 
-
-
 export const createGrades = (data: any) => {
     const args = {
         url: '/api/management/grade/create-grade',
@@ -19,7 +17,6 @@ export const createGrades = (data: any) => {
     }
     return http.request(args)
 }
-
 
 export const deleteGrades = (data: any) => {
     const args = {

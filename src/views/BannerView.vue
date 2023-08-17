@@ -166,7 +166,7 @@ const handleFileChange = (e: Event) => {
             })
           } else {
             console.log(res)
-            newBannerContext.url = res.data.url
+            showImgSrc.value = res.data.url
           }
         })
         .catch()
@@ -215,7 +215,7 @@ loadData()
 
         <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
           @dragleave="mouseLeave">
-          <img class="show-img" id="show_img" :src="newBannerContext.url" />
+          <img class="show-img" id="show_img" :src="showImgSrc.value" />
           <div class="upload-file-area-text">
             <el-text>点击此处或拖拽上传海报</el-text>
             <el-text>图片不大于1MB</el-text>
