@@ -1,8 +1,5 @@
 import http from '@/libs/http'
 
-
-
-
 export const getCourseQuestionPackage = (data : any) => {
     const args = {
         url: '/api/management/course-question-package/page-course-question-package',

@@ -24,47 +24,17 @@ const searchBarItems = reactive([
   { name: "课程名称", value: "", label: "请输入" },
 ])
 
-const allGrades = ref<any>([])
-const allSubjects = ref<any>([])
-const allTeacher = ref<any>([])
-
-const loadSelectOption = () => {
-
-  getGrades()
-    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-    .catch()
-
-  getSubjects()
-    .then((res) => (allSubjects.value = res.data))
-    .catch()
-
-  getAllTeachers()
-    .then((res) => { (allTeacher.value = res.data), console.log(res) })
-    .catch()
-}
+const allGrades = reactive<any>([])
+const allSubjects = reactive<any>([])
+const allTeachers = reactive<any>([])
 
 const router = useRouter()
-
-
 
 const courseCreat = () => {
   router.push({ path: 'course-create' })
 }
 
-const newCourseData = reactive<{
-
-  id: string,
-  name: string,
-  description: string,
-  difficultyLevel: string,
-  gradeId: string,
-  type: string,
-  subjectId: string,
-  teacherId: string,
-  cover: string
-
-}>({
-
+const newCourseData = reactive<any>({
   id: '',
   name: '',
   description: '',
@@ -75,30 +45,31 @@ const newCourseData = reactive<{
   teacherId: '',
   cover: ''
 });
+
 const allDifficultyType = [
   {
-    id: '1',
-    value: '1',
+    id: 1,
+    value: 1,
     label: '容易  ',
   },
   {
-    id: '2',
-    value: '2',
+    id: 2,
+    value: 2,
     label: '较易 ',
   },
   {
-    id: '3',
-    value: '3',
+    id: 3,
+    value: 3,
     label: '一般',
   },
   {
-    id: '4',
-    value: '4',
+    id: 4,
+    value: 4,
     label: '较难 ',
   },
   {
-    id: '5',
-    value: '5',
+    id: 5,
+    value: 5,
     label: '困难',
   }
 ]
@@ -260,11 +231,8 @@ const calcelDeleteTea = (item: any) => {
   item.rowData.id = null
 }
 
-
-
 const deleteTea = (item: any) => {
   setTimeout(console.log, 0)
-
   var args = {
     id: item.rowData.id,
     type: 1
@@ -296,55 +264,54 @@ const deleteTea = (item: any) => {
     })
 }
 
-const confirmEditDialog = () => {
+const editCourse = (props: any) => {
+  console.log(props);
+  newCourseData.name = props.rowData.name;
+  newCourseData.cover = props.rowData.cover;
+  newCourseData.description = props.rowData.description;
+  newCourseData.teacherId = Number(props.rowData.teacherId);
+  newCourseData.difficultyLevel = Number(props.rowData.difficultyLevel);
+  newCourseData.gradeId = Number(props.rowData.gradeId);
+  newCourseData.subjectId = Number(props.rowData.subjectId);
+  newCourseData.id = Number(props.rowData.id);
+  console.log(newCourseData);
+  editDialogShow.value = true;
+}
 
-  editCourseQuestionPackage(newCourseData)
+const confirmEditDialog = () => {
+  var args = {
+    name: newCourseData.name,
+    cover: newCourseData.cover,
+    description: newCourseData.description,
+    teacherId: Number(newCourseData.teacherId),
+    difficultyLevel: Number(newCourseData.difficultyLevel),
+    gradeId: Number(newCourseData.gradeId),
+    subjectId: Number(newCourseData.subjectId),
+    id: Number(newCourseData.id),
+  }
+  console.log(args)
+  editCourseQuestionPackage(args)
     .then((res: any) => {
-      if (res.code == 20000) {
-        ElNotification({
-          title: '成功',
-          message: '已成功编辑',
-          type: 'success'
-        })
-        loadData()
-      } else {
+      if (res.code != 20000) {
         ElNotification({
           title: 'Warning',
           message: res.msg,
           type: 'warning'
         })
+      } else {
+        ElNotification({
+          title: '成功',
+          message: '已成功编辑',
+          type: 'success'
+        })
       }
     })
     .catch()
+    .finally(() => {
+      loadData()
+    })
   editDialogShow.value = false
 }
-
-const editCourse = (props: {
-  rowData: {
-    name: string,
-    teacherId: string,
-    subjectId: string,
-    gradeId: string,
-    id: string
-    description: string,
-    difficultyLevel: string,
-    cover: string
-  }
-
-}) => {
-  console.log(props);
-  editDialogShow.value = true;
-  newCourseData.cover = props.rowData.cover;
-  newCourseData.description = props.rowData.description;
-  newCourseData.teacherId = props.rowData.teacherId;
-  newCourseData.difficultyLevel = props.rowData.difficultyLevel;
-  newCourseData.gradeId = props.rowData.gradeId;
-  newCourseData.subjectId = props.rowData.subjectId;
-  newCourseData.gradeId = props.rowData.gradeId;
-  newCourseData.id = props.rowData.id;
-}
-
-
 
 const paginationInfo = reactive({
   currentPage: 1,
@@ -352,7 +319,6 @@ const paginationInfo = reactive({
 })
 
 const loadData = () => {
-  loadSelectOption()
   loading.value = true
   var args = {
     pageNum: paginationInfo.currentPage,
@@ -365,16 +331,45 @@ const loadData = () => {
       console.log(res)
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
+      return getGrades()
+    }).then((res: any) => {
+      allGrades.length = 0
+      res.data.forEach((item: any) => {
+        item.subset.forEach((item: any) => {
+          var dataSample: { id: number, level: number, name: string } = {
+            id: Number(item.id),
+            level: item.level,
+            name: item.name
+          }
+          allGrades.push(dataSample)
+        })
+      })
+      return getSubjects()
+    }).then((res: any) => {
+      allSubjects.length = 0
+      res.data.forEach((item: any) => {
+        var dataSample: { id: number, name: string } = {
+          id: Number(item.id),
+          name: item.name
+        }
+        allSubjects.push(dataSample)
+      })
+      return getAllTeachers()
+    }).then((res: any) => {
+      allTeachers.length = 0
+      res.data.forEach((item: any) => {
+        var dataSample: { id: number, name: string } = {
+          id: Number(item.id),
+          name: item.name
+        }
+        allTeachers.push(dataSample)
+      })
     })
     .catch(() => { })
     .finally(() => {
       loading.value = false
     })
-
-
 }
-
-
 loadData()
 
 </script>
@@ -388,26 +383,8 @@ loadData()
     </div>
   </TablePage>
 
-
-
-
-
-
-
-
-
-
-
-
-
   <el-dialog class="new-class-dialog" width="370px" v-model="editDialogShow">
-
-
-
     <div>
-
-
-
       <div class="div-input-element">
         <span class="dialog-span">
           封面名称：
@@ -416,11 +393,8 @@ loadData()
         </el-input>
       </div>
 
-
-
-
       <div class="div-input-element">
-        <span class="dialog-span" >
+        <span class="dialog-span">
           课程名称：
         </span>
         <el-input class="dialog-input" v-model="newCourseData.name">
@@ -438,15 +412,15 @@ loadData()
         <span class="dialog-span">
           老师：
         </span>
-        <el-select class="dialog-input" v-model="newCourseData.difficultyLevel">
-          <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
+        <el-select class="dialog-input" v-model="newCourseData.teacherId">
+          <el-option v-for="item in allTeachers" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           难度：
         </span>
-        <el-select class="dialog-input" v-model="newCourseData.teacherId">
+        <el-select class="dialog-input" v-model="newCourseData.difficultyLevel">
           <el-option v-for="item in allDifficultyType" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </div>
@@ -468,7 +442,7 @@ loadData()
       </div>
     </div>
     <template #header>
-      <el-text>编辑班级</el-text>
+      <el-text>编辑课程包</el-text>
     </template>
 
     <template #footer>

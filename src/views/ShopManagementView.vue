@@ -420,6 +420,7 @@ const loadData = () => {
       totalLength.value = res.data.records.length
       return getGrades()
     }).then((res: any) => {
+      allGrades.length = 0
       res.data.forEach((item: any) => {
         item.subset.forEach((item: any) => {
           var dataSample: { id: number, level: number, name: string } = {
@@ -432,11 +433,12 @@ const loadData = () => {
       })
       return getSubjects()
     }).then((res: any) => {
+      allSubjects.length = 0
       res.data.forEach((item: any) => {
         var dataSample: { id: number, name: string } = {
-            id: Number(item.id),
-            name: item.name
-          }
+          id: Number(item.id),
+          name: item.name
+        }
         allSubjects.push(dataSample)
       })
     })
@@ -517,7 +519,7 @@ const editProductData = reactive<any>({
 
 
 const editGoods =
-  (props: { rowData: { id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
+  (props: any) => {
     editProductData.id = props.rowData.id;
     editProductData.iosPoint = props.rowData.iosPoint;
     editProductData.tcoin = props.rowData.tcoin;
@@ -533,10 +535,7 @@ const editGoods =
     editDialogShow.value = true;
   }
 
-
 const editDialogShow = ref(false)
-
-
 
 const confirmEditDialog = () => {
   editProduct(editProductData).

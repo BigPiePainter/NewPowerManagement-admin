@@ -231,7 +231,7 @@ const deleteTea = (item: any) => {
 
 const allGrades = reactive<any>([])
 const allSubjects = reactive<any>([])
-const allTeacher = reactive<any>([])
+const allTeachers = reactive<any>([])
 const router = useRouter()
 
 const clickCreate = () => {
@@ -248,7 +248,7 @@ const clickCreate = () => {
 //     .catch()
 
 //   getAllTeachers()
-//     .then((res) => { (allTeacher.value = res.data), console.log(res) })
+//     .then((res) => { (allTeachers.value = res.data), console.log(res) })
 //     .catch()
 // }
 
@@ -370,6 +370,7 @@ const loadData = () => {
       totalLength.value = res.data.records.length
       return getGrades()
     }).then((res: any) => {
+      allGrades.length = 0
       res.data.forEach((item: any) => {
         item.subset.forEach((item: any) => {
           var dataSample: { id: number, level: number, name: string } = {
@@ -382,6 +383,7 @@ const loadData = () => {
       })
       return getSubjects()
     }).then((res: any) => {
+      allSubjects.length = 0
       res.data.forEach((item: any) => {
         var dataSample: { id: number, name: string } = {
           id: Number(item.id),
@@ -391,12 +393,13 @@ const loadData = () => {
       })
       return getAllTeachers()
     }).then((res: any) => {
+      allTeachers.length = 0
       res.data.forEach((item: any) => {
         var dataSample: { id: number, name: string } = {
           id: Number(item.id),
           name: item.name
         }
-        allTeacher.push(dataSample)
+        allTeachers.push(dataSample)
       })
     })
     .catch(() => { })
@@ -482,7 +485,7 @@ const confirmEditDialog = () => {
           *老师：
         </span>
         <el-select class="dialog-input" v-model="newCourseData.teacherId">
-          <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
+          <el-option v-for="item in allTeachers" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
