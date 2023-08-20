@@ -6,6 +6,7 @@ import { getTeacherCourse } from '@/apis/teacherCourses'
 import { videoToUrl } from '@/apis/videoIdToUrl'
 import { useRoute } from 'vue-router'
 import { getMiniLessons } from '@/apis/minilessons'
+import { getClasses } from '@/apis/class'
 
 const loading = ref(true)
 const video = reactive<any>([])
@@ -99,6 +100,58 @@ const playVideo = (videoId: any) => {
     videoShow.value = true
   })
 }
+const classData=ref<any>([])
+
+
+
+
+
+
+const getClassData=()=>{
+
+  var args = {
+    pageNum: paginationInfoMiniLesson.currentPage,
+    pageSize: paginationInfoMiniLesson.pageSize,
+    teacherId: route.query.id
+  }
+  getClasses(args).then((res)=>{
+       totalNum.value = res.data.total
+      res.data.records.forEach((item: any) => {
+        classData.value.push({
+          name: item.name,
+        })
+      })
+  })
+  .catch()
+}
+getClassData()
+
+const classCount=ref<any>([])
+
+const getClassCount=()=>{
+
+var args = {
+  pageNum: paginationInfoMiniLesson.currentPage,
+  pageSize: paginationInfoMiniLesson.pageSize,
+  teacherId: route.query.id
+}
+getClasses(args).then((res)=>{
+  classCount.value=res.data.total
+      })
+.catch()
+}
+
+getClassCount()
+
+
+
+
+
+
+
+
+
+
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`)
@@ -128,6 +181,7 @@ breadcrumbStore.data = [
   { name: '老师管理', path: '/account-teacher-managament' },
   { name: '老师详情', path: '/teacher-detail-managament' },
 ]
+
 
 </script>
 
@@ -163,11 +217,14 @@ breadcrumbStore.data = [
         <div class="topPart2-2"><el-text>电话:{{ route.query.phoneNumber }}</el-text></div>
       </div>
 
-      <!-- <el-divider direction="vertical" class="divider-height" />
+      <el-divider direction="vertical" class="divider-height" />
       <div class="topPart1">
-        <div class="topPart1-1"><el-text>所在教研组</el-text></div>
-        <div class="topPart2-2"><el-text>庄老师教研组</el-text></div>
-      </div> -->
+        <div class="topPart1-1"><el-text>所带教研组:</el-text>
+     
+        </div>
+        <div class="topPart2-2"><el-text style="display: flex;flex-direction: row;flex-wrap: ;margin:5px;warp">   <el-text  class="topPart1-1"  v-for="item in classData" :key="item.name">{{ item.name }} </el-text>
+        </el-text></div>
+      </div>
     </div>
     <el-divider class="row-divider"></el-divider>
     <!-- <div>
@@ -242,7 +299,7 @@ $scale: 0.88;
 .topPart2-2 {
   display: flex;
   margin-top: 10px * $scale;
-
+  flex-direction: row;
   margin-left: 15px;
 }
 
