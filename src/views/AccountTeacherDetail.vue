@@ -51,16 +51,14 @@ const loadTeacherData = () => {
     .finally(() => {
       loading.value = false
     })
-console.log(route.query)
+  console.log(route.query)
 }
 loadTeacherData()
 
 const totalNum = ref('')
 const loadDialogData = (teacherCourseId: any) => {
   video.length = 0
-
   loading.value = true
-
   paginationInfoMiniLesson.teacherCourseId = teacherCourseId
   var args = {
     pageNum: paginationInfoMiniLesson.currentPage,
@@ -100,58 +98,41 @@ const playVideo = (videoId: any) => {
     videoShow.value = true
   })
 }
-const classData=ref<any>([])
+const classData = ref<any>([])
 
-
-
-
-
-
-const getClassData=()=>{
+const getClassData = () => {
 
   var args = {
     pageNum: paginationInfoMiniLesson.currentPage,
     pageSize: paginationInfoMiniLesson.pageSize,
     teacherId: route.query.id
   }
-  getClasses(args).then((res)=>{
-       totalNum.value = res.data.total
-      res.data.records.forEach((item: any) => {
-        classData.value.push({
-          name: item.name,
-        })
+  getClasses(args).then((res) => {
+    totalNum.value = res.data.total
+    res.data.records.forEach((item: any) => {
+      classData.value.push({
+        name: item.name,
       })
+    })
   })
-  .catch()
+    .catch()
 }
 getClassData()
 
-const classCount=ref<any>([])
+const classCount = ref<any>([])
 
-const getClassCount=()=>{
-
-var args = {
-  pageNum: paginationInfoMiniLesson.currentPage,
-  pageSize: paginationInfoMiniLesson.pageSize,
-  teacherId: route.query.id
+const getClassCount = () => {
+  var args = {
+    pageNum: 1,
+    pageSize: 1,
+    teacherId: route.query.id
+  }
+  getClasses(args).then((res) => {
+    classCount.value = res.data.total
+  })
+    .catch()
 }
-getClasses(args).then((res)=>{
-  classCount.value=res.data.total
-      })
-.catch()
-}
-
 getClassCount()
-
-
-
-
-
-
-
-
-
-
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`)
@@ -220,10 +201,11 @@ breadcrumbStore.data = [
       <el-divider direction="vertical" class="divider-height" />
       <div class="topPart1">
         <div class="topPart1-1"><el-text>所带教研组:</el-text>
-     
+
         </div>
-        <div class="topPart2-2"><el-text style="display: flex;flex-direction: row;flex-wrap: ;margin:5px;warp">   <el-text  class="topPart1-1"  v-for="item in classData" :key="item.name">{{ item.name }} </el-text>
-        </el-text></div>
+        <div class="topPart2-2"><el-text style="display: flex;flex-direction: row;flex-wrap: ;margin:5px;warp"> <el-text
+              class="topPart1-1" v-for="item in classData" :key="item.name">{{ item.name }} </el-text>
+          </el-text></div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>

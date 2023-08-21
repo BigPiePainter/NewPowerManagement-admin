@@ -5,37 +5,77 @@ import { ElNotification } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue'
 import { getMiniLessons, editMiniLessons, deleteMiniLessons } from '@/apis/minilessons'
-import HeaderCellRenderer from 'element-plus/es/components/table-v2/src/renderers/header-cell'
+import { videoToUrl } from '@/apis/videoIdToUrl'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '课程管理' }, { name: '微课审核' }]
 
 const activeName = ref('pending')
-const totalLength = ref<Number>()
+const totalLength1 = ref<Number>()
+const totalLength2 = ref<Number>()
+const totalLength3 = ref<Number>()
 const auditStatus = ref<Number>()
 const warningDialogshow = ref(false)
 
-const loading = ref(true)
-const paginationInfo = reactive({
+const loading1 = ref(false)
+const loading2 = ref(false)
+const loading3 = ref(false)
+const paginationInfo1 = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const paginationInfo2 = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const paginationInfo3 = reactive({
   currentPage: 1,
   pageSize: 20
 })
 
+const videoShow = ref(false)
+const url = ref<any>('')
+const playVideo = (videoId: any) => {
+  var args = { videoId: videoId }
+  console.log(args)
+  videoToUrl(args).then((res: any) => {
+    console.log(res)
+    url.value = res.playURL
+    videoShow.value = true
+  })
+}
+
 const editDialogShow = ref(false);
 
-const editCourseData = reactive<{
-
-  id: string,
-  isTrial: string,
-  name: string,
-
-}>({
-
+const editCourseData = reactive<any>({
   id: '',
-  isTrial: '',
   name: ''
-
 });
+
+const changeTrial = (item: any) => {
+  var args = {
+    id: item.rowData.id,
+    isTrial: item.cellData
+  }
+  console.log(args)
+  editMiniLessons(args)
+    .then((res: any) => {
+      if (res.code != 20000) {
+        ElNotification({
+          title: '编辑失败',
+          message: res.msg,
+          type: 'error'
+        })
+      } else {
+        ElNotification({
+          title: '成功',
+          message: '编辑成功',
+          type: 'success'
+        })
+      }
+      loadData()
+    })
+}
 
 const tableColumnsPending = [
   {
@@ -48,6 +88,13 @@ const tableColumnsPending = [
     dataKey: 'name',
     key: 'name',
     title: '标题',
+    cellRenderer: (cellData: any) => {
+      return (
+        <div>
+          <el-button link type="primary" onClick={() => playVideo(cellData.rowData.videoId)}> {cellData.cellData}</el-button>
+        </div>
+      )
+    },
     width: 200
   },
   {
@@ -67,7 +114,33 @@ const tableColumnsPending = [
       </span>
     )
   },
-
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '上传者',
+    width: 200
+  },
+  {
+    dataKey: 'isTrial',
+    key: 'isTrial',
+    title: '是否支持试看',
+    width: 200,
+    cellRenderer: (cellData: any) => {
+      return (
+        <div>
+          <el-switch
+            v-model={cellData.cellData}
+            active-value={1}
+            inactive-value={2}
+            onChange={() => changeTrial(cellData)}
+            inline-prompt
+            active-text="是"
+            inactive-text="否"
+          />
+        </div>
+      )
+    }
+  },
   {
     key: 'option',
     title: '操作',
@@ -92,19 +165,6 @@ const tableColumnsPending = [
   }
 ]
 
-const allOption = [
-  {
-    id: '1',
-    value: '1',
-    label: '支持试看',
-  },
-  {
-    id: '2',
-    value: '2',
-    label: '不支持试看',
-  },
-]
-
 const pass = (item: any) => {
 
   editMiniLessons({ id: item.rowData.id, auditStatus: 3, }).then((res: any) => {
@@ -116,7 +176,6 @@ const pass = (item: any) => {
 }
 
 const reject = (item: any) => {
-
   editMiniLessons({ id: item.rowData.id, auditStatus: 4, }).then((res: any) => {
     if (res.code == '20000') {
       console.log('已通过')
@@ -125,16 +184,12 @@ const reject = (item: any) => {
   }).catch
 }
 
-
-const edit =
-  (props: { rowData: { id: string, name: string, isTrial: string } }) => {
-    editCourseData.id = props.rowData.id;
-    editCourseData.isTrial = '';
-    editCourseData.name = props.rowData.name;
-    console.log(props)
-    editDialogShow.value = true;
-  }
-
+const edit = (props: any) => {
+  editCourseData.id = props.rowData.id;
+  editCourseData.name = props.rowData.name;
+  console.log(props)
+  editDialogShow.value = true;
+}
 
 const confirmEditDialog = () => {
   editMiniLessons(editCourseData).then((res: any) => {
@@ -168,62 +223,56 @@ const tableDataApproved = ref<any>([])
 const tableDataRejected = ref<any>([])
 
 const loadPendingData = () => {
-  loading.value = true
+  loading1.value = true
   var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
+    pageNum: paginationInfo1.currentPage,
+    pageSize: paginationInfo1.pageSize,
     auditStatus: 1
   }
-
   getMiniLessons(args)
     .then((res) => {
       tableDataPending.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength1.value = res.data.records.length
     })
     .catch(() => { })
     .finally(() => {
-      loading.value = false
+      loading1.value = false
     })
 }
 
 const loadApprovalData = () => {
-  loading.value = true
+  loading2.value = true
   var args = {
-
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
+    pageNum: paginationInfo2.currentPage,
+    pageSize: paginationInfo2.pageSize,
     auditStatus: 3,
   }
-
   getMiniLessons(args)
-
     .then((res) => {
       tableDataApproved.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength2.value = res.data.records.length
     })
     .catch(() => { })
     .finally(() => {
-      loading.value = false
+      loading2.value = false
     })
 }
-loadApprovalData()
 
 const loadRejctData = () => {
-  loading.value = true
+  loading3.value = true
   var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
+    pageNum: paginationInfo3.currentPage,
+    pageSize: paginationInfo3.pageSize,
     auditStatus: 4,
   }
-
   getMiniLessons(args)
     .then((res) => {
       tableDataRejected.value = res.data.records,
-        totalLength.value = res.data.records.length
+        totalLength3.value = res.data.records.length
     })
     .catch(() => { })
     .finally(() => {
-      loading.value = false
+      loading3.value = false
     })
 }
 
@@ -255,7 +304,6 @@ const ConfirmdeleteMiniLesson = () => {
     }
   }).catch()
 }
-
 loadData()
 
 const handleClick = (tab: any) => {
@@ -279,13 +327,16 @@ const handleClick = (tab: any) => {
   <div class="">
     <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick">
       <el-tab-pane label="待审核" name="pending">
-        <TablePage class="tabs-page-table" :columns="tableColumnsPending" :data="tableDataPending"></TablePage>
+        <TablePage :loading="loading1" class="tabs-page-table" :itemsTotalLength="totalLength1"
+          @paginationChange="loadPendingData" :columns="tableColumnsPending" :data="tableDataPending"></TablePage>
       </el-tab-pane>
       <el-tab-pane label="已通过" name="approved">
-        <TablePage class="tabs-page-table" :columns="tableColumnsPending" :data="tableDataApproved"></TablePage>
+        <TablePage :loading="loading2" class="tabs-page-table" :itemsTotalLength="totalLength2"
+          @paginationChange="loadApprovalData" :columns="tableColumnsPending" :data="tableDataApproved"></TablePage>
       </el-tab-pane>
       <el-tab-pane label="未通过" name="rejected">
-        <TablePage class="tabs-page-table" :columns="tableColumnsPending" :data="tableDataRejected"></TablePage>
+        <TablePage :loading="loading3" class="tabs-page-table" :itemsTotalLength="totalLength3"
+          @paginationChange="loadRejctData" :columns="tableColumnsPending" :data="tableDataRejected"></TablePage>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -306,15 +357,6 @@ const handleClick = (tab: any) => {
       </el-input>
     </div>
 
-    <div class="div-input-element" style="margin-top: 10px;">
-      <span class="dialog-span">
-        可否预览：
-      </span>
-      <el-select class="dialog-input" v-model="editCourseData.isTrial">
-        <el-option v-for="item in allOption" :key="item.id" :label="item.label" :value="item.value" />
-      </el-select>
-    </div>
-
     <template #header>
       <el-text>编辑老师</el-text>
     </template>
@@ -333,12 +375,16 @@ const handleClick = (tab: any) => {
     </el-text>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="warningDialogshow = false">Cancel</el-button>
+        <el-button @click="warningDialogshow = false">取消</el-button>
         <el-button type="primary" @click="ConfirmdeleteMiniLesson">
           确认
         </el-button>
       </span>
     </template>
+  </el-dialog>
+
+  <el-dialog style="height: 1000px;width: 1650px;" v-model="videoShow">
+    <video v-if="videoShow" style="height: 900px;width: 1600px;" :src="url" controls autoplay></video>
   </el-dialog>
 </template>
 
