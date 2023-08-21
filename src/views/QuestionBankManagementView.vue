@@ -10,6 +10,8 @@ import { InputType } from '@/type'
 import { getCourseQuestionPackage, editCourseQuestionPackage, deleteCourseQuestionPackage } from '@/apis/coursequestionpackage'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllTeachers } from '@/apis/teacher'
+import { freePackageCreate } from '@/apis/freeOrder'
+import { getAllStudents } from '@/apis/student'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '好题包管理', path: '' }]
@@ -25,17 +27,96 @@ const clickDetail = (props: any) => {
     path: 'question-detail',
     query: {
       id: props.rowData.id,
+      androidPoint: props.rowData.androidPoint,
       name: props.rowData.name,
       cover: props.rowData.cover,
       teacherName: props.rowData.teacherName,
+      gradeId: props.rowData.gradeId,
       gradeName: props.rowData.gradeName,
+      subjectId: props.rowData.subjectId,
       subjectName: props.rowData.subjectName,
       description: props.rowData.description,
       difficultyLevel: props.rowData.difficultyLevel,
       createdAt: props.rowData.createdAt,
+      categoryId: props.rowData.categoryId,
+      categoryName: props.rowData.categoryName,
+      iosPoint: props.rowData.iosPoint,
+      version: props.rowData.version,
+      versionType: props.rowData.versionType,
     }
   });
 
+}
+
+const snapShot = reactive<any>({})
+const freeCourseDialogShow = ref(false)
+const freeCourseInfo = reactive<any>({
+  courseQuestionPackageSnapshot: "",
+  id: 0,
+  studentId: 0,
+  type: 0
+})
+const allStudent = reactive<any>([])
+
+const giveCourse = (item: any) => {
+  freeCourseInfo.id = item.rowData.id
+  freeCourseInfo.type = 2
+  freeCourseInfo.studentId = ''
+  snapShot.androidPoint = item.rowData.androidPoint
+  snapShot.categoryId = item.rowData.categoryId
+  snapShot.categoryName = item.rowData.categoryName
+  snapShot.coursesQuestionPackagesId = item.rowData.id
+  snapShot.cover = item.rowData.cover
+  snapShot.gradeId = item.rowData.gradeId
+  snapShot.gradeName = item.rowData.gradeName
+  snapShot.iosPoint = item.rowData.iosPoint
+  snapShot.name = item.rowData.name
+  snapShot.subjectId = item.rowData.subjectId
+  snapShot.subjectName = item.rowData.subjectName
+  snapShot.type = 2
+  snapShot.version = item.rowData.version
+  snapShot.versionType = item.rowData.versionType
+  getAllStudents()
+    .then((res: any) => {
+      res.data.forEach((item: any) => {
+        allStudent.push(item)
+      })
+    })
+
+  freeCourseDialogShow.value = true
+}
+
+const freeCourseCreateConfirm = () => {
+
+  freeCourseDialogShow.value = false
+  var args = {
+    id: freeCourseInfo.id,
+    courseQuestionPackageSnapshot: JSON.stringify(snapShot),
+    studentId: freeCourseInfo.studentId,
+    type: freeCourseInfo.type
+  }
+  freePackageCreate(args).then((res: any) => {
+    if (res.code != 20000) {
+      ElNotification({
+        title: '下发失败',
+        message: res.msg,
+        type: 'error'
+      })
+    } else {
+      ElNotification({
+        title: '成功',
+        message: '好题包下发成功',
+        type: 'success'
+      })
+    }
+  })
+    .catch((res: any) => {
+      ElNotification({
+        title: '下发失败',
+        message: res.msg,
+        type: 'error'
+      })
+    })
 }
 
 
@@ -139,9 +220,9 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <div>
-          {/* <el-button link type="primary" class="">
+          <el-button link type="primary" class="" onClick={() => giveCourse(item)}>
             下发
-          </el-button> */}
+          </el-button>
           <el-button link type="primary" class="" onClick={() => editCourse(item)}>
             编辑
           </el-button>
@@ -276,6 +357,7 @@ const editCourse = (props: {
   newCourseData.subjectId = Number(props.rowData.subjectId);
   newCourseData.gradeId = Number(props.rowData.gradeId);
   newCourseData.id = props.rowData.id;
+  newCourseData.name = props.rowData.name;
 }
 
 const searchBarItems = reactive([
@@ -512,6 +594,28 @@ const confirmEditDialog = () => {
     <template #footer>
       <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
       <el-button @click="editDialogShow = false">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
+
+  <el-dialog class="teacher-group-dialog" width="400px" v-model="freeCourseDialogShow">
+    <div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *选择学生：
+        </span>
+        <el-select filterable class="dialog-input" v-model="freeCourseInfo.studentId">
+          <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </div>
+    </div>
+    <template #header>
+      <el-text>下发题包</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="freeCourseCreateConfirm()">确定</el-button>
+      <el-button @click="freeCourseDialogShow = false">
         取消
       </el-button>
     </template>

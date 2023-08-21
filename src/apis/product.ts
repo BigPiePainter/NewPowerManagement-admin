@@ -9,6 +9,15 @@ export const getProduct = (data:object) => {
     return http.request(args)
 }
 
+export const getAllPackages = (data:object) => {
+    const args = {
+        url: '/api/management/product/all-package',
+        method: 'GET',
+        params: data
+    }
+    return http.request(args)
+}
+
 export const createProduct = (data:any) => {
     const args = {
         url: '/api/management/product/create-product',

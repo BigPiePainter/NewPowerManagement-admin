@@ -1,5 +1,4 @@
 <script setup lang="tsx">
-import DisplayVideoCard from '../components/DisplayVideoCard.vue'
 import { ref, reactive } from 'vue'
 import { InputType } from '@/type'
 import SearchBar from '@/components/SearchBar.vue'
@@ -7,13 +6,87 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import TablePage from '@/components/TablePage.vue';
 import { useRoute } from 'vue-router'
 import type { CheckboxValueType } from 'element-plus'
-import { getMiniLessons, deleteMiniLesson, addMiniLessons, getMiniLesson } from '@/apis/minilessons'
+import { getMiniLessons, deleteMiniLesson, addMiniLessons, getMiniLesson, editMiniLessons } from '@/apis/minilessons'
 import { ElCheckbox, ElNotification } from 'element-plus'
 import { getAllTeachers } from '@/apis/teacher'
+import { getAllStudents } from '@/apis/student'
+import { freePackageCreate } from '@/apis/freeOrder'
 
 const route = useRoute()
 const warningDialogshow = ref(false)
 const deleteItemid = ref<any>()
+
+const snapShot = reactive<any>({})
+const freeCourseDialogShow = ref(false)
+const freeCourseInfo = reactive<any>({
+  courseQuestionPackageSnapshot: "",
+  id: 0,
+  studentId: 0,
+  type: 0
+})
+const allStudent = reactive<any>([])
+
+const giveCourse = () => {
+  freeCourseInfo.id = route.query.id
+  freeCourseInfo.type = 1
+  freeCourseInfo.studentId = ''
+  freeCourseInfo.totalAmount = route.query.androidPrice
+  snapShot.androidPoint = route.query.androidPoint
+  snapShot.categoryId = route.query.categoryId
+  snapShot.categoryName = route.query.categoryName
+  snapShot.coursesQuestionPackagesId = route.query.id
+  snapShot.cover = route.query.cover
+  snapShot.gradeId = route.query.gradeId
+  snapShot.gradeName = route.query.gradeName
+  snapShot.iosPoint = route.query.iosPoint
+  snapShot.name = route.query.name
+  snapShot.subjectId = route.query.subjectId
+  snapShot.subjectName = route.query.subjectName
+  snapShot.type = 1
+  snapShot.version = route.query.version
+  snapShot.versionType = route.query.versionType
+  getAllStudents()
+    .then((res: any) => {
+      res.data.forEach((item: any) => {
+        allStudent.push(item)
+      })
+    })
+
+  freeCourseDialogShow.value = true
+}
+
+const freeCourseCreateConfirm = () => {
+
+  freeCourseDialogShow.value = false
+  var args = {
+    id: freeCourseInfo.id,
+    courseQuestionPackageSnapshot: JSON.stringify(snapShot),
+    studentId: freeCourseInfo.studentId,
+    type: freeCourseInfo.type
+  }
+  freePackageCreate(args).then((res: any) => {
+    if (res.code != 20000) {
+      ElNotification({
+        title: '下发失败',
+        message: res.msg,
+        type: 'error'
+      })
+    } else {
+      ElNotification({
+        title: '成功',
+        message: '课程包下发成功',
+        type: 'success'
+      })
+    }
+  })
+    .catch((res: any) => {
+      ElNotification({
+        title: '下发失败',
+        message: res.msg,
+        type: 'error'
+      })
+    })
+}
 
 const warningDialog = (cellData2: any) => {
   console.log(cellData2)
@@ -50,13 +123,38 @@ breadcrumbStore.data = [
 
 const tableData = ref<any>([])
 
+const changeTrial = (item: any) => {
+  var args = {
+    id: item.rowData.miniLessonId,
+    isTrial: item.cellData
+  }
+  console.log(args)
+  editMiniLessons(args)
+    .then((res: any) => {
+      if (res.code != 20000) {
+        ElNotification({
+          title: '编辑失败',
+          message: res.msg,
+          type: 'error'
+        })
+      } else {
+        ElNotification({
+          title: '成功',
+          message: '编辑成功',
+          type: 'success'
+        })
+      }
+      loadData()
+    })
+}
+
 const loading = ref(true)
 const totalLength = ref<Number>()
-const tableColumns = [
+const tableColumns = reactive<any>([
 
   {
-    dataKey: 'id',
-    key: 'id',
+    dataKey: 'miniLessonId',
+    key: 'miniLessonId',
     title: 'ID',
     width: 200
   },
@@ -71,12 +169,33 @@ const tableColumns = [
     key: 'miniLessonIsTrial',
     title: '是否支持试看',
     width: 200,
-    cellRenderer: (cellData: any) => (
-      <span>
-        {cellData.cellData == 1 ? "支持" : "不支持"}
-      </span>
-    )
+    cellRenderer: (cellData: any) => {
+      return (
+        <div>
+          <el-switch
+            v-model={cellData.cellData}
+            active-value={1}
+            inactive-value={2}
+            onChange={() => changeTrial(cellData)}
+            inline-prompt
+            active-text="是"
+            inactive-text="否"
+          />
+        </div>
+      )
+    }
   },
+  // {
+  //   dataKey: 'miniLessonIsTrial',
+  //   key: 'miniLessonIsTrial',
+  //   title: '是否支持试看',
+  //   width: 200,
+  //   cellRenderer: (cellData: any) => (
+  //     <span>
+  //       {cellData.cellData == 1 ? "支持" : "不支持"}
+  //     </span>
+  //   )
+  // },
   {
     dataKey: 'teacherName',
     key: 'teacherName',
@@ -99,52 +218,33 @@ const tableColumns = [
     fixed: 'right',
     align: 'left'
   }
-]
-const loadTeacherData=()=>{
-getAllTeachers()
-  .then((res) => { (allTeacher.value = res.data), console.log(res) })
-  .catch()
-}
-
+])
 
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
 
-
 const loadData = () => {
   loading.value = true
-  loadTeacherData()
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     courseId: route.query.id
   }
-
   getMiniLesson(args).then((res) => {
-
     console.log(args)
     console.log(res)
     tableData.value = res.data.records
     totalLength.value = res.data.records.length
-  })
+    return getAllTeachers()
+  }).then((res) => { (allTeacher.value = res.data), console.log(res) })
     .catch(() => { })
     .finally(() => {
       loading.value = false
     })
 }
-
-
-
-
 loadData()
-
-
-
-
-
-
 
 const dialogTableData = ref<any>([])
 const dialogTableColumns = reactive<any>([
@@ -181,20 +281,14 @@ const dialogTableColumns = reactive<any>([
     title: '老师姓名',
     width: 250,
   },
-  
+
   {
     dataKey: 'teacherCourseId',
     key: 'teacherCourseId',
     title: '老师课程编号',
     width: 250,
   }
-
-
-  
 ])
-
-
-loadData()
 
 const confirmAdd = () => {
   newTeaData.value = dialogTableData.value.filter((item: any) => item.checked)
@@ -218,36 +312,26 @@ const confirmAdd = () => {
         type: 'warning'
       })
     }
-
     loadData()
   }).catch
 }
 const allTeacher = ref<any>([])
 
-
 const dialogSearchBarItems = reactive([
   { name: "微课名称", value: "", },
   { name: "老师课程编号", value: "", },
-  { name: '老师姓名', value: '', type: InputType.Select, label: '请选择', options: allTeacher,single:true }
+  { name: '老师姓名', value: '', type: InputType.Select, label: '请选择', options: allTeacher, single: true }
 ])
-
-
-
-
 
 const loadDialogData = () => {
 
-  
-
-
   loading.value = true
-
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     name: dialogSearchBarItems[0].value,
     ownerId: dialogSearchBarItems[2].value,
-    auditStatus:'3',
+    auditStatus: '3',
     teacherCourseId: dialogSearchBarItems[1].value,
   }
   getMiniLessons(args)
@@ -260,8 +344,11 @@ const loadDialogData = () => {
       loading.value = false
     })
 }
-loadDialogData()
 
+const clickAdd = () => {
+  loadDialogData()
+  addDialogShow.value = true
+}
 </script>
 
 <template>
@@ -271,37 +358,29 @@ loadDialogData()
         <div>
           <el-image class="image" fit="scale-down" :src="route.query.cover" className="shop-Preview" preview-src-list={{}}
             preview-teleported />
-
         </div>
         <div class="topPart1-3">
           <div class="topPart1-3-2">
-            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{ route.query.name }}</el-text></div>
+            <div class="topPart1-3-2"><el-text style="font-size: 20px;">课程包名称：{{ route.query.name }}</el-text></div>
             <div class="topPart1-3-2"><el-text>更新时间:{{ route.query.updatedAt }}</el-text></div>
             <div class="topPart1-3-2"><el-text>阶段：{{ route.query.gradeName }}</el-text></div>
             <div class="topPart1-3-2"><el-text>学科：{{ route.query.subjectName }}</el-text></div>
             <div class="topPart1-3-2"><el-text>老师：{{ route.query.teacherName }}</el-text></div>
           </div>
         </div>
-
-
       </div>
 
-
-
-      <div class="topPart1">
-        <div class="topPart1-1"><el-text></el-text></div>
-        <div class="topPart2-2"><el-text></el-text></div>
+      <div style="flex-grow: 1;">
       </div>
 
-
-      <!-- <div class="topPart1">
-        <div class="topPart1-1"> <el-button>下发课程</el-button></div>
-      </div> -->
+      <div style="margin-top: 5px;margin-right: 15px;">
+        <div><el-button type="primary" @click="giveCourse()">下发课程包</el-button></div>
+      </div>
     </div>
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button type="primary" @click="addDialogShow = true">添加微课</el-button></div>
+        <div class="botPart1-1-1"><el-button type="primary" @click="clickAdd()">添加微课</el-button></div>
       </div>
     </div>
     <div class="botPart1-2">
@@ -328,26 +407,6 @@ loadDialogData()
     </template>
   </el-dialog>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addDialogShow">
     <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
       <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
@@ -359,6 +418,28 @@ loadDialogData()
     <template #footer>
       <el-button type="primary" @click="confirmAdd()">确定</el-button>
       <el-button @click="addDialogShow = false">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
+
+  <el-dialog class="teacher-group-dialog" width="400px" v-model="freeCourseDialogShow">
+    <div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *选择学生：
+        </span>
+        <el-select filterable class="dialog-input" v-model="freeCourseInfo.studentId">
+          <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </div>
+    </div>
+    <template #header>
+      <el-text>下发课程包</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="freeCourseCreateConfirm()">确定</el-button>
+      <el-button @click="freeCourseDialogShow = false">
         取消
       </el-button>
     </template>

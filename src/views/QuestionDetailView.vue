@@ -5,6 +5,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import RichTextEditor from '@/components/RichTextEditor.vue'
 import { getGoodQuestions, removeQuestionFromPack } from '@/apis/questionPackageQuestion'
+import { getAllStudents } from '@/apis/student'
+import { freePackageCreate } from '@/apis/freeOrder'
 
 const router = useRouter()
 const totalNum = ref('')
@@ -35,6 +37,78 @@ const deleteQuestion = (id: any) => {
       type: 'error'
     })
   })
+}
+
+const snapShot = reactive<any>({})
+const freeCourseDialogShow = ref(false)
+const freeCourseInfo = reactive<any>({
+  courseQuestionPackageSnapshot: "",
+  id: 0,
+  studentId: 0,
+  type: 0
+})
+const allStudent = reactive<any>([])
+
+const giveCourse = () => {
+  freeCourseInfo.id = route.query.id
+  freeCourseInfo.type = 2
+  freeCourseInfo.studentId = ''
+  freeCourseInfo.totalAmount = route.query.androidPrice
+  snapShot.androidPoint = route.query.androidPoint
+  snapShot.categoryId = route.query.categoryId
+  snapShot.categoryName = route.query.categoryName
+  snapShot.coursesQuestionPackagesId = route.query.id
+  snapShot.cover = route.query.cover
+  snapShot.gradeId = route.query.gradeId
+  snapShot.gradeName = route.query.gradeName
+  snapShot.iosPoint = route.query.iosPoint
+  snapShot.name = route.query.name
+  snapShot.subjectId = route.query.subjectId
+  snapShot.subjectName = route.query.subjectName
+  snapShot.type = 2
+  snapShot.version = route.query.version
+  snapShot.versionType = route.query.versionType
+  getAllStudents()
+    .then((res: any) => {
+      res.data.forEach((item: any) => {
+        allStudent.push(item)
+      })
+    })
+
+  freeCourseDialogShow.value = true
+}
+
+const freeCourseCreateConfirm = () => {
+
+  freeCourseDialogShow.value = false
+  var args = {
+    id: freeCourseInfo.id,
+    courseQuestionPackageSnapshot: JSON.stringify(snapShot),
+    studentId: freeCourseInfo.studentId,
+    type: freeCourseInfo.type
+  }
+  freePackageCreate(args).then((res: any) => {
+    if (res.code != 20000) {
+      ElNotification({
+        title: '下发失败',
+        message: res.msg,
+        type: 'error'
+      })
+    } else {
+      ElNotification({
+        title: '成功',
+        message: '好题包下发成功',
+        type: 'success'
+      })
+    }
+  })
+    .catch((res: any) => {
+      ElNotification({
+        title: '下发失败',
+        message: res.msg,
+        type: 'error'
+      })
+    })
 }
 
 const breadcrumbStore = useBreadcrumbStore()
@@ -107,9 +181,9 @@ const handleCurrentChange = (val: number) => {
             preview-teleported />
 
         </div>
-        <div class="topPart1-3">
+        <div style="display: flex;" class="topPart1-3">
           <div class="topPart1-3-2">
-            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{}}</el-text></div>
+            <div class="topPart1-3-2"><el-text style="font-size: 20px;">好题包名称：{{ route.query.name }}</el-text></div>
             <div class="topPart1-3-2"><el-text>学习阶段：{{ route.query.gradeName }}</el-text></div>
             <div class="topPart1-3-2"><el-text>学科：{{ route.query.subjectName }}</el-text></div>
             <div class="topPart1-3-2"><el-text>难度：
@@ -125,17 +199,12 @@ const handleCurrentChange = (val: number) => {
         </div>
       </div>
 
-
-
-      <div class="topPart1">
-        <div class="topPart1-1"><el-text></el-text></div>
-        <div class="topPart2-2"><el-text></el-text></div>
+      <div style="flex-grow: 1;">
       </div>
 
-<!-- 
-      <div class="topPart1">
-        <div class="topPart1-1"><el-button type="primary">编辑</el-button> <el-button>下发课程</el-button></div>
-      </div> -->
+      <div style="margin-top: 5px;margin-right: 15px;">
+        <div><el-button type="primary" @click="giveCourse()">下发好题包</el-button></div>
+      </div>
     </div>
     <el-divider class="row-divider"></el-divider>
     <div>
@@ -204,6 +273,29 @@ const handleCurrentChange = (val: number) => {
       <ElButton @click="createQuestionDailogShow = false">取消</ElButton>
 
       <ElButton type="primary">确认</ElButton>
+    </template>
+  </el-dialog>
+
+
+  <el-dialog class="teacher-group-dialog" width="400px" v-model="freeCourseDialogShow">
+    <div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          *选择学生：
+        </span>
+        <el-select filterable class="dialog-input" v-model="freeCourseInfo.studentId">
+          <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </div>
+    </div>
+    <template #header>
+      <el-text>下发好题包</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="freeCourseCreateConfirm()">确定</el-button>
+      <el-button @click="freeCourseDialogShow = false">
+        取消
+      </el-button>
     </template>
   </el-dialog>
 </template>

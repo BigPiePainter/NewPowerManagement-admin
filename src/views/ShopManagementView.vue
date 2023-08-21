@@ -6,7 +6,7 @@ import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { useRouter } from 'vue-router'
-import { deleteProduct, editProduct, getProduct } from '@/apis/product'
+import { deleteProduct, editProduct, getProduct, getAllPackages } from '@/apis/product'
 import { freeOrderCreate } from '@/apis/freeOrder'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
@@ -15,6 +15,7 @@ import { getAllStudents } from '@/apis/student'
 const router = useRouter()
 
 //------------下发免费订单---------------
+const snapShot = reactive<any>({})
 const freeOrderDialogShow = ref(false)
 const freeOrderInfo = reactive<any>({
   productId: '',
@@ -26,18 +27,43 @@ const freeOrderClick = (item: any) => {
   freeOrderInfo.productId = item.rowData.id
   freeOrderInfo.studentId = ''
   freeOrderInfo.totalAmount = item.rowData.androidPrice
+  snapShot.androidPoint = item.rowData.androidPoint
+  snapShot.categoryId = item.rowData.categoryId
+  snapShot.categoryName = item.rowData.categoryName
+  snapShot.coursesQuestionPackagesId = []
+  snapShot.cover = item.rowData.cover
+  snapShot.gradeId = item.rowData.gradeId
+  snapShot.gradeName = item.rowData.gradeName
+  snapShot.id = item.rowData.id
+  snapShot.iosPoint = item.rowData.iosPoint
+  snapShot.name = item.rowData.name
+  snapShot.subjectId = item.rowData.subjectId
+  snapShot.subjectName = item.rowData.subjectName
+  snapShot.type = item.rowData.type
+  snapShot.version = item.rowData.version
+  snapShot.versionType = item.rowData.versionType
   getAllStudents()
     .then((res: any) => {
       res.data.forEach((item: any) => {
         allStudent.push(item)
       })
+      return getAllPackages(freeOrderInfo.productId)
+    }).then((res: any) => {
+      res.data.forEach((item: any) => {
+        snapShot.coursesQuestionPackagesId.push(item.coursesQuestionPackagesId)
+      })
+      console.log(JSON.stringify(snapShot))
     })
   freeOrderDialogShow.value = true
 }
+
 const freeOrderCreateConfirm = () => {
+
   freeOrderDialogShow.value = false
+
   var args = {
     productId: freeOrderInfo.productId,
+    productSnapshot: JSON.stringify(snapShot),
     studentId: freeOrderInfo.studentId,
     totalAmount: freeOrderInfo.totalAmount
   }
@@ -45,21 +71,21 @@ const freeOrderCreateConfirm = () => {
     .then((res: any) => {
       if (res.code != 20000) {
         ElNotification({
-          title: '赠送失败',
+          title: '下发失败',
           message: res.msg,
           type: 'error'
         })
       } else {
         ElNotification({
           title: '成功',
-          message: '商品赠送成功',
+          message: '商品下发成功',
           type: 'success'
         })
       }
     })
     .catch((res: any) => {
       ElNotification({
-        title: '赠送失败',
+        title: '下发失败',
         message: res.msg,
         type: 'error'
       })
@@ -361,7 +387,7 @@ const tableColumns = [
       return (
         <>
           <el-button link type="primary" onClick={() => freeOrderClick(item)}>
-            赠送
+            下发
           </el-button>
 
           <el-button link type="primary" onClick={() => editGoods(item)}>
@@ -778,7 +804,7 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
       </div>
     </div>
     <template #header>
-      <el-text>赠送商品</el-text>
+      <el-text>下发商品</el-text>
     </template>
     <template #footer>
       <el-button type="primary" @click="freeOrderCreateConfirm()">确定</el-button>

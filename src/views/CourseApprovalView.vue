@@ -15,18 +15,11 @@ const totalLength = ref<Number>()
 const auditStatus = ref<Number>()
 const warningDialogshow = ref(false)
 
-
-
 const loading = ref(true)
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
-
-
-
-
 
 const editDialogShow = ref(false);
 
@@ -43,19 +36,6 @@ const editCourseData = reactive<{
   name: ''
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const tableColumnsPending = [
   {
@@ -136,7 +116,7 @@ const pass = (item: any) => {
 }
 
 const reject = (item: any) => {
- 
+
   editMiniLessons({ id: item.rowData.id, auditStatus: 4, }).then((res: any) => {
     if (res.code == '20000') {
       console.log('已通过')
@@ -160,26 +140,22 @@ const confirmEditDialog = () => {
   editMiniLessons(editCourseData).then((res: any) => {
     if (res.code == '20000') {
       ElNotification({
-          title: '成功',
-          message: '已成功编辑',
-          type: 'success'
-        })
-        loadData()
-        editDialogShow.value = false;
-      } else {
-        ElNotification({
-          title: 'Warning',
-          message: res.msg,
-          type: 'warning'
-        })
-      
+        title: '成功',
+        message: '已成功编辑',
+        type: 'success'
+      })
+      loadData()
+      editDialogShow.value = false;
+    } else {
+      ElNotification({
+        title: 'Warning',
+        message: res.msg,
+        type: 'warning'
+      })
+
     }
   }).catch
 }
-
-
-
-
 
 const cancelEditDialog = () => {
   editDialogShow.value = false;
@@ -191,21 +167,15 @@ const tableDataApproved = ref<any>([])
 
 const tableDataRejected = ref<any>([])
 
-
-
 const loadPendingData = () => {
   loading.value = true
-
   var args = {
-
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     auditStatus: 1
-
   }
 
   getMiniLessons(args)
-
     .then((res) => {
       tableDataPending.value = res.data.records
       totalLength.value = res.data.records.length
@@ -215,7 +185,6 @@ const loadPendingData = () => {
       loading.value = false
     })
 }
-
 
 const loadApprovalData = () => {
   loading.value = true
@@ -239,19 +208,15 @@ const loadApprovalData = () => {
 }
 loadApprovalData()
 
-
 const loadRejctData = () => {
   loading.value = true
-
   var args = {
-
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     auditStatus: 4,
   }
 
   getMiniLessons(args)
-
     .then((res) => {
       tableDataRejected.value = res.data.records,
         totalLength.value = res.data.records.length
@@ -261,12 +226,12 @@ const loadRejctData = () => {
       loading.value = false
     })
 }
+
 const deleteItemid = ref<any>()
 const loadData = () => {
   loadPendingData()
   loadApprovalData()
   loadRejctData()
-
 }
 
 const warningDialog = (cellData2: any) => {
@@ -275,12 +240,12 @@ const warningDialog = (cellData2: any) => {
   deleteItemid.value = cellData2
   console.log(deleteItemid.value)
 }
+
 const ConfirmdeleteMiniLesson = () => {
   deleteMiniLessons({ id: deleteItemid.value.rowData.id }).then((res: any) => {
     console.log(deleteItemid)
     if (res.code == 20000) {
       console.log('删除成功')
-
       loadData()
       warningDialogshow.value = false
     }
@@ -290,15 +255,6 @@ const ConfirmdeleteMiniLesson = () => {
     }
   }).catch()
 }
-
-
-
-
-
-
-
-
-
 
 loadData()
 
@@ -311,7 +267,6 @@ const handleClick = (tab: any) => {
     auditStatus.value = 3
     loadApprovalData()
   }
-
   else {
     auditStatus.value = 4
     loadRejctData()
@@ -335,9 +290,6 @@ const handleClick = (tab: any) => {
     </el-tabs>
   </div>
 
-
-
-
   <el-dialog class="new-class-dialog" width="370px" v-model="editDialogShow">
     <div class="div-input-element">
       <span class="dialog-span">
@@ -353,7 +305,6 @@ const handleClick = (tab: any) => {
       <el-input filterable class="dialog-input" style="width: 220px;" v-model="editCourseData.name">
       </el-input>
     </div>
-
 
     <div class="div-input-element" style="margin-top: 10px;">
       <span class="dialog-span">
@@ -376,8 +327,6 @@ const handleClick = (tab: any) => {
     </template>
   </el-dialog>
 
-
-
   <el-dialog v-model="warningDialogshow" title="Warning" width="30%" center>
     <el-text disabled style="display: flex;align-items: center;justify-content: center;">
       是否确认删除课程
@@ -386,13 +335,12 @@ const handleClick = (tab: any) => {
       <span class="dialog-footer">
         <el-button @click="warningDialogshow = false">Cancel</el-button>
         <el-button type="primary" @click="ConfirmdeleteMiniLesson">
-          Confirm
+          确认
         </el-button>
       </span>
     </template>
   </el-dialog>
 </template>
-
 
 <style scoped lang="scss">
 $gap: 15px;
