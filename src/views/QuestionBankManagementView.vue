@@ -449,7 +449,7 @@ const loadData = () => {
   getCourseQuestionPackage(args)
     .then((res) => {
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
       return getGrades()
     }).then((res: any) => {
       allGrades.length = 0
@@ -515,7 +515,7 @@ const confirmEditDialog = () => {
 </script>
 
 <template>
-  <TablePage :loading="loading" class="table-page" :columns="tableColumns" :searchBarItemsTotalLength="totalLength"
+  <TablePage :loading="loading" class="table-page" :columns="tableColumns" :itemsTotalLength="totalLength"
     @paginationChange="loadData" :data="tableData" style="margin-left: 15px;">
 
     <div class="div-search-bar">

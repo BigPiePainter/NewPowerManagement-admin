@@ -261,7 +261,7 @@ const handleFileChange = (e: Event) => {
 <template>
   <TablePage class="course-category-table" :columns="tableColumns" :data="tableData" :row-height="59">
     <div>
-      <el-button @click="newCourseCategory" class="new-poster-button" type="primary">新增</el-button>
+      <el-button @click="newCourseCategory" class="new-poster-button" type="primary">新增 icon</el-button>
     </div>
   </TablePage>
 

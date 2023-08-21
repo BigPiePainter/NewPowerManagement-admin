@@ -11,6 +11,7 @@ import { ElCheckbox, ElNotification } from 'element-plus'
 import { getAllTeachers } from '@/apis/teacher'
 import { getAllStudents } from '@/apis/student'
 import { freePackageCreate } from '@/apis/freeOrder'
+import { videoToUrl } from '@/apis/videoIdToUrl'
 
 const route = useRoute()
 const warningDialogshow = ref(false)
@@ -148,6 +149,51 @@ const changeTrial = (item: any) => {
     })
 }
 
+const changeTrialDuration = (item: any) => {
+  var args = {
+    id: item.rowData.miniLessonId,
+    trialDuration: item.cellData
+  }
+  console.log(args)
+  if (item.cellData > item.rowData.miniLessonVideoDuration) {
+    ElNotification({
+      title: '编辑失败',
+      message: '试看时长不可大于总时长',
+      type: 'error'
+    })
+  } else {
+    editMiniLessons(args)
+      .then((res: any) => {
+        if (res.code != 20000) {
+          ElNotification({
+            title: '编辑失败',
+            message: res.msg,
+            type: 'error'
+          })
+        } else {
+          ElNotification({
+            title: '成功',
+            message: '编辑成功',
+            type: 'success'
+          })
+        }
+        loadData()
+      })
+  }
+}
+
+const videoShow = ref(false)
+const url = ref<any>('')
+const playVideo = (videoId: any) => {
+  var args = { videoId: videoId }
+  console.log(args)
+  videoToUrl(args).then((res: any) => {
+    console.log(res)
+    url.value = res.playURL
+    videoShow.value = true
+  })
+}
+
 const loading = ref(true)
 const totalLength = ref<Number>()
 const tableColumns = reactive<any>([
@@ -161,7 +207,20 @@ const tableColumns = reactive<any>([
   {
     dataKey: 'miniLessonName',
     key: 'miniLessonName',
-    title: '名称',
+    title: '标题',
+    cellRenderer: (cellData: any) => {
+      return (
+        <div>
+          <el-button link type="primary" onClick={() => playVideo(cellData.rowData.miniLessonVideoId)}> {cellData.cellData}</el-button>
+        </div>
+      )
+    },
+    width: 200
+  },
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '老师姓名',
     width: 200
   },
   {
@@ -185,23 +244,46 @@ const tableColumns = reactive<any>([
       )
     }
   },
-  // {
-  //   dataKey: 'miniLessonIsTrial',
-  //   key: 'miniLessonIsTrial',
-  //   title: '是否支持试看',
-  //   width: 200,
-  //   cellRenderer: (cellData: any) => (
-  //     <span>
-  //       {cellData.cellData == 1 ? "支持" : "不支持"}
-  //     </span>
-  //   )
-  // },
   {
-    dataKey: 'teacherName',
-    key: 'teacherName',
-    title: '老师姓名',
-    width: 200
+    dataKey: 'miniLessonTrialDuration',
+    key: 'miniLessonTrialDuration',
+    title: '试看时长(秒)',
+    align: 'center',
+    width: 200,
+    cellRenderer: (cellData: any) => {
+      const slots = {
+        append: () =>
+          <el-button disabled={cellData.rowData.miniLessonIsTrial == 2 ? true : false} onClick={() => changeTrialDuration(cellData)}>设置</el-button>
+      }
+      return (
+        <div>
+          <el-input
+            disabled={cellData.rowData.miniLessonIsTrial == 2 ? true : false}
+            style='width:120px' v-model={cellData.rowData.miniLessonTrialDuration}
+            type='number'
+            step={1}
+            min={0}
+            max={cellData.rowData.miniLessonVideoDuration}
+            v-slots={slots}>
+          </el-input>
+        </div>
+      )
+    }
   },
+  {
+    dataKey: 'miniLessonVideoDuration',
+    key: 'miniLessonVideoDuration',
+    title: '时长(秒)',
+    align: 'center',
+    cellRenderer: (cellData: any) => {
+      return (
+        <span>{cellData.cellData}</span>
+      )
+    },
+    width: 100
+  },
+  //----------此处删除使用的是课程包-微课联表id，将微课移除课程包，不是真的删除--------------------
+  //-------------------------在这张表中，微课真正id为miniLessonId------------------------------
   {
     key: 'option',
     title: '操作',
@@ -209,7 +291,7 @@ const tableColumns = reactive<any>([
       return (
         <div>
           <el-button link type="danger" onClick={() => warningDialog(cellData.rowData.id)}>
-            删除
+            移除课程包
           </el-button>
         </div>
       )
@@ -444,6 +526,10 @@ const clickAdd = () => {
       </el-button>
     </template>
   </el-dialog>
+
+  <el-dialog style="height: 1000px;width: 1650px;" v-model="videoShow">
+    <video v-if="videoShow" style="height: 900px;width: 1600px;" :src="url" controls autoplay></video>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -455,8 +541,7 @@ $gap: 15px;
 
   margin-left: $gap;
   margin-top: 15px;
-  height: 430px;
-  //margin-right: $gap;
+  height: calc($page-height - 270px) //margin-right: $gap;
 }
 
 .whole {

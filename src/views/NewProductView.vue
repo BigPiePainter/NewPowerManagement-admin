@@ -1,32 +1,192 @@
 <script setup lang="tsx">
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { ref, reactive } from 'vue'
-import { ArrowRight } from '@element-plus/icons-vue'
+import { ArrowRight, ArrowLeft } from '@element-plus/icons-vue'
 import { upload } from '@/apis/upload';
 import { getGrades } from '@/apis/grade';
 import { getSubjects } from '@/apis/subject';
-import { createProduct } from '@/apis/product';
-import { ElButton, ElNotification } from 'element-plus'
-
+import { createProduct, addProduct } from '@/apis/product';
+import { getCourseQuestionPackage } from '@/apis/coursequestionpackage';
+import TablePage from '@/components/TablePage.vue'
+import SearchBar from '@/components/SearchBar.vue'
+import { InputType } from '@/type'
+import { ElButton, ElNotification, ElCheckbox } from 'element-plus'
+import type { CheckboxValueType } from 'element-plus'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '商城管理', path: '/shop-management' },
   { name: '新建商品', path: '' }
 ]
 
+const searchBarItems = reactive([
+  { name: "课程名称:", value: "", },
+  {
+    name: '难度:',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options: [
+      { name: "容易", id: 1 },
+      { name: "较易", id: 2 },
+      { name: "普通", id: 3 },
+      { name: "较难", id: 4 },
+      { name: "困难", id: 5 }
+    ],
+    single: true
+  }
+])
 
 const next = () => {
-  if (++active.value > 2) active.value = 0
+  if (active.value >= 0 && active.value < 2) {
+    active.value = active.value + 1
+  }
+  if (active.value == 1)
+    loadData()
 }
 
 const up = () => {
-  active.value = 0
+  if (active.value > 0 && active.value <= 2) {
+    active.value = active.value - 1
+  }
+  if (active.value == 1)
+    loadData()
 }
 
+const loading = ref(false)
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const totalLength = ref<number>()
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
+const tableData = reactive<any>([])
+const loadData = () => {
+  tableData.length = 0
+  loading.value = true
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    type: newProductData.type,
+    subjectId: newProductData.subjectId,
+    gradeId: newProductData.gradeId,
+    difficultyLevel: searchBarItems[1].value,
+    name: searchBarItems[0].value
+  }
+  getCourseQuestionPackage(args)
+    .then((res: any) => {
+      totalLength.value = res.data.total
+      res.data.records.forEach((item: any) => {
+        tableData.push(item)
+      })
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading.value = false
+    })
+}
 
-
+const tableColumn = reactive<any>([
+  {
+    key: 'selection',
+    width: 50,
+    cellRenderer: (item: any) => {
+      const onChange = (value: CheckboxValueType) => item.rowData.checked = value
+      return <ElCheckbox modelValue={item.rowData.checked} onChange={onChange} />
+    },
+    headerCellRenderer: () => {
+      const onChange = (value: CheckboxValueType) => {
+        tableData.forEach((i: any) => i.checked = value);
+      }
+      return <ElCheckbox
+        onChange={onChange}
+        modelValue={tableData.every((i: any) => i.checked)}
+        indeterminate={!tableData.every((i: any) => i.checked)
+          && tableData.some((i: any) => i.checked)}
+      />
+    },
+    checked: false,
+  },
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 180
+  },
+  {
+    dataKey: 'cover',
+    key: 'cover',
+    title: '封面',
+    width: 100,
+    cellRenderer: (item: any) => (
+      <el-image
+        fit="scale-down"
+        src={item.rowData.cover}
+        className="shop-Preview"
+        preview-src-list={[item.rowData.cover]}
+        preview-teleported
+      />)
+  },
+  {
+    dataKey: 'name',
+    key: 'name',
+    title: '标题',
+    width: 180
+  },
+  {
+    dataKey: 'description',
+    key: 'description',
+    title: '描述',
+    width: 180
+  },
+  {
+    dataKey: 'difficultyLevel',
+    key: 'difficultyLevel',
+    title: '难度',
+    cellRenderer: (cellData: any) => (
+      <span>
+        {
+          cellData.cellData == 0 ? "容易"
+            : cellData.cellData == 1 ? "较易"
+              : cellData.cellData == 2 ? "普通"
+                : cellData.cellData == 3 ? "较难"
+                  : cellData.cellData == 4 ? "难"
+                    : '困难'
+        }
+      </span>),
+    width: 100
+  },
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '老师',
+    width: 80
+  },
+  {
+    dataKey: 'subjectName',
+    key: 'subjectName',
+    title: '学科',
+    width: 80
+  },
+  {
+    dataKey: 'gradeName',
+    key: 'gradeName',
+    title: '学习阶段',
+    width: 80
+  },
+  {
+    dataKey: 'createdAt',
+    key: 'createdAt',
+    title: '创建时间',
+    width: 100
+  },
+  {
+    dataKey: 'updatedAt',
+    key: 'updatedAt',
+    title: '更新时间',
+    width: 100
+  }
+])
 
 const allstatus = [
   {
@@ -82,17 +242,19 @@ const allversionType = [
   }
 ]
 
-
 const loadSelectOption = () => {
   getGrades()
-    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-    .catch()
-
-  getSubjects()
-    .then((res) => (allSubjects.value = res.data))
+    .then((res) => {
+      allGrades.value = res.data.map((i: any) => i.subset).flat()
+      return getSubjects()
+    })
+    .then((res) => {
+      allSubjects.value = res.data
+    })
     .catch()
 }
 loadSelectOption()
+
 const allType: any = [
   {
     id: '1',
@@ -118,23 +280,6 @@ const allHot: any = [
     name: '非热门',
   },
 ]
-
-
-
-
-const a = [
-  { identifier: 'B', value: '2' },
-  { identifier: 'C', value: '3' }
-];
-
-const result = {
-  answers: a.map(item => item.identifier),
-  correct: null
-};
-
-
-
-
 
 const newCoverUrl = ref('')
 const showImgSrc = ref<string>('')
@@ -215,25 +360,51 @@ const newProductData = reactive<any>({
   cover: newCoverUrl.value
 });
 
+const newContentData = ref<any>([])
+
 const create = () => {
+  newContentData.value = tableData.filter((item: any) => item.checked)
+  let data = newContentData.value.map((item: any) => item.id)
+  console.log(data)
   createProduct(newProductData)
     .then((res: any) => {
-      if (res.code == '20000') {
-        ElNotification({
-          title: '新建商品成功',
-          message: '下一步请返回商城管理页面点击商品名向其中添加课程/好题',
-          type: 'success',
+      if (res.code == 20000) {
+        addProduct({
+          productId: res.msg,
+          coursesQuestionPackagesIds: data
+        }).then((res: any) => {
+          if (res.code == 20000) {
+            ElNotification({
+              title: '新建商品成功',
+              type: 'success',
+            })
+          } else {
+            ElNotification({
+              title: '未知错误',
+              message: '加入课程包时' + res.msg,
+              type: 'error',
+            })
+          }
         })
+          .catch((res: any) => {
+            ElNotification({
+              title: '未知错误',
+              message: res.msg,
+              type: 'error',
+            })
+          })
       } else {
         ElNotification({
           title: '新建失败',
+          message: '创建商品时' + res.msg,
           type: 'error',
         })
       }
     })
-    .catch(() => {
+    .catch((res: any) => {
       ElNotification({
         title: '未知错误',
+        message: res.msg,
         type: 'error',
       })
     })
@@ -244,10 +415,10 @@ const create = () => {
   <div class="page">
     <el-steps :active="active" align-center finish-status="success" class="steps">
       <el-step title="基本信息" />
+      <el-step title="选择课程包" />
       <el-step title="价格信息" />
     </el-steps>
     <el-divider></el-divider>
-
 
     <div class="step-1" v-if="active == 0">
       <div class="image-row">
@@ -268,7 +439,7 @@ const create = () => {
       </div>
       <div class="input-row">
         <div class="input-title">
-          <el-text style="color: #fa1010;">商品名称：</el-text>
+          <el-text style="">商品名称：</el-text>
         </div>
         <div class="input-container">
           <el-input class="input-input" v-model="newProductData.name" />
@@ -276,7 +447,7 @@ const create = () => {
       </div>
       <div class="input-row">
         <div class="input-title">
-          <el-text style="color: #fa1010;">分类：</el-text>
+          <el-text style="">分类：</el-text>
         </div>
         <div class="input-container">
           <el-select class="input-input" placeholder="请选择学习阶段" v-model="newProductData.gradeId">
@@ -293,7 +464,7 @@ const create = () => {
           </el-select>
         </div>
       </div>
-      <div class="input-row">
+      <div style="margin-left: 10px;" class="input-row">
         <div class="input-title">
           <el-text>详细：</el-text>
         </div>
@@ -313,46 +484,57 @@ const create = () => {
       </div>
     </div>
 
-
-
-    <div class="step-2" v-else-if="active == 1">
-      第2步
-
-      <div class="next-button-row">
+    <TablePage class="table-class" :loading="loading" :itemsTotalLength="totalLength" :columns="tableColumn"
+      :data="tableData" @paginationChange="loadData" v-else-if="active == 1">
+      <SearchBar class="search-bar" :items="searchBarItems" @change="loadData"></SearchBar>
+      <div style="white-space:nowrap;margin-left: 5px;margin-top: 15px;margin-bottom: 15px;">
+        <!-- <el-button type="primary"
+          style="max-width: 150px;margin-left: 5px;margin-top: 15px;margin-bottom: 15px;">将课程包加入商品</el-button> -->
+        <el-button class="next-button-row-button" type="text" @click="up"><el-icon class="el-icon--left">
+            <ArrowLeft />
+          </el-icon>上一步</el-button>
+        <el-button class="next-button-row-button" type="text" @click="next">下一步<el-icon class="el-icon--right">
+            <ArrowRight />
+          </el-icon></el-button>
       </div>
+    </TablePage>
 
+    <div class="step-2" v-else-if="active == 2">
+      <div style="margin-left: 15px;" class="next-button-row">
+        <el-button class="next-button-row-button" type="text" @click="up"><el-icon class="el-icon--left">
+            <ArrowLeft />
+          </el-icon>上一步</el-button>
+      </div>
       <div class="part2" style="margin-top: 20px; margin-left: 160px;">
 
+        <el-text style="margin-left: 15px;">商品价格: </el-text>
 
-        <el-text style="margin-left: 15px;color: #fa1010;">商品价格: </el-text>
-
-        <div style="margin-top:3px" >
+        <div style="margin-top:3px">
           <el-text>安卓: </el-text>
           <el-input class="input-length" placeholder="请输入(元)" v-model="newProductData.androidPrice">元</el-input>
-          /<el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.androidPoint">积分</el-input>
+          / <el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.androidPoint">积分</el-input>
         </div>
 
-        <div style="margin-left: 30px;color: #fa1010;">
-          <el-text>IOS:</el-text>
+        <div style="margin-left: 30px;">
+          <el-text>IOS: </el-text>
           <el-input class="input-length" placeholder="请输入T币价格" v-model="newProductData.tcoin">T币</el-input>
-          /<el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.iosPoint">积分</el-input>
+          / <el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.iosPoint">积分</el-input>
         </div>
       </div>
 
-
-      <div style="margin-left: 175px; margin-top:50px;color: #fa1010;">
+      <div style="margin-left: 175px; margin-top:50px;">
         <el-text>是否上架: </el-text>
 
         <el-select style="margin-left: 27px;" input-length class="input-input" placeholder="请选择是否立即上架"
           v-model="newProductData.status">
           <el-option v-for="item in allstatus" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
+        <el-button style="margin-left: 20px;" type="primary" @click="create()">确认新建商品</el-button>
       </div>
 
-      <div style="margin-top: 200px;margin-right: 40px;">
+      <!-- <div style="margin-top: 200px;margin-right: 40px;">
         <el-button type="primary" @click="up()">上一页</el-button>
-        <el-button type="primary" @click="create()">确认添加商品</el-button>
-      </div>
+      </div> -->
     </div>
 
   </div>
@@ -399,8 +581,8 @@ const create = () => {
 }
 
 .page {
-  width: $page-width;
-  height: $page-height;
+  width: calc($page-width - 10px);
+  height: calc($page-height - 10px);
   display: flex;
   flex-direction: column;
 
@@ -413,11 +595,13 @@ const create = () => {
       margin-bottom: 20px;
       display: flex;
       align-items: flex-end;
+
       >.image-row-image {
         margin-left: 20px;
         width: 400px;
         height: calc(400px / 16 * 9);
       }
+
       >.image-row-button {
         margin-left: 20px;
       }
@@ -445,6 +629,7 @@ const create = () => {
 
     >.next-button-row {
       flex-grow: 1;
+
       >.next-button-row-button {
         margin-left: 20px;
       }
@@ -452,9 +637,15 @@ const create = () => {
   }
 }
 
+.search-bar {
+  width: calc($page-width - 30px);
+  margin-left: 5px;
+}
 
-
-
+.table-class {
+  margin-left: 5px;
+  height: calc($page-height - 160px);
+}
 
 .part2 {
   display: flex;

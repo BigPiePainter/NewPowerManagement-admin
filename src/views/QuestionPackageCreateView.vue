@@ -3,12 +3,9 @@ import RichTextEditor from '@/components/RichTextEditor.vue';
 import { ElButton, ElNotification } from 'element-plus'
 import { getSubjects } from '@/apis/subject'
 import { getGrades } from '@/apis/grade'
-import { InputType } from '@/type'
-import { useRoute } from 'vue-router'
 import { ref, reactive } from 'vue'
 import { createGoodQuestionPack } from '@/apis/questionPackageQuestion'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { getGoodQuestion, } from '@/apis/questionStore'
 import { getAllTeachers } from '@/apis/teacher';
 import { upload } from '@/apis/upload'
 import { getLabels } from '@/apis/label';
@@ -156,7 +153,6 @@ const createnewGoodQuestion = () => {
 <template>
     <div class="div-input-element">
         <div>
-
             <div class="top-part">
                 <el-text class="dialog-el-text" >
                     名称：
@@ -164,7 +160,6 @@ const createnewGoodQuestion = () => {
                 <el-input style="width: 217px;" class="dialog-input" placeholder="请输入好题包名称" v-model="newGoodQuestion.name">
                 </el-input>
             </div>
-
 
             <div class="top-part">
                 <el-text class="dialog-el-text" >
@@ -175,7 +170,6 @@ const createnewGoodQuestion = () => {
                 </el-select>
             </div>
 
-
             <div class="top-part" >
                 <el-text class="dialog-el-text" >
                     阶段：
@@ -183,8 +177,6 @@ const createnewGoodQuestion = () => {
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.gradeId">
                     <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
-
-
             </div>
 
             <div class="div-input-element">
@@ -233,8 +225,6 @@ const createnewGoodQuestion = () => {
             </el-select>
         </div>
 
-
-
         <div class="div-input-element">
             <el-text class="dialog-el-text" >
                 老师：
@@ -245,11 +235,8 @@ const createnewGoodQuestion = () => {
         </div>
 
         <div class="rich-text-area">
-            <el-button @click="createnewGoodQuestion">创建好题包</el-button>
+            <el-button type="primary" @click="createnewGoodQuestion">创建好题包</el-button>
         </div>
-
-
-
     </div>
 </template>
   

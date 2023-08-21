@@ -272,7 +272,7 @@ const change = (valueHtml: any) => {
             <el-text class="dialog-el-text" >
                 详情描述：
             </el-text>
-                <RichTextEditor :questionPrompt="newGoodQuestion.description" :isShow="true" @change="change"
+                <RichTextEditor style="max-width: 600px;" :questionPrompt="newGoodQuestion.description" :isShow="true" @change="change"
                 v-model="newGoodQuestion.description">
             </RichTextEditor>
         </div>
@@ -281,7 +281,7 @@ const change = (valueHtml: any) => {
 
 
         <div class="rich-text-area">
-            <el-button @click="createnewGoodQuestion">添加课程包</el-button>
+            <el-button type="primary" @click="createnewGoodQuestion">添加课程包</el-button>
         </div>
     </div>
 </template>

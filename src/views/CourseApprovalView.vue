@@ -33,6 +33,52 @@ const paginationInfo3 = reactive({
   pageSize: 20
 })
 
+//----------------initialization-----------------
+const loadData = () => {
+  //-------loadPendingData-------
+  loading1.value = true
+  var args1 = {
+    pageNum: paginationInfo1.currentPage,
+    pageSize: paginationInfo1.pageSize,
+    auditStatus: 1
+  }
+  //-------loadApprovalData-------
+  loading2.value = true
+  var args2 = {
+    pageNum: paginationInfo2.currentPage,
+    pageSize: paginationInfo2.pageSize,
+    auditStatus: 3,
+  }
+  //-------loadRejctData-------
+  loading3.value = true
+  var args3 = {
+    pageNum: paginationInfo3.currentPage,
+    pageSize: paginationInfo3.pageSize,
+    auditStatus: 4,
+  }
+  //-------promise-------------
+  getMiniLessons(args1)
+    .then((res: any) => {
+      tableDataPending.value = res.data.records
+      totalLength1.value = res.data.records.length
+      getMiniLessons(args2)
+    }).then((res: any) => {
+      tableDataApproved.value = res.data.records
+      totalLength2.value = res.data.records.length
+      getMiniLessons(args3)
+    }).then((res: any) => {
+      tableDataRejected.value = res.data.records,
+        totalLength3.value = res.data.records.length
+    })
+    .catch(() => { })
+    .finally(() => {
+      loading1.value = false
+      loading2.value = false
+      loading3.value = false
+    })
+}
+loadData()
+
 const videoShow = ref(false)
 const url = ref<any>('')
 const playVideo = (videoId: any) => {
@@ -77,12 +123,45 @@ const changeTrial = (item: any) => {
     })
 }
 
+const changeTrialDuration = (item: any) => {
+  var args = {
+    id: item.rowData.id,
+    trialDuration: item.cellData
+  }
+  console.log(args)
+  if (item.cellData > item.rowData.videoDuration) {
+    ElNotification({
+      title: '编辑失败',
+      message: '试看时长不可大于总时长',
+      type: 'error'
+    })
+  } else {
+    editMiniLessons(args)
+      .then((res: any) => {
+        if (res.code != 20000) {
+          ElNotification({
+            title: '编辑失败',
+            message: res.msg,
+            type: 'error'
+          })
+        } else {
+          ElNotification({
+            title: '成功',
+            message: '编辑成功',
+            type: 'success'
+          })
+        }
+        loadData()
+      })
+  }
+}
+
 const tableColumnsPending = [
   {
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 180
   },
   {
     dataKey: 'name',
@@ -101,13 +180,15 @@ const tableColumnsPending = [
     dataKey: 'teacherName',
     key: 'teacherName',
     title: '上传者',
-    width: 200
+    align: 'center',
+    width: 100
   },
   {
     dataKey: 'status',
     key: 'status',
     title: '状态',
-    width: 200,
+    align: 'center',
+    width: 100,
     cellRenderer: (cellData: any) => (
       <span>
         {cellData.cellData == 1 ? "草稿" : cellData.cellData == 2 ? "制作完成" : "已提交"}
@@ -115,16 +196,11 @@ const tableColumnsPending = [
     )
   },
   {
-    dataKey: 'teacherName',
-    key: 'teacherName',
-    title: '上传者',
-    width: 200
-  },
-  {
     dataKey: 'isTrial',
     key: 'isTrial',
     title: '是否支持试看',
-    width: 200,
+    align: 'center',
+    width: 100,
     cellRenderer: (cellData: any) => {
       return (
         <div>
@@ -140,6 +216,37 @@ const tableColumnsPending = [
         </div>
       )
     }
+  },
+  {
+    dataKey: 'trialDuration',
+    key: 'trialDuration',
+    title: '试看时长(秒)',
+    align: 'center',
+    width: 200,
+    cellRenderer: (cellData: any) => {
+      const slots = {
+        append: () =>
+          <el-button disabled={cellData.rowData.isTrial == 2 ? true : false} onClick={() => changeTrialDuration(cellData)}>设置</el-button>
+      }
+      return (
+        <div>
+          <el-input disabled={cellData.rowData.isTrial == 2 ? true : false} style='width:120px' v-model={cellData.rowData.trialDuration} type='number' step={1} min={0} max={cellData.rowData.videoDuration} v-slots={slots}>
+          </el-input>
+        </div>
+      )
+    }
+  },
+  {
+    dataKey: 'videoDuration',
+    key: 'videoDuration',
+    title: '时长(秒)',
+    align: 'center',
+    cellRenderer: (cellData: any) => {
+      return (
+        <span>{cellData.cellData}</span>
+      )
+    },
+    width: 100
   },
   {
     key: 'option',
@@ -277,11 +384,6 @@ const loadRejctData = () => {
 }
 
 const deleteItemid = ref<any>()
-const loadData = () => {
-  loadPendingData()
-  loadApprovalData()
-  loadRejctData()
-}
 
 const warningDialog = (cellData2: any) => {
   console.log(cellData2)
@@ -304,7 +406,7 @@ const ConfirmdeleteMiniLesson = () => {
     }
   }).catch()
 }
-loadData()
+
 
 const handleClick = (tab: any) => {
   if (tab.props.name == 'pending') {

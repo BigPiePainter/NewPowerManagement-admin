@@ -38,9 +38,6 @@ export const editProduct = (data:any) => {
     return http.request(args)
 }
 
-
-
-
 export const deleteProductContent = (data:any) => {
     const args = {
         url: '/api/management/product/content/delete-content',
@@ -50,8 +47,6 @@ export const deleteProductContent = (data:any) => {
     }
     return http.request(args)
 }
-
-
 
 export const deleteProduct = (data:any) => {
     const args = {
@@ -71,7 +66,6 @@ export const getProductContent = (data:any) => {
     }
     return http.request(args)
 }
-
 
 export const addProduct = (data:any) => {
     const args = {
