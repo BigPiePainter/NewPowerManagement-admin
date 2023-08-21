@@ -33,51 +33,51 @@ const paginationInfo3 = reactive({
   pageSize: 20
 })
 
-//----------------initialization-----------------
-const loadData = () => {
-  //-------loadPendingData-------
-  loading1.value = true
-  var args1 = {
-    pageNum: paginationInfo1.currentPage,
-    pageSize: paginationInfo1.pageSize,
-    auditStatus: 1
-  }
-  //-------loadApprovalData-------
-  loading2.value = true
-  var args2 = {
-    pageNum: paginationInfo2.currentPage,
-    pageSize: paginationInfo2.pageSize,
-    auditStatus: 3,
-  }
-  //-------loadRejctData-------
-  loading3.value = true
-  var args3 = {
-    pageNum: paginationInfo3.currentPage,
-    pageSize: paginationInfo3.pageSize,
-    auditStatus: 4,
-  }
-  //-------promise-------------
-  getMiniLessons(args1)
-    .then((res: any) => {
-      tableDataPending.value = res.data.records
-      totalLength1.value = res.data.records.length
-      getMiniLessons(args2)
-    }).then((res: any) => {
-      tableDataApproved.value = res.data.records
-      totalLength2.value = res.data.records.length
-      getMiniLessons(args3)
-    }).then((res: any) => {
-      tableDataRejected.value = res.data.records,
-        totalLength3.value = res.data.records.length
-    })
-    .catch(() => { })
-    .finally(() => {
-      loading1.value = false
-      loading2.value = false
-      loading3.value = false
-    })
-}
-loadData()
+// //----------------initialization-----------------
+// const loadData = () => {
+//   //-------loadPendingData-------
+//   loading1.value = true
+//   var args1 = {
+//     pageNum: paginationInfo1.currentPage,
+//     pageSize: paginationInfo1.pageSize,
+//     auditStatus: 1
+//   }
+//   //-------loadApprovalData-------
+//   loading2.value = true
+//   var args2 = {
+//     pageNum: paginationInfo2.currentPage,
+//     pageSize: paginationInfo2.pageSize,
+//     auditStatus: 3,
+//   }
+//   //-------loadRejctData-------
+//   loading3.value = true
+//   var args3 = {
+//     pageNum: paginationInfo3.currentPage,
+//     pageSize: paginationInfo3.pageSize,
+//     auditStatus: 4,
+//   }
+//   //-------promise-------------
+//   getMiniLessons(args1)
+//     .then((res: any) => {
+//       tableDataPending.value = res.data.records
+//       totalLength1.value = res.data.records.length
+//       getMiniLessons(args2)
+//     }).then((res: any) => {
+//       tableDataApproved.value = res.data.records
+//       totalLength2.value = res.data.records.length
+//       getMiniLessons(args3)
+//     }).then((res: any) => {
+//       tableDataRejected.value = res.data.records,
+//         totalLength3.value = res.data.records.length
+//     })
+//     .catch(() => { })
+//     .finally(() => {
+//       loading1.value = false
+//       loading2.value = false
+//       loading3.value = false
+//     })
+// }
+// loadData()
 
 const videoShow = ref(false)
 const url = ref<any>('')
@@ -101,7 +101,7 @@ const editCourseData = reactive<any>({
 const changeTrial = (item: any) => {
   var args = {
     id: item.rowData.id,
-    isTrial: item.cellData
+    isTrial: item.rowData.isTrial
   }
   console.log(args)
   editMiniLessons(args)
@@ -119,14 +119,29 @@ const changeTrial = (item: any) => {
           type: 'success'
         })
       }
-      loadData()
+    })
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error'
+      })
+    })
+    .finally(() => {
+      if (auditStatus.value == 1) {
+        loadPendingData()
+      } else if (auditStatus.value == 3) {
+        loadApprovalData()
+      } else if (auditStatus.value == 4) {
+        loadRejctData()
+      }
     })
 }
 
 const changeTrialDuration = (item: any) => {
   var args = {
     id: item.rowData.id,
-    trialDuration: item.cellData
+    trialDuration: item.rowData.trialDuration
   }
   console.log(args)
   if (item.cellData > item.rowData.videoDuration) {
@@ -151,7 +166,20 @@ const changeTrialDuration = (item: any) => {
             type: 'success'
           })
         }
-        loadData()
+      }).catch((res: any) => {
+        ElNotification({
+          title: '未知错误',
+          message: res.msg,
+          type: 'error'
+        })
+      }).finally(() => {
+        if (auditStatus.value == 1) {
+          loadPendingData()
+        } else if (auditStatus.value == 3) {
+          loadApprovalData()
+        } else if (auditStatus.value == 4) {
+          loadRejctData()
+        }
       })
   }
 }
@@ -205,7 +233,7 @@ const tableColumnsPending = [
       return (
         <div>
           <el-switch
-            v-model={cellData.cellData}
+            v-model={cellData.rowData.isTrial}
             active-value={1}
             inactive-value={2}
             onChange={() => changeTrial(cellData)}
@@ -273,22 +301,67 @@ const tableColumnsPending = [
 ]
 
 const pass = (item: any) => {
-
-  editMiniLessons({ id: item.rowData.id, auditStatus: 3, }).then((res: any) => {
-    if (res.code == '20000') {
-      console.log('已通过')
-    }
-    loadData()
-  }).catch
+  editMiniLessons({ id: item.rowData.id, auditStatus: 3, })
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '审核通过',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: 'Warni状态更改失败ng',
+          message: res.msg,
+          type: 'error'
+        })
+      }
+    }).catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error'
+      })
+    }).finally(() => {
+      if (auditStatus.value == 1) {
+        loadPendingData()
+      } else if (auditStatus.value == 3) {
+        loadApprovalData()
+      } else if (auditStatus.value == 4) {
+        loadRejctData()
+      }
+    })
 }
 
 const reject = (item: any) => {
-  editMiniLessons({ id: item.rowData.id, auditStatus: 4, }).then((res: any) => {
-    if (res.code == '20000') {
-      console.log('已通过')
-    }
-    loadData()
-  }).catch
+  editMiniLessons({ id: item.rowData.id, auditStatus: 4, })
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '已拒绝',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: '状态更改失败',
+          message: res.msg,
+          type: 'error'
+        })
+      }
+    }).catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error'
+      })
+    }).finally(() => {
+      if (auditStatus.value == 1) {
+        loadPendingData()
+      } else if (auditStatus.value == 3) {
+        loadApprovalData()
+      } else if (auditStatus.value == 4) {
+        loadRejctData()
+      }
+    })
 }
 
 const edit = (props: any) => {
@@ -300,23 +373,35 @@ const edit = (props: any) => {
 
 const confirmEditDialog = () => {
   editMiniLessons(editCourseData).then((res: any) => {
-    if (res.code == '20000') {
+    if (res.code == 20000) {
       ElNotification({
         title: '成功',
         message: '已成功编辑',
         type: 'success'
       })
-      loadData()
       editDialogShow.value = false;
     } else {
       ElNotification({
-        title: 'Warning',
+        title: '编辑失败',
         message: res.msg,
         type: 'warning'
       })
-
     }
-  }).catch
+  }).catch((res: any) => {
+    ElNotification({
+      title: '未知错误',
+      message: res.msg,
+      type: 'error'
+    })
+  }).finally(() => {
+    if (auditStatus.value == 1) {
+      loadPendingData()
+    } else if (auditStatus.value == 3) {
+      loadApprovalData()
+    } else if (auditStatus.value == 4) {
+      loadRejctData()
+    }
+  })
 }
 
 const cancelEditDialog = () => {
@@ -346,6 +431,7 @@ const loadPendingData = () => {
       loading1.value = false
     })
 }
+loadPendingData()
 
 const loadApprovalData = () => {
   loading2.value = true
@@ -396,15 +482,34 @@ const ConfirmdeleteMiniLesson = () => {
   deleteMiniLessons({ id: deleteItemid.value.rowData.id }).then((res: any) => {
     console.log(deleteItemid)
     if (res.code == 20000) {
-      console.log('删除成功')
-      loadData()
-      warningDialogshow.value = false
+      ElNotification({
+        title: '已删除',
+        type: 'success'
+      })
     }
     else {
-      warningDialogshow.value = false
-      console.log('删除失败')
+      ElNotification({
+        title: '删除失败',
+        message: res.msg,
+        type: 'error'
+      })
     }
-  }).catch()
+  }).catch((res: any) => {
+    ElNotification({
+      title: '未知错误',
+      message: res.msg,
+      type: 'error'
+    })
+  }).finally(() => {
+    warningDialogshow.value = false
+    if (auditStatus.value == 1) {
+      loadPendingData()
+    } else if (auditStatus.value == 3) {
+      loadApprovalData()
+    } else if (auditStatus.value == 4) {
+      loadRejctData()
+    }
+  })
 }
 
 
@@ -417,7 +522,7 @@ const handleClick = (tab: any) => {
     auditStatus.value = 3
     loadApprovalData()
   }
-  else {
+  else if (tab.props.name == 'rejected') {
     auditStatus.value = 4
     loadRejctData()
   }

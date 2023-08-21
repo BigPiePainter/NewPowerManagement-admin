@@ -25,7 +25,7 @@ const enterHome = () => {
         router.push({ path: 'work-space' })
         localStorage.remark = res.data.records[0].remark
         console.log(localStorage)
-        var author:any = {}
+        var author: any = {}
         var items = res.data.records[0].menuList
         for (const key in items) {
           var menu = items[key].name
@@ -89,15 +89,23 @@ const login = () => {
 
 <template>
   <div class="login">
-    <el-text class="title">锦鲤项目</el-text>
+    <div class="bg"></div>
+    
     <div class="account">
-      <el-text class="word">账号：</el-text> <el-input placeholder="" v-model="account" />
+      <el-input placeholder="请输入" v-model="account">
+        <template #prepend>账号</template>
+      </el-input>
     </div>
+
     <div class="account">
-      <el-text class="word">密码：</el-text>
-      <el-input placeholder="" v-model="password" show-password />
+      <el-input placeholder="请输入" v-model="password" show-password>
+        <template #prepend>密码</template>
+      </el-input>
     </div>
-    <el-button type="primary" @click="login">登陆</el-button>
+
+    <div class="account">
+      <el-button type="primary" @click="login">登陆</el-button>
+    </div>
   </div>
 </template>
 
@@ -111,25 +119,45 @@ const login = () => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-color: rgb(243, 245, 247);
+}
 
-  background-color: rgb(82, 50, 156);
+.bg {
+  height: 500px;
+  background-image: url(../../public/loginBgTop.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center top;
+  position: absolute;
+  padding: 0px;
+  width: 100%;
+  height: 35%;
+  top: 0;
+  left: 0;
 }
 
 .account {
-  width: 400px;
+  white-space: nowrap;
+  width: 300px;
   display: flex;
-  margin: 8px;
+  margin: 12px;
   flex-direction: row;
 }
 
 .word {
+  white-space: nowrap;
   display: flex;
   flex-direction: row;
-  width: 40px;
+  width: 45px;
 }
 
 .title {
   font-size: 22px;
   margin: 10px;
+}
+
+.el-button {
+  margin: 17px;
+  width: 300px;
 }
 </style>
