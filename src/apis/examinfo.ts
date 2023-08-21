@@ -9,12 +9,9 @@ export const getExamInfor = () => {
     return http.request(args)
 }
 
-
-
-
 export const createExamInfor = (data: any) => {
     const args = {
-        url: ' POST/api/management/exam-info/create-exam-info',
+        url: ' /api/management/exam-info/create-exam-info',
         method: 'POST',
         data,
         mode: "json"
