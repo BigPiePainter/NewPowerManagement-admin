@@ -2,7 +2,7 @@
 import { getStudent, restStudentPsw, deleteStudent, toNormalStudent } from '@/apis/student'
 import { getGrades } from '@/apis/grade'
 import { ref, reactive, h } from 'vue'
-import { ElNotification,ElButton } from 'element-plus'
+import { ElNotification, ElButton } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
@@ -233,13 +233,6 @@ const loadSelectOption = () => {
     .then((res) => {
       selectOptionGrades.length = 0
       res.data.forEach((item: any) => {
-        // var dataSample = {
-        //   id: it                                                                                                                                                                                                     em.id,
-        //   level: item.level,
-        //   name: item.name                                                                           
-        // }
-        // selectOptionGrades.push(dataSample)
-
         item.subset.forEach((item: any) => {
           var dataSample = {
             id: item.id,

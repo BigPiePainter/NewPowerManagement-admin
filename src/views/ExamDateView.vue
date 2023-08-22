@@ -1,68 +1,139 @@
 <script setup lang="tsx">
-import { ref, reactive, } from 'vue'
-import { ElButton } from 'element-plus'
+import { reactive, } from 'vue'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { getGrades, UpdataExamDay } from '@/apis/grade';
+import { ElNotification } from 'element-plus';
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '设置', path: '' },{name:'考试时间'}]
+breadcrumbStore.data = [{ name: '设置', path: '' }, { name: '考试时间' }]
 
-const tableColumns = [
+//--------------gobal variable----------
+const tableData = reactive<any>([])
+const tableColumns = reactive<any>([
   {
-    dataKey: 'studyState',
-    key: 'studyState',
+    dataKey: 'name',
+    key: 'name',
     title: '学习阶段',
-    width: 80
-  },
-  {
-    dataKey: 'title',
-    key: 'title',
-    title: '标题',
-    width: 300
-  },  
-  {
-    dataKey: 'date',
-    key: 'date',
-    title: '时间',
+    align: 'center',
     width: 120
   },
   {
-    key: 'option',
-    title: '操作',
-    cellRenderer: (item: any) => {
+    dataKey: 'dayRemainingUntilExamsWord',
+    key: 'dayRemainingUntilExamsWord',
+    title: '标题',
+    cellRenderer: (cellData: any) => {
+      const slots = {
+        append: () =>
+          <el-button onClick={() => changeTitle(cellData)}>设置</el-button>
+      }
       return (
-        <>
-          <el-button link type="primary" onClick={() => console.log(item)}>
-            编辑
-          </el-button>
-          <el-button link type="danger" onClick={() => console.log(item)}>
-            删除
-          </el-button>
-        </>
+        <div>
+          <el-input style='width:380px' v-model={cellData.rowData.dayRemainingUntilExamsWord} type='string' v-slots={slots}>
+          </el-input>
+        </div>
       )
     },
-    width: 150,
-    fixed: 'right',
-    align: 'center',
-    height: 500
+    width: 400
+  },
+  {
+    dataKey: 'dayRemainingUntilExams',
+    key: 'dayRemainingUntilExams',
+    title: '距离考试时间(每日自动减少)',
+    cellRenderer: (cellData: any) => {
+      const slots = {
+        append: () =>
+          <el-button onClick={() => changeDate(cellData)}>设置</el-button>
+      }
+      return (
+        <div>
+          <el-input style='width:130px' v-model={cellData.rowData.dayRemainingUntilExams} type='number' step={1} min={0} v-slots={slots}>
+          </el-input>
+        </div>
+      )
+    },
+    width: 200
+  },
+])
+
+//--------------created------------------
+const loadData = () => {
+  tableData.length = 0
+  getGrades()
+    .then((res: any) => {
+      res.data.forEach((item: any) => {
+        item.subset.forEach((item: any) => {
+          tableData.push(item)
+        })
+      })
+    })
+}
+loadData()
+
+//----------------修改标题------------------
+const changeTitle = (cellData: any) => {
+  var args = {
+    id: cellData.rowData.id,
+    dayRemainingUntilExamsWord: cellData.rowData.dayRemainingUntilExamsWord,
+    dayRemainingUntilExams: cellData.rowData.dayRemainingUntilExams
   }
-]
-
-let fakeData = {
-  studyState: '初中',
-  title: '距离中考时间',
-  date: '287天',
+  console.log(args)
+  UpdataExamDay(args)
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '修改成功',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: '修改失败',
+          message: res.msg,
+          type: 'error'
+        })
+      }
+    }).catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error'
+      })
+    }).finally(() => {
+      loadData()
+    })
 }
 
-const tableData: object[] = []
-
-for (let index = 0; index < 2; index++) {
-  let data = { ...fakeData }
-  tableData.push(data)
+//----------------修改日期------------------
+const changeDate = (cellData: any) => {
+  var args = {
+    id: cellData.rowData.id,
+    dayRemainingUntilExamsWord: cellData.rowData.dayRemainingUntilExamsWord,
+    dayRemainingUntilExams: cellData.rowData.dayRemainingUntilExams
+  }
+  console.log(args)
+  UpdataExamDay(args)
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '修改成功',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: '修改失败',
+          message: res.msg,
+          type: 'error'
+        })
+      }
+    }).catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error'
+      })
+    }).finally(() => {
+      loadData()
+    })
 }
-
-console.log(tableData)
 </script>
 
 <template>
@@ -75,7 +146,7 @@ $gap: 15px;
 
 .exam-date-table {
   width: calc($page-width - $gap);
-  height: $page-height;
+  height: calc($page-height - $gap);
   margin-left: $gap;
   margin-top: $gap;
 }

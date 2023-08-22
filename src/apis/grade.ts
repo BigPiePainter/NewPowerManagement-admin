@@ -28,4 +28,14 @@ export const deleteGrades = (data: any) => {
     return http.request(args)
 }
 
+export const UpdataExamDay = (data: any) => {
+    const args = {
+        url: '/api/management/grade/set-day-remaining-exams',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}
+
 

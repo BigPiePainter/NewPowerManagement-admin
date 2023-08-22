@@ -310,7 +310,7 @@ const pass = (item: any) => {
         })
       } else {
         ElNotification({
-          title: 'Warni状态更改失败ng',
+          title: '状态更改失败',
           message: res.msg,
           type: 'error'
         })
