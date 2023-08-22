@@ -8,7 +8,6 @@ export const getSubjects = () => {
     return http.request(args)
 }
 
-
 export const createSubject = (data:any) => {
     const args = {
         url: '/api/management/subject/create-subject',

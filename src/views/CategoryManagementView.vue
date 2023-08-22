@@ -2,472 +2,313 @@
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { ref, reactive } from 'vue'
 import { getGrades, createGrades, deleteGrades } from '@/apis/grade'
-import { getSubjects } from '@/apis/subject';
+import { getSubjects, deleteSubject, createSubject } from '@/apis/subject';
 import { ElNotification } from 'element-plus'
-import { createSubject, deleteSubject } from '@/apis/subject'
-
-
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
-
-const allTheGrades = ref<any>([])
 const allGrades = ref<any[]>([])
+const allSubjects = reactive<any>([])
 const createSubjectDialogShow = ref(false)
-
-
-
-const newSubjectdata = reactive<{
-
-name: string
-
-}>({
-name: ''
+const createUpperGradeDialogShow = ref(false)
+const createSubGradeDialogShow = ref(false)
+const newSubjectdata = reactive<any>({
+  name: ''
 });
-
-const loadGrade = () => {
-  getGrades().then((res: any) => {
-    allGrades.value = res.data
-    console.log(res)
-  }).catch()
-}
-
-getGrades()
-  .then((res) => (allTheGrades.value = res.data.map((i: any) => i.subset).flat()))
-  .catch()
-
-const loadData = () => {
-  loadGrade()
-  getGrades()
-
-}
-
-loadData()
-
-
-const newGradedata = reactive<{
-
-  level: string,
-  name: string,
-  parentId: string,
-
-}>({
+const newGradedata = reactive<any>({
   level: '',
   name: '',
   parentId: ''
 });
 
-const createDialogShow = ref(false)
-
-const createNew = () => {
-  createDialogShow.value = true
-}
-
-const confrimCreateNew = () => {
-  loadData()
-  createGrades(newGradedata).then((res: any) => {
-    if (res.code == 20000) {
-      ElNotification({
-        title: '成功',
-        message: '已成功创建',
-        type: 'success'
+//-----------------created-----------------------
+const loadData = () => {
+  allSubjects.length = 0
+  getGrades().then((res: any) => {
+    allGrades.value = res.data
+    return getSubjects()
+  })
+    .then((res: any) => {
+      res.data.forEach((item: any) => {
+        allSubjects.push(item)
       })
-      createDialogShow.value = false
-      loadData()
-    }
-    else {
-      ElNotification({
-        title: '失败',
-        message: '创建失败',
-        type: 'warning'
-      })
-    }
-  }).catch()
+    })
+    .catch()
 }
+loadData()
 
-const major = ref<any[]>([])
-
-
-
-
-const deletDialogShow = ref(false)
-
-getSubjects().then((res) =>
-  major.value = res.data).catch()
-
-
-
-console.log(major.value)
-const allLevel = [
-  {
-    id: 2,
-    name: '子级学习阶段'
+//---------------创建父级学习阶段--------------------
+const createNewUpperGrade = () => {
+  createUpperGradeDialogShow.value = true
+}
+const confrimCreateNewUpperGrade = () => {
+  var args = {
+    level: 1,
+    name: newGradedata.name,
+    parentId: 0
   }
-]
-
-
-
-
-const deleteGradeData = reactive<{
-  id: string,
-}>({
-  id: '',
-});
-
-const deleteSubjectdata = reactive<{
-  id: string,
-}>({
-  id: '',
-});
-
-
-
-
-const confrimDeleteSub = () => {
-  deleteSubject(deleteSubjectdata).then((res: any) => {
-    if (res.code == 20000) {
+  createGrades(args)
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '创建成功',
+          type: 'success'
+        })
+        createUpperGradeDialogShow.value = false
+      }
+      else {
+        ElNotification({
+          title: '失败',
+          message: '创建失败',
+          type: 'warning'
+        })
+      }
+    }).catch((res: any) => {
       ElNotification({
-        title: '成功',
-        message: '已成功删除',
-        type: 'success'
-      })
-      deletSubDialogShow.value = false
-      getSubjects().then((res) =>
-  major.value = res.data).catch()
-
-    }
-
-    else {
-      ElNotification({
-        title: '失败',
-        message: '删除失败',
+        title: '未知错误',
+        message: res.msg,
         type: 'warning'
       })
+    })
+    .finally(() => {
       loadData()
-    }
-
-  })
-    .catch()
+    })
 }
 
-const confrimDelete = () => {
-  deleteGrades(deleteGradeData).then((res: any) => {
-    if (res.code == 20000) {
+//---------------创建子级学习阶段--------------------
+const createNewSubGrade = (id: any) => {
+  newGradedata.parentId = id
+  createSubGradeDialogShow.value = true
+}
+const confrimCreateNewSubGrade = () => {
+  var args = {
+    level: 2,
+    name: newGradedata.name,
+    parentId: newGradedata.parentId
+  }
+  createGrades(args)
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '创建成功',
+          type: 'success'
+        })
+        createSubGradeDialogShow.value = false
+      }
+      else {
+        ElNotification({
+          title: '失败',
+          message: '创建失败',
+          type: 'warning'
+        })
+      }
+    }).catch((res: any) => {
       ElNotification({
-        title: '成功',
-        message: '已成功删除',
-        type: 'success'
-      })
-      deletDialogShow.value = false
-      loadData()
-    }
-
-    else {
-      ElNotification({
-        title: '失败',
-        message: '删除失败',
+        title: '未知错误',
+        message: res.msg,
         type: 'warning'
       })
+    })
+    .finally(() => {
       loadData()
-    }
-
-  })
-    .catch()
+    })
 }
 
-
-const deleteGrade = () => {
-  loadData()
-  deletDialogShow.value = true
+//------------------删除学习阶段----------------------
+const deleteGrade = (id: any) => {
+  deleteGrades({ id: id })
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '删除成功',
+          type: 'success'
+        })
+      } else {
+        ElNotification({
+          title: '删除失败',
+          message: res.msg,
+          type: 'warning'
+        })
+      }
+    })
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
+    .finally(() => {
+      loadData()
+    })
 }
 
-
-
+//----------------------创建科目-----------------------
+const createNewSubject = () => {
+  createSubjectDialogShow.value = true
+}
 const confrimCreateSub = () => {
-  createSubject(newSubjectdata).then((res: any) => {
-    if (res.code == 20000) {
+  createSubject(newSubjectdata)
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '创建成功',
+          type: 'success'
+        })
+        createSubjectDialogShow.value = false
+      }
+      else {
+        ElNotification({
+          title: '创建失败',
+          message: res.msg,
+          type: 'warning'
+        })
+      }
+    })
+    .catch((res: any) => {
       ElNotification({
-        title: '成功',
-        message: '已成功创建',
-        type: 'success'
-      })
-      createDialogShow.value = false
-      getSubjects().then((res) =>
-  major.value = res.data).catch()
-    }
-    else {
-      ElNotification({
-        title: '失败',
-        message: '创建失败',
+        title: '未知错误',
+        message: res.msg,
         type: 'warning'
       })
-    }
-
-  }).catch()
+    })
+    .finally(() => {
+      loadData()
+    })
 }
 
-
-
-
-
-const deletSubDialogShow = ref(false)
-
-
-
-
-
+//---------------------删除科目----------------------
+const deleteSubjects = (id: any) => {
+  deleteSubject({ id: id })
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '删除成功',
+          type: 'success'
+        })
+        createSubjectDialogShow.value = false
+      }
+      else {
+        ElNotification({
+          title: '删除失败',
+          message: res.msg,
+          type: 'warning'
+        })
+      }
+    })
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
+    .finally(() => {
+      loadData()
+    })
+}
 </script>
 
 <template>
   <div class="sup-card">
+    <!---------------------- 学习阶段 --------------------->
     <div class="card-left">
       <div class="card-title-bar">
         <el-text class="card-title-text">学习阶段</el-text>
         <div style="flex-grow: 1;"></div>
-
-        <el-button type="primary" @Click="createNew">新增阶段</el-button>
-        <el-button type="primary" @Click="deleteGrade">删除阶段</el-button>
+        <el-button type="primary" link @Click="createNewUpperGrade">新增阶段</el-button>
       </div>
 
-
-
-
-
       <div v-for="(value, key) in allGrades" :key="key" class="subtitle">
-        <div>{{ value.name }}</div>
 
-
-        <div v-for="(innervalue, innerKey) in value.subset" :key="innerKey" class="subtitle">
-          <div>{{ innervalue.name }}</div>
+        <div style="margin-left: 10px;">
+          <el-text>{{ value.name }}</el-text>
+          <el-button type="primary" link style="margin-left: 10px;" @Click="deleteGrade(value.id)">删除阶段</el-button>
         </div>
+
+        <div style="margin-left: 15px; margin-top: 10px;">
+          <el-tag style="margin-right: 15px;" v-for="(innervalue, innerKey) in value.subset" :key="innerKey" closable
+            @close="deleteGrade(innervalue.id)">{{
+              innervalue.name }}</el-tag>
+          <el-button type="primary" link @click="createNewSubGrade(value.id)">新增</el-button>
+        </div>
+
       </div>
     </div>
 
-
+    <!------------------------- 学科 ------------------------>
     <div class="card-right">
-
       <div class="card-title-bar">
-        <el-text class="card-title-text">学科大全</el-text>
-        <div style="flex-grow: 1;"></div>
-        <el-button type="primary" @click="createSubjectDialogShow = true">新增学科</el-button>
-        <el-button type="primary" @click="deletSubDialogShow = true">删除学科</el-button>
+        <el-text class="card-title-text">学科</el-text>
       </div>
-      
+
       <div class="card-body">
-        <div class="div-major-items">
-
-          <el-text class="major-item" v-for=" item  in  major " :key="item.id">{{ item.name }}</el-text>
+        <div class="div-major-items" style="margin-left: 10px;">
+          <el-tag style="margin-bottom: 10px;" class="major-item" v-for="item in allSubjects" :key="item.id" closable
+            @close="deleteSubjects(item.id)">{{
+              item.name }}</el-tag>
+          <el-button type="primary" link @click="createNewSubject">新增</el-button>
         </div>
-
       </div>
-
     </div>
   </div>
 
-
-
-
-
   <el-dialog class="new-class-dialog" width="370px" v-model="createSubjectDialogShow">
-    <div class="div-input-element">
-    </div>
-
-
-
-    <div class="div-input-element" style="margin-top: 10px;">
-      <el-text style="color: #fa1010;">
-        学科名称：
+    <div style="margin-top: 10px;white-space:nowrap;">
+      <el-text>
+        科目名称：
       </el-text>
-      <div>
-        <el-input class="dialog-input" v-model="newSubjectdata.name" @change="console.log(newSubjectdata.name)" style="width: 256px;">
-        </el-input>
-      </div>
+      <el-input v-model="newSubjectdata.name" style="width: 200px;">
+      </el-input>
     </div>
-
-
     <template #header>
       <el-text>添加学科</el-text>
     </template>
-
     <template #footer>
       <el-button type="primary" @click="confrimCreateSub()">确定</el-button>
-      <el-button @click="createDialogShow = false">
+      <el-button @click="createSubjectDialogShow = false">
         取消
       </el-button>
     </template>
-
   </el-dialog>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <el-dialog class="new-class-dialog" width="370px" v-model="createDialogShow">
-    <div class="div-input-element">
-    </div>
-
-    <div class="div-input-element" style="margin-top: 10px;">
+  <el-dialog class="new-class-dialog" width="370px" v-model="createUpperGradeDialogShow">
+    <div style="margin-top: 10px;white-space:nowrap;">
       <el-text>
-        阶段层级：
-      </el-text>
-      <div>
-        <el-select placeholder="只允许添加初中与高中的子集" class="dialog-input" v-model="newGradedata.level" style="width: 256px;">
-          <el-option v-for="item in allLevel" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-
-      </div>
-
-    </div>
-
-
-    <div class="div-input-element" style="margin-top: 10px;">
-      <el-text style="color: #fa1010;">
         阶段名称：
       </el-text>
-      <div>
-        <el-input class="dialog-input" v-model="newGradedata.name" style="width: 256px;">
-        </el-input>
-      </div>
+      <el-input v-model="newGradedata.name" style="width: 200px;">
+      </el-input>
     </div>
-
-
-    <div class="div-input-element" style="margin-top: 10px;">
-      <el-text style="color: #fa1010;">
-        父级阶段：
-      </el-text>
-      <div>
-        <el-select type="datetime" placeholder="请选择" style="width:256px" v-model="newGradedata.parentId">
-          <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div>
-
-    </div>
-
     <template #header>
-      <el-text>添加学习阶段</el-text>
+      <el-text>添加父级学习阶段</el-text>
     </template>
-
     <template #footer>
-      <el-button type="primary" @click="confrimCreateNew()">确定</el-button>
-      <el-button @click="createDialogShow = false">
+      <el-button type="primary" @click="confrimCreateNewUpperGrade()">确定</el-button>
+      <el-button @click="createUpperGradeDialogShow = false">
         取消
       </el-button>
     </template>
-
   </el-dialog>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <el-dialog class="new-class-dialog" width="370px" v-model="deletDialogShow">
-    <div class="div-input-element">
-    </div>
-
-    <div class="div-input-element" style="margin-top: 10px;">
+  <el-dialog class="new-class-dialog" width="370px" v-model="createSubGradeDialogShow">
+    <div style="margin-top: 10px;white-space:nowrap;">
       <el-text>
-        要删除的学习阶段：
+        阶段名称：
       </el-text>
-      <div>
-        <el-select placeholder="例：初中为父级，初一为子级别" class="dialog-input" v-model="deleteGradeData.id" style="width: 256px;">
-          <el-option v-for="item in allTheGrades" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-
-      </div>
-
+      <el-input v-model="newGradedata.name" style="width: 200px;">
+      </el-input>
     </div>
-
     <template #header>
-      <el-text>删除学习阶段</el-text>
+      <el-text>添加子级学习阶段</el-text>
     </template>
-
     <template #footer>
-      <el-button type="primary" @click="confrimDelete()">确定</el-button>
-      <el-button @click="createDialogShow = false">
+      <el-button type="primary" @click="confrimCreateNewSubGrade()">确定</el-button>
+      <el-button @click="createSubGradeDialogShow = false">
         取消
       </el-button>
     </template>
-
-  </el-dialog>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <el-dialog class="new-class-dialog" width="370px" v-model="deletSubDialogShow">
-    <div class="div-input-element">
-    </div>
-
-    <div class="div-input-element" style="margin-top: 10px;">
-      <el-text>
-        要删除的学科：
-      </el-text>
-      <div>
-        <el-select placeholder="请选择" class="dialog-input" v-model="deleteSubjectdata.id" style="width: 256px;">
-          <el-option v-for="item in major" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-
-      </div>
-
-    </div>
-
-    <template #header>
-      <el-text>删除科目</el-text>
-    </template>
-
-    <template #footer>
-      <el-button type="primary" @click="confrimDeleteSub()">确定</el-button>
-      <el-button @click="deletSubDialogShow = false">
-        取消
-      </el-button>
-    </template>
-
   </el-dialog>
 </template>
 
@@ -510,7 +351,7 @@ const deletSubDialogShow = ref(false)
 
   .subtitle {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     margin: $gap;
 

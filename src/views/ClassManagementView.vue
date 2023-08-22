@@ -12,8 +12,6 @@ import { getClasses, createClass } from '@/apis/class'
 import { editClasses, deleteClasses } from '@/apis/class'
 import { getAllTeachers } from '@/apis/teacher'
 
-
-
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
 
@@ -73,17 +71,6 @@ const searchBarItems = reactive([
   },
 ])
 
-const getselection = () => {
-  getGrades()
-    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-    .catch()
-
-  getSubjects()
-    .then((res) => (allSubjects.value = res.data))
-    .catch()
-}
-getselection()
-
 const newClassDialogShow = ref(false);
 
 const creatNewClass = () => {
@@ -127,11 +114,6 @@ const confirmNewClass = () => {
 const cancelNewClass = () => {
   newClassDialogShow.value = false
 }
-
-
-
-
-
 
 const tableColumns = reactive([
   {
@@ -199,7 +181,7 @@ const tableColumns = reactive([
     align: 'center'
   }
 ])
-const clickDetail = (props:any) => {
+const clickDetail = (props: any) => {
   console.log(props);
   router.push({
     path: 'class-detail',
@@ -235,11 +217,11 @@ const editClassData = reactive<{
 
 });
 
-const editClass = (props:any) => {
+const editClass = (props: any) => {
   console.log(props);
   editClassDialogShow.value = true;
   editClassData.name = props.rowData.name;
-  editClassData.teacherId = props.rowData.teacher;
+  editClassData.teacherId = props.rowData.teacherId;
   editClassData.endDate = props.rowData.endDate;
   editClassData.subjectId = props.rowData.subjectId;
   editClassData.gradeId = props.rowData.gradeId;
@@ -247,19 +229,19 @@ const editClass = (props:any) => {
 }
 
 const deleteClassDialogShow = ref(false);
-const deleteClassData = reactive<{ id: string,name:string }>({ id: '',name: '' });
+const deleteClassData = reactive<{ id: string, name: string }>({ id: '', name: '' });
 
-const deleteClass = (props: { rowData: { id: string, name:string } }) => {
+const deleteClass = (props: { rowData: { id: string, name: string } }) => {
   console.log(props);
 
   deleteClassDialogShow.value = true;
   deleteClassData.id = props.rowData.id
-  deleteClassData.name= props.rowData.name
+  deleteClassData.name = props.rowData.name
 }
 
 const confirmEditDialog = () => {
   console.log(editClassData)
-  editClasses({id:editClassData.id})
+  editClasses({ id: editClassData.id, teacherId: editClassData.teacherId })
     .then((res: any) => {
       if (res.code == 20000) {
         ElNotification({
@@ -308,16 +290,21 @@ const confirmDeleteDialog = () => {
   deleteClassDialogShow.value = false;
 }
 
-
-
-
 const cancelDeleteDialog = () => {
   deleteClassDialogShow.value = false;
 }
 
+const loadAllTeacher = () => {
+  getAllTeachers()
+    .then((res) => {
+      allTeacher.value = res.data
+    })
+    .catch()
+}
+//------------created---------------------------------
+
 const loadData = () => {
   loading.value = true
-
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
@@ -326,11 +313,19 @@ const loadData = () => {
     gradeId: searchBarItems[2].value[0],
     subjectId: searchBarItems[3].value[0]
   }
-
   getClasses(args)
     .then((res) => {
       tableData.value = res.data.records
       totalLength.value = res.data.records.length
+      return getAllTeachers()
+    }).then((res) => {
+      allTeacher.value = res.data
+      return getSubjects()
+    }).then((res) => {
+      allSubjects.value = res.data
+      return getGrades()
+    }).then((res) => {
+      allGrades.value = res.data.map((i: any) => i.subset).flat()
     })
     .catch(() => { })
     .finally(() => {
@@ -339,16 +334,7 @@ const loadData = () => {
 }
 loadData()
 
-const loadAllTeacher = () => {
-
-  getAllTeachers()
-    .then((res) => {
-      allTeacher.value = res.data
-    })
-    .catch()
-}
-loadAllTeacher()
-
+//------------------------------------------------------
 </script>
 
 <template>
@@ -367,14 +353,14 @@ loadAllTeacher()
   <el-dialog class="new-class-dialog" width="370px" v-model="newClassDialogShow">
     <div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;">
+        <span class="dialog-span">
           班级名称：
         </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.name">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;">
+        <span class="dialog-span">
           负责老师：
         </span>
         <el-select filterable class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
@@ -382,14 +368,14 @@ loadAllTeacher()
         </el-select>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;">
+        <span class="dialog-span">
           起始时间：
         </span>
         <el-date-picker class="dialog-input" placeholder="yyyy-mm-dd" v-model="newClassData.startDate">
         </el-date-picker>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;">
+        <span class="dialog-span">
           到期时间：
         </span>
         <el-date-picker class="dialog-input" placeholder="请输入" v-model="newClassData.endDate">
@@ -434,7 +420,7 @@ loadAllTeacher()
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span" >
+        <span class="dialog-span">
           负责老师：
         </span>
         <el-select filterable class="dialog-input" v-model="editClassData.teacherId">
@@ -442,7 +428,7 @@ loadAllTeacher()
         </el-select>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"  >
+        <span class="dialog-span">
           到期时间：
         </span>
         <el-date-picker class="dialog-input" placeholder="yyyy-mm-dd" v-model="editClassData.endDate">

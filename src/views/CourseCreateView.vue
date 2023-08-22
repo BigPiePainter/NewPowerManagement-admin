@@ -20,7 +20,7 @@ const allLabel = ref<any>([])
 const loading = ref(true)
 const bgc = ref('#e2e5ec')
 
-const newGoodQuestion = reactive<any>([])
+const newGoodQuestion = reactive<any>({})
 
 const showImgSrc = ref<string>('')
 
@@ -80,28 +80,6 @@ const loadSelectOption = () => {
             allLabel.value = res.data
         })
         .catch()
-
-    // getSubjects()
-    //     .then((res) => {
-    //         allSubjects.value.length = 0
-    //         allSubjects.value = res.data
-    //     })
-    //     .catch()
-
-    // getAllTeachers()
-    //     .then((res) => {
-    //         allTeacher.value.length = 0
-    //         allTeacher.value = res.data
-    //         console.log(res)
-    //     })
-    //     .catch()
-
-    // getLabels()
-    //     .then((res) => {
-    //         allLabel.value.length = 0
-    //         allLabel.value = res.data
-    //     })
-    //     .catch()
 }
 loadSelectOption()
 
@@ -148,30 +126,36 @@ const createnewGoodQuestion = () => {
     var args = {
         cover: showImgSrc.value,
         name: newGoodQuestion.name,
-        teacherId: newGoodQuestion.teacherId,
+        teacherId: Number(newGoodQuestion.teacherId),
         description: newGoodQuestion.description,
-        difficultyLevel: newGoodQuestion.difficultyLevel,
-        gradeId: newGoodQuestion.gradeId,
-        subjectId: newGoodQuestion.subjectId,
-        labelId: newGoodQuestion.labelId,
+        difficultyLevel: Number(newGoodQuestion.difficultyLevel),
+        gradeId: Number(newGoodQuestion.gradeId),
+        subjectId: Number(newGoodQuestion.subjectId),
+        labelId: Number(newGoodQuestion.labelId),
         type: 1
     }
 
     createGoodQuestionPack(args)
         .then((res: any) => {
-            if (res.code == '20000') {
+            if (res.code == 20000) {
                 ElNotification({
                     title: '成功',
-                    message: '好题包创建成功',
+                    message: '课程包创建成功',
                     type: 'success',
+                })
+            } else {
+                ElNotification({
+                    title: '创建失败',
+                    message: res.msg,
+                    type: 'warning',
                 })
             }
             loading.value = false
         })
-        .catch(() => {
+        .catch((res: any) => {
             ElNotification({
-                title: '失败',
-                message: '创建失败',
+                title: '未知错误',
+                message: res.msg,
                 type: 'warning',
             })
         })
@@ -180,13 +164,8 @@ const createnewGoodQuestion = () => {
         })
 }
 
-
-
-
-
-
 const change = (valueHtml: any) => {
-            newGoodQuestion.description = valueHtml
+    newGoodQuestion.description = valueHtml
 }
 </script>
 
@@ -194,7 +173,7 @@ const change = (valueHtml: any) => {
     <div class="div-input-element">
         <div>
             <div class="top-part">
-                <el-text class="dialog-el-text" >
+                <el-text class="dialog-el-text">
                     名称：
                 </el-text>
                 <el-input style="width: 217px;" class="dialog-input" placeholder="请输入课程包名称" v-model="newGoodQuestion.name">
@@ -202,7 +181,7 @@ const change = (valueHtml: any) => {
             </div>
 
             <div class="top-part">
-                <el-text class="dialog-el-text" >
+                <el-text class="dialog-el-text">
                     学科：
                 </el-text>
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.subjectId">
@@ -211,7 +190,7 @@ const change = (valueHtml: any) => {
             </div>
 
             <div class="top-part">
-                <el-text class="dialog-el-text" >
+                <el-text class="dialog-el-text">
                     阶段：
                 </el-text>
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.gradeId">
@@ -239,19 +218,17 @@ const change = (valueHtml: any) => {
             </div>
         </div>
 
-
-
         <div class="div-input-element">
-            <el-text class="dialog-el-text" >
+            <el-text class="dialog-el-text">
                 难度：
             </el-text>
-            <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.difficultyType">
+            <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.difficultyLevel">
                 <el-option v-for="items in allDifficultyType" :key="items.id" :label="items.label" :value="items.id" />
             </el-select>
         </div>
 
         <div class="div-input-element">
-            <el-text class="dialog-el-text" >
+            <el-text class="dialog-el-text">
                 老师：
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.teacherId">
@@ -260,7 +237,7 @@ const change = (valueHtml: any) => {
         </div>
 
         <div class="div-input-element">
-            <el-text class="dialog-el-text" >
+            <el-text class="dialog-el-text">
                 标签：
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.labelId">
@@ -269,11 +246,11 @@ const change = (valueHtml: any) => {
         </div>
 
         <div class="div-input-element">
-            <el-text class="dialog-el-text" >
+            <el-text class="dialog-el-text">
                 详情描述：
             </el-text>
-                <RichTextEditor style="max-width: 600px;" :questionPrompt="newGoodQuestion.description" :isShow="true" @change="change"
-                v-model="newGoodQuestion.description">
+            <RichTextEditor style="max-width: 600px;" :questionPrompt="newGoodQuestion.description" :isShow="true"
+                @change="change" v-model="newGoodQuestion.description">
             </RichTextEditor>
         </div>
 
