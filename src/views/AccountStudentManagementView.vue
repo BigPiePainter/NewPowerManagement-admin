@@ -12,16 +12,7 @@ import { getStudent, restStudentPsw, deleteStudent } from '@/apis/student'
 import { createStudent, editStudent } from '@/apis/student'
 const router = useRouter()
 
-
-
-
-
-
-
-
-
 //-----------------跳转传参-----------------------
-
 const clickDetail = (props: any) => {
   console.log(props)
   router.push({
@@ -38,17 +29,6 @@ const clickDetail = (props: any) => {
     }
   })
 }
-
-
-
-
-
-
-
-
-
-
-
 
 const breadcrumbStore = useBreadcrumbStore()
 const createDialogShow = ref(false);
@@ -182,17 +162,6 @@ const newStudentData = reactive<any>({
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 
-const loadSelectOptionDialog = () => {
-
-  getSubjects()
-    .then((res) => (allSubjects.value = res.data))
-    .catch()
-
-  getGrades()
-    .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-    .catch()
-}
-
 const restPsw = (item: any) => {
   var args = { studentId: item.rowData.id }
   restStudentPsw(args)
@@ -319,7 +288,6 @@ const totalLength = ref<Number>()
 
 const loadData = () => {
   loading.value = true
-
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
@@ -329,13 +297,19 @@ const loadData = () => {
     phoneNumber: searchBarItems[1].value,
     gradeIds: searchBarItems[3].value
   }
-
   getStudent(args)
     .then((res) => {
       dataCompute(res.data.records)
       loading.value = false
       totalLength.value = res.data.records.length
+      return getSubjects()
     })
+    .then((res) => {
+      allSubjects.value = res.data
+      return getGrades()
+    }).then((res) => (
+      allGrades.value = res.data.map((i: any) => i.subset).flat()
+    ))
     .catch()
 }
 loadData()
@@ -427,8 +401,6 @@ const confirmEditDialog = () => {
 }
 
 const createStudents = () => {
-
-  loadSelectOptionDialog()
   createDialogShow.value = true;
   console.log(createDialogShow.value)
 }
@@ -445,15 +417,15 @@ const cancelEditDialog = () => {
     </template>
     <div style="height: 350px;margin-left: 20px;">
       <div class="input">
-        <div class="input-word"  style="color: #fa1010;">用户名:</div>
+        <div class="input-word" style="color: #fa1010;">用户名:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.account" />
       </div>
       <div class="input">
-        <div class="input-word"  style="color: #fa1010;">姓名:</div>
+        <div class="input-word" style="color: #fa1010;">姓名:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.name" />
       </div>
       <div class="input">
-        <div class="input-word"  style="color: #fa1010;">到期时间:</div>
+        <div class="input-word" style="color: #fa1010;">到期时间:</div>
         <el-date-picker type="datetime" placeholder="请选择" style="width:200px" v-model="newStudentData.expiration"
           value-format="YYYY-MM-DD HH:MM:00" />
       </div>
@@ -465,12 +437,12 @@ const cancelEditDialog = () => {
         </el-select>
       </div>
       <div class="input">
-        <div class="input-word"  style="color: #fa1010;">密码:</div>
+        <div class="input-word" style="color: #fa1010;">密码:</div>
         <ElInput class="input-input" placeholder="6-20位,建议包含数字与字母" v-model="newStudentData.password" />
       </div>
 
       <div class="input">
-        <div class="input-word"  style="color: #fa1010;">手机号码:</div>
+        <div class="input-word" style="color: #fa1010;">手机号码:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumber" />
       </div>
       <div class="input">
@@ -478,7 +450,7 @@ const cancelEditDialog = () => {
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.remark" />
       </div>
       <div class="input">
-        <div class="input-word"  style="color: #fa1010;">父母手机号:</div>
+        <div class="input-word" style="color: #fa1010;">父母手机号:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumberOfParent" />
       </div>
     </div>

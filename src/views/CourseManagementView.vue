@@ -444,7 +444,6 @@ const loadData = () => {
     })
 }
 loadData()
-
 </script>
 
 <template>
@@ -458,13 +457,13 @@ loadData()
 
   <el-dialog class="new-class-dialog" width="370px" v-model="editDialogShow">
     <div>
-      <div class="div-input-element">
+      <!-- <div class="div-input-element">
         <span class="dialog-span">
-          封面名称：
+          封面地址：
         </span>
         <el-input class="dialog-input" v-model="newCourseData.cover">
         </el-input>
-      </div>
+      </div> -->
 
       <div class="div-input-element">
         <span class="dialog-span">
