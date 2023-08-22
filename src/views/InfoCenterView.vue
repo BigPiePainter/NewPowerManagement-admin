@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import RichTextEditor from '@/components/RichTextEditor.vue';
-import { getMessages, createMessage } from '@/apis/message';
+import { getMessages, createMessage, deleteMessage } from '@/apis/message';
 import { ref, reactive } from 'vue'
 import { ElNotification } from 'element-plus'
 import { ElButton } from 'element-plus'
@@ -37,7 +37,7 @@ const searchBarItems = reactive([
   }
 ])
 
-const tableColumns = [
+const tableColumns = reactive([
   {
     dataKey: 'id',
     key: 'id',
@@ -60,6 +60,7 @@ const tableColumns = [
     dataKey: 'type',
     key: 'type',
     title: '接收者类型',
+    align:'center',
     cellRenderer: (item: any) => {
       return (
         <>
@@ -73,6 +74,7 @@ const tableColumns = [
     dataKey: 'receiverList',
     key: 'receiverList',
     title: '接收对象',
+    align:'center',
     cellRenderer: (item: any) => {
       return (
         <>
@@ -80,7 +82,13 @@ const tableColumns = [
         </>
       )
     },
-    width: 140
+    width: 180
+  },
+  {
+    dataKey: 'createdAt',
+    key: 'createdAt',
+    title: '创建时间',
+    width: 200
   },
   {
     key: 'option',
@@ -88,7 +96,7 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <>
-          <el-button link type="danger" onClick={() => console.log(item)}>
+          <el-button link type="danger" onClick={() => messageDelete(item)}>
             删除
           </el-button>
         </>
@@ -98,8 +106,33 @@ const tableColumns = [
     fixed: 'right',
     align: 'center',
   }
-]
-
+])
+const messageDelete = (item: any) => {
+  deleteMessage({ id: item.rowData.id })
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '已删除',
+          type: 'success'
+        })
+      }
+      else {
+        ElNotification({
+          title: '删除失败',
+          message: res.msg,
+          type: 'error'
+        })
+      }
+    }).catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error'
+      })
+    }).finally(() => {
+      loadData()
+    })
+}
 const recieverListTableData = reactive<any>([])
 const receiverListDialogShow = ref(false)
 const recieverListDialogColumn = reactive([
@@ -185,14 +218,6 @@ const sendMsg = () => {
   sendMsgDialogShow.value = true
 }
 
-// const msgContent = reactive({ title: '', recievers: '', richText: '' })
-// const confirmSendMsg = () => {
-//   console.log(msgContent)
-//   msgContent.title = ''
-//   msgContent.recievers = ''
-//   msgContent.richText = ''
-// }
-
 const cancelSendMsg = () => {
   sendMsgDialogShow.value = false
 }
@@ -207,7 +232,8 @@ const dataCompute = (props: any) => {
       type: item.type,
       title: item.title,
       content: item.content,
-      receiverList: []
+      receiverList: [],
+      createdAt: item.createdAt
     }
     item.receiverList.forEach((i: any) => {
       if (item.readList.indexOf(i) != -1) {

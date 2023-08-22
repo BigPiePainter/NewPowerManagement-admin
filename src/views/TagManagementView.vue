@@ -15,6 +15,17 @@ const supLabelId = ref()
 const changeSupLabelId = (id: any) => {
   supLabelId.value = id
 }
+
+const loadData = () => {
+  getLabels().then((res: any) => {
+    labelData.length = 0
+    res.data.forEach((item: any) => {
+      labelData.push(item)
+    })
+    dataCompute(labelData)
+  }).catch
+}
+
 const dataCompute = (props: any) => {
   supLabels.length = 0
   subLabels.length = 0
@@ -25,6 +36,31 @@ const dataCompute = (props: any) => {
       subLabels.push(label)
     }
   })
+}
+
+const loadDataCreate = () => {
+  getLabels().then((res: any) => {
+    labelData.length = 0
+    res.data.forEach((item: any) => {
+      labelData.push(item)
+    })
+    dataComputeCreate(labelData)
+  }).catch
+}
+loadDataCreate()
+
+const dataComputeCreate = (props: any) => {
+  supLabels.length = 0
+  subLabels.length = 0
+  props.forEach((label: any) => {
+    if (label.level == 1) {
+      supLabels.push(label)
+    } else if (label.level == 2) {
+      subLabels.push(label)
+    }
+  })
+  supLabelId.value = supLabels[0].id
+  console.log(supLabelId)
 }
 
 const createLabelInfo = reactive<any>({
@@ -44,17 +80,6 @@ const addSubLabel = () => {
   createLabelInfo.name = ''
   createDialogShow.value = true
 }
-
-const loadData = () => {
-  getLabels().then((res: any) => {
-    labelData.length = 0
-    res.data.forEach((item: any) => {
-      labelData.push(item)
-    })
-    dataCompute(labelData)
-  }).catch
-}
-loadData()
 
 const confrimCreateNew = () => {
   console.log(createLabelInfo)
@@ -116,7 +141,12 @@ const deleteLab = (item: any) => {
       <div class="test">
         <el-scrollbar class="scrollbar">
           <div class="card-body" v-for="item in supLabels" :key="item.name">
-            <el-button link type="primary" @click="changeSupLabelId(item.id)">{{ item.name }}</el-button>
+            <el-button color="#e2e5ec" style="flex-grow: 1;" v-if="item.id == supLabelId ? true : false" @click="changeSupLabelId(item.id)">{{
+              item.name
+            }}</el-button>
+            <el-button style="flex-grow: 1;" v-if="item.id == supLabelId ? false : true" text @click="changeSupLabelId(item.id)">{{
+              item.name
+            }}</el-button>
             <div style="flex-grow: 1;"></div>
             <el-button link type="danger" @click="deleteLab(item.id)">删除</el-button>
           </div>
@@ -143,7 +173,10 @@ const deleteLab = (item: any) => {
 
   <el-dialog class="new-class-dialog" width="370px" v-model="createDialogShow">
     <div class="div-input-element" style="margin-top: 10px;">
-      <el-text style="color: #fa1010;">
+      <el-text style="color: #ff0000;">
+        *
+      </el-text>
+      <el-text>
         标签名称：
       </el-text>
       <div>
@@ -217,6 +250,7 @@ const deleteLab = (item: any) => {
     >.card-body {
       margin: 10px;
       display: flex;
+
       >.tag-item {
         line-height: 2;
         margin-bottom: 3px;

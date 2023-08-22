@@ -18,3 +18,13 @@ export const createMessage = (data:any) => {
     }
     return http.request(args)
 }
+
+export const deleteMessage = (data:any) => {
+    const args = {
+        url: '/api/management/message/delete-message',
+        method: 'POST',
+        data,
+        mode: "json"
+    }
+    return http.request(args)
+}

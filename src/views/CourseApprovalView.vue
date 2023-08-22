@@ -479,37 +479,37 @@ const warningDialog = (cellData2: any) => {
 }
 
 const ConfirmdeleteMiniLesson = () => {
-  deleteMiniLessons({ id: deleteItemid.value.rowData.id }).then((res: any) => {
-    console.log(deleteItemid)
-    if (res.code == 20000) {
+  deleteMiniLessons({ id: deleteItemid.value.rowData.id })
+    .then((res: any) => {
+      if (res.code == 20000) {
+        ElNotification({
+          title: '已删除',
+          type: 'success'
+        })
+      }
+      else {
+        ElNotification({
+          title: '删除失败',
+          message: res.msg,
+          type: 'error'
+        })
+      }
+    }).catch((res: any) => {
       ElNotification({
-        title: '已删除',
-        type: 'success'
-      })
-    }
-    else {
-      ElNotification({
-        title: '删除失败',
+        title: '未知错误',
         message: res.msg,
         type: 'error'
       })
-    }
-  }).catch((res: any) => {
-    ElNotification({
-      title: '未知错误',
-      message: res.msg,
-      type: 'error'
+    }).finally(() => {
+      warningDialogshow.value = false
+      if (auditStatus.value == 1) {
+        loadPendingData()
+      } else if (auditStatus.value == 3) {
+        loadApprovalData()
+      } else if (auditStatus.value == 4) {
+        loadRejctData()
+      }
     })
-  }).finally(() => {
-    warningDialogshow.value = false
-    if (auditStatus.value == 1) {
-      loadPendingData()
-    } else if (auditStatus.value == 3) {
-      loadApprovalData()
-    } else if (auditStatus.value == 4) {
-      loadRejctData()
-    }
-  })
 }
 
 

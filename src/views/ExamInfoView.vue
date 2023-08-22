@@ -157,7 +157,7 @@ $gap: 15px;
 
 .info-table {
   width: calc($page-width - $gap);
-  height: $page-height;
+  height: calc($page-height - $gap);
   margin-left: $gap;
   margin-top: $gap;
 
