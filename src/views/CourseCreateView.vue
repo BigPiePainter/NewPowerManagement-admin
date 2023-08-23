@@ -126,12 +126,12 @@ const createnewGoodQuestion = () => {
     var args = {
         cover: showImgSrc.value,
         name: newGoodQuestion.name,
-        teacherId: Number(newGoodQuestion.teacherId),
+        teacherId: newGoodQuestion.teacherId,
         description: newGoodQuestion.description,
-        difficultyLevel: Number(newGoodQuestion.difficultyLevel),
-        gradeId: Number(newGoodQuestion.gradeId),
-        subjectId: Number(newGoodQuestion.subjectId),
-        labelId: Number(newGoodQuestion.labelId),
+        difficultyLevel: newGoodQuestion.difficultyLevel,
+        gradeId: newGoodQuestion.gradeId,
+        subjectId: newGoodQuestion.subjectId,
+        labelId: newGoodQuestion.labelId,
         type: 1
     }
 

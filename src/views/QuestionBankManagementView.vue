@@ -334,28 +334,15 @@ const clickCreate = () => {
 // }
 
 
-const editCourse = (props: {
-  rowData: {
-    name: string,
-    teacherId: number,
-    subjectId: number,
-    gradeId: number,
-    id: number
-    description: string,
-    difficultyLevel: number,
-    cover: string
-  }
-
-}) => {
+const editCourse = (props:any) => {
   console.log(props);
   editDialogShow.value = true;
   newCourseData.cover = props.rowData.cover;
   newCourseData.description = props.rowData.description;
-  newCourseData.teacherId = Number(props.rowData.teacherId);
+  newCourseData.teacherId = props.rowData.teacherId;
   newCourseData.difficultyLevel = Number(props.rowData.difficultyLevel);
-  newCourseData.gradeId = Number(props.rowData.gradeId);
-  newCourseData.subjectId = Number(props.rowData.subjectId);
-  newCourseData.gradeId = Number(props.rowData.gradeId);
+  newCourseData.gradeId = props.rowData.gradeId;
+  newCourseData.subjectId = props.rowData.subjectId;
   newCourseData.id = props.rowData.id;
   newCourseData.name = props.rowData.name;
 }
@@ -455,8 +442,8 @@ const loadData = () => {
       allGrades.length = 0
       res.data.forEach((item: any) => {
         item.subset.forEach((item: any) => {
-          var dataSample: { id: number, level: number, name: string } = {
-            id: Number(item.id),
+          var dataSample: { id: string, level: number, name: string } = {
+            id: item.id,
             level: item.level,
             name: item.name
           }
@@ -467,8 +454,8 @@ const loadData = () => {
     }).then((res: any) => {
       allSubjects.length = 0
       res.data.forEach((item: any) => {
-        var dataSample: { id: number, name: string } = {
-          id: Number(item.id),
+        var dataSample: { id: string, name: string } = {
+          id: item.id,
           name: item.name
         }
         allSubjects.push(dataSample)
@@ -477,8 +464,8 @@ const loadData = () => {
     }).then((res: any) => {
       allTeachers.length = 0
       res.data.forEach((item: any) => {
-        var dataSample: { id: number, name: string } = {
-          id: Number(item.id),
+        var dataSample: { id: string, name: string } = {
+          id: item.id,
           name: item.name
         }
         allTeachers.push(dataSample)

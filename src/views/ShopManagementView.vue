@@ -120,95 +120,50 @@ const loading = ref(true)
 
 const allstatus = [
   {
-    id: 1,
-    value: 1,
+    id: '1',
+    value: '1',
     name: '已上架',
   },
   {
-    id: 2,
-    value: 2,
+    id: '2',
+    value: '2',
     name: '未上架',
   },
 ]
 
 const allVersion = [
   {
-    id: 1,
-    value: 1,
+    id: '1',
+    value: '1',
     name: '课程/好题A',
   },
   {
-    id: 2,
-    value: 2,
+    id: '2',
+    value: '2',
     name: '课程/好题B',
   },
   {
-    id: 3,
-    value: 3,
+    id: '3',
+    value: '3',
     name: '课程/好题C',
   },
   {
-    id: 4,
-    value: 4,
+    id: '4',
+    value: '4',
     name: '课程/好题D',
   },
 ]
 
-const allversionType = [
-  {
-    id: 1,
-    value: 1,
-    name: '基础版',
-  },
-  {
-    id: 2,
-    value: 2,
-    name: '培优版',
-  },
-  {
-    id: 3,
-    value: 3,
-    name: '创新版',
-  }
-]
-
-
-// const loadSelectOption = () => {
-//   getGrades()
-//     .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-//     .catch()
-
-//   getSubjects()
-//     .then((res) => {
-//       (allSubjects.value = res.data)
-//       console.log(allSubjects)
-//     })
-//     .catch()
-// }
-
 const allType: any = [
   {
-    id: 1,
-    value: 1,
+    id: '1',
+    value: '1',
     name: '课程',
   },
   {
-    id: 2,
-    value: 2,
+    id: '2',
+    value: '2',
     name: '好题',
-  },
-]
-
-const allHot: any = [
-  {
-    id: 1,
-    value: 1,
-    name: '热门',
-  },
-  {
-    id: 2,
-    value: 2,
-    name: '非热门',
   },
 ]
 
@@ -373,12 +328,45 @@ const tableColumns = [
     dataKey: 'status',
     key: 'status',
     title: '状态',
-    Fwidth: 50,
-    cellRenderer: (cellData: any) => (
-      <span>
-        {cellData.cellData == 1 ? "已上架" : "未上架"}
-      </span>
-    )
+    width: 70,
+    align:'center',
+    cellRenderer: (cellData: any) => {
+      return (
+        <div>
+          <el-switch
+            v-model={cellData.rowData.status}
+            active-value={1}
+            inactive-value={2}
+            onChange={() => editgoodOn(cellData)}
+            inline-prompt
+            active-text="已上架"
+            inactive-text="未上架"
+          />
+        </div>
+      )
+    }
+  },
+  {
+    dataKey: 'hot',
+    key: 'hot',
+    title: '热门',
+    width: 70,
+    align:'center',
+    cellRenderer: (cellData: any) => {
+      return (
+        <div>
+          <el-switch
+            v-model={cellData.rowData.hot}
+            active-value={1}
+            inactive-value={2}
+            onChange={() => editGoodsHot(cellData)}
+            inline-prompt
+            active-text="热门"
+            inactive-text="非热门"
+          />
+        </div>
+      )
+    }
   },
   {
     key: 'option',
@@ -394,30 +382,19 @@ const tableColumns = [
             编辑
           </el-button>
 
-          <el-button link type="primary" onClick={() => editGoodsHot(item)}>
-            添加为热门
-          </el-button>
-
-          <el-button link type="primary" onClick={() => editgoodOn(item)}>
-            上架/下架
-          </el-button>
-
-          <el-popconfirm hide-after={0} width='170' title={`删除学生${item.rowData.name}`} onConfirm={() => preDeleteStu(item)} v-slots={deleteSlot} />
+          <el-popconfirm hide-after={0} width='170' title={`删除商品${item.rowData.name}`} onConfirm={() => preDeleteStu(item)} v-slots={deleteSlot} />
         </>
       )
     },
-    width: 300,
-    fixed: 'right',
+    width: 160,
     align: 'center',
-    height: 500
+    fixed:'right'
   }
 ]
-
 
 const deleteSlot = {
   reference: () => <el-button link type="danger">删除</el-button>
 }
-
 
 const paginationInfo = reactive({
   currentPage: 1,
@@ -449,7 +426,7 @@ const loadData = () => {
       allGrades.length = 0
       res.data.forEach((item: any) => {
         item.subset.forEach((item: any) => {
-          var dataSample: { id: number, level: number, name: string } = {
+          var dataSample: { id: string, level: string, name: string } = {
             id: item.id,
             level: item.level,
             name: item.name
@@ -461,8 +438,8 @@ const loadData = () => {
     }).then((res: any) => {
       allSubjects.length = 0
       res.data.forEach((item: any) => {
-        var dataSample: { id: number, name: string } = {
-          id: Number(item.id),
+        var dataSample: { id: string, name: string } = {
+          id: item.id,
           name: item.name
         }
         allSubjects.push(dataSample)
@@ -483,30 +460,12 @@ console.log(tableData)
 //-------------------上下架----------------------//
 
 const editgoodOn = (props: any) => {
-  editProductData.id = props.rowData.id;
-  editProductData.iosPoint = props.rowData.iosPoint;
-  editProductData.tcoin = props.rowData.tcoin;
-  editProductData.androidPoint = props.rowData.androidPoint;
-  editProductData.androidPrice = props.rowData.androidPrice;
-  editProductData.name = props.rowData.name
-  editProductData.hot = props.rowData.hot
-  editProductData.subjectId = props.rowData.subjectId
-  editProductData.type = props.rowData.type
-  editProductData.version = props.rowData.version
-  editProductData.versionType = props.rowData.versionType
-  editProductData.status = props.rowData.status
-  console.log(props)
-
-
-  if (props.rowData.status == '1') {
-    editProductData.status = '2'
+  var args = {
+    id: props.rowData.id,
+    status: props.rowData.status
   }
-  else if (props.rowData.status == '2') {
-    editProductData.status = '1'
-  }
-  editProduct(editProductData).
+  editProduct(args).
     then((res: any) => {
-      console.log(editProductData)
       if (res.code == '20000') {
         ElNotification({
           title: '成功',
@@ -527,20 +486,12 @@ const editgoodOn = (props: any) => {
 }
 //------------------------编辑商品--------------
 const editProductData = reactive<any>({
-
   id: '',
   iosPoint: '',
   androidPoint: '',
   androidPrice: '',
-  hot: '',
   name: '',
-  status: '',
-  subjectId: '',
   tcoin: '',
-  type: '',
-  version: '',
-  versionType: '',
-
 });
 
 
@@ -552,11 +503,6 @@ const editGoods =
     editProductData.androidPoint = props.rowData.androidPoint;
     editProductData.androidPrice = props.rowData.androidPrice;
     editProductData.name = props.rowData.name
-    editProductData.hot = props.rowData.hot
-    editProductData.subjectId = props.rowData.subjectId
-    editProductData.type = props.rowData.type
-    editProductData.version = props.rowData.version
-    editProductData.versionType = props.rowData.versionType
     console.log(props)
     editDialogShow.value = true;
   }
@@ -637,28 +583,12 @@ const deleteStu = (item: any) => {
     })
 }
 //----------------------------添加热门----------
-const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: string, tcoin: string, androidPoint: string, androidPrice: string, name: string, hot: string, subjectId: string, type: string, version: string, versionType: string } }) => {
-  editProductData.id = props.rowData.id;
-  editProductData.iosPoint = props.rowData.iosPoint;
-  editProductData.tcoin = props.rowData.tcoin;
-  editProductData.androidPoint = props.rowData.androidPoint;
-  editProductData.androidPrice = props.rowData.androidPrice;
-  editProductData.name = props.rowData.name
-  editProductData.hot = props.rowData.hot
-  editProductData.subjectId = props.rowData.subjectId
-  editProductData.type = props.rowData.type
-  editProductData.version = props.rowData.version
-  editProductData.versionType = props.rowData.versionType
-  editProductData.status = props.rowData.status
-  console.log(props)
-
-  if (props.rowData.hot == '1') {
-    editProductData.hot = '1'
+const editGoodsHot = (props: any) => {
+  var args = {
+    id: props.rowData.id,
+    hot: props.rowData.hot
   }
-  else if (props.rowData.hot == '2') {
-    editProductData.hot = '1'
-  }
-  editProduct(editProductData).
+  editProduct(args).
     then((res: any) => {
       console.log(editProductData)
       if (res.code == '20000') {
@@ -705,7 +635,7 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *商品ios积分价格：
+          *ios积分价格：
         </span>
         <el-input class="dialog-input" v-model="editProductData.iosPoint">
         </el-input>
@@ -713,7 +643,7 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *商品T币价格：
+          *T币价格：
         </span>
         <el-input class="dialog-input" v-model="editProductData.tcoin">
         </el-input>
@@ -721,13 +651,21 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *商品安卓积分价格：
+          *安卓积分价格：
         </span>
         <el-input class="dialog-input" v-model="editProductData.androidPoint">
         </el-input>
       </div>
 
       <div class="div-input-element">
+        <span class="dialog-span">
+          *安卓价格(￥)：
+        </span>
+        <el-input class="dialog-input" v-model="editProductData.androidPrice">
+        </el-input>
+      </div>
+
+      <!-- <div class="div-input-element">
         <span class="dialog-span">
           状态：
         </span>
@@ -743,9 +681,9 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
         <el-select class="dialog-input" v-model="editProductData.hot">
           <el-option v-for="item in allHot" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
-      </div>
+      </div> -->
 
-      <div class="div-input-element">
+      <!-- <div class="div-input-element">
         <span class="dialog-span">
           *学科：
         </span>
@@ -779,7 +717,7 @@ const editGoodsHot = (props: { rowData: { status: string, id: string, iosPoint: 
         <el-select class="dialog-input" v-model="editProductData.versionType">
           <el-option v-for="item in allversionType" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
-      </div>
+      </div> -->
     </div>
     <template #header>
       <el-text>编辑商品</el-text>

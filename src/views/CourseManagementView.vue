@@ -208,7 +208,7 @@ const tableColumns = [
     dataKey: 'cover',
     key: 'cover',
     title: '封面',
-    width: 200,
+    width: 150,
     cellRenderer: (item: any) => (
       <el-image
         fit="scale-down"
@@ -224,7 +224,19 @@ const tableColumns = [
     dataKey: 'teacherName',
     key: 'teacherName',
     title: '负责老师',
-    width: 200
+    width: 100
+  },
+  {
+    dataKey: 'subjectName',
+    key: 'subjectName',
+    title: '学科',
+    width: 100
+  },
+  {
+    dataKey: 'gradeName',
+    key: 'gradeName',
+    title: '阶段',
+    width: 100
   },
   {
     dataKey: 'createdAt',
@@ -232,19 +244,6 @@ const tableColumns = [
     title: '创建时间',
     width: 200
   },
-  {
-    dataKey: 'subjectName',
-    key: 'subjectName',
-    title: '学科',
-    width: 200
-  },
-  {
-    dataKey: 'gradeName',
-    key: 'gradeName',
-    title: '阶段',
-    width: 200
-  },
-
   {
     key: 'option',
     title: '操作',
@@ -342,11 +341,11 @@ const editCourse = (props: any) => {
   newCourseData.name = props.rowData.name;
   newCourseData.cover = props.rowData.cover;
   newCourseData.description = props.rowData.description;
-  newCourseData.teacherId = Number(props.rowData.teacherId);
+  newCourseData.teacherId = props.rowData.teacherId;
   newCourseData.difficultyLevel = Number(props.rowData.difficultyLevel);
-  newCourseData.gradeId = Number(props.rowData.gradeId);
-  newCourseData.subjectId = Number(props.rowData.subjectId);
-  newCourseData.id = Number(props.rowData.id);
+  newCourseData.gradeId = props.rowData.gradeId;
+  newCourseData.subjectId = props.rowData.subjectId;
+  newCourseData.id = props.rowData.id;
   console.log(newCourseData);
   editDialogShow.value = true;
 }
@@ -356,11 +355,11 @@ const confirmEditDialog = () => {
     name: newCourseData.name,
     cover: newCourseData.cover,
     description: newCourseData.description,
-    teacherId: Number(newCourseData.teacherId),
-    difficultyLevel: Number(newCourseData.difficultyLevel),
-    gradeId: Number(newCourseData.gradeId),
-    subjectId: Number(newCourseData.subjectId),
-    id: Number(newCourseData.id),
+    teacherId: newCourseData.teacherId,
+    difficultyLevel: newCourseData.difficultyLevel,
+    gradeId: newCourseData.gradeId,
+    subjectId: newCourseData.subjectId,
+    id: newCourseData.id,
   }
   console.log(args)
   editCourseQuestionPackage(args)
@@ -409,8 +408,8 @@ const loadData = () => {
       allGrades.length = 0
       res.data.forEach((item: any) => {
         item.subset.forEach((item: any) => {
-          var dataSample: { id: number, level: number, name: string } = {
-            id: Number(item.id),
+          var dataSample: { id: string, level: number, name: string } = {
+            id: item.id,
             level: item.level,
             name: item.name
           }
@@ -421,8 +420,8 @@ const loadData = () => {
     }).then((res: any) => {
       allSubjects.length = 0
       res.data.forEach((item: any) => {
-        var dataSample: { id: number, name: string } = {
-          id: Number(item.id),
+        var dataSample: { id: string, name: string } = {
+          id: item.id,
           name: item.name
         }
         allSubjects.push(dataSample)
@@ -431,8 +430,8 @@ const loadData = () => {
     }).then((res: any) => {
       allTeachers.length = 0
       res.data.forEach((item: any) => {
-        var dataSample: { id: number, name: string } = {
-          id: Number(item.id),
+        var dataSample: { id: string, name: string } = {
+          id: item.id,
           name: item.name
         }
         allTeachers.push(dataSample)
