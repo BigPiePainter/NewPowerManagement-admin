@@ -118,9 +118,7 @@ const detail = (props: any) => {
       phoneNumber: props.rowData.phoneNumber,
     }
   })
-
 }
-
 
 //------------新建角色数据------------------------
 const roleDetail = () => {
@@ -153,8 +151,8 @@ const tableColumns = [
     width: 200
   },
   {
-    dataKey: 'roleRemark',
-    key: 'roleRemark',
+    dataKey: 'remark',
+    key: 'remark',
     title: '备注',
     width: 200
   },
@@ -254,36 +252,30 @@ const deleteTea = (item: any) => {
   <el-dialog class="new-class-dialog" width="370px" v-model="editTeacherDialogShow">
 
     <div class="div-input-element">
-      <span class="dialog-span">
+      <span style="white-space: nowrap; margin-top:5px">
         账号：
       </span>
-      <el-input filterable class="dialog-input" v-model="editTeacherData.account">
-      </el-input>
-    </div>
-
-    <div class="div-input-element">
-      <span class="dialog-span">
-        权限：
-      </span>
-      <el-input filterable class="dialog-input" v-model="editTeacherData.managerRoleId">
+      <el-input v-model="editTeacherData.account">
       </el-input>
     </div>
 
     <div class="div-input-element" style="margin-top: 10px;">
-      <span class="dialog-span">
+      <span style="white-space: nowrap; margin-top:5px">
         密码：
       </span>
-      <el-input class="dialog-input" v-model="editTeacherData.password">
+      <el-input v-model="editTeacherData.password">
       </el-input>
     </div>
 
     <div class="div-input-element" style="margin-top: 10px;">
-      <span class="dialog-span">
+      <span style="white-space: nowrap; margin-top:5px">
         手机：
       </span>
-      <el-input class="dialog-input" v-model="editTeacherData.phoneNumber">
+      <el-input v-model="editTeacherData.phoneNumber">
       </el-input>
     </div>
+
+    <el-text style="margin-top:5px; margin-left:15px" size="small">修改权限请点击管理员进入详情</el-text>
 
     <template #header>
       <el-text>编辑管理员</el-text>
@@ -300,6 +292,11 @@ const deleteTea = (item: any) => {
 
 <style scoped lang="scss">
 $gap: 15px;
+
+.div-input-element {
+  flex-direction: row;
+  display: flex;
+}
 
 .page-container {
   width: calc($page-width - $gap);

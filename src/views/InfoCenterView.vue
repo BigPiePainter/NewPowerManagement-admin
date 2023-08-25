@@ -1,5 +1,4 @@
 <script setup lang="tsx">
-import RichTextEditor from '@/components/RichTextEditor.vue';
 import { getMessages, createMessage, deleteMessage } from '@/apis/message';
 import { ref, reactive } from 'vue'
 import { ElNotification } from 'element-plus'
@@ -60,7 +59,7 @@ const tableColumns = reactive([
     dataKey: 'type',
     key: 'type',
     title: '接收者类型',
-    align:'center',
+    align: 'center',
     cellRenderer: (item: any) => {
       return (
         <>
@@ -74,7 +73,7 @@ const tableColumns = reactive([
     dataKey: 'receiverList',
     key: 'receiverList',
     title: '接收对象',
-    align:'center',
+    align: 'center',
     cellRenderer: (item: any) => {
       return (
         <>
@@ -269,14 +268,11 @@ const loadData = () => {
 loadData()
 
 const recieverTypeDialog = ref(false)
-const msgCtx = ref('')
 const receiverIds = ref('')
 const receiverIdArr = ref<any>([])
 const title = ref('')
+const textarea = ref('')
 const type = ref<number>()
-const change = (val: any) => {
-  msgCtx.value = val
-}
 
 const createMsg = () => {
   receiverIds.value = ''
@@ -284,7 +280,7 @@ const createMsg = () => {
     receiverIds.value = receiverIds.value + item + ','
   })
   var args = {
-    content: msgCtx.value,
+    content: textarea.value,
     receiverIds: receiverIds.value,
     senderId: userId.value,
     title: title.value,
@@ -320,7 +316,7 @@ const createMsg = () => {
     </div>
   </TablePage>
 
-  <el-dialog class="send-msg-dialog" width="600px" v-model="sendMsgDialogShow">
+  <el-dialog class="send-msg-dialog" width="400px" v-model="sendMsgDialogShow">
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
@@ -333,13 +329,13 @@ const createMsg = () => {
         <span class="dialog-span">
           *接收对象：
         </span>
-        <div v-if="type == 1">
-          <el-select filterable multiple class="dialog-input" placeholder="请选择消息接收对象" v-model="receiverIdArr">
+        <div class="dialog-input" v-if="type == 1">
+          <el-select filterable multiple placeholder="请选择消息接收对象" v-model="receiverIdArr">
             <el-option v-for="item in allStudents" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </div>
-        <div v-else-if="type == 2">
-          <el-select filterable multiple class="dialog-input" placeholder="请选择消息接收对象" v-model="receiverIdArr">
+        <div class="dialog-input" v-else-if="type == 2">
+          <el-select filterable multiple placeholder="请选择消息接收对象" v-model="receiverIdArr">
             <el-option v-for="item in allTeachers" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </div>
@@ -348,9 +344,10 @@ const createMsg = () => {
         <span class="dialog-span">
           *消息内容：
         </span>
-        <RichTextEditor :isShow="true" @change="change"></RichTextEditor>
-        <!-- <el-input class="dialog-input" placeholder="请输入" v-model="msgContent.richText">
-        </el-input> -->
+
+        <el-input style="margin-top:10px;" v-model="textarea" maxlength="100" placeholder="请输入消息内容" show-word-limit type="textarea">
+
+        </el-input>
       </div>
     </div>
     <template #header>
