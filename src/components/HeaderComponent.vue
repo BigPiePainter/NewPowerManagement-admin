@@ -51,7 +51,7 @@ const quit = () => {
         <FullScreen />
       </el-icon>
     </div>
-    <div class="user-avatar"></div>
+    <!-- <div class="user-avatar"></div> -->
     <el-dropdown class="user-action">
       <span>
         {{name}}
@@ -61,9 +61,9 @@ const quit = () => {
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>阿巴阿巴</el-dropdown-item>
+          <!-- <el-dropdown-item>阿巴阿巴</el-dropdown-item>
           <el-dropdown-item>阿巴巴</el-dropdown-item>
-          <el-dropdown-item>阿巴巴巴</el-dropdown-item>
+          <el-dropdown-item>阿巴巴巴</el-dropdown-item> -->
           <el-dropdown-item divided @click="quit">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
