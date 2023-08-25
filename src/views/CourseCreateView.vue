@@ -92,6 +92,7 @@ const handleFileChange = (e: Event) => {
         var imageSize = currentTarget.files[0].size
         var formData = new FormData()
         formData.append('file', currentTarget.files[0])
+        console.log(formData)
         if (imageSize < 1048576) {
             upload(formData)
                 .then((res: any) => {

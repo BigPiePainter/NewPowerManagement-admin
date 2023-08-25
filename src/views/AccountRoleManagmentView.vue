@@ -72,7 +72,7 @@ const editTeacherDialogShow = ref(false)
 
 
 const editTeacher =
-  (props:any) => {
+  (props: any) => {
     editTeacherData.id = props.rowData.id;
     editTeacherData.phoneNumber = props.rowData.phoneNumber;
     editTeacherData.account = props.rowData.account;
@@ -108,6 +108,18 @@ const cancelEditDialog = () => {
   editTeacherDialogShow.value = false;
 }
 
+const detail = (props: any) => {
+  router.push({
+    path: 'author',
+    query: {
+      id: props.rowData.id,
+      remark: props.rowData.remark,
+      account: props.rowData.account,
+      phoneNumber: props.rowData.phoneNumber,
+    }
+  })
+
+}
 
 
 //------------新建角色数据------------------------
@@ -125,6 +137,13 @@ const tableColumns = [
     dataKey: 'account',
     key: 'account',
     title: '账号',
+    cellRenderer: (item: any) => {
+      return (
+        <el-button link type="primary" onClick={() => detail(item)}>
+          {item.rowData.account}
+        </el-button>
+      )
+    },
     width: 200
   },
   {

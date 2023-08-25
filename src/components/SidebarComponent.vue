@@ -18,160 +18,178 @@ import { reactive } from 'vue';
 // const cslg=()=>{
 //   console.log(JSON.parse(localStorage.author))
 // }
-const url='src/assets/编组.png'
+const author = JSON.parse(localStorage.author)
+const url = 'src/assets/编组.png'
 const items = reactive([
   {
     index: '/work-space',
-    title: '工作台'
+    title: '工作台',
+    show: author.workSpace
   },
   {
     index: '/school-management',
     title: '学校管理',
+    show: author.classShow || author.teacherGroupShow,
     subs: [
       {
         index: '/class-management',
         title: '班级管理',
-        
+        show: author.classShow
       },
       {
         index: '/teacher-group-management',
         title: '教研组管理',
-        
+        show: author.teacherGroupShow
       }
     ]
   },
   {
     index: '/account-management',
     title: '账号管理',
+    show: author.managerShow
+      || author.deviceShow
+      || author.teacherShow
+      || author.studentShow
+      || author.temoryStudentShow,
     subs: [
       {
         index: '/account-role-managment',
         title: '管理员管理',
-        
+        show: author.managerShow,
       },
       {
         index: '/acount-equipment-management',
         title: '账号设备管理',
-        
+        show: author.deviceShow,
       },
       {
         index: '/account-teacher-managament',
         title: '老师管理',
-        
+        show: author.teacherShow,
       },
       {
         index: '/account-student-management',
         title: '学生管理',
-        
+        show: author.studentShow,
       },
       {
         index: '/account-temoorary-student',
         title: '临时学生',
-        
+        show: author.temoryStudentShow,
       }
     ]
   },
   {
     index: '/live-class',
     title: '实时课堂',
-    
+    show: author.liveClassShow,
   },
   {
     index: '/course-management-group',
     title: '课程管理',
+    show: author.miniLessonShow || author.coursePackageShow,
     subs: [
       {
         index: '/course-approval',
         title: '微课审核',
-        
+        show: author.miniLessonShow,
       },
       {
         index: '/course-management',
         title: '课程包管理',
-        
+        show: author.coursePackageShow,
       }
     ]
   },
   {
     index: '/shop-management',
     title: '商城管理',
-    
+    show: author.shopShow,
   },
   {
     index: '',
     title: '题库管理',
+    show: author.questionPackageShow || author.questionsShow,
     subs: [
       {
         index: '/question-bank-management',
         title: '好题包管理',
-        
+        show: author.questionPackageShow,
       },
       {
         index: '/question-bank',
         title: '题库',
-        
+        show: author.questionsShow,
       }
     ]
   },
   {
     index: '/order-management',
     title: '订单管理',
-    
+    show: author.orderShow,
   },
   {
     index: '/student-points-management',
     title: '消费管理',
+    show: author.pointShow || author.tCoinShow,
     subs: [
       {
         index: '/student-points-management',
         title: '学生积分',
-        
+        show: author.pointShow,
       },
       {
         index: '/student-tcoin-management',
         title: '学生T币',
-        
+        show: author.tCoinShow,
       }
     ]
   },
   {
     index: '/setting',
     title: '设置',
+    show: author.categoryShow
+      || author.tagShow
+      || author.courseCategoryShow
+      || author.examInfoShow
+      || author.examDateShow
+      || author.bannerShow
+      || author.messageShow,
     subs: [
       {
         index: '/category-management',
         title: '分类管理',
-        
+        show: author.categoryShow,
       },
       {
         index: '/tag-management',
         title: '标签管理',
-        
+        show: author.tagShow,
       },
       {
         index: '/course-category',
         title: '课程类目',
-        
+        show: author.courseCategoryShow,
       },
       {
         index: '/exam-info',
         title: '考试咨询',
-        
+        show: author.examInfoShow,
       },
       {
         index: '/exam-date',
         title: '考试时间',
-        
+        show: author.examDateShow,
       },
       {
         index: '/banner',
         title: 'banner',
-        
+        show: author.bannerShow,
       },
       {
         index: '/info-center',
         title: '消息中心',
-        
+        show: author.messageShow,
       },
     ]
   },
@@ -348,25 +366,30 @@ onUnmounted(() => {
 <template>
   <canvas class="sidebar-canvas"></canvas>
   <div class="sidebar">
-    <div class="sidebar-header"><el-image :src="url" style="width: 27px; height: 25px"></el-image><el-text style="margin-left: 15px;color: #FFFFFF;font-size: 20px;font-family: -, ;width: 80px;height=25px">满分智慧</el-text></div>
+    <div class="sidebar-header"><el-image :src="url" style="width: 27px; height: 25px"></el-image><el-text
+        style="margin-left: 15px;color: #FFFFFF;font-size: 20px;font-family: -, ;width: 80px;height=25px">满分智慧</el-text>
+    </div>
 
-    <el-menu  :unique-opened="true" :default-active="route.path" router>
+    <el-menu :unique-opened="true" :default-active="route.path" router>
       <template v-for="item in items" :key="item.index">
         <template v-if="item.subs">
-          <el-sub-menu :index="item.index" :key="item.index" class="sidebar-sub-menu">
-            <template #title>
-              <span>{{ item.title }}</span>
-            </template>
-            <template v-for="subItem in item.subs" :key="subItem.title">
-              <el-menu-item :index="subItem.index" class="sidebar-menu-item">
-                {{ subItem.title }}
-              </el-menu-item>
-            </template>
-          </el-sub-menu>
+          <div v-if="item.show">
+            <el-sub-menu :index="item.index" :key="item.index" class="sidebar-sub-menu">
+              <template #title>
+                <span>{{ item.title }}</span>
+              </template>
+              <template v-for="subItem in item.subs" :key="subItem.title">
+                <el-menu-item v-if="subItem.show" :index="subItem.index" class="sidebar-menu-item">
+                  {{ subItem.title }}
+                </el-menu-item>
+              </template>
+            </el-sub-menu>
+          </div>
+
         </template>
         <template v-else>
           <app-link :to="item.index">
-            <el-menu-item :index="item.index" :key="item.index" class="sidebar-menu-item">
+            <el-menu-item v-if="item.show" :index="item.index" :key="item.index" class="sidebar-menu-item">
               <template #title>{{ item.title }}</template>
             </el-menu-item>
           </app-link>

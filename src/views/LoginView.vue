@@ -1,13 +1,67 @@
 <script setup lang="ts">
 import { userLogin } from '@/apis/login'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElNotification } from 'element-plus'
 import { getManager } from '@/apis/manager'
 import router from '@/router'
 
 const account = ref('')
 const password = ref('')
-
+const author = reactive<any>({
+  workSpace: true,
+  school: false,
+  classShow: false,
+  classEdit: false,
+  teacherGroupShow: false,
+  teacherGroupEdit: false,
+  account: false,
+  managerShow: false,
+  managerEdit: false,
+  deviceShow: false,
+  deviceEdit: false,
+  teacherShow: false,
+  teacherEdit: false,
+  studentShow: false,
+  studentEdit: false,
+  temoryStudentShow: false,
+  temoryStudentEdit: false,
+  liveClassShow: false,
+  liveClassEdit: false,
+  course: false,
+  miniLessonShow: false,
+  miniLessonEdit: false,
+  coursePackageShow: false,
+  coursePackageEdit: false,
+  shopShow: false,
+  shopEdit: false,
+  questionBank: false,
+  questionPackageShow: false,
+  questionPackageEdit: false,
+  questionsShow: false,
+  questionsEdit: false,
+  orderShow: false,
+  orderEdit: false,
+  market: false,
+  pointShow: false,
+  pointEdit: false,
+  tCoinShow: false,
+  tCoinEdit: false,
+  setting: false,
+  categoryShow: false,
+  categoryEdit: false,
+  tagShow: false,
+  tagEdit: false,
+  courseCategoryShow: false,
+  courseCategoryEdit: false,
+  examInfoShow: false,
+  examInfoEdit: false,
+  examDateShow: false,
+  examDateEdit: false,
+  bannerShow: false,
+  bannerEdit: false,
+  messageShow: false,
+  messageEdit: false
+})
 const enterHome = () => {
   var args = {
     account: account.value,
@@ -21,17 +75,17 @@ const enterHome = () => {
       if (res.code == 20000) {
         localStorage.account = res.data.records[0].account
         localStorage.avator = res.data.records[0].avator
-        console.log(localStorage)
-        router.push({ path: 'work-space' })
         localStorage.remark = res.data.records[0].remark
-        console.log(localStorage)
-        var author: any = {}
-        var items = res.data.records[0].menuList
-        for (const key in items) {
-          var menu = items[key].name
-          console.log(key, menu)
-          author[menu] = "check"
-        }
+        var menuList: any = []
+        res.data.records[0].menuList.forEach((menu: any) => {
+          menuList.push(menu.name)
+        })
+        console.log(menuList)
+        menuList.forEach((menu: any) => {
+          author[menu] = true
+        })
+        localStorage.author = JSON.stringify(author)
+        router.push({ path: 'work-space' })
       } else {
         ElNotification({
           title: 'Error',
@@ -66,8 +120,6 @@ const login = () => {
       } else if (res.code == 20000) {
         localStorage.clear()
         localStorage.token = res.data.token
-        console.log(res.data.token)
-        localStorage.id = res.data.id
         ElNotification({
           title: 'Success',
           message: '登陆成功',
@@ -90,7 +142,7 @@ const login = () => {
 <template>
   <div class="login">
     <div class="bg"></div>
-    
+
     <div class="account">
       <el-input placeholder="请输入" v-model="account">
         <template #prepend>账号</template>

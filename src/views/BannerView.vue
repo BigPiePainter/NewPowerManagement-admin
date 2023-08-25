@@ -79,7 +79,7 @@ const newBanner = () => {
   newBannerDialogShow.value = true
   newBannerContext.title = ''
   newBannerContext.url = ''
-  showImgSrc.value = 'test'
+  showImgSrc.value = ''
 }
 
 const confirmNewBanner = () => {
@@ -150,22 +150,21 @@ const handleFileChange = (e: Event) => {
   //图片上传到服务器返回url
   //url在res.data.url
   if (currentTarget.files) {
+    console.log(currentTarget.files[0])
     var imageSize = currentTarget.files[0].size
     var formData = new FormData()
     formData.append('file', currentTarget.files[0])
+    console.log(formData)
     if (imageSize < 1048576) {
       upload(formData)
         .then((res: any) => {
           if (res.code != 20000) {
-            console.log(res)
-            console.log("失败")
             ElNotification({
               title: '封面上传失败',
               message: res.msg,
               type: 'error'
             })
           } else {
-            console.log(res)
             showImgSrc.value = res.data.url
           }
         })
@@ -215,7 +214,7 @@ loadData()
 
         <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
           @dragleave="mouseLeave">
-          <img class="show-img" id="show_img" :src="showImgSrc.value" />
+          <img class="show-img" id="show_img" :src="showImgSrc" />
           <div class="upload-file-area-text">
             <el-text>点击此处或拖拽上传海报</el-text>
             <el-text>图片不大于1MB</el-text>

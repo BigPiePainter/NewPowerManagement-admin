@@ -10,7 +10,6 @@ import { getStudentQuestions } from '@/apis/studentQuestion'
 import { getStudentHomework } from '@/apis/studentHomework'
 import HomeworkQuestionDisplayCard from '@/components/HomeworkQuestionDisplayCard.vue'
 
-
 const breadcrumbStore = useBreadcrumbStore()
 
 const route = useRoute()
@@ -21,22 +20,15 @@ const lessons = reactive<any>([])
 const homeWork = reactive<any>([])
 const loading = ref(true)
 
-
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)
 }
-
-
 
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '学生管理', path: '/account-student-managament' },
   { name: '学生详情', path: '/student-detail-managament' },
 ]
-
-
-
-
 
 //-------------------加载学生数据--------------
 const loadData = () => {
@@ -66,15 +58,6 @@ const loadData = () => {
       loading.value = false
     })
 
-
-
-
-
-
-
-
-
-  
   getStudentQuestions(args)
     .then((res) => {
       console.log(res)
@@ -98,35 +81,24 @@ const loadData = () => {
       loading.value = false
     })
 
-
-
-
-
-
   getStudentHomework(args)
     .then((res) => {
       console.log(res)
       res.data.forEach((item: any) => {
         console.log(item)
         if (item.isFinished == 0) {
-
           homeWork.push({
-
             homeworkName: item.homeworkName,
             teacherName: item.teacherName,
             isFinished: '未完成'
-
           })
         } else {
-
           homeWork.push({
             homeworkName: item.homeworkName,
             teacherName: item.teacherName,
             isFinished: '已完成'
           })
-
         }
-
       })
     })
     .catch(() => { })
@@ -135,27 +107,6 @@ const loadData = () => {
     })
 }
 loadData()
-
-// const cal =()=>{
-
-// Object.keys(questionPackage).forEach((item:any)=>{
-//   var count = 0
-//    questionPackage[item].forEach((i:any)=>{
-//     if (i.outcomeType!=3){
-//             count = count + 1
-//           }
-//    })
-//    questionPackage[item].unshift(count)
-// })
-// console.log(questionPackage)
-// }
-
-
-
-
-
-
-
 </script>
 
 <template>

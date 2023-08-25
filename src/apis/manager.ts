@@ -17,7 +17,6 @@ export const userAuthor = (data: any) => {
   return http.request(args)
 }
 
-
 export const getManager = (data: any) => {
   const args = {
     url: '/api/management/manager/page-managers',
@@ -26,7 +25,6 @@ export const getManager = (data: any) => {
   }
   return http.request(args)
 }
-
 
 export const createManager = (data: any) => {
   const args = {
@@ -38,9 +36,6 @@ export const createManager = (data: any) => {
   return http.request(args)
 }
 
-
-
-
 export const eidtManager = (data: any) => {
   const args = {
     url: '/api/management/manager/edit-manager',
@@ -50,8 +45,6 @@ export const eidtManager = (data: any) => {
   }
   return http.request(args)
 }
-
-
 
 export const deleteManager = (data: any) => {
   const args = {
