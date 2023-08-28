@@ -64,17 +64,23 @@ const conformCreate = () => {
           type: 'success'
         })
         loadData()
+        showDialog.value = false
       } else {
         ElNotification({
           title: 'Warning',
-          message: res,
+          message: res.msg,
           type: 'warning'
         })
       }
     })
-    .catch()
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
 
-  showDialog.value = false
 }
 
 const searchBarItems = reactive([
@@ -209,13 +215,6 @@ const paginationInfo = reactive({
   pageSize: 20
 })
 
-// var args = {
-//   pageNum: paginationInfo.currentPage,
-//   pageSize: paginationInfo.pageSize,
-//   name: searchBarItems[1].value,
-//   teacherId: searchBarItems[0].value
-// }
-
 const loadSelectOption = () => {
   allTeacher.length = 0
   getAllTeachers()
@@ -230,7 +229,7 @@ const loadSelectOption = () => {
 const loadData = () => {
   loading.value = true
   loadSelectOption()
-  var args:any
+  var args: any
   searchBarItems[0].value == '' ?
     args = {
       pageNum: paginationInfo.currentPage,
@@ -275,34 +274,34 @@ loadData()
   <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">
     <div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;"> 课堂名称: </span>
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 课堂名称：</span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.name">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;"> 老师姓名： </span>
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 老师姓名：</span>
         <el-select class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;"> 上课学生： </span>
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 上课学生：</span>
         <el-select multiple class="dialog-input" placeholder="请输入" v-model="newClassData.studentIds">
           <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
-      <div class="div-input-element"  style="color: #fa1010;">
-        <span class="dialog-span"> 开课时间： </span>
+      <div class="div-input-element">
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 开课时间：</span>
         <el-date-picker type="datetime" placeholder="请选择" v-model="newClassData.startTime"
           value-format="YYYY-MM-DD HH:MM:00" style="width: 200px;" />
       </div>
-      <div class="div-input-element"  style="color: #fa1010;">
-        <span class="dialog-span"> 时长（分钟）： </span>
+      <div class="div-input-element">
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 时长(分钟)：</span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.duration">
         </el-input>
       </div>
-      <div class="div-input-element"  style="color: #fa1010;">
-        <span class="dialog-span"> 课程链接 </span>
+      <div class="div-input-element">
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 课程链接：</span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.url">
         </el-input>
       </div>
@@ -318,49 +317,9 @@ loadData()
     </template>
   </el-dialog>
 
-
-
-  <!-- <el-dialog class="new-class-dialog" width="370px" v-model="editliveclassDialogshow">
-    <div class="div-input-element">
-      <span class="dialog-span">
-        <el-input disabled class="dialog-input" v-model="editliveclassData.id">
-        </el-input>
-      </span>
-    </div>
-    <div class="div-input-element">
-      <span class="dialog-span">
-        学科：
-      </span>
-      <el-input>
-
-      </el-input>
-    </div>
-    <div class="div-input-element" style="margin-top: 10px;">
-      <span class="dialog-span">
-        学习阶段：
-      </span>
-      <el-select>
-        <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
-      </el-select>
-    </div>
-
-    <template #header>
-      <el-text>编辑</el-text>
-    </template>
-
-    <template #footer>
-      <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
-      <el-button @click="cancelEditDialog()">
-        取消
-      </el-button>
-    </template>
-  </el-dialog> -->
-
-
   <el-dialog v-model="allStudentsDialogShow" class='dialog-container' style="width:630px">
 
     <TablePage :data="classStudent" :columns="classstudentCloumn" class="dialog-container">
-
 
     </TablePage>
 

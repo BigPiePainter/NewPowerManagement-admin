@@ -320,14 +320,14 @@ const createMsg = () => {
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *消息标题：
+          <el-text style="color:#ff0000">*</el-text>消息标题：
         </span>
         <el-input class="dialog-input" placeholder="输入消息标题" v-model="title">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *接收对象：
+          <el-text style="color:#ff0000">*</el-text>接收对象：
         </span>
         <div class="dialog-input" v-if="type == 1">
           <el-select filterable multiple placeholder="请选择消息接收对象" v-model="receiverIdArr">
@@ -342,7 +342,7 @@ const createMsg = () => {
       </div>
       <div>
         <span class="dialog-span">
-          *消息内容：
+          <el-text style="color:#ff0000">*</el-text>消息内容：
         </span>
 
         <el-input style="margin-top:10px;" v-model="textarea" maxlength="100" placeholder="请输入消息内容" show-word-limit type="textarea">

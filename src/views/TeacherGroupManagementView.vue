@@ -250,9 +250,6 @@ const loadData = () => {
 loadData()
 
 const confirmNewTeacherGroup = () => {
-  console.log(newTeacherGroupData)
-  newTeacherGroupDialogShow.value = false
-
   createTeacherGroup(newTeacherGroupData)
     .then((res: any) => {
       if (res.code == 20000) {
@@ -262,6 +259,7 @@ const confirmNewTeacherGroup = () => {
           type: 'success',
         })
         loadData()
+        newTeacherGroupDialogShow.value = false
       } else {
         ElNotification({
           title: 'Warning',
@@ -270,7 +268,13 @@ const confirmNewTeacherGroup = () => {
         })
       }
     })
-    .catch()
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
 }
 
 const cancelNewTeacherGroup = () => {
@@ -294,14 +298,16 @@ const cancelNewTeacherGroup = () => {
   <el-dialog class="teacher-group-dialog" width="370px" v-model="newTeacherGroupDialogShow">
     <div>
       <div class="div-input-element">
-        <span class="dialog-span" style="color: #fa1010;">
+        <span class="dialog-span">
+          <el-text style="color:#ff0000">*</el-text>
           教研组名称：
         </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherGroupData.name">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;">
+        <span class="dialog-span">
+          <el-text style="color:#ff0000">*</el-text>
           教研组长：
         </span>
         <el-select class="dialog-input" placeholder="请输入" v-model="newTeacherGroupData.leaderId">

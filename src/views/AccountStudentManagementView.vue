@@ -245,6 +245,7 @@ const conformCreate = () => {
         type: 'success',
       })
       createDialogShow.value = false
+      loadData()
     }
     else {
       ElNotification({
@@ -252,11 +253,15 @@ const conformCreate = () => {
         message: res.msg,
         type: 'warning',
       })
-      createDialogShow.value = false
     }
-    loadData()
-  }).catch()
-  createDialogShow.value = false
+  })
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
 }
 
 const cancel = () => {
@@ -417,19 +422,13 @@ const cancelEditDialog = () => {
     </template>
     <div style="height: 350px;margin-left: 20px;">
       <div class="input">
-        <div class="input-word" style="color: #fa1010;">用户名:</div>
+        <div class="input-word"><el-text style="color:#ff0000">*</el-text>用户名:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.account" />
       </div>
       <div class="input">
-        <div class="input-word" style="color: #fa1010;">姓名:</div>
+        <div class="input-word"><el-text style="color:#ff0000">*</el-text>姓名:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.name" />
       </div>
-      <div class="input">
-        <div class="input-word" style="color: #fa1010;">到期时间:</div>
-        <el-date-picker type="datetime" placeholder="请选择" style="width:200px" v-model="newStudentData.expiration"
-          value-format="YYYY-MM-DD HH:MM:00" />
-      </div>
-
       <div class="input">
         <div class="input-word">性别:</div>
         <el-select class="input-input" placeholder="请输入" v-model="newStudentData.sex">
@@ -437,21 +436,29 @@ const cancelEditDialog = () => {
         </el-select>
       </div>
       <div class="input">
-        <div class="input-word" style="color: #fa1010;">密码:</div>
+        <div class="input-word"><el-text style="color:#ff0000">*</el-text>到期时间:</div>
+        <el-date-picker type="datetime" placeholder="请选择" style="width:200px" v-model="newStudentData.expiration"
+          value-format="YYYY-MM-DD HH:MM:00" />
+      </div>
+
+      <div class="input">
+        <div class="input-word"><el-text style="color:#ff0000">*</el-text>密码:</div>
         <ElInput class="input-input" placeholder="6-20位,建议包含数字与字母" v-model="newStudentData.password" />
       </div>
 
       <div class="input">
-        <div class="input-word" style="color: #fa1010;">手机号码:</div>
+        <div class="input-word">手机号码:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumber" />
       </div>
+
+      <div class="input">
+        <div class="input-word"><el-text style="color:#ff0000">*</el-text>父母手机号:</div>
+        <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumberOfParent" />
+      </div>
+
       <div class="input">
         <div class="input-word">备注:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.remark" />
-      </div>
-      <div class="input">
-        <div class="input-word" style="color: #fa1010;">父母手机号:</div>
-        <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumberOfParent" />
       </div>
     </div>
     <template #footer>

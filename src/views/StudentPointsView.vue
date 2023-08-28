@@ -218,21 +218,18 @@ loadData()
     </div>
   </TablePage>
 
-
-
-
   <el-dialog class="teacher-group-dialog" width="370px" v-model="editStudentFundDialog">
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *变更数量：
+          <el-text style="color:#ff0000">*</el-text>变更数量：
         </span>
         <el-input class="dialog-input" v-model="editStudentFund.numberOfPoint">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-         *收支类型：
+          <el-text style="color:#ff0000">*</el-text>收支类型：
         </span>
         <el-select class="dialog-input" v-model="editStudentFund.revenuesType">
           <el-option v-for="item in allRevenuesType" :key="item.id" :label="item.label" :value="item.id" />
@@ -240,7 +237,7 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-           *来源类型 ：
+          <el-text style="color:#ff0000">*</el-text>来源类型 ：
         </span>
         <el-select class="dialog-input" v-model="editStudentFund.sourceType">
           <el-option v-for="item in allSourceType" :key="item.id" :label="item.label" :value="item.value" />
@@ -254,10 +251,6 @@ loadData()
         </el-input>
       </div>
     </div>
-
-
-
-
     
     <template #header>
       <el-text>编辑积分数</el-text>
@@ -270,10 +263,6 @@ loadData()
     </template>
   </el-dialog>
 </template>
-
-
-
-
 
 <style scoped lang="scss">
 $gap: 15px;

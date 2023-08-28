@@ -75,9 +75,6 @@ const newClassDialogShow = ref(false);
 
 const creatNewClass = () => {
   loadAllTeacher()
-  // Object.keys(newClassData).forEach((key: any) => {
-  //   newClassData[key] = ''
-  // })
   newClassData.creationType = 2
   newClassData.endDate = ''
   newClassData.gradeId = ''
@@ -98,6 +95,7 @@ const confirmNewClass = () => {
           message: '已成功创建',
           type: 'success'
         })
+        newClassDialogShow.value = false
       } else {
         ElNotification({
           title: 'Warning',
@@ -106,9 +104,13 @@ const confirmNewClass = () => {
         })
       }
     })
-    .catch()
-
-  newClassDialogShow.value = false
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
 }
 
 const cancelNewClass = () => {
@@ -273,7 +275,7 @@ const confirmDeleteDialog = () => {
       if (res.code == 20000) {
         ElNotification({
           title: '成功',
-          message: '已成功编辑',
+          message: '成功删除',
           type: 'success'
         })
         loadData()
@@ -354,14 +356,14 @@ loadData()
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
-          班级名称：
+          <el-text style="color:#ff0000">*</el-text>班级名称：
         </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newClassData.name">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          负责老师：
+          <el-text style="color:#ff0000">*</el-text>负责老师：
         </span>
         <el-select filterable class="dialog-input" placeholder="请输入" v-model="newClassData.teacherId">
           <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
@@ -369,21 +371,21 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          起始时间：
+          <el-text style="color:#ff0000">*</el-text>起始时间：
         </span>
         <el-date-picker class="dialog-input" placeholder="yyyy-mm-dd" v-model="newClassData.startDate">
         </el-date-picker>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          到期时间：
+          <el-text style="color:#ff0000">*</el-text>到期时间：
         </span>
         <el-date-picker class="dialog-input" placeholder="请输入" v-model="newClassData.endDate">
         </el-date-picker>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          学科：
+          <el-text style="color:#ff0000">*</el-text>学科：
         </span>
         <el-select class="dialog-input" placeholder="请输入" v-model="newClassData.subjectId">
           <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
@@ -391,7 +393,7 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          学习阶段：
+          <el-text style="color:#ff0000">*</el-text>学习阶段：
         </span>
         <el-select class="dialog-input" placeholder="请输入" v-model="newClassData.gradeId">
           <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />

@@ -147,6 +147,8 @@ const confirmNewCourseCategory = () => {
             message: '课程类目新建成功',
             type: 'success',
           })
+          loadData()
+          newCourseCategoryDialogShow.value = false
         } else {
           ElNotification({
             title: '失败',
@@ -155,11 +157,14 @@ const confirmNewCourseCategory = () => {
           })
         }
       })
-      .catch()
-      .finally(() => {
-        loadData()
-        newCourseCategoryDialogShow.value = false
+      .catch((res: any) => {
+        ElNotification({
+          title: '未知错误',
+          message: res.msg,
+          type: 'warning'
+        })
       })
+
   } else if (action.value == 2) {
     var args2 = {
       id: editId.value,
@@ -173,18 +178,22 @@ const confirmNewCourseCategory = () => {
             message: '课程类目编辑成功',
             type: 'success',
           })
+          loadData()
+          newCourseCategoryDialogShow.value = false
         } else {
           ElNotification({
-            title: '失败',
+            title: '编辑失败',
             message: res.msg,
             type: 'error',
           })
         }
       })
-      .catch()
-      .finally(() => {
-        loadData()
-        newCourseCategoryDialogShow.value = false
+      .catch((res: any) => {
+        ElNotification({
+          title: '未知错误',
+          message: res.msg,
+          type: 'warning'
+        })
       })
   }
 }
@@ -279,14 +288,16 @@ const handleFileChange = (e: Event) => {
           @change="handleFileChange" />
       </div>
       <div class="div-input-element">
-        <span class="dialog-span" style="color: #fa1010;">
+        <span class="dialog-span">
+          <el-text style="color:#ff0000">*</el-text>
           类目名称：
         </span>
         <el-input class="dialog-input" v-model="newCourseCategoryContext.name">
         </el-input>
       </div>
-      <div v-if="action == 1" class="div-input-element" style="color: #fa1010;">
+      <div v-if="action == 1" class="div-input-element">
         <span class="dialog-span">
+          <el-text style="color:#ff0000">*</el-text>
           学习阶段：
         </span>
         <el-select class="dialog-input" placeholder="请选择学习阶段" v-model="newCourseCategoryContext.gradeId">

@@ -98,16 +98,23 @@ const confirmNewBanner = () => {
           message: 'banner已上传',
           type: 'success',
         })
+        newBannerDialogShow.value = false
+        loadData()
       } else {
         ElNotification({
           title: '上传失败',
+          message: res.msg,
           type: 'error',
         })
       }
-      loadData()
     })
-    .catch()
-  newBannerDialogShow.value = false
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
 }
 
 const cancelNewBanner = () => {
@@ -226,14 +233,16 @@ loadData()
         </div>
 
         <div class="div-input-element">
-          <span class="dialog-span" style="color: #fa1010;">
+          <span class="dialog-span">
+            <el-text style="color:#ff0000">*</el-text>
             标题：
           </span>
           <el-input class="dialog-input" v-model="newBannerContext.title">
           </el-input>
         </div>
         <div class="div-input-element">
-          <span class="dialog-span" style="color: #fa1010;">
+          <span class="dialog-span">
+            <el-text style="color:#ff0000">*</el-text>
             跳转链接：
           </span>
           <el-input class="dialog-input" v-model="newBannerContext.url">

@@ -19,3 +19,21 @@ export const cancelOrder = (data:any) => {
     
     return http.request(args)
 }
+
+export const getOrderNumber = (data: object) => {
+    const args = {
+        url: '/api/management/order/count-order',
+        method: 'GET',
+        params: data
+    }
+    return http.request(args)
+}
+
+export const getOrderAmount = (data: object) => {
+    const args = {
+        url: '/api/management/order/sum-order-income',
+        method: 'GET',
+        params: data
+    }
+    return http.request(args)
+}

@@ -4,13 +4,13 @@ import { loadTcoins, loadPoint, getStudentAmount } from '@/apis/student'
 import DisplayCard from '../components/DisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import UploadVideo from '@/components/UploadVideo.vue'
 import { getClasses } from '@/apis/class'
 import { getTeacherGroup } from '@/apis/teacherGroup'
+import { getMiniLessons } from '@/apis/minilessons'
+import { getOrderAmount, getOrderNumber } from '@/apis/order'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '工作台' }]
-
 
 const studentAmount = ref()
 const TeacherAmount = ref()
@@ -19,105 +19,149 @@ const CoinsAmount = ref()
 const ClassAmount = ref()
 const GroupAmount = ref()
 const MinilessonsAmount = ref()
+const todayIncom = ref()
+const todayNumber = ref()
+const weekIncom = ref()
+const weekNumber = ref()
 
-
-
-
-
-
-
-
-
-
-
-// const reload = () => {
-//   if (localStorage.reload == "true") {
-//     location.reload()
-//     localStorage.reload = "false"
-//   }
-// }
-// reload()
 const history = reactive([
   { title: '学生账号', amount: studentAmount },
   { title: '老师账号', amount: TeacherAmount },
   { title: '用户积分总额', amount: PointAmount },
   { title: 'TB总额', amount: CoinsAmount },
-  { title: '老师上传微课数', amount: 0 },
+  { title: '老师上传微课数', amount: MinilessonsAmount },
   { title: '班级数量', amount: ClassAmount },
   { title: '教研组数量', amount: GroupAmount }
 ])
 
 const order = reactive([
-  { title: '今日订单收入', amount: 0 },
-  { title: '今日订单数量', amount: 0 },
-  { title: '7日内订单数量', amount: 0 },
-  { title: '7日内订单收入', amount: 0 }
+  { title: '今日订单收入', amount: todayIncom },
+  { title: '今日订单数量', amount: todayNumber },
+  { title: '7日内订单收入', amount: weekIncom },
+  { title: '7日内订单数量', amount: weekNumber }
 ])
 
+const getNowDateTime = () => {
+  var date = new Date();
+  var nowMonth: any = date.getMonth() + 1;
+  var strDate: any = date.getDate();
+  var seperator = "-";
+  if (nowMonth >= 1 && nowMonth <= 9) {
+    nowMonth = "0" + nowMonth;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+  }
+  var nowDate = date.getFullYear() + seperator + nowMonth + seperator + strDate;
+  console.log(nowDate)
+  return nowDate
+}
+
+// const getNow = () => {
+//   var date = new Date();
+//   var nowMonth: any = date.getMonth() + 1;
+//   var strDate: any = date.getDate();
+//   var hours = date.getHours(); //获取当前小时
+//   var minutes = date.getMinutes(); //获取当前分钟
+//   var seconds = date.getSeconds(); //获取当前秒
+//   var seperator = "-";
+//   if (nowMonth >= 1 && nowMonth <= 9) {
+//     nowMonth = "0" + nowMonth;
+//   }
+//   if (strDate >= 0 && strDate <= 9) {
+//     strDate = "0" + strDate;
+//   }
+//   var nowDate =
+//     date.getFullYear()
+//     + seperator
+//     + nowMonth
+//     + seperator
+//     + strDate
+//     + seperator
+//     + hours
+//     + seperator
+//     + minutes
+//     + seperator
+//     + seconds
+//   console.log(nowDate)
+//   return nowDate
+// }
+
+const getLastWeekTime = () => {
+  var date = new Date();
+  var week = new Date(date.getTime() - 144 * 60 * 60 * 1000);
+  var weekMonth: any = week.getMonth() + 1;
+  var strDate: any = week.getDate();
+  var seperator = "-";
+  if (weekMonth >= 1 && weekMonth <= 9) {
+    weekMonth = "0" + weekMonth;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+  }
+  var lastWeekDate = date.getFullYear() + seperator + weekMonth + seperator + strDate;
+  console.log(lastWeekDate)
+  return lastWeekDate
+}
+
 const loadData = () => {
+  getNowDateTime()
+  getLastWeekTime()
   getStudentAmount()
-    .then((res) => {
+    .then((res: any) => {
       studentAmount.value = res.data
+      return getTeachersCount()
+    })
+    .then((res: any) => {
+      TeacherAmount.value = res.data
+      return loadPoint()
+    })
+    .then((res: any) => {
+      PointAmount.value = res.data
+      return loadTcoins()
+    })
+    .then((res: any) => {
+      CoinsAmount.value = res.data
+      return getClasses({ pageNum: 1, pageSize: 1 })
+    })
+    .then((res: any) => {
+      ClassAmount.value = res.data.total
+      return getTeacherGroup({ pageNum: 1, pageSize: 1 })
+    })
+    .then((res: any) => {
+      GroupAmount.value = res.data.total
+      return getMiniLessons({ pageNum: 1, pageSize: 1 })
+    })
+    .then((res: any) => {
+      MinilessonsAmount.value = res.data.total
+      return getOrderNumber({ start: getNowDateTime() + ' 00:00:00', end: getNowDateTime() + ' 23:59:59' })
+    })
+    .then((res: any) => {
+      todayNumber.value = res.data
+      return getOrderNumber({ start: getLastWeekTime() + ' 00:00:00', end: getNowDateTime() + ' 23:59:59' })
+    })
+    .then((res: any) => {
+      weekNumber.value = res.data
+      return getOrderAmount({ start: getNowDateTime() + ' 00:00:00', end: getNowDateTime() + ' 23:59:59' })
+    })
+    .then((res: any) => {
+      if (res.data == null) {
+        todayIncom.value = 0
+      } else {
+        todayIncom.value = res.data
+      }
+      return getOrderAmount({ start: getLastWeekTime() + ' 00:00:00', end: getNowDateTime() + ' 23:59:59' })
+    })
+    .then((res: any) => {
+      if (res.data == null) {
+        weekIncom.value = 0
+      } else {
+        weekIncom.value = res.data
+      }
     })
     .catch()
 }
 loadData()
-
-const loadTeacher = () => {
-  getTeachersCount().then((res) => {
-    TeacherAmount.value = res.data
-  }).catch
-}
-loadTeacher()
-
-
-const loadMark = () => {
-
-  loadPoint().then((res) => {
-    PointAmount.value = res.data
-  }).catch()
-}
-loadMark()
-
-const LoadCoins = () => {
-  loadTcoins().then((res) => {
-    CoinsAmount.value = res.data
-  }).then()
-}
-LoadCoins()
-
-
-
-const getClassesAmount = () => {
-  
-  var args = {
-    pageNum: 1,
-    pageSize: 20
-  }
-  getClasses(args).then((res) => {
-      ClassAmount.value = res.data.total
-    })
-    .catch(() => { })
-    .finally(() => {
-    })
-}
-getClassesAmount()
-
-
-const getGroupAmount = () => {
-  
-  var args = {
-    pageNum: 1,
-    pageSize: 20
-  }
-  getTeacherGroup(args).then((res) => {
-      GroupAmount.value = res.data.total
-    })
-    .catch(() => { })
-    .finally(() => {
-    })
-}
-getGroupAmount()
 </script>
 
 <template>
@@ -143,8 +187,6 @@ getGroupAmount()
       </DisplayCard>
     </div>
   </div>
-
-
 </template>
 
 <style scoped lang="scss">

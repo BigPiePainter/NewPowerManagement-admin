@@ -29,6 +29,8 @@ const confirm = () => {
           title: '创建成功',
           type: 'success'
         })
+        examInfoDialogShow.value = false
+        loadData()
       } else {
         ElNotification({
           title: '创建失败',
@@ -43,10 +45,6 @@ const confirm = () => {
         message: res.msg,
         type: 'error'
       })
-    })
-    .finally(() => {
-      examInfoDialogShow.value = false
-      loadData()
     })
 }
 
@@ -136,7 +134,7 @@ loadData()
   <el-dialog width="400px" v-model="examInfoDialogShow">
     <div style="white-space:nowrap;">
       <span>
-        *资讯内容：
+        <el-text style="color:#ff0000">*</el-text>资讯内容：
       </span>
       <el-input style="max-width: 250px;" v-model="examInfoContent" placeholder="请输入"></el-input>
     </div>

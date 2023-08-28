@@ -627,7 +627,7 @@ const editGoodsHot = (props: any) => {
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *商品名称：
+          <el-text style="color:#ff0000">*</el-text>商品名称：
         </span>
         <el-input class="dialog-input" v-model="editProductData.name">
         </el-input>
@@ -635,7 +635,7 @@ const editGoodsHot = (props: any) => {
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *ios积分价格：
+          <el-text style="color:#ff0000">*</el-text>ios积分价格：
         </span>
         <el-input class="dialog-input" v-model="editProductData.iosPoint">
         </el-input>
@@ -643,7 +643,7 @@ const editGoodsHot = (props: any) => {
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *T币价格：
+          <el-text style="color:#ff0000">*</el-text>T币价格：
         </span>
         <el-input class="dialog-input" v-model="editProductData.tcoin">
         </el-input>
@@ -651,7 +651,7 @@ const editGoodsHot = (props: any) => {
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *安卓积分价格：
+          <el-text style="color:#ff0000">*</el-text>安卓积分价格：
         </span>
         <el-input class="dialog-input" v-model="editProductData.androidPoint">
         </el-input>
@@ -659,65 +659,11 @@ const editGoodsHot = (props: any) => {
 
       <div class="div-input-element">
         <span class="dialog-span">
-          *安卓价格(￥)：
+          <el-text style="color:#ff0000">*</el-text>安卓价格(￥)：
         </span>
         <el-input class="dialog-input" v-model="editProductData.androidPrice">
         </el-input>
       </div>
-
-      <!-- <div class="div-input-element">
-        <span class="dialog-span">
-          状态：
-        </span>
-        <el-select class="dialog-input" v-model="editProductData.androidPrice">
-          <el-option v-for="item in allstatus" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div>
-
-      <div class="div-input-element">
-        <span class="dialog-span">
-          *是否是热门商品：
-        </span>
-        <el-select class="dialog-input" v-model="editProductData.hot">
-          <el-option v-for="item in allHot" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div> -->
-
-      <!-- <div class="div-input-element">
-        <span class="dialog-span">
-          *学科：
-        </span>
-        <el-select class="dialog-input" v-model="editProductData.subjectId">
-          <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div>
-
-      <div class="div-input-element">
-        <span class="dialog-span">
-          商品种类
-        </span>
-        <el-select class="dialog-input" v-model="editProductData.type">
-          <el-option v-for="item in allType" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div>
-
-      <div class="div-input-element">
-        <span class="dialog-span">
-          商品版本
-        </span>
-        <el-select class="dialog-input" v-model="editProductData.version">
-          <el-option v-for="item in allVersion" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div>
-
-      <div class="div-input-element">
-        <span class="dialog-span">
-          商品版本类型
-        </span>
-        <el-select class="dialog-input" v-model="editProductData.versionType">
-          <el-option v-for="item in allversionType" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </div> -->
     </div>
     <template #header>
       <el-text>编辑商品</el-text>
@@ -734,7 +680,7 @@ const editGoodsHot = (props: any) => {
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *选择学生：
+          <el-text style="color:#ff0000">*</el-text>选择学生：
         </span>
         <el-select filterable class="dialog-input" v-model="freeOrderInfo.studentId">
           <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />

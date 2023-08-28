@@ -66,7 +66,7 @@ const loadTeacherData = () => {
       return getClasses({ pageNum: 1, pageSize: 1, teacherId: route.query.id })
     })
     .then((res: any) => {
-      classNum.value = res.data.size
+      classNum.value = res.data.total
       return getClasses({ pageNum: 1, pageSize: classNum.value, teacherId: route.query.id })
     })
     .then((res: any) => {

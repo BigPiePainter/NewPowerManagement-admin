@@ -42,7 +42,7 @@ const searchBarItems = reactive([
     type: InputType.Select,
     label: '请选择',
     options: allGrades,
-    single:true 
+    single: true
   },
   {
     name: '学科',
@@ -50,7 +50,7 @@ const searchBarItems = reactive([
     type: InputType.Select,
     label: '请选择',
     options: allSubjects,
-    single:true 
+    single: true
   }
 ])
 
@@ -98,6 +98,7 @@ const conformCreate = () => {
           type: 'success'
         })
         loadData()
+        showDialog.value = false
       } else {
         ElNotification({
           title: 'Warning',
@@ -106,10 +107,13 @@ const conformCreate = () => {
         })
       }
     })
-    .catch()
-
-  console.log(newTeacherData)
-  showDialog.value = false
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
 }
 
 //------------------------跳转传参------------
@@ -282,7 +286,7 @@ const deleteTea = (item: any) => {
   deleteTeacher({ id: item.rowData.id }).then((res: any) => {
     if (res.code == '20000') {
       ElNotification({
-        title: '成功',  
+        title: '成功',
         message: item.rowData.name + '老师删除成功',
         type: 'success'
       })
@@ -390,34 +394,34 @@ loadData()
   <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">
     <div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;"> 用户名： </span>
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 用户名： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.account">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;"> 姓名： </span>
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 姓名： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.name">
         </el-input>
       </div>
       <div class="div-input-element">
-        <span class="dialog-span"  style="color: #fa1010;"> 密码： </span>
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 密码： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.password">
         </el-input>
       </div>
-      <div class="div-input-element"  style="color: #fa1010;">
+      <div class="div-input-element"><el-text style="color:#ff0000">*</el-text>
         <span class="dialog-span"> 学习阶段： </span>
         <el-select filterable class="dialog-input" placeholder="请选择" v-model="newTeacherData.gradeId">
           <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
-      <div class="div-input-element"  style="color: #fa1010;">
+      <div class="div-input-element"><el-text style="color:#ff0000">*</el-text>
         <span class="dialog-span"> 学科： </span>
         <el-select filterable class="dialog-input" place holder="请选择" v-model="newTeacherData.subjectId">
           <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
 
         </el-select>
       </div>
-      <div class="div-input-element"  style="color: #fa1010;">
+      <div class="div-input-element"><el-text style="color:#ff0000">*</el-text>
         <span class="dialog-span"> 手机号码： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.phoneNumber">
         </el-input>

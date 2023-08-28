@@ -88,20 +88,26 @@ const confrimCreateNew = () => {
       console.log('添加成功')
       ElNotification({
         title: '成功',
-        message: '标签新建成功',
+        message: '标签添加成功',
         type: 'success'
       })
       loadData()
+      createDialogShow.value = false
     } else {
       ElNotification({
         title: '添加失败',
-        message: '添加失败' + res.msg,
+        message: res.msg,
         type: 'error'
       })
     }
-    loadData()
-    createDialogShow.value = false
-  }).catch()
+  })
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
 }
 
 const createDialogShow = ref(false)
@@ -141,12 +147,14 @@ const deleteLab = (item: any) => {
       <div class="test">
         <el-scrollbar class="scrollbar">
           <div class="card-body" v-for="item in supLabels" :key="item.name">
-            <el-button color="#e2e5ec" style="flex-grow: 1;" v-if="item.id == supLabelId ? true : false" @click="changeSupLabelId(item.id)">{{
-              item.name
-            }}</el-button>
-            <el-button style="flex-grow: 1;" v-if="item.id == supLabelId ? false : true" text @click="changeSupLabelId(item.id)">{{
-              item.name
-            }}</el-button>
+            <el-button color="#e2e5ec" style="flex-grow: 1;" v-if="item.id == supLabelId ? true : false"
+              @click="changeSupLabelId(item.id)">{{
+                item.name
+              }}</el-button>
+            <el-button style="flex-grow: 1;" v-if="item.id == supLabelId ? false : true" text
+              @click="changeSupLabelId(item.id)">{{
+                item.name
+              }}</el-button>
             <div style="flex-grow: 1;"></div>
             <el-button link type="danger" @click="deleteLab(item.id)">删除</el-button>
           </div>
@@ -171,16 +179,16 @@ const deleteLab = (item: any) => {
     </div>
   </div>
 
-  <el-dialog class="new-class-dialog" width="370px" v-model="createDialogShow">
+  <el-dialog width="370px" v-model="createDialogShow">
     <div class="div-input-element" style="margin-top: 10px;">
       <el-text style="color: #ff0000;">
         *
       </el-text>
-      <el-text>
+      <el-text style="width: 70px;">
         标签名称：
       </el-text>
       <div>
-        <el-input class="dialog-input" v-model="createLabelInfo.name" style="width: 256px;">
+        <el-input style="margin-left: 10px;" v-model="createLabelInfo.name">
         </el-input>
       </div>
     </div>
@@ -198,6 +206,11 @@ const deleteLab = (item: any) => {
 </template>
 
 <style scoped lang="scss">
+.div-input-element {
+  display: flex;
+  flex-direction: row;
+}
+
 .sup-card {
   $gap: 15px;
   height: $page-height;

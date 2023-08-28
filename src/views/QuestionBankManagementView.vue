@@ -531,28 +531,28 @@ const confirmEditDialog = () => {
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *封面路径：
+          <el-text style="color:#ff0000">*</el-text>封面路径：
         </span>
         <el-input class="dialog-input" v-model="newCourseData.cover">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *好题包名称：
+          <el-text style="color:#ff0000">*</el-text>好题包名称：
         </span>
         <el-input class="dialog-input" v-model="newCourseData.name">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *好题包描述：
+          <el-text style="color:#ff0000">*</el-text>好题包描述：
         </span>
         <el-input class="dialog-input" v-model="newCourseData.description">
         </el-input>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *好题包难度：
+          <el-text style="color:#ff0000">*</el-text>好题包难度：
         </span>
         <el-select class="dialog-input" v-model="newCourseData.difficultyLevel">
           <el-option v-for="item in allDifficultyType" :key="item.id" :label="item.label" :value="item.id" />
@@ -560,7 +560,7 @@ const confirmEditDialog = () => {
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *老师：
+          <el-text style="color:#ff0000">*</el-text>老师：
         </span>
         <el-select class="dialog-input" v-model="newCourseData.teacherId">
           <el-option v-for="item in allTeachers" :key="item.id" :label="item.name" :value="item.id" />
@@ -599,7 +599,7 @@ const confirmEditDialog = () => {
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *选择学生：
+          <el-text style="color:#ff0000">*</el-text>选择学生：
         </span>
         <el-select filterable class="dialog-input" v-model="freeCourseInfo.studentId">
           <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />

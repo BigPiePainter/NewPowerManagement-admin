@@ -509,7 +509,7 @@ const clickAdd = () => {
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
-          *选择学生：
+          <el-text style="color:#ff0000">*</el-text>选择学生：
         </span>
         <el-select filterable class="dialog-input" v-model="freeCourseInfo.studentId">
           <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
