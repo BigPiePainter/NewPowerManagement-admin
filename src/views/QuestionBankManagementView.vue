@@ -119,7 +119,6 @@ const freeCourseCreateConfirm = () => {
     })
 }
 
-
 const newCourseData = reactive<any>({
   id: '',
   name: '',
@@ -149,42 +148,39 @@ const tableColumns = [
       </ElButton>
     )
   },
-  {
-    dataKey: 'cover',
-    key: 'cover',
-    title: '封面',
-    width: 100,
-    cellRenderer: (item: any) => (
-      <el-image
-        fit="scale-down"
-        src={item.rowData.cover}
-        //onClick={()=>console.log(item)}
-        className="shop-Preview"
-        preview-src-list={[item.rowData.cover]}
-        preview-teleported
-      />)
-  },
+  // {
+  //   dataKey: 'cover',
+  //   key: 'cover',
+  //   title: '封面',
+  //   width: 100,
+  //   cellRenderer: (item: any) => (
+  //     <el-image
+  //       fit="scale-down"
+  //       src={item.rowData.cover}
+  //       //onClick={()=>console.log(item)}
+  //       className="shop-Preview"
+  //       preview-src-list={[item.rowData.cover]}
+  //       preview-teleported
+  //     />)
+  // },
   {
     dataKey: 'gradeName',
     key: 'gradeName',
     title: '学习阶段',
-    width: 100,
-    single: true
+    width: 80,
   },
   {
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '学科',
-    width: 100,
-    single: true
+    width: 80,
   },
-  {
-    dataKey: 'teacherName',
-    key: 'teacherName',
-    title: '老师名',
-    width: 100
-  },
-
+  // {
+  //   dataKey: 'teacherName',
+  //   key: 'teacherName',
+  //   title: '老师名',
+  //   width: 100
+  // },
   {
     dataKey: 'difficultyLevel',
     key: 'difficultyLevel',
@@ -192,26 +188,54 @@ const tableColumns = [
     width: 100,
     cellRenderer: (cellData: any) => (
       <span>
-        {cellData.cellData == 0 ? "容易" : cellData.cellData == 1 ? "较易" : cellData.cellData == 2 ? "普通" : cellData.cellData == 3 ? "较难" : cellData.cellData == 4 ? "难" : '困难'}
+        {cellData.cellData == 0 ? '⭐'
+          : cellData.cellData == 1 ? '⭐⭐'
+            : cellData.cellData == 2 ? '⭐⭐⭐'
+              : cellData.cellData == 3 ? '⭐⭐⭐⭐'
+                : cellData.cellData == 4 ? '⭐⭐⭐⭐⭐'
+                  : '⭐⭐⭐⭐⭐⭐'}
       </span>)
+  },
+  {
+    dataKey: 'labelName',
+    key: 'labelName',
+    title: '标签',
+    width: 100,
+    align:'center',
+    cellRenderer: (cellData: any) => {
+      if (cellData.cellData == null) {
+        return (
+          <>
+            <el-text>--</el-text>
+          </>
+        )
+      } else {
+        return (
+          <>
+            <el-tag>{cellData.cellData}</el-tag>
+          </>
+        )
+      }
+
+    }
   },
   {
     dataKey: 'description',
     key: 'description',
     title: '详情描述',
-    width: 100
+    width: 200
   },
   {
     dataKey: 'createdAt',
     key: 'createdAt',
     title: '创建时间',
-    width: 200
+    width: 110
   },
   {
     dataKey: 'updatedAt',
     key: 'updatedAt',
-    title: '创建时间',
-    width: 200
+    title: '更新时间',
+    width: 110
   },
   {
     key: 'option',
@@ -319,22 +343,7 @@ const clickCreate = () => {
   router.push({ path: 'question-package-create' });
 }
 
-// const loadSelectOption = () => {
-//   getGrades()
-//     .then((res) => (allGrades.value = res.data.map((i: any) => i.subset).flat()))
-//     .catch()
-
-//   getSubjects()
-//     .then((res) => (allSubjects.value = res.data))
-//     .catch()
-
-//   getAllTeachers()
-//     .then((res) => { (allTeachers.value = res.data), console.log(res) })
-//     .catch()
-// }
-
-
-const editCourse = (props:any) => {
+const editCourse = (props: any) => {
   console.log(props);
   editDialogShow.value = true;
   newCourseData.cover = props.rowData.cover;

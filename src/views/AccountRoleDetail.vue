@@ -444,7 +444,7 @@ watch(() => author, (val: any) => {
     margin-top: 10px;
 
     .page-body-left {
-        width: 30%;
+        width: 400px;
         border: 1px solid var(--el-border-color);
         border-radius: 0;
 
@@ -474,7 +474,7 @@ watch(() => author, (val: any) => {
     .page-body-right {
         flex-direction: column;
         margin-left: 15px;
-        width: 70%;
+        width: 800px;
         border: 1px solid var(--el-border-color);
         border-radius: 0;
 

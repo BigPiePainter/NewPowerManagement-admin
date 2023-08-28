@@ -1,12 +1,10 @@
 <script setup lang="tsx">
 import { ref, reactive, watch } from 'vue'
-import { ElButton } from 'element-plus'
-import { useRouter } from 'vue-router'
+import { ElButton, ElNotification } from 'element-plus'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import RichTextEditor from '@/components/RichTextEditor.vue';
-import { ElCheckbox, ElNotification } from 'element-plus'
+import RichTextEditor from '@/components/RichTextEditor.vue'
 import { createGoodQuestion } from '@/apis/questionStore'
 
 const allGrades = ref<any>([])
@@ -131,7 +129,7 @@ const newSMultipleChoiceQuestion = reactive<any>({
 
 const questionData = ref<any>([])
 
-const newAnswer = ref([])
+const newAnswer = ref<any>([])
 const count = ref<number>(0)
 const giveData = () => {
     var newSMultipleChoice = reactive<any>([
@@ -171,25 +169,26 @@ const confirmCreate = () => {
     createGoodQuestion(args).then((res: any) => {
         console.log(args)
         if (res.code == 20000) {
-            console.log('删除成功')
             ElNotification({
                 title: '成功',
                 message: '题目新建成功',
                 type: 'success'
             })
-            newQuestionData.difficultyType = ''
-            newQuestionData.gradeId = ''
-            newQuestionData.type = ''
-            newQuestionData.id = ''
-            newQuestionData.subjectId = ''
-            newQuestionData.questionPrompt = ''
-            newQuestionData.option = ''
-            newQuestionData.answer = ''
+            // newQuestionData.difficultyType = ''
+            // newQuestionData.gradeId = ''
+            // newQuestionData.type = ''
+            // newQuestionData.id = ''
+            // newQuestionData.subjectId = ''
+            // newQuestionData.questionPrompt = ''
+            // newQuestionData.option = ''
+            // newQuestionData.answer = ''
+            // newAnswer.value = []
+            location.reload()
             centerDialogVisible.value = false
         } else {
             ElNotification({
-                title: '删除失败',
-                message: '新建失败' + res.msg,
+                title: '新建失败',
+                message: res.msg,
                 type: 'error'
             })
             centerDialogVisible.value = false

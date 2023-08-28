@@ -19,24 +19,11 @@ const totalNum = ref('')
 const centerDialogVisible = ref(false)
 const aim = ref<any>([])
 
-
-
-
-
-
-
-
-
-
-
 const PredeleteQuestion=(id:any)=>{
     centerDialogVisible.value=true
     aim.value=id
     console.log(aim)
 }
-
-
-
 
 const deleteQuestion = () => {
     deleteGoodQuestion({id:aim.value})
@@ -86,14 +73,10 @@ breadcrumbStore.data = [
 const tableData = reactive<any>([])
 const loading = ref(true)
 
-
-
 const router = useRouter()
 // const createQuestionDailogShow = ref(false)
 
-
 const questionCreate = () => { router.push({ path: 'question-create' }) }
-
 
 const searchQuestionData = reactive<any>({
 
@@ -102,8 +85,6 @@ const searchQuestionData = reactive<any>({
     type: '',
     id: '',
     subjectId: '',
-
-
 });
 
 const paginationInfo = reactive({
@@ -114,7 +95,6 @@ const paginationInfo = reactive({
 const loadData = () => {
     tableData.length = 0
     loading.value = true
-
 
     var args = {
         pageNum: paginationInfo.currentPage,
@@ -187,7 +167,6 @@ loadData()
     <div class="margin">
         <div class="subandgrade">
             <div>
-
                 <el-text style="margin-left: 15px;">科目:</el-text>
                 <el-select @click="loadSubjectsOption" style="margin-left:5px" class="select-width" filterable place
                     holder="请选择科目" v-model="searchQuestionData.subjectId" @change="loadData">
@@ -227,7 +206,6 @@ loadData()
                     <el-radio label="4">较难</el-radio>
                     <el-radio label="5">困难</el-radio>
                 </el-radio-group>
-
         </div>
 
         <div class="margin">
@@ -288,9 +266,6 @@ loadData()
         </el-scrollbar>
     </div>
 
-
-
-
     <el-dialog v-model="centerDialogVisible" title="Warning" width="30%" center>
     <span style="display: flex;  justify-content: center;">
       是否确认删除题目
@@ -304,19 +279,6 @@ loadData()
       </span>
     </template>
   </el-dialog>
-
-
-
-
-
-
-
-
-
-
-
-
-
 </template>
 
 <style scoped>
@@ -325,28 +287,22 @@ loadData()
     margin-left: 15px;
     margin-right: 15px
 }
-
 .row-divider {
     width: 100%;
     border-bottom: 2px #f0f2f5 solid;
     box-sizing: border-box;
     margin: 0;
 }
-
 .margin-left {
     margin-left: 25px
 }
-
-
 .subandgrade {
     display: flex;
     flex-direction: row
 }
-
 .select-width {
     width: 90px
 }
-
 .dialog-footer button:first-child {
   margin-right: 10px;
 }

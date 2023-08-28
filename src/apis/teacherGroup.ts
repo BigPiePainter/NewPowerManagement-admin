@@ -18,6 +18,15 @@ export const getTeacherGroup = (data: object) => {
     return http.request(args)
 }
 
+export const  getGroupsByTeacher= (data: object) => {
+    const args = {
+        url: '/api/management/teaching-research-group/all-groups',
+        method: 'GET',
+        params: data
+    }
+    return http.request(args)
+}
+
 export const addTeacherTogroup = (data:any) => {
     const args = {
         url: '/api/management/teaching-research-group-teacher/create-group-teacher',

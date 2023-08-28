@@ -3,55 +3,82 @@ import DisplayVideoCard from '../components/DisplayVideoCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getTeacherCourse } from '@/apis/teacherCourses'
+import { getGroupsByTeacher } from '@/apis/teacherGroup'
 import { videoToUrl } from '@/apis/videoIdToUrl'
 import { useRoute } from 'vue-router'
 import { getMiniLessons } from '@/apis/minilessons'
 import { getClasses } from '@/apis/class'
+const breadcrumbStore = useBreadcrumbStore()
+breadcrumbStore.data = [
+  { name: '账号管理', path: '' },
+  { name: '老师管理', path: '/account-teacher-managament' },
+  { name: '老师详情', path: '/teacher-detail-managament' },
+]
 
 const loading = ref(true)
 const video = reactive<any>([])
 const route = useRoute()
 console.log(route.query.id)
 const dialogShow = ref(false)
-
 const paginationInfoCourse = reactive({
   currentPage: 1,
-  pageSize: 20,
-  teacherId: route.query.id
+  pageSize: 20
 })
-
 const paginationInfoMiniLesson = reactive({
   currentPage: 1,
   pageSize: 20,
   teacherCourseId: ''
 })
-
 const courseData = reactive<any>([])
 const totalNum2 = ref('')
+const groupInfo = reactive<any>([])
+const groupNum = ref<number>()
+const classInfo = reactive<any>([])
+const classNum = ref<number>()
 const loadTeacherData = () => {
   courseData.length = 0
   loading.value = true
-
   var args = {
     pageNum: paginationInfoCourse.currentPage,
     pageSize: paginationInfoCourse.pageSize,
-    teacherId: paginationInfoCourse.teacherId
+    teacherId: route.query.id
   }
-  console.log(args)
   getTeacherCourse(args)
     .then((res) => {
       console.log(res)
       totalNum2.value = res.data.total
       res.data.records.forEach((course: any) => {
-        var item = { id: course.id, picture: course.cover, title: course.name, time: course.createdAt }
+        var item = {
+          id: course.id,
+          picture: course.cover,
+          title: course.name,
+          time: course.createdAt
+        }
         courseData.push(item)
+      })
+      return getGroupsByTeacher({ teacherId: route.query.id })
+    })
+    .then((res: any) => {
+      res.data.forEach((item: any) => {
+        groupInfo.push(item)
+      })
+      groupNum.value = res.data.length
+      return getClasses({ pageNum: 1, pageSize: 1, teacherId: route.query.id })
+    })
+    .then((res: any) => {
+      classNum.value = res.data.size
+      return getClasses({ pageNum: 1, pageSize: classNum.value, teacherId: route.query.id })
+    })
+    .then((res: any) => {
+      res.data.records.forEach((item: any) => {
+        classInfo.push(item)
       })
     })
     .catch(() => { })
     .finally(() => {
       loading.value = false
+      console.log(classInfo, groupInfo)
     })
-  console.log(route.query)
 }
 loadTeacherData()
 
@@ -156,14 +183,6 @@ const handleCurrentChange2 = (val: number) => {
   loadTeacherData()
 }
 
-const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [
-  { name: '账号管理', path: '' },
-  { name: '老师管理', path: '/account-teacher-managament' },
-  { name: '老师详情', path: '/teacher-detail-managament' },
-]
-
-
 </script>
 
 <template>
@@ -183,11 +202,13 @@ breadcrumbStore.data = [
         </div>
         <div class="topPart1-3">
           <div class="topPart1-3-2">
-            <el-text>最后登录:{{ route.query.lastLoginTime }}</el-text>
+            <el-text>最后登录: {{ route.query.lastLoginTime }}</el-text>
+            <div style="width: 20px;"></div>
+            <el-text>创建时间: {{ route.query.createdAt }}</el-text>
           </div>
-          <div class="topPart1-3-2">
+          <!-- <div class="topPart1-3-2">
             <el-text>创建时间:{{ route.query.createdAt }}</el-text>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -200,12 +221,14 @@ breadcrumbStore.data = [
 
       <el-divider direction="vertical" class="divider-height" />
       <div class="topPart1">
-        <div class="topPart1-1"><el-text>所带教研组:</el-text>
-
+        <div class="topPart1-1">
+          <el-text style="width: 110px;">所在教研组数量:</el-text>
+          <el-text>{{ groupNum }}</el-text>
         </div>
-        <div class="topPart2-2"><el-text style="display: flex;flex-direction: row;flex-wrap: ;margin:5px;warp"> <el-text
-              class="topPart1-1" v-for="item in classData" :key="item.name">{{ item.name }} </el-text>
-          </el-text></div>
+        <div class="topPart2-2">
+          <el-text style="width: 110px;">所带班级数量:</el-text>
+          <el-text>{{ classNum }}</el-text>
+        </div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
@@ -216,6 +239,36 @@ breadcrumbStore.data = [
         <div class="botPart1-1-3"><el-text>共23个微课</el-text></div>
       </div>
     </div> -->
+
+    <!-- <el-collapse class="collapse">
+      <el-card>
+        <el-collapse-item title="所在教研组" class="sup-node">
+
+        </el-collapse-item>
+      </el-card>
+      <el-card>
+        <el-collapse-item title="所在教研组" class="sup-node">
+
+        </el-collapse-item>
+      </el-card>
+    </el-collapse> -->
+    <div class="collapse">
+      <div class="sup-node">
+        <el-text class="sup-title">所在教研组</el-text>
+        <div class="group-list">
+          <el-text class="group-name" v-for="item in groupInfo" :key="item">{{ item.groupName }}</el-text>
+        </div>
+      </div>
+      <div style="width: 10px;background-color: #f0f2f5;"></div>
+      <div class="sup-node">
+        <el-text class="sup-title">所带班级</el-text>
+        <div class="group-list">
+          <el-text class="group-name" v-for="item in classInfo" :key="item">{{ item.name }}</el-text>
+        </div>
+      </div>
+    </div>
+
+    <el-divider class="row-divider"></el-divider>
 
     <div class="botPart1-2">
       <div @click="loadDialogData(item.id)" v-for="item in courseData" :key="item.id">
@@ -253,6 +306,33 @@ breadcrumbStore.data = [
 
 <style scoped lang="scss">
 $scale: 0.88;
+
+.collapse {
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+
+  .sup-node {
+    width: 50%;
+    flex-direction: column;
+
+    .sup-title {
+      margin-left: 15px;
+      margin-right: 15px;
+      margin-top: 10px;
+    }
+
+    .group-list {
+      margin-left: 25px;
+      margin-right: 15px;
+      margin-top: 10px;
+      .group-name{
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
 
 .whole {
   display: flex;
@@ -328,7 +408,8 @@ $scale: 0.88;
 
 .topPart1-3-2 {
   margin-top: 20px * $scale;
-
+  display: flex;
+  flex-direction: row;
 }
 
 .botPart1-1 {
