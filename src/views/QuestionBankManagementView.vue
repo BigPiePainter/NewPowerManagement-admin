@@ -188,12 +188,11 @@ const tableColumns = [
     width: 100,
     cellRenderer: (cellData: any) => (
       <span>
-        {cellData.cellData == 0 ? '⭐'
-          : cellData.cellData == 1 ? '⭐⭐'
-            : cellData.cellData == 2 ? '⭐⭐⭐'
-              : cellData.cellData == 3 ? '⭐⭐⭐⭐'
-                : cellData.cellData == 4 ? '⭐⭐⭐⭐⭐'
-                  : '⭐⭐⭐⭐⭐⭐'}
+        {cellData.cellData == 1 ? '⭐'
+          : cellData.cellData == 2 ? '⭐⭐'
+            : cellData.cellData == 3 ? '⭐⭐⭐'
+              : cellData.cellData == 4 ? '⭐⭐⭐⭐'
+                : '⭐⭐⭐⭐⭐'}
       </span>)
   },
   {
@@ -201,7 +200,7 @@ const tableColumns = [
     key: 'labelName',
     title: '标签',
     width: 100,
-    align:'center',
+    align: 'center',
     cellRenderer: (cellData: any) => {
       if (cellData.cellData == null) {
         return (
@@ -297,11 +296,7 @@ const calcelDeleteTea = (item: any) => {
   item.rowData.id = null
 }
 
-
-
 const deleteTea = (item: any) => {
-
-
   var args = {
     id: item.rowData.id,
     type: 2
@@ -332,7 +327,6 @@ const deleteTea = (item: any) => {
       })
     })
 }
-
 
 const allGrades = reactive<any>([])
 const allSubjects = reactive<any>([])
@@ -375,7 +369,18 @@ const searchBarItems = reactive([
   },
   {
     name: '难度',
-    value: ''
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options:
+      [
+        { id: 1, name: '⭐' },
+        { id: 2, name: '⭐⭐' },
+        { id: 3, name: '⭐⭐⭐' },
+        { id: 4, name: '⭐⭐⭐⭐' },
+        { id: 5, name: '⭐⭐⭐⭐⭐', }
+      ],
+    single: true
   },
 
   {
@@ -403,27 +408,27 @@ const allDifficultyType = [
   {
     id: 1,
     value: 1,
-    label: '容易',
+    label: '⭐',
   },
   {
     id: 2,
     value: 2,
-    label: '较易',
+    label: '⭐⭐',
   },
   {
     id: 3,
     value: 3,
-    label: '一般',
+    label: '⭐⭐⭐',
   },
   {
     id: 4,
     value: 4,
-    label: '较难',
+    label: '⭐⭐⭐⭐',
   },
   {
     id: 5,
     value: 5,
-    label: '困难',
+    label: '⭐⭐⭐⭐⭐',
   }
 ]
 
