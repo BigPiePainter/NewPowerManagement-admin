@@ -19,7 +19,7 @@ import { reactive } from 'vue';
 //   console.log(JSON.parse(localStorage.author))
 // }
 const author = JSON.parse(localStorage.author)
-const url = 'src/assets/编组.png'
+const url = 'logo.png'
 const items = reactive([
   {
     index: '/work-space',
@@ -173,7 +173,7 @@ const items = reactive([
       },
       {
         index: '/exam-info',
-        title: '考试咨询',
+        title: '考试资讯',
         show: author.examInfoShow,
       },
       {
