@@ -163,7 +163,7 @@ const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 
 const restPsw = (item: any) => {
-  var args = { studentId: item.rowData.id }
+  var args = { id: item.rowData.id }
   restStudentPsw(args)
     .then((res: any) => {
       if (res.msg == 'success') {
@@ -406,8 +406,15 @@ const confirmEditDialog = () => {
 }
 
 const createStudents = () => {
+  newStudentData.account = ''
+  newStudentData.name = ''
+  newStudentData.expiration = ''
+  newStudentData.password = ''
+  newStudentData.phoneNumber = ''
+  newStudentData.sex = ''
+  newStudentData.phoneNumberOfParent = ''
+  newStudentData.remark = ''
   createDialogShow.value = true;
-  console.log(createDialogShow.value)
 }
 
 const cancelEditDialog = () => {
@@ -447,7 +454,7 @@ const cancelEditDialog = () => {
       </div>
 
       <div class="input">
-        <div class="input-word">手机号码:</div>
+        <div class="input-word"><el-text style="color:#ff0000">*</el-text>手机号码:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.phoneNumber" />
       </div>
 

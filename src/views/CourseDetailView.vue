@@ -82,7 +82,7 @@ const freeCourseCreateConfirm = () => {
   })
     .catch((res: any) => {
       ElNotification({
-        title: '下发失败',
+        title: '未知错误',
         message: res.msg,
         type: 'error'
       })
@@ -97,19 +97,32 @@ const warningDialog = (cellData2: any) => {
 }
 
 const ConfirmdeleteMiniLesson = () => {
-  deleteMiniLesson({ id: deleteItemid.value }).then((res: any) => {
-    console.log(deleteItemid)
-    if (res.code == 20000) {
-      console.log('删除成功')
-
-      loadData()
-      warningDialogshow.value = false
-    }
-    else {
-      warningDialogshow.value = false
-      console.log('删除失败')
-    }
-  }).catch()
+  deleteMiniLesson({ id: deleteItemid.value })
+    .then((res: any) => {
+      console.log(deleteItemid)
+      if (res.code == 20000) {
+        ElNotification({
+          title: '移除成功',
+          type: 'success'
+        })
+        loadData()
+        warningDialogshow.value = false
+      }
+      else {
+        ElNotification({
+          title: '移除失败',
+          message: res.msg,
+          type: 'error'
+        })
+      }
+    })
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error'
+      })
+    })
 }
 
 const addDialogShow = ref(false)
@@ -291,7 +304,7 @@ const tableColumns = reactive<any>([
       return (
         <div>
           <el-button link type="danger" onClick={() => warningDialog(cellData.rowData.id)}>
-            移除课程包
+            移除微课
           </el-button>
         </div>
       )
@@ -375,10 +388,14 @@ const dialogTableColumns = reactive<any>([
 const confirmAdd = () => {
   newTeaData.value = dialogTableData.value.filter((item: any) => item.checked)
   let data = newTeaData.value.map((item: any) => item.id)
+  // let data:number[] = []
+  // newTeaData.value.forEach((item:any)=>{
+  //   data.push(Number(item.id))
+  // })
   console.log(data)
   addMiniLessons({
     courseId: route.query.id,
-    miniLessonId: data
+    miniLessonIdArr: data
   }).then((res: any) => {
     if (res.code == '20000') {
       ElNotification({
@@ -470,20 +487,17 @@ const clickAdd = () => {
         :columns="tableColumns" :data="tableData">
       </TablePage>
     </div>
-
   </div>
 
-
-
-  <el-dialog v-model="warningDialogshow" title="Warning" width="30%" center>
+  <el-dialog v-model="warningDialogshow" title="警告" width="300px">
     <el-text disabled style="display: flex;align-items: center;justify-content: center;">
-      是否确认从课程包中删除微课
+      是否确认从课程包中移除微课
     </el-text>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="warningDialogshow = false">Cancel</el-button>
+        <el-button @click="warningDialogshow = false">取消</el-button>
         <el-button type="primary" @click="ConfirmdeleteMiniLesson">
-          Confirm
+          确认
         </el-button>
       </span>
     </template>
@@ -535,7 +549,6 @@ const clickAdd = () => {
 <style scoped lang="scss">
 $scale: 0.88;
 $gap: 15px;
-
 
 .page-container {
 

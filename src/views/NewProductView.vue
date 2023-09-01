@@ -315,7 +315,7 @@ const handleFileChange = (e: Event) => {
               type: 'error'
             })
           } else {
-            console.log(res)
+            console.log(res.data.url)
             newCoverUrl.value = res.data.url
           }
         })
@@ -366,6 +366,10 @@ const create = () => {
   newContentData.value = tableData.filter((item: any) => item.checked)
   let data = newContentData.value.map((item: any) => item.id)
   console.log(data)
+  newProductData.androidPrice = Number(newProductData.androidPrice) * 100
+  newProductData.tcoin = Number(newProductData.tcoin) * 100
+  newProductData.cover = newCoverUrl.value
+  console.log(newProductData)
   createProduct(newProductData)
     .then((res: any) => {
       if (res.code == 20000) {
@@ -381,7 +385,7 @@ const create = () => {
           } else {
             ElNotification({
               title: '未知错误',
-              message: '加入课程包时' + res.msg,
+              message: '加入课程包时 ' + res.msg,
               type: 'error',
             })
           }
@@ -396,7 +400,7 @@ const create = () => {
       } else {
         ElNotification({
           title: '新建失败',
-          message: '创建商品时' + res.msg,
+          message: '创建商品时 ' + res.msg,
           type: 'error',
         })
       }

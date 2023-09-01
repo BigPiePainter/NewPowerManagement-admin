@@ -246,7 +246,7 @@ const tableColumns = [
     title: '安卓售价',
     align: 'center',
     cellRenderer: (cellData: any) => (
-      <span>{cellData.cellData ? cellData.cellData + '￥' : '无'}</span>
+      <span>{cellData.cellData ? cellData.cellData / 100 + '￥' : '无'}</span>
     ),
     width: 80
   },
@@ -266,7 +266,7 @@ const tableColumns = [
     title: 'T币价格',
     align: 'center',
     cellRenderer: (cellData: any) => (
-      <span>{cellData.cellData ? cellData.cellData : '无'}</span>
+      <span>{cellData.cellData ? cellData.cellData / 100 : '无'}</span>
     ),
     width: 80,
   },
@@ -304,7 +304,6 @@ const tableColumns = [
         </>
       )
     }
-
   },
   {
     dataKey: 'versionType',
@@ -454,9 +453,6 @@ const loadData = () => {
 }
 loadData()
 
-console.log(tableData)
-
-
 //-------------------上下架----------------------//
 
 const editgoodOn = (props: any) => {
@@ -493,7 +489,6 @@ const editProductData = reactive<any>({
   name: '',
   tcoin: '',
 });
-
 
 const editGoods =
   (props: any) => {
