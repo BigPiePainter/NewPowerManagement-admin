@@ -77,10 +77,10 @@ const tableColumns = [
     cellRenderer: (item: any) => (
       <el-image
         fit="scale-down"
-        src={item.rowData.productCover}
+        src={item.rowData.productCover ? item.rowData.productCover : item.rowData.coursesQuestionPackagesCover}
         //onClick={()=>console.log(item)}
         className="shop-Preview"
-        preview-src-list={[item.rowData.productCover]}
+        preview-src-list={[item.rowData.productCover ? item.rowData.productCover : item.rowData.coursesQuestionPackagesCover]}
         preview-teleported
       />
     )
@@ -89,7 +89,10 @@ const tableColumns = [
     dataKey: 'productName',
     key: 'productName',
     title: '商品名称',
-    width: 260
+    width: 260,
+    cellRenderer: (item: any) => (
+      <span>{item.rowData.productName ? item.rowData.productName : item.rowData.coursesQuestionPackagesName}</span>
+    )
   },
   {
     dataKey: 'studentName',

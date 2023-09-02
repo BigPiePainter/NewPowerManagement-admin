@@ -266,7 +266,7 @@ const tableColumns = [
     title: 'T币价格',
     align: 'center',
     cellRenderer: (cellData: any) => (
-      <span>{cellData.cellData ? cellData.cellData / 100 : '无'}</span>
+      <span>{cellData.cellData ? cellData.cellData : '无'}</span>
     ),
     width: 80,
   },
@@ -328,7 +328,7 @@ const tableColumns = [
     key: 'status',
     title: '状态',
     width: 70,
-    align:'center',
+    align: 'center',
     cellRenderer: (cellData: any) => {
       return (
         <div>
@@ -350,7 +350,7 @@ const tableColumns = [
     key: 'hot',
     title: '热门',
     width: 70,
-    align:'center',
+    align: 'center',
     cellRenderer: (cellData: any) => {
       return (
         <div>
@@ -387,7 +387,7 @@ const tableColumns = [
     },
     width: 160,
     align: 'center',
-    fixed:'right'
+    fixed: 'right'
   }
 ]
 
@@ -694,7 +694,7 @@ const editGoodsHot = (props: any) => {
   </el-dialog>
 </template>
 
-<style lang="scss" scop>
+<style lang="scss" scoped>
 $gap: 15px;
 
 .page-container {

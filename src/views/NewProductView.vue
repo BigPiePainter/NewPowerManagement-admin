@@ -367,7 +367,6 @@ const create = () => {
   let data = newContentData.value.map((item: any) => item.id)
   console.log(data)
   newProductData.androidPrice = Number(newProductData.androidPrice) * 100
-  newProductData.tcoin = Number(newProductData.tcoin) * 100
   newProductData.cover = newCoverUrl.value
   console.log(newProductData)
   createProduct(newProductData)

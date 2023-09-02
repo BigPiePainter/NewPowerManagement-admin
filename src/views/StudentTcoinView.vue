@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton,ElNotification } from 'element-plus'
+import { ElButton, ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { InputType } from '@/type'
@@ -21,7 +21,7 @@ const allGrade = ref<any>([])
 
 const searchBarItems = reactive([
   { name: '用户姓名', value: '', label: "请输入" },
-  { name: '学习阶段', value: '', type: InputType.Select, label: "请选择", options: allGrade,single:true },
+  { name: '学习阶段', value: '', type: InputType.Select, label: "请选择", options: allGrade, single: true },
 ])
 
 const getselection = () => {
@@ -113,7 +113,7 @@ const tableColumns = [
     cellRenderer: (item: any) => (
       <>
         <el-button link type="primary" class="" onClick={() => editFund(item)}>
-          变更积分数
+          变更T币数
         </el-button>
       </>
     ),
@@ -193,6 +193,7 @@ const confirmEditDialog = () => {
           message: '学生编辑成功',
           type: 'success'
         })
+        editStudentFundDialog.value = false;
         loadData()
       } else {
         ElNotification({
@@ -202,7 +203,6 @@ const confirmEditDialog = () => {
         })
       }
     }).catch()
-  editStudentFundDialog.value = false;
 }
 const cancelEditDialog = () => {
   editStudentFundDialog.value = false;
@@ -265,9 +265,9 @@ loadData()
         </el-input>
       </div>
     </div>
-    
+
     <template #header>
-      <el-text>编辑积分数</el-text>
+      <el-text>编辑T币数</el-text>
     </template>
     <template #footer>
       <el-button type="primary" @click="confirmEditDialog()">确定</el-button>
@@ -277,10 +277,6 @@ loadData()
     </template>
   </el-dialog>
 </template>
-
-
-
-
 
 <style scoped lang="scss">
 $gap: 15px;
