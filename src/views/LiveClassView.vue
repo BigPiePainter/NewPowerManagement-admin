@@ -286,7 +286,7 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 上课学生：</span>
-        <el-select multiple class="dialog-input" placeholder="请输入" v-model="newClassData.studentIds">
+        <el-select filterable multiple class="dialog-input" placeholder="请输入" v-model="newClassData.studentIds">
           <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>

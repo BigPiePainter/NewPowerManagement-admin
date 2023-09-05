@@ -53,7 +53,9 @@ const giveCourse = (item: any) => {
   snapShot.androidPoint = item.rowData.androidPoint
   snapShot.categoryId = item.rowData.categoryId
   snapShot.categoryName = item.rowData.categoryName
-  snapShot.coursesQuestionPackagesId = item.rowData.id
+  var idArr = []
+  idArr.push(item.rowData.id)
+  snapShot.coursesQuestionPackagesId = idArr
   snapShot.cover = item.rowData.cover
   snapShot.gradeId = item.rowData.gradeId
   snapShot.gradeName = item.rowData.gradeName

@@ -365,10 +365,30 @@ const newContentData = ref<any>([])
 const create = () => {
   newContentData.value = tableData.filter((item: any) => item.checked)
   let data = newContentData.value.map((item: any) => item.id)
-  console.log(data)
-  newProductData.androidPrice = Number(newProductData.androidPrice) * 100
-  newProductData.cover = newCoverUrl.value
-  console.log(newProductData)
+  var args = {
+    id: newProductData.id,
+    hot: newProductData.hot,
+    name: newProductData.name,
+    status: newProductData.status,
+    subjectId: newProductData.subjectId,
+    type: newProductData.type,
+    version: newProductData.version,
+    versionType: newProductData.versionType,
+    gradeId: newProductData.gradeId,
+    cover: newCoverUrl.value
+  }
+  if (newProductData.iosPoint != '') {
+    Object.assign(args, { iosPoint: newProductData.iosPoint })
+  }
+  if (newProductData.tcoin != '') {
+    Object.assign(args, { tcoin: newProductData.tcoin })
+  }
+  if (newProductData.androidPoint != '') {
+    Object.assign(args, { androidPoint: newProductData.androidPoint })
+  }
+  if (newProductData.androidPrice != '') {
+    Object.assign(args, { androidPrice: Number(newProductData.androidPrice) * 100 })
+  }
   createProduct(newProductData)
     .then((res: any) => {
       if (res.code == 20000) {
@@ -514,14 +534,18 @@ const create = () => {
 
         <div style="margin-top:3px">
           <el-text>安卓: </el-text>
-          <el-input class="input-length" placeholder="请输入(元)" v-model="newProductData.androidPrice">元</el-input>
-          / <el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.androidPoint">积分</el-input>
+          <el-input :disabled="newProductData.androidPoint != ''" class="input-length" placeholder="请输入(元)"
+            v-model="newProductData.androidPrice">元</el-input>
+          / <el-input :disabled="newProductData.androidPrice != ''" class="input-length" placeholder="请输入（积分）"
+            v-model="newProductData.androidPoint">积分</el-input>
         </div>
 
         <div style="margin-left: 30px;">
           <el-text>IOS: </el-text>
-          <el-input class="input-length" placeholder="请输入T币价格" v-model="newProductData.tcoin">T币</el-input>
-          / <el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.iosPoint">积分</el-input>
+          <el-input :disabled="newProductData.iosPoint != ''" class="input-length" placeholder="请输入T币价格"
+            v-model="newProductData.tcoin">T币</el-input>
+          / <el-input :disabled="newProductData.tcoin != ''" class="input-length" placeholder="请输入（积分）"
+            v-model="newProductData.iosPoint">积分</el-input>
         </div>
       </div>
 

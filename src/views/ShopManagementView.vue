@@ -490,30 +490,75 @@ const editProductData = reactive<any>({
   tcoin: '',
 });
 
-const editGoods =
-  (props: any) => {
-    editProductData.id = props.rowData.id;
+const editGoods = (props: any) => {
+  editProductData.id = props.rowData.id;
+  if (props.rowData.iosPoint == null) {
+    editProductData.iosPoint = ''
+  } else {
     editProductData.iosPoint = props.rowData.iosPoint;
-    editProductData.tcoin = props.rowData.tcoin;
-    editProductData.androidPoint = props.rowData.androidPoint;
-    editProductData.androidPrice = props.rowData.androidPrice;
-    editProductData.name = props.rowData.name
-    console.log(props)
-    editDialogShow.value = true;
   }
+  if (props.rowData.tcoin == null) {
+    editProductData.tcoin = ''
+  } else {
+    editProductData.tcoin = props.rowData.tcoin;
+  }
+  if (props.rowData.androidPoint == null) {
+    editProductData.androidPoint = ''
+  } else {
+    editProductData.androidPoint = props.rowData.androidPoint;
+  }
+  if (props.rowData.androidPrice == null) {
+    editProductData.androidPrice = ''
+  } else {
+    editProductData.androidPrice = props.rowData.androidPrice / 100;
+  }
+  // editProductData.iosPoint = props.rowData.iosPoint;
+  // editProductData.tcoin = props.rowData.tcoin;
+  // editProductData.androidPoint = props.rowData.androidPoint;
+  // editProductData.androidPrice = Number(props.rowData.androidPrice / 100);
+  editProductData.name = props.rowData.name
+  console.log(editProductData)
+  editDialogShow.value = true;
+}
 
 const editDialogShow = ref(false)
 
 const confirmEditDialog = () => {
-  editProduct(editProductData).
+  var args: any = {
+    name: editProductData.name,
+    id: editProductData.id
+  }
+  console.log(args)
+  if (editProductData.iosPoint == '') {
+    Object.assign(args, { iosPoint: null })
+  } else {
+    Object.assign(args, { iosPoint: editProductData.iosPoint })
+  }
+  if (editProductData.tcoin == '') {
+    Object.assign(args, { tcoin: null })
+  } else {
+    Object.assign(args, { tcoin: editProductData.tcoin })
+  }
+  if (editProductData.androidPoint == '') {
+    Object.assign(args, { androidPoint: null })
+  } else {
+    Object.assign(args, { androidPoint: editProductData.androidPoint })
+  }
+  if (editProductData.androidPrice == '') {
+    Object.assign(args, { androidPrice: null })
+  } else {
+    Object.assign(args, { androidPrice: Number(editProductData.androidPrice) * 100 })
+  }
+  console.log(args)
+  editProduct(args).
     then((res: any) => {
-      console.log(editProductData)
       if (res.code == '20000') {
         ElNotification({
           title: '成功',
           message: '商品编辑成功',
           type: 'success'
         })
+        editDialogShow.value = false;
         loadData()
       } else {
         ElNotification({
@@ -523,9 +568,6 @@ const confirmEditDialog = () => {
         })
       }
     }).catch()
-  loadData()
-  editDialogShow.value = false;
-
 }
 //----------------------------删除商品----------
 
@@ -632,7 +674,7 @@ const editGoodsHot = (props: any) => {
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>ios积分价格：
         </span>
-        <el-input class="dialog-input" v-model="editProductData.iosPoint">
+        <el-input :disabled="editProductData.tcoin != ''" class="dialog-input" v-model="editProductData.iosPoint">
         </el-input>
       </div>
 
@@ -640,7 +682,7 @@ const editGoodsHot = (props: any) => {
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>T币价格：
         </span>
-        <el-input class="dialog-input" v-model="editProductData.tcoin">
+        <el-input :disabled="editProductData.iosPoint != ''" class="dialog-input" v-model="editProductData.tcoin">
         </el-input>
       </div>
 
@@ -648,7 +690,8 @@ const editGoodsHot = (props: any) => {
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>安卓积分价格：
         </span>
-        <el-input class="dialog-input" v-model="editProductData.androidPoint">
+        <el-input :disabled="editProductData.androidPrice != ''" class="dialog-input"
+          v-model="editProductData.androidPoint">
         </el-input>
       </div>
 
@@ -656,7 +699,8 @@ const editGoodsHot = (props: any) => {
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>安卓价格(￥)：
         </span>
-        <el-input class="dialog-input" v-model="editProductData.androidPrice">
+        <el-input :disabled="editProductData.androidPoint != ''" class="dialog-input"
+          v-model="editProductData.androidPrice">
         </el-input>
       </div>
     </div>
