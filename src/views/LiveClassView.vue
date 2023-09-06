@@ -214,7 +214,11 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 const loadSelectOption = () => {
   allTeacher.length = 0
   getAllTeachers()
@@ -222,7 +226,6 @@ const loadSelectOption = () => {
       res.data.forEach((item: any) => {
         allTeacher.push(item)
       })
-      console.log(allTeacher)
     }).catch()
 }
 
@@ -243,13 +246,11 @@ const loadData = () => {
       name: searchBarItems[1].value,
       teacherId: searchBarItems[0].value
     }
-
-  console.log(args)
   getLiveClasses(args)
     .then((res) => {
       console.log(args)
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
       console.log(res)
     })
     .catch(() => { })
@@ -258,11 +259,10 @@ const loadData = () => {
     })
 }
 loadData()
-
 </script>
 
 <template>
-  <TablePage :loading="loading" class="page-container" @paginationChange="loadData" :columns="tableColumns"
+  <TablePage :loading="loading" class="page-container" @paginationChange="pageChange" :columns="tableColumns"
     :itemsTotalLength="totalLength" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>

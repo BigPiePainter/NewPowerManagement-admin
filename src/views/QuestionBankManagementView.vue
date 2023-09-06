@@ -396,9 +396,12 @@ const totalLength = ref<Number>()
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
-
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 const allDifficultyType = [
   {
     id: 0,
@@ -431,8 +434,6 @@ const allDifficultyType = [
     label: '⭐⭐⭐⭐⭐',
   }
 ]
-
-
 
 const loadData = () => {
   loading.value = true
@@ -516,8 +517,8 @@ const confirmEditDialog = () => {
 </script>
 
 <template>
-  <TablePage :loading="loading" class="table-page" :columns="tableColumns" :itemsTotalLength="totalLength"
-    @paginationChange="loadData" :data="tableData" style="margin-left: 15px;">
+  <TablePage :loading="loading" class="page-container" :columns="tableColumns" :itemsTotalLength="totalLength"
+    @paginationChange="pageChange" :data="tableData" style="margin-left: 15px;">
 
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
@@ -623,7 +624,7 @@ const confirmEditDialog = () => {
   </el-dialog>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 $gap: 15px;
 
 .page-container {

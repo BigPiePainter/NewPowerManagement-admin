@@ -263,7 +263,7 @@ const loadData = (prop: any) => {
   getStudent(args).then((res) => {
     dataCompute(res)
     loading.value = false
-    totalLength.value = res.data.records.length
+    totalLength.value = res.data.total
   })
     .catch()
 }

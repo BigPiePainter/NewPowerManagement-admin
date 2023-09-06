@@ -391,7 +391,11 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 const loadData = () => {
   loading.value = true
   var args = {
@@ -404,7 +408,7 @@ const loadData = () => {
     .then((res) => {
       console.log(res)
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
       return getGrades()
     }).then((res: any) => {
       allGrades.length = 0
@@ -448,7 +452,7 @@ loadData()
 </script>
 
 <template>
-  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
     :columns="tableColumns" :data="tableData">
     <div class='div-search-bar'>
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>

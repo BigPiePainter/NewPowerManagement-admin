@@ -221,10 +221,13 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 const totalLength = ref<Number>()
-
 const tableData = ref<any>([])
-
 const loadData = () => {
   loading.value = true
   var args = {
@@ -245,7 +248,7 @@ const loadData = () => {
         })
       })
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -319,14 +322,14 @@ const deleteTea = (item: any) => {
 
 <template>
   <TablePage class="page-container" :columns="tableColumns" :data="tableData" :loading="loading"
-    :itemsTotalLength="totalLength" @paginationChange="loadData" :row-height="59">
+    :itemsTotalLength="totalLength" @paginationChange="pageChange" :row-height="59">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
   </TablePage>
 </template>
 
-<style lang="scss" scop>
+<style lang="scss" scoped>
 $gap: 15px;
 
 .page-container {

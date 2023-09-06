@@ -33,52 +33,6 @@ const paginationInfo3 = reactive({
   pageSize: 20
 })
 
-// //----------------initialization-----------------
-// const loadData = () => {
-//   //-------loadPendingData-------
-//   loading1.value = true
-//   var args1 = {
-//     pageNum: paginationInfo1.currentPage,
-//     pageSize: paginationInfo1.pageSize,
-//     auditStatus: 1
-//   }
-//   //-------loadApprovalData-------
-//   loading2.value = true
-//   var args2 = {
-//     pageNum: paginationInfo2.currentPage,
-//     pageSize: paginationInfo2.pageSize,
-//     auditStatus: 3,
-//   }
-//   //-------loadRejctData-------
-//   loading3.value = true
-//   var args3 = {
-//     pageNum: paginationInfo3.currentPage,
-//     pageSize: paginationInfo3.pageSize,
-//     auditStatus: 4,
-//   }
-//   //-------promise-------------
-//   getMiniLessons(args1)
-//     .then((res: any) => {
-//       tableDataPending.value = res.data.records
-//       totalLength1.value = res.data.records.length
-//       getMiniLessons(args2)
-//     }).then((res: any) => {
-//       tableDataApproved.value = res.data.records
-//       totalLength2.value = res.data.records.length
-//       getMiniLessons(args3)
-//     }).then((res: any) => {
-//       tableDataRejected.value = res.data.records,
-//         totalLength3.value = res.data.records.length
-//     })
-//     .catch(() => { })
-//     .finally(() => {
-//       loading1.value = false
-//       loading2.value = false
-//       loading3.value = false
-//     })
-// }
-// loadData()
-
 const videoShow = ref(false)
 const url = ref<any>('')
 const playVideo = (videoId: any) => {
@@ -413,7 +367,21 @@ const tableDataPending = ref<any>([])
 const tableDataApproved = ref<any>([])
 
 const tableDataRejected = ref<any>([])
-
+const pageChange1 = (val: any) => {
+  paginationInfo1.currentPage = val.currentPage
+  paginationInfo1.pageSize = val.pageSize
+  loadPendingData()
+}
+const pageChange2 = (val: any) => {
+  paginationInfo2.currentPage = val.currentPage
+  paginationInfo2.pageSize = val.pageSize
+  loadApprovalData()
+}
+const pageChange3 = (val: any) => {
+  paginationInfo3.currentPage = val.currentPage
+  paginationInfo3.pageSize = val.pageSize
+  loadRejctData()
+}
 const loadPendingData = () => {
   loading1.value = true
   var args = {
@@ -424,7 +392,7 @@ const loadPendingData = () => {
   getMiniLessons(args)
     .then((res) => {
       tableDataPending.value = res.data.records
-      totalLength1.value = res.data.records.length
+      totalLength1.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -443,7 +411,7 @@ const loadApprovalData = () => {
   getMiniLessons(args)
     .then((res) => {
       tableDataApproved.value = res.data.records
-      totalLength2.value = res.data.records.length
+      totalLength2.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -461,7 +429,7 @@ const loadRejctData = () => {
   getMiniLessons(args)
     .then((res) => {
       tableDataRejected.value = res.data.records,
-        totalLength3.value = res.data.records.length
+        totalLength3.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -512,7 +480,6 @@ const ConfirmdeleteMiniLesson = () => {
     })
 }
 
-
 const handleClick = (tab: any) => {
   if (tab.props.name == 'pending') {
     auditStatus.value = 1
@@ -527,7 +494,6 @@ const handleClick = (tab: any) => {
     loadRejctData()
   }
 }
-
 </script>
 
 <template>
@@ -535,15 +501,15 @@ const handleClick = (tab: any) => {
     <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick">
       <el-tab-pane label="待审核" name="pending">
         <TablePage :loading="loading1" class="tabs-page-table" :itemsTotalLength="totalLength1"
-          @paginationChange="loadPendingData" :columns="tableColumnsPending" :data="tableDataPending"></TablePage>
+          @paginationChange="pageChange1" :columns="tableColumnsPending" :data="tableDataPending"></TablePage>
       </el-tab-pane>
       <el-tab-pane label="已通过" name="approved">
         <TablePage :loading="loading2" class="tabs-page-table" :itemsTotalLength="totalLength2"
-          @paginationChange="loadApprovalData" :columns="tableColumnsPending" :data="tableDataApproved"></TablePage>
+          @paginationChange="pageChange2" :columns="tableColumnsPending" :data="tableDataApproved"></TablePage>
       </el-tab-pane>
       <el-tab-pane label="未通过" name="rejected">
         <TablePage :loading="loading3" class="tabs-page-table" :itemsTotalLength="totalLength3"
-          @paginationChange="loadRejctData" :columns="tableColumnsPending" :data="tableDataRejected"></TablePage>
+          @paginationChange="pageChange3" :columns="tableColumnsPending" :data="tableDataRejected"></TablePage>
       </el-tab-pane>
     </el-tabs>
   </div>

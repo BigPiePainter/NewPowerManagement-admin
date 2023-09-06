@@ -209,6 +209,7 @@ const playVideo = (videoId: any) => {
 
 const loading = ref(true)
 const totalLength = ref<Number>()
+const dialogTotalLength = ref<Number>()
 const tableColumns = reactive<any>([
 
   {
@@ -319,7 +320,20 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
+const dialogPaginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
+const dialogPageChange = (val: any) => {
+  dialogPaginationInfo.currentPage = val.currentPage
+  dialogPaginationInfo.pageSize = val.pageSize
+  loadDialogData()
+}
 const loadData = () => {
   loading.value = true
   var args = {
@@ -331,7 +345,7 @@ const loadData = () => {
     console.log(args)
     console.log(res)
     tableData.value = res.data.records
-    totalLength.value = res.data.records.length
+    totalLength.value = res.data.total
     return getAllTeachers()
   }).then((res) => { (allTeacher.value = res.data), console.log(res) })
     .catch(() => { })
@@ -426,8 +440,8 @@ const loadDialogData = () => {
 
   loading.value = true
   var args = {
-    pageNum: paginationInfo.currentPage,
-    pageSize: paginationInfo.pageSize,
+    pageNum: dialogPaginationInfo.currentPage,
+    pageSize: dialogPaginationInfo.pageSize,
     name: dialogSearchBarItems[0].value,
     ownerId: dialogSearchBarItems[2].value,
     auditStatus: '3',
@@ -436,7 +450,7 @@ const loadDialogData = () => {
   getMiniLessons(args)
     .then((res) => {
       dialogTableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      dialogTotalLength.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -483,7 +497,7 @@ const clickAdd = () => {
       </div>
     </div>
     <div class="botPart1-2">
-      <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+      <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
         :columns="tableColumns" :data="tableData">
       </TablePage>
     </div>
@@ -504,7 +518,8 @@ const clickAdd = () => {
   </el-dialog>
 
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addDialogShow">
-    <TablePage class="dialog-table-page" :columns="dialogTableColumns" :data="dialogTableData">
+    <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="dialogPageChange"
+      :columns="dialogTableColumns" :data="dialogTableData">
       <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
     </TablePage>
 

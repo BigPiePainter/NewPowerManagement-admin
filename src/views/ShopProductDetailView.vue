@@ -35,7 +35,11 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 const dialogTableData = ref<any>([])
 const addProductDialog = ref(false)
 const newTeaData = ref<any>([])
@@ -153,6 +157,11 @@ const dialogPaginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
+const dialogPageChange = (val: any) => {
+  dialogPaginationInfo.currentPage = val.currentPage
+  dialogPaginationInfo.pageSize = val.pageSize
+  loadDialogData()
+}
 const dialogTotalLength = ref()
 const allGrades = reactive<any>([])
 const allSubjects = reactive<any>([])
@@ -217,7 +226,7 @@ const loadDialogData = () => {
       console.log(dialogSearchBarItems)
       console.log(res)
       dialogTableData.value = res.data.records
-      dialogTotalLength.value = res.data.records.length
+      dialogTotalLength.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -237,7 +246,7 @@ const loadData = () => {
     console.log(args)
     console.log(res)
     tableData.value = res.data.records
-    totalLength.value = res.data.records.length
+    totalLength.value = res.data.total
   })
     .catch(() => { })
     .finally(() => {
@@ -400,7 +409,7 @@ const confirmAdd = () => {
     </div>
     <div class="botPart1-2">
       <TablePage style="height: 620px;" :loading="loading" class="page-container" :itemsTotalLength="totalLength"
-        @paginationChange="loadData" :columns="tableColumns" :data="tableData">
+        @paginationChange="pageChange" :columns="tableColumns" :data="tableData">
       </TablePage>
     </div>
   </div>
@@ -420,7 +429,7 @@ const confirmAdd = () => {
   </el-dialog>
 
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addProductDialog">
-    <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="loadDialogData"
+    <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="dialogPageChange"
       :columns="dialogTableColumns" :data="dialogTableData">
       <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
     </TablePage>

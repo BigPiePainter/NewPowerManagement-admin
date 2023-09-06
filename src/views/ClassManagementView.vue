@@ -20,7 +20,6 @@ breadcrumbStore.data = [
   { name: '班级管理', path: '/class-management' }
 ]
 
-
 const router = useRouter()
 const loading = ref(true)
 const tableData = ref<any>([])
@@ -42,6 +41,12 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
+
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 
 const totalLength = ref<Number>()
 
@@ -318,7 +323,7 @@ const loadData = () => {
   getClasses(args)
     .then((res) => {
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
       return getAllTeachers()
     }).then((res) => {
       allTeacher.value = res.data
@@ -342,7 +347,7 @@ loadData()
 <template>
   <div class="div-class-management">
     <TablePage class="table-page" :loading="loading" :itemsTotalLength="totalLength" :columns="tableColumns"
-      @paginationChange="loadData" :data="tableData">
+      @paginationChange="pageChange" :data="tableData">
       <div class="div-search-bar">
         <SearchBar :items="searchBarItems" @change="loadData()" />
       </div>

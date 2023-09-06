@@ -1,10 +1,9 @@
 <script setup lang="tsx">
 import { cancelEquipments, getEquipments } from '@/apis/clientDevice'
 import { ref, reactive } from 'vue'
-import { ElButton, ElPopconfirm, ElNotification } from 'element-plus'
+import { ElPopconfirm, ElNotification } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
-import { InputType } from '@/type'
 
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 const breadcrumbStore = useBreadcrumbStore()
@@ -22,16 +21,16 @@ const searchBarItems = reactive([
 
 const loading = ref(true)
 const tableData = ref<any>([])
-  const paginationInfo = reactive({
+const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 const totalLength = ref<Number>()
-
-
-
-
 
 const tableColumns = [
   {
@@ -113,12 +112,6 @@ const tableColumns = [
   }
 ]
 
-
-
-
-
-
-
 //------------解绑设备---------------------
 const cancelEquip = (id: number) => {
   cancelEquipments({ id }).then(() => {
@@ -130,9 +123,6 @@ const cancelEquip = (id: number) => {
     loadData()
   }).catch
 }
-
-
-
 
 //--------------获取设备数据------------------
 const loadData = () => {
@@ -148,7 +138,7 @@ const loadData = () => {
   getEquipments(args)
     .then((res) => {
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
     })
     .catch(() => {
       ElNotification({
@@ -166,14 +156,8 @@ loadData()
 </script>
 
 <template>
-  <TablePage
-    :loading="loading"
-    class="page-container"
-    :itemsTotalLength="totalLength"
-    @paginationChange="loadData"
-    :columns="tableColumns"
-    :data="tableData"
-  >
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
+    :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
     </div>

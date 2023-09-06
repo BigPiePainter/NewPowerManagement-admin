@@ -20,7 +20,11 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 const searchBarItems = reactive([
   { name: '标题', value: '' },
   {
@@ -305,7 +309,7 @@ const createMsg = () => {
 </script>
 
 <template>
-  <TablePage class="msg-table" :loading="loading" :itemsTotalLength="totalLength" @paginationChange="loadData"
+  <TablePage class="msg-table" :loading="loading" :itemsTotalLength="totalLength" @paginationChange="pageChange"
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>

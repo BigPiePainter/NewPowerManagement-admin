@@ -44,12 +44,20 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
 const dialogPaginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
+const dialogPageChange = (val: any) => {
+  dialogPaginationInfo.currentPage = val.currentPage
+  dialogPaginationInfo.pageSize = val.pageSize
+  loadDialogData()
+}
 const activeName = ref('officalStudent')
 
 const normalDialogSearchBarItems = reactive([
@@ -59,7 +67,7 @@ const normalDialogSearchBarItems = reactive([
     label: "请选择",
     type: InputType.Select,
     options: allGrades,
-    single:true 
+    single: true
   },
   { name: "姓名", value: "", },
 
@@ -265,7 +273,6 @@ const cancelNewStudent = () => {
   dialogTableData.value.forEach((i: any) => i.checked = false);
 }
 
-
 const totalLength = ref<Number>()
 const dialogTotalLength = ref<Number>()
 const studentType = ref<number>()
@@ -293,7 +300,7 @@ const loadDialogData = () => {
   getStudent(args)
     .then((res) => {
       dialogTableData.value = res.data.records
-      dialogTotalLength.value = res.data.records.length
+      dialogTotalLength.value = res.data.total
       loading.value = false
     })
     .catch(() => { })
@@ -316,7 +323,7 @@ const loadData = () => {
       loadGradeOption()
       console.log(res)
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -362,7 +369,7 @@ loadData()
     </div>
     <div class="card-right">
       <TablePage class="table-page" :itemsTotalLength="totalLength" :loading="loading" :columns="tableColumns"
-        @paginationChange="loadData" :data="tableData">
+        @paginationChange="pageChange" :data="tableData">
         <div class="div-search-bar">
           <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
           <div style="flex-grow: 1"></div>
@@ -375,13 +382,15 @@ loadData()
   <el-dialog class="class-detail-dialog" width="850px" v-model="addStudentDialogShow">
     <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleTabClick">
       <el-tab-pane label="正式学生" name="officalStudent">
-        <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="loadDialogData" :columns="dialogTableColumns" :data="dialogTableData">
+        <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="dialogPageChange"
+          :columns="dialogTableColumns" :data="dialogTableData">
           <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="loadDialogData()">
           </SearchBar>
         </TablePage>
       </el-tab-pane>
       <el-tab-pane label="临时学生" name="inofficalStudent">
-        <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="loadDialogData" :columns="dialogTableColumns" :data="dialogTableData">
+        <TablePage class="dialog-table-page" :itemsTotalLength="dialogTotalLength" @paginationChange="dialogPageChange"
+          :columns="dialogTableColumns" :data="dialogTableData">
           <SearchBar class="dialog-search-bar" :items="normalDialogSearchBarItems" @change="loadDialogData()">
           </SearchBar>
         </TablePage>

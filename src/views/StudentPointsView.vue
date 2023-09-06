@@ -24,30 +24,11 @@ const searchBarItems = reactive([
   { name: '学习阶段', value: '', type: InputType.Select, label: "请选择", options: allGrade, single:true },
 ])
 
-
-
-
 const router = useRouter()
 const clickDetail = (props: { rowData: { id: string } }) => {
   console.log(props);
   router.push({ path: 'points-detail', query: { id: props.rowData.id } });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const getselection = () => {
   getGrades()
@@ -118,7 +99,11 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 const loadData = () => {
   loading.value = true
 
@@ -132,7 +117,7 @@ const loadData = () => {
   getStudent(args)
     .then((res) => {
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -211,7 +196,7 @@ loadData()
 </script>
 
 <template>
-  <TablePage class="page-container" :loading="loading" :itemsTotalLength="totalLength" @paginationChange="loadData"
+  <TablePage class="page-container" :loading="loading" :itemsTotalLength="totalLength" @paginationChange="pageChange"
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>

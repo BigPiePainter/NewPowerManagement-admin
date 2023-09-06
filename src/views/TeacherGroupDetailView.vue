@@ -144,12 +144,20 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
 const dialogPaginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
+const dialogPageChange = (val: any) => {
+  dialogPaginationInfo.currentPage = val.currentPage
+  dialogPaginationInfo.pageSize = val.pageSize
+  loadDialogData()
+}
 const totalLength = ref<Number>()
 const dialogTotalLength = ref<Number>()
 
@@ -167,7 +175,7 @@ const loadDialogData = () => {
       console.log(dialogSearchBarItems)
       console.log(res)
       dialogTableData.value = res.data.records
-      dialogTotalLength.value = res.data.records.length
+      dialogTotalLength.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -189,7 +197,7 @@ const loadData = () => {
   getTeacherGroupTeachers(args)
     .then((res) => {
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -322,7 +330,7 @@ const cancelNewTeacher = () => {
 
     <div class="card-right">
       <TablePage :loading="loading" class="table-page" :columns="tableColumns" :itemsTotalLength="totalLength"
-        @paginationChange="loadData" :data="tableData">
+        @paginationChange="pageChange" :data="tableData">
         <div class="div-search-bar">
 
           <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
@@ -337,7 +345,7 @@ const cancelNewTeacher = () => {
   </div>
 
   <el-dialog class="teacher-group-detail-dialog" width="900px" v-model="addTeacherDialogShow">
-    <TablePage class="dialog-table-page" @paginationChange="loadDialogData" :columns="dialogTableColumns"
+    <TablePage class="dialog-table-page" @paginationChange="dialogPageChange" :columns="dialogTableColumns"
       :itemsTotalLength="dialogTotalLength" :data="dialogTableData">
       <SearchBar class="dialog-search-bar" :items="dialogSearchBarItems" @change="loadDialogData()"></SearchBar>
     </TablePage>

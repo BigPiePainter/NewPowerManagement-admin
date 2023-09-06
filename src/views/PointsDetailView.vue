@@ -1,9 +1,6 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton } from 'element-plus'
-import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
-import { InputType } from '@/type'
 import { getPointInfor } from '@/apis/point'
 import { useRoute } from 'vue-router'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
@@ -15,10 +12,6 @@ breadcrumbStore.data = [
   { name: '积分明细', path: '' },
 ]
 const route = useRoute()
-const SearchBarItem = reactive([
-  { name: '班级', value: '', type: InputType.Select, label: "请选择" },
-
-])
 
 const tableColumns = [
   {
@@ -69,36 +62,32 @@ const tableColumns = [
 
 const tableData = ref<any>([])
 
-
-
-
-
-
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20,
   type: 1
 })
-
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 const totalLength = ref<Number>()
 
 const loadData = () => {
   loading.value = true
-
   var args = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     studentId: route.query.id,
 
   }
-
-
   getPointInfor(args)
     .then((res) => {
       console.log(args)
       console.log(res)
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -111,7 +100,7 @@ loadData()
 </script>
 
 <template>
-  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
     </div>

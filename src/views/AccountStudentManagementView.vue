@@ -282,6 +282,13 @@ const paginationInfo = reactive({
   type: 1
 })
 
+const pageChange = (val: any) => {
+  console.log(val)
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
+
 const dataCompute = (items: any) => {
   items.forEach((i: any) => {
     i.sexName = i.sex == 1 ? '男' : '女'
@@ -306,7 +313,7 @@ const loadData = () => {
     .then((res) => {
       dataCompute(res.data.records)
       loading.value = false
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
       return getSubjects()
     })
     .then((res) => {
@@ -475,7 +482,7 @@ const cancelEditDialog = () => {
     </template>
   </el-dialog>
 
-  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>

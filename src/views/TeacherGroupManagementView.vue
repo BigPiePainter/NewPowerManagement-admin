@@ -22,7 +22,6 @@ getAllTeachers().then((res) => {
   allTeacher.value = res.data
 })
 
-
 const searchBarItems = reactive([
   { name: "教研组名称", value: "" },
   { name: "教研组长", type: InputType.Select, value: "", options: allTeacher },
@@ -226,6 +225,13 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
+
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
+
 const totalLength = ref<Number>()
 
 const loadData = () => {
@@ -239,7 +245,7 @@ const loadData = () => {
   getTeacherGroup(args)
     .then((res) => {
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
     })
     .catch(() => { })
     .finally(() => {
@@ -285,7 +291,7 @@ const cancelNewTeacherGroup = () => {
 <template>
   <div class="div-teacher-group-management">
     <TablePage :loading="loading" class="table-page" :columns="tableColumns" :data="tableData"
-      :itemsTotalLength="totalLength" @paginationChange="loadData">
+      :itemsTotalLength="totalLength" @paginationChange="pageChange">
       <div class="div-search-bar">
         <SearchBar :items="searchBarItems" @change="loadData()" />
       </div>

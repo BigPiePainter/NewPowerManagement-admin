@@ -4,12 +4,8 @@ import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { getManager, createManager, eidtManager, deleteManager } from '@/apis/manager'
-import { getAllMenu, createRole, getRole } from '@/apis/role'
-import { receiveMessageOnPort } from 'worker_threads'
-
+import { getManager, eidtManager, deleteManager } from '@/apis/manager'
 const breadcrumbStore = useBreadcrumbStore()
-
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '管理员管理', path: '/account-role-managment' }
@@ -19,13 +15,17 @@ const loading = ref(true)
 const router = useRouter()
 const tableData = ref<any>([])
 
-
-
 //-------------获取角色数据---------------------
 const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
+
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 
 const totalLength = ref<Number>()
 const loadData = () => {
@@ -36,13 +36,11 @@ const loadData = () => {
 
   }
   getManager(args)
-
     .then((res) => {
       console.log(res)
       tableData.value = res.data.records
-      totalLength.value = res.data.records.length
+      totalLength.value = res.data.total
       console.log(res.data.records.menuList[0].id)
-
     })
     .catch(() => { })
     .finally(() => {
@@ -242,7 +240,7 @@ const deleteTea = (item: any) => {
 </script>
 
 <template>
-  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="loadData"
+  <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
     :columns="tableColumns" :data="tableData">
     <div>
       <el-button class="ARMbutton" type="primary" @click="roleDetail">新建角色</el-button>
