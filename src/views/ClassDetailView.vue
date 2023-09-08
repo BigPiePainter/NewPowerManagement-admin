@@ -20,6 +20,7 @@ breadcrumbStore.data = [
   { name: '班级详情', path: '/class-detail' }
 ]
 
+const author = JSON.parse(localStorage.author)
 const allStudents = ref<any>([])
 const allGrades = ref<any>([])
 
@@ -213,7 +214,7 @@ const tableColumns = [
             onConfirm={() => preDeleteStu(item)}
             v-slots={{
               reference: () => (
-                <el-button link type="primary">
+                <el-button disabled={!author.classEdit} link type="primary">
                   移除
                 </el-button>
               )
@@ -373,7 +374,7 @@ loadData()
         <div class="div-search-bar">
           <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
           <div style="flex-grow: 1"></div>
-          <el-button class="search-bar-button" type="primary" @click="addStudent(), studentType = 1">添加成员</el-button>
+          <el-button :disabled="!author.classEdit" class="search-bar-button" type="primary" @click="addStudent(), studentType = 1">添加成员</el-button>
         </div>
       </TablePage>
     </div>

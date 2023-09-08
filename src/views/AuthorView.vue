@@ -1,10 +1,11 @@
 <script setup lang="tsx">
-import { getManager, eidtManager } from '@/apis/manager'
-import { ref, reactive, watch } from 'vue'
-import { ElButton, ElInput, ElNotification } from 'element-plus'
+import { getManager, eidtManagerAuthor } from '@/apis/manager'
+import { reactive, watch } from 'vue'
+import { ElButton, ElNotification } from 'element-plus'
 import { useRoute } from 'vue-router'
 
 //------------------variable----------------------
+const author1 = JSON.parse(localStorage.author)
 const route = useRoute()
 const author = reactive<any>({
     workSpace: { able: true, id: 1 },
@@ -98,7 +99,7 @@ const confirmAuthor = () => {
         if (author[key].able == true)
             menuIds = menuIds + String(author[key].id) + ','
     })
-    eidtManager({
+    eidtManagerAuthor({
         id: route.query.id,
         menuIds: menuIds
     }).then((res: any) => {
@@ -139,7 +140,7 @@ watch(() => author, (val: any) => {
                 <div class="left-title">
                     <div style="margin-top: 5px;">编辑管理员权限</div>
                     <div style="flex-grow: 1;"></div>
-                    <el-button style="margin-right: 10px;" type="primary" @click="confirmAuthor">确认权限</el-button>
+                    <el-button :disabled="!author1.managerEdit" style="margin-right: 10px;" type="primary" @click="confirmAuthor">确认权限</el-button>
                 </div>
                 <div class="manager-info">
                     <div class="manager-info-row">
@@ -452,7 +453,7 @@ watch(() => author, (val: any) => {
     margin-top: 10px;
 
     .page-body-left {
-        width: 300px;
+        width: 400px;
         border: 1px solid var(--el-border-color);
         border-radius: 0;
 

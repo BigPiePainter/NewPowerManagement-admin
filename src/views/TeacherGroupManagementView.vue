@@ -16,6 +16,7 @@ breadcrumbStore.data = [
   { name: '教研组管理', path: '/teacher-group-management' }
 ]
 
+const author = JSON.parse(localStorage.author)
 const allTeacher = ref<any>([])
 
 getAllTeachers().then((res) => {
@@ -85,7 +86,7 @@ const tableColumns = reactive<any[]>([
     cellRenderer: (item: any) => {
       return (
         <div>
-          <ElButton link type='primary' onClick={() => editTeacherGroup(item)}>编辑</ElButton>
+          <ElButton disabled={!author.teacherGroupEdit} link type='primary' onClick={() => editTeacherGroup(item)}>编辑</ElButton>
           <el-popconfirm
             hide-after={0}
             width="170"
@@ -93,7 +94,7 @@ const tableColumns = reactive<any[]>([
             onConfirm={() => preDeleteTea(item)}
             v-slots={{
               reference: () => (
-                <el-button link type="danger">
+                <el-button disabled={!author.teacherGroupEdit} link type="danger">
                   删除
                 </el-button>
               )
@@ -296,7 +297,7 @@ const cancelNewTeacherGroup = () => {
         <SearchBar :items="searchBarItems" @change="loadData()" />
       </div>
       <div class="table-div">
-        <el-button class="new-teacher-group-button" type="primary" @click="creatNewTeacherGroup()">新建教研组</el-button>
+        <el-button :disabled="!author.teacherGroupEdit" class="new-teacher-group-button" type="primary" @click="creatNewTeacherGroup()">新建教研组</el-button>
       </div>
     </TablePage>
   </div>

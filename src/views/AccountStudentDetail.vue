@@ -141,18 +141,11 @@ loadData()
       <div>
       </div>
     </div>
-
-
-
   </div>
-
-
 
   <el-divider class="row-divider"></el-divider>
 
-
   <div class="downpart">
-
     <div>
       <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick" type="card">
 

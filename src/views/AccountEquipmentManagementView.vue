@@ -18,7 +18,7 @@ const searchBarItems = reactive([
   { name: '手机号', value: '' },
   { name: '设备型号', value: '' }
 ])
-
+const author = JSON.parse(localStorage.author)
 const loading = ref(true)
 const tableData = ref<any>([])
 const paginationInfo = reactive({
@@ -93,8 +93,8 @@ const tableColumns = [
     cellRenderer: (cellData: any) => {
       const slots = {
         reference: () => (
-          <el-button link type="primary">
-            删除
+          <el-button disabled={!author.deviceEdit} link type="primary">
+            解绑
           </el-button>
         )
       }

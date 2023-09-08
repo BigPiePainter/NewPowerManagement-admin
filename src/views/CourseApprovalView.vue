@@ -166,18 +166,6 @@ const tableColumnsPending = [
     width: 100
   },
   {
-    dataKey: 'status',
-    key: 'status',
-    title: '状态',
-    align: 'center',
-    width: 100,
-    cellRenderer: (cellData: any) => (
-      <span>
-        {cellData.cellData == 1 ? "草稿" : cellData.cellData == 2 ? "制作完成" : "已提交"}
-      </span>
-    )
-  },
-  {
     dataKey: 'isTrial',
     key: 'isTrial',
     title: '是否支持试看',

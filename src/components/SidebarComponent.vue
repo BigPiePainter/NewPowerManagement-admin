@@ -12,12 +12,6 @@ console.log('超炫酷无敌动画依赖import加载完毕')
 import { useRoute } from 'vue-router'
 import { onMounted, onUnmounted } from 'vue'
 import { reactive } from 'vue';
-// import { getCurrentInstance } from "vue";
-// const isIn = getCurrentInstance()?.appContext.config.globalProperties.$isIn
-// const author = JSON.parse(localStorage.author)
-// const cslg=()=>{
-//   console.log(JSON.parse(localStorage.author))
-// }
 const author = JSON.parse(localStorage.author)
 const url = 'logo.png'
 const items = reactive([

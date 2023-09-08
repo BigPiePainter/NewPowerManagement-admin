@@ -19,7 +19,7 @@ breadcrumbStore.data = [
   { name: '学校管理', path: '' },
   { name: '班级管理', path: '/class-management' }
 ]
-
+const author = JSON.parse(localStorage.author)
 const router = useRouter()
 const loading = ref(true)
 const tableData = ref<any>([])
@@ -178,8 +178,8 @@ const tableColumns = reactive([
     cellRenderer: (item: any) => {
       return (
         <div>
-          <ElButton link type='primary' onClick={() => editClass(item)}>编辑</ElButton>
-          <ElButton link type='primary' onClick={() => deleteClass(item)}>删除</ElButton>
+          <ElButton disabled={!author.classEdit} link type='primary' onClick={() => editClass(item)}>编辑</ElButton>
+          <ElButton disabled={!author.classEdit} link type='primary' onClick={() => deleteClass(item)}>删除</ElButton>
         </div>
       )
     },
@@ -352,7 +352,7 @@ loadData()
         <SearchBar :items="searchBarItems" @change="loadData()" />
       </div>
       <div>
-        <el-button class="new-class-button" type="primary" @click="creatNewClass()">新建班级</el-button>
+        <el-button :disabled="!author.classEdit" class="new-class-button" type="primary" @click="creatNewClass()">新建班级</el-button>
       </div>
     </TablePage>
   </div>

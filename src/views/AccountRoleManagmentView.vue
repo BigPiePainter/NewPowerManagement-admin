@@ -10,7 +10,7 @@ breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '管理员管理', path: '/account-role-managment' }
 ]
-
+const author = JSON.parse(localStorage.author)
 const loading = ref(true)
 const router = useRouter()
 const tableData = ref<any>([])
@@ -160,7 +160,7 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <div>
-          <el-button link type="primary" onClick={() => editTeacher(item)}>
+          <el-button disabled={!author.managerEdit} link type="primary" onClick={() => editTeacher(item)}>
             编辑
           </el-button>
           <el-popconfirm
@@ -170,7 +170,7 @@ const tableColumns = [
             onConfirm={() => preDeleteTea(item)}
             v-slots={{
               reference: () => (
-                <el-button link type="danger">
+                <el-button disabled={!author.managerEdit} link type="danger">
                   删除
                 </el-button>
               )
@@ -236,14 +236,13 @@ const deleteTea = (item: any) => {
       })
     })
 }
-
 </script>
 
 <template>
   <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
     :columns="tableColumns" :data="tableData">
     <div>
-      <el-button class="ARMbutton" type="primary" @click="roleDetail">新建角色</el-button>
+      <el-button :disabled="!author.managerEdit" class="ARMbutton" type="primary" @click="roleDetail">新建角色</el-button>
     </div>
   </TablePage>
 

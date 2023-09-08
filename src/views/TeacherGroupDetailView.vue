@@ -18,6 +18,7 @@ breadcrumbStore.data = [
   { name: '教研组详情', path: '/teacher-group-detail' }
 ]
 
+const author = JSON.parse(localStorage.author)
 const route = useRoute()
 const loading = ref(true)
 const searchBarItems = reactive([
@@ -124,7 +125,7 @@ const tableColumns = reactive<any>([
             onConfirm={() => preDeleteStu(item)}
             v-slots={{
               reference: () => (
-                <el-button link type="primary">
+                <el-button disabled={!author.teacherGroupEdit} link type="primary">
                   移除
                 </el-button>
               )
@@ -337,7 +338,7 @@ const cancelNewTeacher = () => {
 
           <div style="flex-grow: 1"></div>
 
-          <el-button class="search-bar-button" type="primary" @click="addTeacher()">添加成员</el-button>
+          <el-button :disabled="!author.teacherGroupEdit" class="search-bar-button" type="primary" @click="addTeacher()">添加成员</el-button>
         </div>
       </TablePage>
     </div>

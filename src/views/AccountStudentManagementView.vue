@@ -2,7 +2,7 @@
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 import { ref, reactive } from 'vue'
-import { ElButton, ElInput, ElNotification } from 'element-plus'
+import { ElButton, ElInput, ElNotification, ElTag } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import { InputType } from '@/type'
 import TablePage from '@/components/TablePage.vue'
@@ -52,24 +52,33 @@ const tableColumns = [
     dataKey: 'name',
     key: 'name',
     title: '姓名',
-    width: 80,
-    cellRenderer: (cellData: any) => (
-      <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
-        {cellData.cellData}
-      </ElButton>
-    )
+    width: 150,
+    cellRenderer: (cellData: any) => {
+      if (Date.parse(cellData.rowData.expiration) > Date.now()) {
+        return (
+          <>
+            <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
+              {cellData.cellData}
+            </ElButton>
+          </>
+        )
+      } else {
+        return (
+          <>
+            <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
+              {cellData.cellData}
+            </ElButton>
+            <ElTag type="danger">过期</ElTag>
+          </>
+        )
+      }
+    },
   },
   {
     dataKey: 'account',
     key: 'account',
     title: '用户名',
-    width: 170
-  },
-  {
-    dataKey: 'expiration',
-    key: 'expiration',
-    title: '有效期',
-    width: 140
+    width: 150
   },
   {
     dataKey: 'gradeName',
@@ -81,19 +90,19 @@ const tableColumns = [
     dataKey: 'phoneNumber',
     key: 'phoneNumber',
     title: '手机号码',
-    width: 200
+    width: 130
+  },
+  {
+    dataKey: 'phoneNumberOfParent',
+    key: 'phoneNumberOfParent',
+    title: '家长手机号码',
+    width: 130
   },
   {
     dataKey: 'sexName',
     key: 'sexName',
     title: '性别',
     width: 70
-  },
-  {
-    dataKey: 'phoneNumberOfParent',
-    key: 'phoneNumberOfParent',
-    title: '家长手机号码',
-    width: 180
   },
   {
     dataKey: 'remark',
@@ -105,14 +114,19 @@ const tableColumns = [
     dataKey: 'createdAt',
     key: 'createdAt',
     title: '创建时间',
-    width: 200
+    width: 160
   },
-
+  {
+    dataKey: 'expiration',
+    key: 'expiration',
+    title: '有效期',
+    width: 160
+  },
   {
     dataKey: 'lastLoginTime',
     key: 'lastLoginTime',
     title: '最后登陆时间',
-    width: 200
+    width: 160
   },
 
   {
@@ -352,7 +366,6 @@ const loadSelectOption = () => {
     })
 }
 loadSelectOption()
-
 
 const allGender = [
   {

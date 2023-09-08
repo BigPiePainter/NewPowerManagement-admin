@@ -46,6 +46,16 @@ export const eidtManager = (data: any) => {
   return http.request(args)
 }
 
+export const eidtManagerAuthor = (data: any) => {
+  const args = {
+    url: '/api/management/manager/edit-manager-author',
+    method: 'POST',
+    data,
+    mode: "json"
+  }
+  return http.request(args)
+}
+
 export const deleteManager = (data: any) => {
   const args = {
     url: '/api/management/manager/delete-manager',

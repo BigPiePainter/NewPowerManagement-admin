@@ -8,7 +8,6 @@ import { getLiveClasses, createLiveClass, deleteLiveclasses } from '@/apis/liveC
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllTeachers } from '@/apis/teacher'
 import { getAllStudents } from '@/apis/student'
-import { getSubjects } from '@/apis/subject'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '实时课程', path: '' }]
@@ -19,11 +18,6 @@ const tableData = ref<any>([])
 const allTeacher = reactive<any>([])
 const allStudent = ref<any>([])
 const showDialog = ref(false)
-const allSubjects = ref([])
-
-getSubjects()
-  .then((res) => (allSubjects.value = res.data))
-  .catch()
 
 getAllStudents()
   .then((res) => (allStudent.value = res.data))
@@ -80,7 +74,6 @@ const conformCreate = () => {
         type: 'warning'
       })
     })
-
 }
 
 const searchBarItems = reactive([
@@ -184,8 +177,13 @@ const tableColumns = [
   }
 ]
 
-
 const createliveclass = () => {
+  newClassData.duration = ''
+  newClassData.name = ''
+  newClassData.startTime = ''
+  newClassData.studentIds = ''
+  newClassData.teacherId = ''
+  newClassData.url = ''
   showDialog.value = true
 }
 
@@ -293,7 +291,7 @@ loadData()
       <div class="div-input-element">
         <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 开课时间：</span>
         <el-date-picker type="datetime" placeholder="请选择" v-model="newClassData.startTime"
-          value-format="YYYY-MM-DD HH:MM:00" style="width: 200px;" />
+          value-format="YYYY-MM-DD HH:mm:00" style="width: 200px;" />
       </div>
       <div class="div-input-element">
         <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 时长(分钟)：</span>

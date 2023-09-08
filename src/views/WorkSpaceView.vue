@@ -25,7 +25,7 @@ const weekIncom = ref()
 const weekNumber = ref()
 
 const history = reactive([
-  { title: '学生账号', amount: studentAmount },
+  { title: '学生账号 (未过期有效账号)', amount: studentAmount },
   { title: '老师账号', amount: TeacherAmount },
   { title: '用户积分总额', amount: PointAmount },
   { title: 'TB总额', amount: CoinsAmount },
@@ -195,20 +195,14 @@ loadData()
     display: flex;
     flex-direction: row;
     align-items: center;
-
     font-size: 15px;
     margin-left: 25px;
-
     &.partA {
       margin-top: 33px;
     }
-
-
-
     &.partB {
       margin-top: 48px;
     }
-
     >.divider {
       border-left: 4px #404040 solid;
       height: 15px;
@@ -216,16 +210,13 @@ loadData()
       margin-left: 8px;
     }
   }
-
   >.card-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
-
     width: calc($page-width - 40px);
   }
-
   >.card-container-divider {
     margin-bottom: 0px;
     margin-top: 7px;
