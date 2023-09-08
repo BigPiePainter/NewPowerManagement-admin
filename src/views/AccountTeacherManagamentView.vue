@@ -19,7 +19,7 @@ breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '老师管理', path: '/account-teacher-managament' }
 ]
-
+const author = JSON.parse(localStorage.author)
 const loading = ref(true)
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
