@@ -16,7 +16,7 @@ import { getAllStudents } from '@/apis/student'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '好题包管理', path: '' }]
 
-
+const author = JSON.parse(localStorage.author)
 const editDialogShow = ref(false)
 
 const loading = ref(true)
@@ -243,10 +243,10 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <div>
-          <el-button link type="primary" class="" onClick={() => giveCourse(item)}>
+          <el-button disabled={!author.questionPackageEdit} link type="primary" class="" onClick={() => giveCourse(item)}>
             下发
           </el-button>
-          <el-button link type="primary" class="" onClick={() => editCourse(item)}>
+          <el-button disabled={!author.questionPackageEdit} link type="primary" class="" onClick={() => editCourse(item)}>
             编辑
           </el-button>
 
@@ -257,7 +257,7 @@ const tableColumns = [
             onConfirm={() => preDeleteTea(item)}
             v-slots={{
               reference: () => (
-                <el-button link type="danger">
+                <el-button disabled={!author.questionPackageEdit} link type="danger">
                   删除
                 </el-button>
               )

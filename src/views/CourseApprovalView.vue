@@ -9,7 +9,7 @@ import { videoToUrl } from '@/apis/videoIdToUrl'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '课程管理' }, { name: '微课审核' }]
-
+const author = JSON.parse(localStorage.author)
 const activeName = ref('pending')
 const totalLength1 = ref<Number>()
 const totalLength2 = ref<Number>()
@@ -175,6 +175,7 @@ const tableColumnsPending = [
       return (
         <div>
           <el-switch
+            disabled={!author.miniLessonEdit}
             v-model={cellData.rowData.isTrial}
             active-value={1}
             inactive-value={2}
@@ -196,11 +197,11 @@ const tableColumnsPending = [
     cellRenderer: (cellData: any) => {
       const slots = {
         append: () =>
-          <el-button disabled={cellData.rowData.isTrial == 2 ? true : false} onClick={() => changeTrialDuration(cellData)}>设置</el-button>
+          <el-button disabled={cellData.rowData.isTrial == 2 && !author.miniLessonEdit ? true : false} onClick={() => changeTrialDuration(cellData)}>设置</el-button>
       }
       return (
         <div>
-          <el-input disabled={cellData.rowData.isTrial == 2 ? true : false} style='width:120px' v-model={cellData.rowData.trialDuration} type='number' step={1} min={0} max={cellData.rowData.videoDuration} v-slots={slots}>
+          <el-input disabled={cellData.rowData.isTrial == 2 && !author.miniLessonEdit ? true : false} style='width:120px' v-model={cellData.rowData.trialDuration} type='number' step={1} min={0} max={cellData.rowData.videoDuration} v-slots={slots}>
           </el-input>
         </div>
       )
@@ -223,16 +224,16 @@ const tableColumnsPending = [
     title: '操作',
     cellRenderer: (cellData: any) => (
       <>
-        <el-button link type="primary" class="" onClick={() => pass(cellData)}>
+        <el-button disabled={!author.miniLessonEdit} link type="primary" class="" onClick={() => pass(cellData)}>
           通过
         </el-button>
-        <el-button link type="primary" class="" onClick={() => reject(cellData)}>
+        <el-button disabled={!author.miniLessonEdit} link type="primary" class="" onClick={() => reject(cellData)}>
           拒绝
         </el-button>
-        <el-button link type="primary" class="" onClick={() => edit(cellData)}>
+        <el-button disabled={!author.miniLessonEdit} link type="primary" class="" onClick={() => edit(cellData)}>
           编辑
         </el-button>
-        <el-button link type="danger" class="" onClick={() => warningDialog(cellData)}>
+        <el-button disabled={!author.miniLessonEdit} link type="danger" class="" onClick={() => warningDialog(cellData)}>
           删除
         </el-button>
       </>
@@ -519,7 +520,7 @@ const handleClick = (tab: any) => {
     </div>
 
     <template #header>
-      <el-text>编辑老师</el-text>
+      <el-text>更改微课名称</el-text>
     </template>
 
     <template #footer>

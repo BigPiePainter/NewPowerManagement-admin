@@ -8,6 +8,7 @@ const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: '考试时间' }]
 
 //--------------gobal variable----------
+const author = JSON.parse(localStorage.author)
 const tableData = reactive<any>([])
 const tableColumns = reactive<any>([
   {
@@ -24,11 +25,11 @@ const tableColumns = reactive<any>([
     cellRenderer: (cellData: any) => {
       const slots = {
         append: () =>
-          <el-button onClick={() => changeTitle(cellData)}>设置</el-button>
+          <el-button disabled={!author.examDateEdit} onClick={() => changeTitle(cellData)}>设置</el-button>
       }
       return (
         <div>
-          <el-input style='width:380px' v-model={cellData.rowData.dayRemainingUntilExamsWord} type='string' v-slots={slots}>
+          <el-input disabled={!author.examDateEdit} style='width:380px' v-model={cellData.rowData.dayRemainingUntilExamsWord} type='string' v-slots={slots}>
           </el-input>
         </div>
       )
@@ -42,11 +43,11 @@ const tableColumns = reactive<any>([
     cellRenderer: (cellData: any) => {
       const slots = {
         append: () =>
-          <el-button onClick={() => changeDate(cellData)}>设置</el-button>
+          <el-button disabled={!author.examDateEdit} onClick={() => changeDate(cellData)}>设置</el-button>
       }
       return (
         <div>
-          <el-input style='width:130px' v-model={cellData.rowData.dayRemainingUntilExams} type='number' step={1} min={0} v-slots={slots}>
+          <el-input disabled={!author.examDateEdit} style='width:130px' v-model={cellData.rowData.dayRemainingUntilExams} type='number' step={1} min={0} v-slots={slots}>
           </el-input>
         </div>
       )

@@ -14,6 +14,7 @@ import {
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: '课程类目' }]
 
+const author = JSON.parse(localStorage.author)
 const action = ref<number>(0)
 const tableColumns = [
   {
@@ -56,10 +57,10 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <>
-          <el-button link type="primary" onClick={() => editCategory(item.rowData.id)}>
+          <el-button disabled={!author.courseCategoryEdit} link type="primary" onClick={() => editCategory(item.rowData.id)}>
             编辑
           </el-button>
-          <el-button link type="danger" onClick={() => deleteCategory(item.rowData.id)}>
+          <el-button disabled={!author.courseCategoryEdit} link type="danger" onClick={() => deleteCategory(item.rowData.id)}>
             删除
           </el-button>
         </>
@@ -270,7 +271,7 @@ const handleFileChange = (e: Event) => {
 <template>
   <TablePage class="course-category-table" :columns="tableColumns" :data="tableData" :row-height="59">
     <div>
-      <el-button @click="newCourseCategory" class="new-poster-button" type="primary">新增 icon</el-button>
+      <el-button :disabled="!author.courseCategoryEdit" @click="newCourseCategory" class="new-poster-button" type="primary">新增 icon</el-button>
     </div>
   </TablePage>
 

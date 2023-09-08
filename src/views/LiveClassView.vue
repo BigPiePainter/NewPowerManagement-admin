@@ -11,7 +11,7 @@ import { getAllStudents } from '@/apis/student'
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '实时课程', path: '' }]
-
+const author = JSON.parse(localStorage.author)
 const totalLength = ref<Number>()
 const loading = ref(true)
 const tableData = ref<any>([])
@@ -165,12 +165,11 @@ const tableColumns = [
         {/* <el-button link type="primary" class="" onClick={() => editliveclass(item)}>
           编辑
         </el-button> */}
-        <el-button link type="danger" class="" onClick={() => deleteliveclass(item)}>
+        <el-button disabled={!author.liveClassEdit} link type="danger" class="" onClick={() => deleteliveclass(item)}>
           删除
         </el-button>
       </>
     ),
-
     width: 100,
     fixed: 'right',
     align: 'left'
@@ -266,7 +265,7 @@ loadData()
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
     <div>
-      <el-button class="new-live-class-button" type="primary" @click="createliveclass">新建课堂</el-button>
+      <el-button :disabled="!author.liveClassEdit" class="new-live-class-button" type="primary" @click="createliveclass">新建课堂</el-button>
     </div>
   </TablePage>
   <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">

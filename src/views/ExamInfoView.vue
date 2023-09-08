@@ -14,7 +14,7 @@ const loading = ref(true)
 const tableData = ref<any>([])
 
 const totalLength = ref<Number>()
-
+const author = JSON.parse(localStorage.author)
 const examInfoDialogShow = ref(false)
 const examInfoContent = ref('')
 const clickNew = () => {
@@ -96,7 +96,7 @@ const tableColumns = reactive<any>([
           {/* <el-button link type="primary" onClick={() => console.log(item)}>
             编辑
           </el-button> */}
-          <el-button link type="danger" onClick={() => deleteExamInfo(item)}>
+          <el-button disabled={!author.examInfoEdit} link type="danger" onClick={() => deleteExamInfo(item)}>
             删除
           </el-button>
         </>
@@ -127,7 +127,7 @@ loadData()
 <template>
   <TablePage :loading="loading" class="info-table" :columns="tableColumns" :data="tableData">
     <div>
-      <el-button @click="clickNew" class="new-info-button" type="primary">新增</el-button>
+      <el-button :disabled="!author.examInfoEdit" @click="clickNew" class="new-info-button" type="primary">新增</el-button>
     </div>
   </TablePage>
 

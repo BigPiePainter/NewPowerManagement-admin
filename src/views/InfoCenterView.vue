@@ -13,7 +13,7 @@ import { userInfo } from '@/apis/manager';
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: '消息中心' }]
-
+const author = JSON.parse(localStorage.author)
 const loading = ref(true)
 const totalLength = ref<any>('')
 const paginationInfo = reactive({
@@ -99,7 +99,7 @@ const tableColumns = reactive([
     cellRenderer: (item: any) => {
       return (
         <>
-          <el-button link type="danger" onClick={() => messageDelete(item)}>
+          <el-button disabled={!author.messageEdit} link type="danger" onClick={() => messageDelete(item)}>
             删除
           </el-button>
         </>
@@ -315,7 +315,7 @@ const createMsg = () => {
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
     </div>
     <div>
-      <el-button @click="recieverTypeDialog = true" style="margin-top: 15px;" class="new-msg-button"
+      <el-button :disabled='!author.messageEdit' @click="recieverTypeDialog = true" style="margin-top: 15px;" class="new-msg-button"
         type="primary">发消息</el-button>
     </div>
   </TablePage>

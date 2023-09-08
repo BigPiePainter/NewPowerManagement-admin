@@ -7,8 +7,8 @@ import { ElNotification } from 'element-plus'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置' }, { name: '标签管理' }]
 
+const author = JSON.parse(localStorage.author)
 const labelData = reactive<any>([])
-
 const supLabels = reactive<any>([])
 const subLabels = reactive<any>([])
 const supLabelId = ref()
@@ -142,7 +142,7 @@ const deleteLab = (item: any) => {
       <div class="card-title-bar">
         <el-text>一级标签菜单</el-text>
         <div style="flex-grow: 1;"></div>
-        <el-button type="primary" @click="addSupLabel">添加</el-button>
+        <el-button :disabled="!author.tagEdit" type="primary" @click="addSupLabel">添加</el-button>
       </div>
       <div class="test">
         <el-scrollbar class="scrollbar">
@@ -156,7 +156,7 @@ const deleteLab = (item: any) => {
                 item.name
               }}</el-button>
             <div style="flex-grow: 1;"></div>
-            <el-button link type="danger" @click="deleteLab(item.id)">删除</el-button>
+            <el-button :disabled="!author.tagEdit" link type="danger" @click="deleteLab(item.id)">删除</el-button>
           </div>
         </el-scrollbar>
       </div>
@@ -167,7 +167,7 @@ const deleteLab = (item: any) => {
       <div class="card-title-bar">
         <el-text>二级标签菜单</el-text>
         <div style="flex-grow: 1;"></div>
-        <el-button type="primary" @click="addSubLabel">添加</el-button>
+        <el-button :disabled="!author.tagEdit" type="primary" @click="addSubLabel">添加</el-button>
       </div>
 
       <div class="card-body">

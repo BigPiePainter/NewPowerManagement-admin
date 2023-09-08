@@ -10,6 +10,8 @@ import { getAllStudents } from '@/apis/student'
 const breadcrumbStore = useBreadcrumbStore()
 
 breadcrumbStore.data = [{ name: '订单管理', path: '' }]
+
+const author = JSON.parse(localStorage.author)
 const allStudent = reactive<any>([])
 const searchBarItems = reactive([
   { name: '订单编号', value: '' },
@@ -202,7 +204,7 @@ const tableColumns = [
             onConfirm={() => preDeleteTea(item)}
             v-slots={{
               reference: () => (
-                <el-button link type="danger">
+                <el-button disabled={!author.orderEdit} link type="danger">
                   退课
                 </el-button>
               )

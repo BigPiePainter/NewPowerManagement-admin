@@ -13,6 +13,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getGoodQuestion, deleteGoodQuestion } from '@/apis/questionStore'
 import RichTextEditor from '@/components/RichTextEditor.vue';
 
+const author = JSON.parse(localStorage.author)
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const totalNum = ref('')
@@ -183,7 +184,7 @@ loadData()
         </div>
 
         <div class="margin">
-            <el-button type="primary" @click="questionCreate()">
+            <el-button :disabled="!author.questionsEdit" type="primary" @click="questionCreate()">
                 新建好题
             </el-button>
             <!-- 
@@ -242,7 +243,7 @@ loadData()
                                             : "解答题" }}
                     </span>
                     <div style="flex-grow: 1"></div>
-                    <el-button @click="PredeleteQuestion(item.id)" type=primary>删除</el-button>
+                    <el-button :disabled="!author.questionsEdit" @click="PredeleteQuestion(item.id)" type=primary>删除</el-button>
                 </div>
 
                 <RichTextEditor :questionPrompt="item.questionPrompt" :isShow="false" :id="item.id">

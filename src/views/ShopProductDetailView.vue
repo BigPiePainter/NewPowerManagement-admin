@@ -17,7 +17,7 @@ breadcrumbStore.data = [
   { name: '商城管理', path: 'shop-management' },
   { name: '商品详情', path: '/teacher-detail-managament' },
 ]
-
+const author = JSON.parse(localStorage.author)
 const route = useRoute()
 const warningDialogshow = ref(false)
 const deleteItemid = ref<any>()
@@ -139,7 +139,7 @@ const tableColumns = [
           <el-button link type="primary" onClick={() => console.log(cellData)}>
             禁止快进
           </el-button> */}
-          <el-button link type="danger" onClick={() => warningDialog(cellData.rowData.id)}>
+          <el-button disabled={!author.shopEdit} link type="danger" onClick={() => warningDialog(cellData.rowData.id)}>
             删除
           </el-button>
         </div>
@@ -403,8 +403,10 @@ const confirmAdd = () => {
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button style="margin-left: 18px;" @click="loadDialogData()" type="primary">
-            {{ route.query.type == '1' ? '添加课程' : '添加好题' }}</el-button></div>
+        <div class="botPart1-1-1">
+          <el-button :disabled='!author.shopEdit' style="margin-left: 18px;" @click="loadDialogData()" type="primary">
+            {{ route.query.type == '1' ? '添加课程' : '添加好题' }}</el-button>
+        </div>
       </div>
     </div>
     <div class="botPart1-2">

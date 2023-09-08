@@ -12,7 +12,7 @@ breadcrumbStore.data = [
   { name: '账号管理', path: '' },
   { name: '临时学生管理', path: '/account-temoorary-student' },
 ]
-
+const author = JSON.parse(localStorage.author)
 const selectOptionGrades = reactive<any>([])
 const searchBarItems = reactive([
   { name: "姓名", value: "" },
@@ -63,15 +63,15 @@ const tableColumns = reactive([
     cellRenderer: (item: any) => {
 
       const resetPswSlot = {
-        reference: () => <el-button link type="primary">重置密码</el-button>
+        reference: () => <el-button disabled={!author.temoryStudentEdit} link type="primary">重置密码</el-button>
       }
 
       const deleteSlot = {
-        reference: () => <el-button link type="danger">删除</el-button>
+        reference: () => <el-button disabled={!author.temoryStudentEdit} link type="danger">删除</el-button>
       }
 
       const toNormalSlot = {
-        reference: () => <el-button link type="primary">转正</el-button>
+        reference: () => <el-button disabled={!author.temoryStudentEdit} link type="primary">转正</el-button>
       }
       return (
         <div>

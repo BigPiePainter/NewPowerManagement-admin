@@ -13,6 +13,7 @@ import { getSubjects } from '@/apis/subject'
 import { getAllStudents } from '@/apis/student'
 
 const router = useRouter()
+const author = JSON.parse(localStorage.author)
 
 //------------下发免费订单---------------
 const snapShot = reactive<any>({})
@@ -333,6 +334,7 @@ const tableColumns = [
       return (
         <div>
           <el-switch
+            disabled={!author.shopEdit}
             v-model={cellData.rowData.status}
             active-value={1}
             inactive-value={2}
@@ -355,6 +357,7 @@ const tableColumns = [
       return (
         <div>
           <el-switch
+            disabled={!author.shopEdit}
             v-model={cellData.rowData.hot}
             active-value={1}
             inactive-value={2}
@@ -373,11 +376,11 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <>
-          <el-button link type="primary" onClick={() => freeOrderClick(item)}>
+          <el-button disabled={!author.shopEdit} link type="primary" onClick={() => freeOrderClick(item)}>
             下发
           </el-button>
 
-          <el-button link type="primary" onClick={() => editGoods(item)}>
+          <el-button disabled={!author.shopEdit} link type="primary" onClick={() => editGoods(item)}>
             编辑
           </el-button>
 
@@ -392,7 +395,7 @@ const tableColumns = [
 ]
 
 const deleteSlot = {
-  reference: () => <el-button link type="danger">删除</el-button>
+  reference: () => <el-button disabled={!author.shopEdit} link type="danger">删除</el-button>
 }
 
 const paginationInfo = reactive({

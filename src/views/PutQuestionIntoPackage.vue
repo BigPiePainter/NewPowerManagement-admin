@@ -23,14 +23,13 @@ const putQuestion = (questionId: any) => {
         .then((res: any) => {
             if (res.code != 20000) {
                 ElNotification({
-                    title: '未知错误',
+                    title: '添加失败',
                     message: res.msg,
                     type: 'error'
                 })
             } else {
                 ElNotification({
-                    title: '成功',
-                    message: '添加成功',
+                    title: '添加成功',
                     type: 'success'
                 })
                 loadData()

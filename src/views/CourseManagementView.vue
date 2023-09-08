@@ -24,7 +24,7 @@ const loading = ref(false)
 const searchBarItems = reactive([
   { name: "课程名称", value: "", label: "请输入" },
 ])
-
+const author = JSON.parse(localStorage.author)
 const allGrades = reactive<any>([])
 const allSubjects = reactive<any>([])
 const allTeachers = reactive<any>([])
@@ -252,10 +252,10 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <div>
-          <el-button link type="primary" onClick={() => giveCourse(item)}>
+          <el-button disabled={!author.coursePackageEdit} link type="primary" onClick={() => giveCourse(item)}>
             下发
           </el-button>
-          <el-button link type="primary" onClick={() => editCourse(item)}>
+          <el-button disabled={!author.coursePackageEdit} link type="primary" onClick={() => editCourse(item)}>
             编辑
           </el-button>
 
@@ -266,7 +266,7 @@ const tableColumns = [
             onConfirm={() => preDeleteTea(item)}
             v-slots={{
               reference: () => (
-                <el-button link type="danger">
+                <el-button disabled={!author.coursePackageEdit} link type="danger">
                   删除
                 </el-button>
               )
@@ -456,7 +456,8 @@ loadData()
     :columns="tableColumns" :data="tableData">
     <div class='div-search-bar'>
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
-      <el-button class="ARMbutton" type="primary" @click="courseCreat">新建课程包</el-button>
+      <el-button :disabled='!author.coursePackageEdit' class="ARMbutton" type="primary"
+        @click="courseCreat">新建课程包</el-button>
     </div>
   </TablePage>
 
@@ -561,6 +562,10 @@ $gap: 15px;
   height: calc($page-height);
   margin-left: $gap;
   //margin-right: $gap;
+}
+
+.div-search-bar {
+  margin: $gap;
 }
 
 .ARMbutton {

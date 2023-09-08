@@ -196,7 +196,7 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <div>
-          <el-button link type="primary" onClick={() => editTeacher(item)}>
+          <el-button disabled={!author.teacherEdit} link type="primary" onClick={() => editTeacher(item)}>
             编辑
           </el-button>
 
@@ -207,7 +207,7 @@ const tableColumns = [
             onConfirm={() => restPsw(item)}
             v-slots={{
               reference: () => (
-                <el-button link type="primary">
+                <el-button disabled={!author.teacherEdit} link type="primary">
                   重置密码
                 </el-button>
               )
@@ -221,7 +221,7 @@ const tableColumns = [
             onConfirm={() => preDeleteTea(item)}
             v-slots={{
               reference: () => (
-                <el-button link type="danger">
+                <el-button disabled={!author.teacherEdit} link type="danger">
                   删除
                 </el-button>
               )
@@ -392,7 +392,7 @@ loadData()
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
-      <el-button class="ARMbutton" type="primary" @click="createteachers">新建老师</el-button>
+      <el-button :disabled="!author.teacherEdit" class="ARMbutton" type="primary" @click="createteachers">新建老师</el-button>
     </div>
   </TablePage>
 
@@ -451,9 +451,6 @@ loadData()
       <el-button @click="showDialog = false">取消</el-button>
     </template>
   </el-dialog>
-
-
-
 
   <el-dialog class="new-class-dialog" width="370px" v-model="editTeacherDialogShow">
     <div class="div-input-element">

@@ -10,7 +10,7 @@ import { freePackageCreate } from '@/apis/freeOrder'
 
 const router = useRouter()
 const totalNum = ref('')
-
+const author = JSON.parse(localStorage.author)
 const deleteQuestion = (id: any) => {
   var args = {
     id: id
@@ -18,7 +18,7 @@ const deleteQuestion = (id: any) => {
   removeQuestionFromPack(args).then((res: any) => {
     if (res.code != 20000) {
       ElNotification({
-        title: '未知错误',
+        title: '删除失败',
         message: res.msg,
         type: 'error'
       })
@@ -104,7 +104,7 @@ const freeCourseCreateConfirm = () => {
   })
     .catch((res: any) => {
       ElNotification({
-        title: '下发失败',
+        title: '未知错误',
         message: res.msg,
         type: 'error'
       })
@@ -203,13 +203,13 @@ const handleCurrentChange = (val: number) => {
       </div>
 
       <div style="margin-top: 5px;margin-right: 15px;">
-        <div><el-button type="primary" @click="giveCourse()">下发好题包</el-button></div>
+        <div><el-button :disabled="!author.questionPackageEdit" type="primary" @click="giveCourse()">下发好题包</el-button></div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button type="primary" @click="questionCreate(route.query.id)">添加好题</el-button></div>
+        <div class="botPart1-1-1"><el-button :disabled="!author.questionPackageEdit" type="primary" @click="questionCreate(route.query.id)">添加好题</el-button></div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
@@ -236,7 +236,7 @@ const handleCurrentChange = (val: number) => {
                         : "解答题" }}
             </span>
             <div style="flex-grow: 1"></div>
-            <el-button @click="deleteQuestion(item.id)" type=primary>移除</el-button>
+            <el-button :disabled="!author.questionPackageEdit" @click="deleteQuestion(item.id)" type=primary>移除</el-button>
           </div>
 
 

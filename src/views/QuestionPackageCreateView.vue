@@ -10,8 +10,6 @@ import { getAllTeachers } from '@/apis/teacher';
 import { upload } from '@/apis/upload'
 import { getLabels } from '@/apis/label';
 
-
-
 const change = (valueHtml: any) => {
     newGoodQuestion.description = valueHtml
 }

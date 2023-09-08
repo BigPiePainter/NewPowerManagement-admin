@@ -8,6 +8,7 @@ import { ElNotification } from 'element-plus'
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置' }, { name: '分类管理' }]
 
+const author = JSON.parse(localStorage.author)
 const allGrades = ref<any[]>([])
 const allSubjects = reactive<any>([])
 const createSubjectDialogShow = ref(false)
@@ -217,21 +218,21 @@ const deleteSubjects = (id: any) => {
       <div class="card-title-bar">
         <el-text class="card-title-text">学习阶段</el-text>
         <div style="flex-grow: 1;"></div>
-        <el-button type="primary" link @Click="createNewUpperGrade">新增阶段</el-button>
+        <el-button :disabled="!author.categoryEdit" type="primary" link @Click="createNewUpperGrade">新增阶段</el-button>
       </div>
 
       <div v-for="(value, key) in allGrades" :key="key" class="subtitle">
 
         <div style="margin-left: 10px;">
           <el-text>{{ value.name }}</el-text>
-          <el-button type="primary" link style="margin-left: 10px;" @Click="deleteGrade(value.id)">删除阶段</el-button>
+          <el-button :disabled="!author.categoryEdit" type="primary" link style="margin-left: 10px;" @Click="deleteGrade(value.id)">删除阶段</el-button>
         </div>
 
         <div style="margin-left: 15px; margin-top: 10px;">
           <el-tag style="margin-right: 15px;" v-for="(innervalue, innerKey) in value.subset" :key="innerKey" closable
             @close="deleteGrade(innervalue.id)">{{
               innervalue.name }}</el-tag>
-          <el-button type="primary" link @click="createNewSubGrade(value.id)">新增</el-button>
+          <el-button :disabled="!author.categoryEdit" type="primary" link @click="createNewSubGrade(value.id)">新增</el-button>
         </div>
 
       </div>
@@ -248,7 +249,7 @@ const deleteSubjects = (id: any) => {
           <el-tag style="margin-bottom: 10px;" class="major-item" v-for="item in allSubjects" :key="item.id" closable
             @close="deleteSubjects(item.id)">{{
               item.name }}</el-tag>
-          <el-button type="primary" link @click="createNewSubject">新增</el-button>
+          <el-button :disabled="!author.categoryEdit" type="primary" link @click="createNewSubject">新增</el-button>
         </div>
       </div>
     </div>

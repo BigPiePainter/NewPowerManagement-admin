@@ -29,7 +29,7 @@ const clickDetail = (props: any) => {
     }
   })
 }
-
+const author = JSON.parse(localStorage.author)
 const breadcrumbStore = useBreadcrumbStore()
 const createDialogShow = ref(false);
 const editStudentDialogShow = ref(false);
@@ -135,16 +135,16 @@ const tableColumns = [
     cellRenderer: (item: any) => {
 
       const resetPswSlot = {
-        reference: () => <el-button link type="primary">重置密码</el-button>
+        reference: () => <el-button disabled={!author.studentEdit} link type="primary">重置密码</el-button>
       }
 
       const deleteSlot = {
-        reference: () => <el-button link type="danger">删除</el-button>
+        reference: () => <el-button disabled={!author.studentEdit} link type="danger">删除</el-button>
       }
 
       return (
         <div>
-          <el-button link type="primary" onClick={() => editstudent(item)}>
+          <el-button disabled={!author.studentEdit} link type="primary" onClick={() => editstudent(item)}>
             编辑
           </el-button>
 
@@ -499,7 +499,7 @@ const cancelEditDialog = () => {
     :columns="tableColumns" :data="tableData">
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
-      <el-button class="ARMbutton" type="primary" @click="createStudents">新建学生</el-button>
+      <el-button :disabled="!author.studentEdit" class="ARMbutton" type="primary" @click="createStudents">新建学生</el-button>
     </div>
   </TablePage>
 

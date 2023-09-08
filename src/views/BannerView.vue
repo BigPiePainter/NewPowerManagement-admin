@@ -6,6 +6,7 @@ import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { upload } from '@/apis/upload';
 
+const author = JSON.parse(localStorage.author)
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '设置', path: '' }, { name: 'banner' }]
 const loading = ref(true)
@@ -49,11 +50,11 @@ const tableColumns = [
     title: '操作',
     cellRenderer: (item: any) => {
       const deleteSlot = {
-        reference: () => <el-button link type="danger">删除</el-button>
+        reference: () => <el-button disabled={!author.bannerEdit} link type="danger">删除</el-button>
       }
       return (
         <>
-          <el-button link type="primary" onClick={() => console.log(item)}>
+          <el-button disabled={!author.bannerEdit} link type="primary" onClick={() => console.log(item)}>
             编辑
           </el-button>
 
@@ -212,7 +213,7 @@ loadData()
   <div>
     <TablePage class="banner-table" :loading="loading" :columns="tableColumns" :data="tableData" :row-height="59">
       <div>
-        <el-button @click="newBanner" class="new-banner-button" type="primary">新增</el-button>
+        <el-button :disabled='!author.bannerEdit' @click="newBanner" class="new-banner-button" type="primary">新增</el-button>
       </div>
     </TablePage>
 

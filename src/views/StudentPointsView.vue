@@ -15,6 +15,7 @@ breadcrumbStore.data = [
   { name: '学生积分', path: '' },
 ]
 
+const author = JSON.parse(localStorage.author)
 const tableData = ref<any>([])
 const loading = ref(true)
 const allGrade = ref<any>([])
@@ -83,7 +84,7 @@ const tableColumns = [
 
     cellRenderer: (item: any) => (
       <>
-        <el-button link type="primary" class="" onClick={() => editFund(item)}>
+        <el-button disabled={!author.pointEdit} link type="primary" class="" onClick={() => editFund(item)}>
           变更积分数
         </el-button>
       </>
