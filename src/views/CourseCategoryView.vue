@@ -4,6 +4,7 @@ import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getGrades } from '@/apis/grade'
+import { getSubjects } from '@/apis/subject'
 import { upload } from '@/apis/upload'
 import {
   getCourseCategory,
@@ -40,9 +41,9 @@ const tableColumns = [
     )
   },
   {
-    dataKey: 'name',
-    key: 'name',
-    title: '课程类目',
+    dataKey: 'subjectName',
+    key: 'subjectName',
+    title: '科目',
     width: 120
   },
   {
@@ -57,9 +58,6 @@ const tableColumns = [
     cellRenderer: (item: any) => {
       return (
         <>
-          <el-button disabled={!author.courseCategoryEdit} link type="primary" onClick={() => editCategory(item.rowData.id)}>
-            编辑
-          </el-button>
           <el-button disabled={!author.courseCategoryEdit} link type="danger" onClick={() => deleteCategory(item.rowData.id)}>
             删除
           </el-button>
@@ -74,11 +72,6 @@ const tableColumns = [
 ]
 
 const editId = ref<any>()
-const editCategory = (id: any) => {
-  action.value = 2
-  newCourseCategoryDialogShow.value = true
-  editId.value = id
-}
 
 const deleteCategory = (id: any) => {
   var args = {
@@ -109,26 +102,36 @@ const newCourseCategoryContext = reactive<any>({
 })
 const newCourseCategoryDialogShow = ref(false)
 const allGrades = reactive<any>([])
+const allSubjects = reactive<any>([])
 const newCourseCategory = () => {
   action.value = 1
   allGrades.length = 0
-  getGrades().then((res: any) => {
-    res.data.forEach((item: any) => {
-      item.subset.forEach((item: any) => {
-        var dataSample = {
-          id: item.id,
-          level: item.level,
-          name: item.name
-        }
-        allGrades.push(dataSample)
+  allSubjects.length = 0
+  getGrades()
+    .then((res: any) => {
+      res.data.forEach((item: any) => {
+        item.subset.forEach((item: any) => {
+          var dataSample = {
+            id: item.id,
+            level: item.level,
+            name: item.name
+          }
+          allGrades.push(dataSample)
+        })
+      })
+      return getSubjects()
+    })
+    .then((res: any) => {
+      res.data.forEach((item: any) => {
+        allSubjects.push(item)
       })
     })
-  }).finally(() => {
-    newCourseCategoryDialogShow.value = true
-    newCourseCategoryContext.name = ''
-    newCourseCategoryContext.icon = ''
-    newCourseCategoryContext.gradeId = ''
-  })
+    .finally(() => {
+      newCourseCategoryDialogShow.value = true
+      newCourseCategoryContext.subjectId = ''
+      newCourseCategoryContext.icon = ''
+      newCourseCategoryContext.gradeId = ''
+    })
 }
 
 const confirmNewCourseCategory = () => {
@@ -136,7 +139,7 @@ const confirmNewCourseCategory = () => {
 
   if (action.value == 1) {
     var args = {
-      name: newCourseCategoryContext.name,
+      subjectId: newCourseCategoryContext.subjectId,
       icon: newCourseCategoryContext.icon,
       gradeId: newCourseCategoryContext.gradeId
     }
@@ -271,7 +274,8 @@ const handleFileChange = (e: Event) => {
 <template>
   <TablePage class="course-category-table" :columns="tableColumns" :data="tableData" :row-height="59">
     <div>
-      <el-button :disabled="!author.courseCategoryEdit" @click="newCourseCategory" class="new-poster-button" type="primary">新增 icon</el-button>
+      <el-button :disabled="!author.courseCategoryEdit" @click="newCourseCategory" class="new-poster-button"
+        type="primary">新增 icon</el-button>
     </div>
   </TablePage>
 
@@ -293,8 +297,9 @@ const handleFileChange = (e: Event) => {
           <el-text style="color:#ff0000">*</el-text>
           类目名称：
         </span>
-        <el-input class="dialog-input" v-model="newCourseCategoryContext.name">
-        </el-input>
+        <el-select class="dialog-input" placeholder="请选择科目" v-model="newCourseCategoryContext.subjectId">
+          <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
       </div>
       <div v-if="action == 1" class="div-input-element">
         <span class="dialog-span">

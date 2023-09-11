@@ -465,7 +465,13 @@ loadData()
 const editgoodOn = (props: any) => {
   var args = {
     id: props.rowData.id,
-    status: props.rowData.status
+    status: props.rowData.status,
+    hot: props.rowData.hot,
+    iosPoint: props.rowData.iosPoint,
+    androidPoint: props.rowData.androidPoint,
+    androidPrice: props.rowData.androidPrice,
+    tcoin: props.rowData.tcoin,
+    name: props.rowData.name,
   }
   editProduct(args).
     then((res: any) => {
@@ -495,10 +501,14 @@ const editProductData = reactive<any>({
   androidPrice: '',
   name: '',
   tcoin: '',
+  status: '',
+  hot: '',
 });
 
 const editGoods = (props: any) => {
   editProductData.id = props.rowData.id;
+  editProductData.hot = props.rowData.hot;
+  editProductData.status = props.rowData.status;
   if (props.rowData.iosPoint == null) {
     editProductData.iosPoint = ''
   } else {
@@ -519,10 +529,6 @@ const editGoods = (props: any) => {
   } else {
     editProductData.androidPrice = props.rowData.androidPrice / 100;
   }
-  // editProductData.iosPoint = props.rowData.iosPoint;
-  // editProductData.tcoin = props.rowData.tcoin;
-  // editProductData.androidPoint = props.rowData.androidPoint;
-  // editProductData.androidPrice = Number(props.rowData.androidPrice / 100);
   editProductData.name = props.rowData.name
   console.log(editProductData)
   editDialogShow.value = true;
@@ -533,7 +539,9 @@ const editDialogShow = ref(false)
 const confirmEditDialog = () => {
   var args: any = {
     name: editProductData.name,
-    id: editProductData.id
+    id: editProductData.id,
+    status: editProductData.status,
+    hot: editProductData.hot,
   }
   console.log(args)
   if (editProductData.iosPoint == '') {
@@ -570,11 +578,17 @@ const confirmEditDialog = () => {
       } else {
         ElNotification({
           title: '编辑失败',
-          message: '请求错误或删除被撤回',
+          message: res.msg,
           type: 'error'
         })
       }
-    }).catch()
+    }).catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error',
+      })
+    })
 }
 //----------------------------删除商品----------
 
@@ -612,16 +626,16 @@ const deleteStu = (item: any) => {
       } else {
         ElNotification({
           title: '删除失败',
-          message: '请求错误或删除被撤回',
+          message: res.msg,
           type: 'error',
         })
       }
       loadData()
     })
-    .catch(() => {
+    .catch((res: any) => {
       ElNotification({
         title: '未知错误',
-        message: "商品未成功删除",
+        message: res.msg,
         type: 'error',
       })
     })
@@ -630,7 +644,13 @@ const deleteStu = (item: any) => {
 const editGoodsHot = (props: any) => {
   var args = {
     id: props.rowData.id,
-    hot: props.rowData.hot
+    status: props.rowData.status,
+    hot: props.rowData.hot,
+    iosPoint: props.rowData.iosPoint,
+    androidPoint: props.rowData.androidPoint,
+    androidPrice: props.rowData.androidPrice,
+    tcoin: props.rowData.tcoin,
+    name: props.rowData.name,
   }
   editProduct(args).
     then((res: any) => {
@@ -645,11 +665,18 @@ const editGoodsHot = (props: any) => {
       } else {
         ElNotification({
           title: '编辑失败',
-          message: '请求错误或删除被撤回',
+          message: res.msg,
           type: 'error'
         })
       }
-    }).catch()
+    })
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'error'
+      })
+    })
   loadData()
   editDialogShow.value = false;
 }

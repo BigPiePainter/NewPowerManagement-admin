@@ -47,7 +47,7 @@ const tableColumns = [
   {
     dataKey: 'account',
     key: 'account',
-    title: '用户名',
+    title: '账号',
     width: 120,
     cellRenderer: (cellData: any) => (
       <ElButton link type="primary" onClick={() => clickDetail(cellData)}>

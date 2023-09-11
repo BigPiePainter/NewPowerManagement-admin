@@ -105,7 +105,7 @@ const dialogTableColumns = reactive<any>([
   {
     dataKey: 'account',
     key: 'account',
-    title: '用户名',
+    title: '账号',
     width: 150
   },
   {
@@ -198,7 +198,7 @@ const tableColumns = [
   {
     dataKey: 'studentId',
     key: 'studentId',
-    title: '用户名',
+    title: '账号',
     width: 200
   },
   {

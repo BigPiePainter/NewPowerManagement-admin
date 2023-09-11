@@ -38,7 +38,7 @@ const pageChange = (val: any) => {
 const totalLength = ref<Number>()
 
 const searchBarItems = reactive([
-  { name: '用户名', value: '' },
+  { name: '账号', value: '' },
   { name: '姓名', value: '' },
   { name: '手机号', value: '', label: '' },
   {
@@ -162,7 +162,7 @@ const tableColumns = [
   {
     dataKey: 'account',
     key: 'account',
-    title: '用户名',
+    title: '账号',
     width: 200
   },
   {
@@ -399,7 +399,7 @@ loadData()
   <el-dialog v-model="showDialog" width="370px" class="new-class-dialog">
     <div>
       <div class="div-input-element">
-        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 用户名： </span>
+        <span class="dialog-span"><el-text style="color:#ff0000">*</el-text> 账号： </span>
         <el-input class="dialog-input" placeholder="请输入" v-model="newTeacherData.account">
         </el-input>
       </div>

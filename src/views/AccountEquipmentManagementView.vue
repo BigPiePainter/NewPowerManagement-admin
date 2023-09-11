@@ -14,7 +14,7 @@ breadcrumbStore.data = [
 
 const searchBarItems = reactive([
   { name: '姓名', value: '' },
-  { name: '用户名', value: '' },
+  { name: '账号', value: '' },
   { name: '手机号', value: '' },
   { name: '设备型号', value: '' }
 ])
@@ -50,7 +50,7 @@ const tableColumns = [
   {
     dataKey: 'account',
     key: 'account',
-    title: '用户名',
+    title: '账号',
     width: 150
   },
   {

@@ -387,9 +387,10 @@ const create = () => {
     Object.assign(args, { androidPoint: newProductData.androidPoint })
   }
   if (newProductData.androidPrice != '') {
-    Object.assign(args, { androidPrice: Number(newProductData.androidPrice) * 100 })
+    Object.assign(args, { androidPrice: Number(newProductData.androidPrice * 100) })
   }
-  createProduct(newProductData)
+  console.log(args)
+  createProduct(args)
     .then((res: any) => {
       if (res.code == 20000) {
         addProduct({

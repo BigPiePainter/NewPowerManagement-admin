@@ -22,7 +22,7 @@ const author = JSON.parse(localStorage.author)
 const route = useRoute()
 const loading = ref(true)
 const searchBarItems = reactive([
-  { name: "姓名/用户名", value: "", },
+  { name: "姓名/账号", value: "", },
 ])
 
 const dialogSearchBarItems = reactive([
@@ -62,7 +62,7 @@ const dialogTableColumns = reactive<any>([
   {
     dataKey: 'account',
     key: 'account',
-    title: '用户名',
+    title: '账号',
     width: 200
   },
   {
@@ -97,7 +97,7 @@ const tableColumns = reactive<any>([
   {
     dataKey: 'account',
     key: 'account',
-    title: '用户名',
+    title: '账号',
     width: 200
   },
   {

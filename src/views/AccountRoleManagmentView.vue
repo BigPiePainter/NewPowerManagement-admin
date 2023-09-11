@@ -50,37 +50,38 @@ const loadData = () => {
 loadData()
 
 //----------------更改角色数据-------------------
-const editTeacherData = reactive<{
-
-  id: string,
-  account: string,
-  phoneNumber: string,
-  password: string,
-  managerRoleId: string
-
-}>({
+const editTeacherData = reactive<any>({
   id: '',
   account: '',
   phoneNumber: '',
   password: '',
-  managerRoleId: ''
+  remark: ''
 });
 
 const editTeacherDialogShow = ref(false)
-
-
-const editTeacher =
-  (props: any) => {
-    editTeacherData.id = props.rowData.id;
-    editTeacherData.phoneNumber = props.rowData.phoneNumber;
-    editTeacherData.account = props.rowData.account;
-    console.log(props)
-    editTeacherDialogShow.value = true;
-  }
+const originalAccount = ref('')
+const originalPhone = ref('')
+const editTeacher = (props: any) => {
+  editTeacherData.id = props.rowData.id;
+  editTeacherData.phoneNumber = props.rowData.phoneNumber;
+  editTeacherData.account = props.rowData.account;
+  editTeacherData.password = props.rowData.password;
+  editTeacherData.remark = props.rowData.remark;
+  originalAccount.value = props.rowData.account;
+  originalPhone.value = props.rowData.phoneNumber;
+  console.log(props)
+  editTeacherDialogShow.value = true;
+}
 
 const confirmEditDialog = () => {
-
-  eidtManager(editTeacherData).
+  var args = {
+    id: editTeacherData.id,
+    phoneNumber: editTeacherData.phoneNumber == originalPhone.value ? null : editTeacherData.phoneNumber,
+    account: editTeacherData.account == originalAccount.value ? null : editTeacherData.account,
+    password: editTeacherData.password,
+    remark: editTeacherData.remark
+  }
+  eidtManager(args).
     then((res: any) => {
       if (res.code == '20000') {
         ElNotification({
@@ -269,6 +270,14 @@ const deleteTea = (item: any) => {
         手机：
       </span>
       <el-input v-model="editTeacherData.phoneNumber">
+      </el-input>
+    </div>
+
+    <div class="div-input-element" style="margin-top: 10px;">
+      <span style="white-space: nowrap; margin-top:5px">
+        备注：
+      </span>
+      <el-input v-model="editTeacherData.remark">
       </el-input>
     </div>
 

@@ -49,7 +49,7 @@ const tableColumns = [
   {
     dataKey: 'userName',
     key: 'userName',
-    title: '用户名',
+    title: '账号',
     width: 160
   },
   {

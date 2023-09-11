@@ -77,7 +77,7 @@ const tableColumns = [
   {
     dataKey: 'account',
     key: 'account',
-    title: '用户名',
+    title: '账号',
     width: 150
   },
   {
@@ -284,7 +284,7 @@ const cancel = () => {
 
 const selectOptionGrades = reactive<any>([])
 const searchBarItems = reactive([
-  { name: '用户名', value: '' },
+  { name: '账号', value: '' },
   { name: '姓名', value: '' },
   { name: '手机号', value: '', label: '' },
   { name: '学习阶段', value: '', type: InputType.Select, label: '请选择', options: selectOptionGrades }
@@ -449,7 +449,7 @@ const cancelEditDialog = () => {
     </template>
     <div style="height: 350px;margin-left: 20px;">
       <div class="input">
-        <div class="input-word"><el-text style="color:#ff0000">*</el-text>用户名:</div>
+        <div class="input-word"><el-text style="color:#ff0000">*</el-text>账号:</div>
         <ElInput class="input-input" placeholder="请输入" v-model="newStudentData.account" />
       </div>
       <div class="input">

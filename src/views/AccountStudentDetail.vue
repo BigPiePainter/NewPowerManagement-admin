@@ -126,7 +126,7 @@ loadData()
         </div>
 
         <div class="topPart1-3">
-          <div><el-text>用户名：{{ route.query.account }}</el-text></div>
+          <div><el-text>账号：{{ route.query.account }}</el-text></div>
           <div class="topPart1-3-2"><el-text>到期时间:{{ route.query.expiration }}</el-text></div>
         </div>
       </div>
