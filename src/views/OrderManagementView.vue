@@ -200,7 +200,7 @@ const tableColumns = [
           <el-popconfirm
             hide-after={0}
             width="170"
-            title={`将${item.rowData.productName}退课吗`}
+            title={`将 ${item.rowData.studentName} 的 ${item.rowData.productName ? item.rowData.productName : item.rowData.coursesQuestionPackagesName} 退课吗`}
             onConfirm={() => preDeleteTea(item)}
             v-slots={{
               reference: () => (

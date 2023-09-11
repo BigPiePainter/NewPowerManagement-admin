@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { ArrowRight, ArrowLeft } from '@element-plus/icons-vue'
 import { upload } from '@/apis/upload';
 import { getGrades } from '@/apis/grade';
@@ -12,6 +12,8 @@ import SearchBar from '@/components/SearchBar.vue'
 import { InputType } from '@/type'
 import { ElButton, ElNotification, ElCheckbox } from 'element-plus'
 import type { CheckboxValueType } from 'element-plus'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '商城管理', path: '/shop-management' },
@@ -35,6 +37,12 @@ const searchBarItems = reactive([
     single: true
   }
 ])
+
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadData()
+}
 
 const next = () => {
   if (active.value >= 0 && active.value < 2) {
@@ -363,7 +371,6 @@ const newProductData = reactive<any>({
 const newContentData = ref<any>([])
 
 const create = () => {
-  newContentData.value = tableData.filter((item: any) => item.checked)
   let data = newContentData.value.map((item: any) => item.id)
   var args = {
     id: newProductData.id,
@@ -402,6 +409,7 @@ const create = () => {
               title: '新建商品成功',
               type: 'success',
             })
+            router.push({ path: 'shop-management' })
           } else {
             ElNotification({
               title: '未知错误',
@@ -433,6 +441,13 @@ const create = () => {
       })
     })
 }
+
+watch(() => tableData, (val: any) => {
+  newContentData.value = val.filter((item: any) => item.checked)
+  console.log(newContentData.value)
+},
+  { deep: true, immediate: true }
+)
 </script>
 
 <template>
@@ -509,7 +524,7 @@ const create = () => {
     </div>
 
     <TablePage class="table-class" :loading="loading" :itemsTotalLength="totalLength" :columns="tableColumn"
-      :data="tableData" @paginationChange="loadData" v-else-if="active == 1">
+      :data="tableData" @paginationChange="pageChange" v-else-if="active == 1">
       <SearchBar class="search-bar" :items="searchBarItems" @change="loadData"></SearchBar>
       <div style="white-space:nowrap;margin-left: 5px;margin-top: 15px;margin-bottom: 15px;">
         <!-- <el-button type="primary"
@@ -517,7 +532,7 @@ const create = () => {
         <el-button class="next-button-row-button" type="text" @click="up"><el-icon class="el-icon--left">
             <ArrowLeft />
           </el-icon>上一步</el-button>
-        <el-button class="next-button-row-button" type="text" @click="next">下一步<el-icon class="el-icon--right">
+        <el-button :disabled="newContentData.length == 0" class="next-button-row-button" type="text" @click="next">下一步<el-icon class="el-icon--right">
             <ArrowRight />
           </el-icon></el-button>
       </div>

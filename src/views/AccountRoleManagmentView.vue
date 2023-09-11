@@ -243,7 +243,7 @@ const deleteTea = (item: any) => {
   <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
     :columns="tableColumns" :data="tableData">
     <div>
-      <el-button :disabled="!author.managerEdit" class="ARMbutton" type="primary" @click="roleDetail">新建角色</el-button>
+      <el-button :disabled="!author.managerEdit" class="ARMbutton" type="primary" @click="roleDetail">新建管理员</el-button>
     </div>
   </TablePage>
 

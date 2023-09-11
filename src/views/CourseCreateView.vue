@@ -8,8 +8,10 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllTeachers } from '@/apis/teacher';
 import { upload } from '@/apis/upload'
 import { getLabels } from '@/apis/label';
+import { useRouter } from 'vue-router'
 import RichTextEditor from '@/components/RichTextEditor.vue';
 
+const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '课程包管理', path: '' }]
 
@@ -144,6 +146,7 @@ const createnewGoodQuestion = () => {
                     message: '课程包创建成功',
                     type: 'success',
                 })
+                router.push({ path: 'course-management' })
             } else {
                 ElNotification({
                     title: '创建失败',

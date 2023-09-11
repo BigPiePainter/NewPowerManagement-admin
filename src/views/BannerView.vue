@@ -243,7 +243,6 @@ loadData()
         </div>
         <div class="div-input-element">
           <span class="dialog-span">
-            <el-text style="color:#ff0000">*</el-text>
             跳转链接：
           </span>
           <el-input class="dialog-input" v-model="newBannerContext.url">

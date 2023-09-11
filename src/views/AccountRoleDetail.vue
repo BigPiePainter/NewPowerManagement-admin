@@ -117,7 +117,7 @@ watch(() => author, (val: any) => {
                 <div class="left-title">
                     <div style="margin-top: 5px;">新建管理员</div>
                     <div style="flex-grow: 1;"></div>
-                    <el-button style="margin-right: 10px;" type="primary"  @click="confirmNew"
+                    <el-button style="margin-right: 10px;" type="primary" @click="confirmNew"
                         :disabled="(account == '') || (passwd < '000000')">确认新建</el-button>
                 </div>
                 <div class="manager-info">
@@ -134,7 +134,8 @@ watch(() => author, (val: any) => {
                         </el-input>
                     </div>
                     <div class="manager-info-row">
-                        <el-text style="width: 40px;margin-left: 20px;">电话:</el-text>
+                        <el-text style="width: 40px;margin-left: 20px;"><el-text
+                                style="color:#ff0000">*</el-text>电话:</el-text>
                         <el-input style="width: 250px;" v-model="phoneNumber" placeholder="请输入">
                         </el-input>
                     </div>

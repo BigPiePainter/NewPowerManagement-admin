@@ -41,6 +41,7 @@ loadData()
 
 //---------------创建父级学习阶段--------------------
 const createNewUpperGrade = () => {
+  newGradedata.name = ''
   createUpperGradeDialogShow.value = true
 }
 const confrimCreateNewUpperGrade = () => {
@@ -79,6 +80,7 @@ const confrimCreateNewUpperGrade = () => {
 
 //---------------创建子级学习阶段--------------------
 const createNewSubGrade = (id: any) => {
+  newGradedata.name = ''
   newGradedata.parentId = id
   createSubGradeDialogShow.value = true
 }
@@ -147,6 +149,7 @@ const deleteGrade = (id: any) => {
 
 //----------------------创建科目-----------------------
 const createNewSubject = () => {
+  newSubjectdata.name = ''
   createSubjectDialogShow.value = true
 }
 const confrimCreateSub = () => {
