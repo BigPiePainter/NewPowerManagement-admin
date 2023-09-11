@@ -20,6 +20,13 @@ const paginationInfo = reactive({
   currentPage: 1,
   pageSize: 20
 })
+
+const recieverTypeDialog = ref(false)
+const receiverIds = ref('')
+const receiverIdArr = ref<any>([])
+const title = ref('')
+const textarea = ref('')
+const type = ref<number>()
 const pageChange = (val: any) => {
   paginationInfo.currentPage = val.currentPage
   paginationInfo.pageSize = val.pageSize
@@ -150,19 +157,24 @@ const recieverListDialogColumn = reactive([
     key: 'name',
     title: '姓名',
     cellRenderer: (item: any) => {
-      if (item.rowData.isRead) {
-        return (
+      return (
           <>
-            <span>{item.rowData.name + ' '}<el-tag>已读</el-tag></span>
+            <span>{item.rowData.name}</span>
           </>
         )
-      } else {
-        return (
-          <>
-            <span>{item.rowData.name + ' '}<el-tag type="danger">未读</el-tag></span>
-          </>
-        )
-      }
+      // if (item.rowData.isRead) {
+      //   return (
+      //     <>
+      //       <span>{item.rowData.name + ' '}<el-tag>已读</el-tag></span>
+      //     </>
+      //   )
+      // } else {
+      //   return (
+      //     <>
+      //       <span>{item.rowData.name + ' '}<el-tag type="danger">未读</el-tag></span>
+      //     </>
+      //   )
+      // }
     },
     width: 350,
     align: 'center'
@@ -198,6 +210,13 @@ const allTeachers = reactive<any>([])
 const allStudents = reactive<any>([])
 const userId = ref<any>('')
 const sendMsgDialogShow = ref(false)
+const sendMsgClick = () => {
+  recieverTypeDialog.value = true
+  textarea.value = ''
+  receiverIds.value = ''
+  receiverIdArr.value.length = 0
+  title.value = ''
+}
 const sendMsg = () => {
   recieverTypeDialog.value = false
   userInfo()
@@ -271,13 +290,6 @@ const loadData = () => {
 }
 loadData()
 
-const recieverTypeDialog = ref(false)
-const receiverIds = ref('')
-const receiverIdArr = ref<any>([])
-const title = ref('')
-const textarea = ref('')
-const type = ref<number>()
-
 const createMsg = () => {
   receiverIds.value = ''
   receiverIdArr.value.forEach((item: any) => {
@@ -303,6 +315,7 @@ const createMsg = () => {
           title: '发送成功',
           type: 'success'
         })
+        sendMsgDialogShow.value = false
       }
     })
 }
@@ -315,7 +328,7 @@ const createMsg = () => {
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
     </div>
     <div>
-      <el-button :disabled='!author.messageEdit' @click="recieverTypeDialog = true" style="margin-top: 15px;" class="new-msg-button"
+      <el-button :disabled='!author.messageEdit' @click="sendMsgClick" style="margin-top: 15px;" class="new-msg-button"
         type="primary">发消息</el-button>
     </div>
   </TablePage>
@@ -349,7 +362,8 @@ const createMsg = () => {
           <el-text style="color:#ff0000">*</el-text>消息内容：
         </span>
 
-        <el-input style="margin-top:10px;" v-model="textarea" maxlength="100" placeholder="请输入消息内容" show-word-limit type="textarea">
+        <el-input style="margin-top:10px;" v-model="textarea" maxlength="100" placeholder="请输入消息内容" show-word-limit
+          type="textarea">
 
         </el-input>
       </div>
@@ -369,7 +383,7 @@ const createMsg = () => {
     <el-table-v2 :header-height="0" :columns="recieverListDialogColumn" :data="recieverListTableData" :width="610"
       :height="550" />
     <template #header>
-      <el-text>接收者 已读{{ readNum }}人 未读{{ unReadNum }}人</el-text>
+      <!-- <el-text>接收者 已读{{ readNum }}人 未读{{ unReadNum }}人</el-text> -->
     </template>
     <template #footer>
       <el-button @click="receiverListDialogShow = false">
