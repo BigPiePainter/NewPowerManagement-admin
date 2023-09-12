@@ -56,11 +56,12 @@ const tableColumns = [
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
+      const deleteSlot = {
+        reference: () => <el-button disabled={!author.courseCategoryEdit} link type="danger">删除</el-button>
+      }
       return (
         <>
-          <el-button disabled={!author.courseCategoryEdit} link type="danger" onClick={() => deleteCategory(item.rowData.id)}>
-            删除
-          </el-button>
+          <el-popconfirm hide-after={0} width='250' title={`删除类目 ${item.rowData.gradeName}${item.rowData.subjectName} ?`} onConfirm={() => deleteCategory(item.rowData.id)} v-slots={deleteSlot} />
         </>
       )
     },

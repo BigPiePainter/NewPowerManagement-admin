@@ -125,7 +125,7 @@ const deleteLab = (item: any) => {
     } else {
       ElNotification({
         title: '删除失败',
-        message: '删除失败' + res.msg,
+        message: res.msg,
         type: 'error'
       })
     }

@@ -477,7 +477,7 @@ const clickAdd = () => {
             <div class="topPart1-3-2"><el-text style="font-size: 20px;">课程包名称：{{ route.query.name }}</el-text></div>
             <div class="topPart1-3-2"><el-text>更新时间:{{ route.query.updatedAt }}</el-text></div>
             <div class="topPart1-3-2"><el-text>阶段：{{ route.query.gradeName }}</el-text></div>
-            <div class="topPart1-3-2"><el-text>学科：{{ route.query.subjectName }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>课程类目：{{ route.query.subjectName }}</el-text></div>
             <div class="topPart1-3-2"><el-text>老师：{{ route.query.teacherName }}</el-text></div>
           </div>
         </div>

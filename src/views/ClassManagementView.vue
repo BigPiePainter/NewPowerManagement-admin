@@ -55,8 +55,8 @@ const searchBarItems = reactive([
   {
     name: "负责老师", type: InputType.Select,
     single: true,
-    value: "", options: allTeacher
-
+    value: "", 
+    options: allTeacher
   },
   {
     name: "阶段",
@@ -64,11 +64,9 @@ const searchBarItems = reactive([
     single: true,
     value: "",
     options: allGrades
-
   },
-
   {
-    name: "学科",
+    name: "课程类目",
     type: InputType.Select,
     single: true,
     value: "",
@@ -157,7 +155,7 @@ const tableColumns = reactive([
   {
     dataKey: 'subjectName',
     key: 'subjectName',
-    title: '学科',
+    title: '课程类目',
     width: 150
   },
   {
@@ -316,9 +314,9 @@ const loadData = () => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     name: searchBarItems[0].value,
-    teacherId: searchBarItems[1].value[0],
-    gradeId: searchBarItems[2].value[0],
-    subjectId: searchBarItems[3].value[0]
+    teacherId: searchBarItems[1].value,
+    gradeId: searchBarItems[2].value,
+    subjectId: searchBarItems[3].value
   }
   getClasses(args)
     .then((res) => {
@@ -390,7 +388,7 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          <el-text style="color:#ff0000">*</el-text>学科：
+          <el-text style="color:#ff0000">*</el-text>课程类目：
         </span>
         <el-select class="dialog-input" placeholder="请输入" v-model="newClassData.subjectId">
           <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
@@ -443,7 +441,7 @@ loadData()
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
-          学科：
+          课程类目：
         </span>
         <el-select filterable class="dialog-input" v-model="editClassData.subjectId">
           <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />

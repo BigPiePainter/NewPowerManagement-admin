@@ -62,7 +62,7 @@ const confrimCreateNewUpperGrade = () => {
       else {
         ElNotification({
           title: '失败',
-          message: '创建失败',
+          message: res.msg,
           type: 'warning'
         })
       }
@@ -102,7 +102,7 @@ const confrimCreateNewSubGrade = () => {
       else {
         ElNotification({
           title: '失败',
-          message: '创建失败',
+          message: res.msg,
           type: 'warning'
         })
       }
@@ -241,10 +241,10 @@ const deleteSubjects = (id: any) => {
       </div>
     </div>
 
-    <!------------------------- 学科 ------------------------>
+    <!------------------------- 课程类目 ------------------------>
     <div class="card-right">
       <div class="card-title-bar">
-        <el-text class="card-title-text">学科</el-text>
+        <el-text class="card-title-text">课程类目</el-text>
       </div>
 
       <div class="card-body">
@@ -267,7 +267,7 @@ const deleteSubjects = (id: any) => {
       </el-input>
     </div>
     <template #header>
-      <el-text>添加学科</el-text>
+      <el-text>添加课程类目</el-text>
     </template>
     <template #footer>
       <el-button type="primary" @click="confrimCreateSub()">确定</el-button>

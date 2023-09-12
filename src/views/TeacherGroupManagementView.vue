@@ -126,10 +126,11 @@ const editTeacherGroupData = reactive<any>({ leaderId: '', id: '', name: '' });
 const editTeacherGroup = (props: any) => {
   console.log(props)
   editTeacherGroupDialogShow.value = true;
-  editTeacherGroupData.name = props.rowData.teacherGroupName
-  editTeacherGroupData.leaderId = props.rowData.groupLeader
+  editTeacherGroupData.name = props.rowData.name
+  editTeacherGroupData.leaderId = props.rowData.leaderId
   editTeacherGroupData.id = props.rowData.id
 }
+
 const preDeleteTea = (item: any) => {
   tableData.value.forEach((i: any) => {
     if (i.id == item.rowData.id) {

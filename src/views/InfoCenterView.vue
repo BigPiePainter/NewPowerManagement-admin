@@ -104,11 +104,12 @@ const tableColumns = reactive([
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
+      const deleteSlot = {
+        reference: () => <el-button disabled={!author.messageEdit} link type="danger">删除</el-button>
+      }
       return (
         <>
-          <el-button disabled={!author.messageEdit} link type="danger" onClick={() => messageDelete(item)}>
-            删除
-          </el-button>
+          <el-popconfirm hide-after={0} width='170' title={`删除消息`} onConfirm={() => messageDelete(item)} v-slots={deleteSlot} />
         </>
       )
     },
@@ -158,10 +159,10 @@ const recieverListDialogColumn = reactive([
     title: '姓名',
     cellRenderer: (item: any) => {
       return (
-          <>
-            <span>{item.rowData.name}</span>
-          </>
-        )
+        <>
+          <span>{item.rowData.name}</span>
+        </>
+      )
       // if (item.rowData.isRead) {
       //   return (
       //     <>
@@ -181,26 +182,13 @@ const recieverListDialogColumn = reactive([
   },
 ])
 
-const readNum = ref<number>(0)
-const unReadNum = ref<number>(0)
 const receiverListDialog = (data: any) => {
   recieverListTableData.length = 0
-  readNum.value = 0
-  unReadNum.value = 0
   data.receiverList.forEach((item: any) => {
-    if (item.isRead == true) {
-      readNum.value = readNum.value + 1
-      console.log(1)
-    } else {
-      unReadNum.value = unReadNum.value + 1
-      console.log(2)
-    }
     console.log(3)
     recieverListTableData.push(item)
   })
   console.log(recieverListTableData)
-  console.log(readNum)
-  console.log(unReadNum)
   receiverListDialogShow.value = true
 }
 
@@ -383,6 +371,7 @@ const createMsg = () => {
     <el-table-v2 :header-height="0" :columns="recieverListDialogColumn" :data="recieverListTableData" :width="610"
       :height="550" />
     <template #header>
+      <el-text>接收对象{{ recieverListTableData.length }}人</el-text>
       <!-- <el-text>接收者 已读{{ readNum }}人 未读{{ unReadNum }}人</el-text> -->
     </template>
     <template #footer>

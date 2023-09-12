@@ -91,14 +91,20 @@ const tableColumns = reactive<any>([
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
-      return (
-        <>
-          {/* <el-button link type="primary" onClick={() => console.log(item)}>
-            编辑
-          </el-button> */}
-          <el-button disabled={!author.examInfoEdit} link type="danger" onClick={() => deleteExamInfo(item)}>
+      const deleteSlot = {
+        reference: () => (
+          <el-button disabled={!author.examInfoEdit} link type="danger">
             删除
           </el-button>
+        )
+      }
+      return (
+        <>
+          <el-Popconfirm
+            title="是否删除？"
+            v-slots={deleteSlot}
+            onConfirm={() => deleteExamInfo(item)}
+          ></el-Popconfirm>
         </>
       )
     },
@@ -132,14 +138,15 @@ loadData()
   </TablePage>
 
   <el-dialog width="400px" v-model="examInfoDialogShow">
-    <div style="white-space:nowrap;">
-      <span>
+    <div style="margin-left: 50px;">
+      <div style="margin-bottom: 10px;">
         <el-text style="color:#ff0000">*</el-text>资讯内容：
-      </span>
-      <el-input style="max-width: 250px;" v-model="examInfoContent" placeholder="请输入"></el-input>
+      </div>
+      <el-input type="textarea" maxlength="50" show-word-limit style="max-width: 250px;" v-model="examInfoContent"
+        placeholder="请输入"></el-input>
     </div>
     <template #header>
-      <el-text>创建考试咨询</el-text>
+      <el-text>创建考试咨讯</el-text>
     </template>
     <template #footer>
       <el-button type="primary" @click="confirm()">确定</el-button>

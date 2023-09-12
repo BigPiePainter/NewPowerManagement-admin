@@ -50,7 +50,7 @@ const searchBarItems = reactive([
     single: true
   },
   {
-    name: '学科',
+    name: '课程类目',
     value: '',
     type: InputType.Select,
     label: '请选择',
@@ -174,7 +174,7 @@ const tableColumns = [
   {
     dataKey: 'subjectName',
     key: 'subjectName',
-    title: '学科',
+    title: '课程类目',
     width: 100
   },
   {
@@ -420,7 +420,7 @@ loadData()
         </el-select>
       </div>
       <div class="div-input-element"><el-text style="color:#ff0000">*</el-text>
-        <span class="dialog-span"> 学科： </span>
+        <span class="dialog-span"> 课程类目： </span>
         <el-select filterable class="dialog-input" place holder="请选择" v-model="newTeacherData.subjectId">
           <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
 
@@ -461,7 +461,7 @@ loadData()
     </div>
     <div class="div-input-element">
       <span class="dialog-span">
-        学科：
+        课程类目：
       </span>
       <el-select filterable class="dialog-input" v-model="editTeacherData.subjectId">
         <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />

@@ -196,7 +196,7 @@ const handleCurrentChange2 = (val: number) => {
           <div class="top-Part1-2-1">{{ route.query.name }}</div>
           <div class="top-Part1-2-2">
             <div><el-text>学习阶段:{{ route.query.gradeName }}</el-text></div>
-            <div><el-text>学科:{{ route.query.subjectName }}</el-text></div>
+            <div><el-text>课程类目:{{ route.query.subjectName }}</el-text></div>
             <div><el-text>备注:{{ route.query.remark }}</el-text></div>
           </div>
         </div>

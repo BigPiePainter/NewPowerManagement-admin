@@ -352,7 +352,7 @@ loadData()
             负责老师：{{ route.query.teacherName }}
           </el-text>
           <el-text class="el-text-detail">
-            学科：{{ route.query.subjectName }}
+            课程类目：{{ route.query.subjectName }}
           </el-text>
           <el-text class="el-text-detail">
             学习阶段：{{ route.query.gradeName }}

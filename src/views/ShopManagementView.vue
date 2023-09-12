@@ -173,7 +173,7 @@ const searchBarItems = reactive([
   { name: '类型', value: '', type: InputType.Select, options: allType, single: true },
   { name: '状态', value: '', type: InputType.Select, options: allstatus, single: true },
   { name: '阶段', value: '', type: InputType.Select, options: allGrades, single: true },
-  { name: '学科', value: '', type: InputType.Select, options: allSubjects, single: true },
+  { name: '课程类目', value: '', type: InputType.Select, options: allSubjects, single: true },
   { name: '版本', value: '', type: InputType.Select, options: allVersion, single: true },
 ])
 
@@ -225,7 +225,7 @@ const tableColumns = [
   {
     dataKey: 'subjectName',
     key: 'subjectName',
-    title: '学科',
+    title: '课程类目',
     cellRenderer: (cellData: any) => (
       <span>{cellData.cellData ? cellData.cellData : '无'}</span>
     ),

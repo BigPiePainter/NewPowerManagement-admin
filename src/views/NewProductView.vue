@@ -30,7 +30,7 @@ const searchBarItems = reactive([
     options: [
       { name: "容易", id: 1 },
       { name: "较易", id: 2 },
-      { name: "普通", id: 3 },
+      { name: "一般", id: 3 },
       { name: "较难", id: 4 },
       { name: "困难", id: 5 }
     ],
@@ -154,12 +154,11 @@ const tableColumn = reactive<any>([
     cellRenderer: (cellData: any) => (
       <span>
         {
-          cellData.cellData == 0 ? "容易"
-            : cellData.cellData == 1 ? "较易"
-              : cellData.cellData == 2 ? "普通"
-                : cellData.cellData == 3 ? "较难"
-                  : cellData.cellData == 4 ? "难"
-                    : '困难'
+          cellData.cellData == 1 ? "容易"
+            : cellData.cellData == 2 ? "较易"
+              : cellData.cellData == 3 ? "一般"
+                : cellData.cellData == 4 ? "较难"
+                  : '困难'
         }
       </span>),
     width: 100
@@ -173,7 +172,7 @@ const tableColumn = reactive<any>([
   {
     dataKey: 'subjectName',
     key: 'subjectName',
-    title: '学科',
+    title: '课程类目',
     width: 80
   },
   {
@@ -478,7 +477,7 @@ watch(() => tableData, (val: any) => {
       </div>
       <div class="input-row">
         <div class="input-title">
-          <el-text style="">商品名称：</el-text>
+          <el-text><el-text style="color:#ff0000">*</el-text>商品名称：</el-text>
         </div>
         <div class="input-container">
           <el-input class="input-input" v-model="newProductData.name" />
@@ -486,13 +485,13 @@ watch(() => tableData, (val: any) => {
       </div>
       <div class="input-row">
         <div class="input-title">
-          <el-text style="">分类：</el-text>
+          <el-text><el-text style="color:#ff0000">*</el-text>分类：</el-text>
         </div>
         <div class="input-container">
           <el-select class="input-input" placeholder="请选择学习阶段" v-model="newProductData.gradeId">
             <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
-          <el-select class="input-input" placeholder="请选择学科阶段" v-model="newProductData.subjectId">
+          <el-select class="input-input" placeholder="请选择课程类目阶段" v-model="newProductData.subjectId">
             <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <el-select class="input-input" placeholder="请选择版本" v-model="newProductData.version">
@@ -503,21 +502,24 @@ watch(() => tableData, (val: any) => {
           </el-select>
         </div>
       </div>
-      <div style="margin-left: 10px;" class="input-row">
+      <div class="input-row">
         <div class="input-title">
-          <el-text>详细：</el-text>
+          <el-text><el-text style="color:#ff0000">*</el-text>详细：</el-text>
         </div>
-        <el-select class="input-input" placeholder="请选择是否热门" v-model="newProductData.hot">
-          <el-option v-for="item in allHot" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-        <el-select style="margin-left: 15px;" class="input-input" placeholder="请选择版本种类"
-          v-model="newProductData.versionType">
-          <el-option v-for="item in allversionType" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
+        <div class="input-container">
+          <el-select class="input-input" placeholder="请选择是否热门" v-model="newProductData.hot">
+            <el-option v-for="item in allHot" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+          <el-select class="input-input" placeholder="请选择版本种类" v-model="newProductData.versionType">
+            <el-option v-for="item in allversionType" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </div>
       </div>
 
       <div class="next-button-row">
-        <el-button class="next-button-row-button" type="text" @click="next">下一步<el-icon class="el-icon--right">
+        <el-button class="next-button-row-button"
+        :disabled="newProductData.name == '' || newProductData.gradeId == '' || newProductData.subjectId == '' || newProductData.version == '' || newProductData.type == '' || newProductData.hot == '' || newProductData.versionType == ''"
+         type="text" @click="next">下一步<el-icon class="el-icon--right">
             <ArrowRight />
           </el-icon></el-button>
       </div>
@@ -532,7 +534,8 @@ watch(() => tableData, (val: any) => {
         <el-button class="next-button-row-button" type="text" @click="up"><el-icon class="el-icon--left">
             <ArrowLeft />
           </el-icon>上一步</el-button>
-        <el-button :disabled="newContentData.length == 0" class="next-button-row-button" type="text" @click="next">下一步<el-icon class="el-icon--right">
+        <el-button :disabled="newContentData.length == 0" class="next-button-row-button" type="text"
+          @click="next">下一步<el-icon class="el-icon--right">
             <ArrowRight />
           </el-icon></el-button>
       </div>

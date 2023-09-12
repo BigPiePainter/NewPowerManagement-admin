@@ -68,7 +68,7 @@ const dialogTableColumns = reactive<any>([
   {
     dataKey: 'subjectName',
     key: 'subjectName',
-    title: '学科',
+    title: '课程类目',
     width: 200
   },
   {
@@ -103,7 +103,7 @@ const tableColumns = reactive<any>([
   {
     dataKey: 'subjectName',
     key: 'subjectName',
-    title: '学科',
+    title: '课程类目',
     width: 200
   },
   {

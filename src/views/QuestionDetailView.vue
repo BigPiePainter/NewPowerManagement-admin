@@ -185,7 +185,7 @@ const handleCurrentChange = (val: number) => {
           <div class="topPart1-3-2">
             <div class="topPart1-3-2"><el-text style="font-size: 20px;">好题包名称：{{ route.query.name }}</el-text></div>
             <div class="topPart1-3-2"><el-text>学习阶段：{{ route.query.gradeName }}</el-text></div>
-            <div class="topPart1-3-2"><el-text>学科：{{ route.query.subjectName }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>课程类目：{{ route.query.subjectName }}</el-text></div>
             <div class="topPart1-3-2"><el-text>难度：
                 {{
                   route.query.difficultyLevel as any == 1 ? "容易"

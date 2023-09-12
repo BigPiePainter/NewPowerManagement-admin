@@ -161,7 +161,7 @@ const createnewGoodQuestion = () => {
 
             <div class="top-part">
                 <el-text class="dialog-el-text">
-                    学科：
+                    课程类目：
                 </el-text>
                 <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.subjectId">
                     <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />

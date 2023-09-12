@@ -176,7 +176,7 @@ const dialogSearchBarItems = reactive([
     single: true
   },
   {
-    name: "学科",
+    name: "课程类目",
     type: InputType.Select,
     value: "",
     label: "请选择",
@@ -310,7 +310,7 @@ const dialogTableColumns = reactive<any>([
   {
     dataKey: 'subjectName',
     key: 'subjectName',
-    title: '学科',
+    title: '课程类目',
     algin: 'center',
     width: 100
   },
