@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getStudentCouse } from '@/apis/studentCourse'
-import DisplayQuestionCard from '@/components/DisplayQuestionCard.vue'
+import CourseCard from '@/components/CourseCard.vue'
 import QuestionDisplayCard from '@/components/QuestionDisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
@@ -8,17 +8,19 @@ import type { TabsPaneContext } from 'element-plus'
 import { useRoute } from 'vue-router'
 import { getStudentQuestions } from '@/apis/studentQuestion'
 import { getStudentHomework } from '@/apis/studentHomework'
+import { getStudentPackages } from '@/apis/studentCourseQuestionPackages'
 import HomeworkQuestionDisplayCard from '@/components/HomeworkQuestionDisplayCard.vue'
 
 const breadcrumbStore = useBreadcrumbStore()
 
 const route = useRoute()
-const activeName = ref('first')
-const studentData = ref<any>([])
+const activeName = ref('courses')
 const questionPackage = reactive<any>({})
 const lessons = reactive<any>([])
-const homeWork = reactive<any>([])
 const loading = ref(true)
+const coursePackages = reactive<any>([])
+const questionPackages = reactive<any>([])
+const homework = reactive<any>([])
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)
@@ -32,76 +34,40 @@ breadcrumbStore.data = [
 
 //-------------------加载学生数据--------------
 const loadData = () => {
+  coursePackages.length = 0
+  questionPackages.length = 0
+  homework.length = 0
   loading.value = true
-
-  var args = {
+  var courseArgs = {
+    studentId: route.query.id,
+    type: 1
+  }
+  var questionArgs = {
+    studentId: route.query.id,
+    type: 2
+  }
+  var homeworkArgs = {
     studentId: route.query.id
   }
-
-  getStudentCouse(args)
+  getStudentPackages(courseArgs)
     .then((res) => {
       res.data.forEach((item: any) => {
-        lessons.push({
-          title: item.miniLessonName,
-          picture: '',
-          tag: '好题',
-          time: item.watchedTime,
-          classfiction: '普通课',
-          time2: item.miniLessonDuration
-        })
+        coursePackages.push(item)
       })
-
-        (studentData.value = res.data[0])
+      return getStudentPackages(questionArgs)
     })
-    .catch(() => { })
-    .finally(() => {
-      loading.value = false
-    })
-
-  getStudentQuestions(args)
     .then((res) => {
-      console.log(res)
       res.data.forEach((item: any) => {
-        if (item.difficultyLevel == 0) {
-          item.difficultyLevel = '※'
-        }
-
-        if (item.questionPackageId in questionPackage) {
-          questionPackage[item.questionPackageId].push(item)
-        } else {
-          questionPackage[item.questionPackageId] = [];
-          // {id:[]}
-          questionPackage[item.questionPackageId].push(item)
-        }
+        questionPackages.push(item)
       })
-
+      return getStudentHomework(homeworkArgs)
     })
-    .catch(() => { })
-    .finally(() => {
-      loading.value = false
-    })
-
-  getStudentHomework(args)
     .then((res) => {
-      console.log(res)
       res.data.forEach((item: any) => {
-        console.log(item)
-        if (item.isFinished == 0) {
-          homeWork.push({
-            homeworkName: item.homeworkName,
-            teacherName: item.teacherName,
-            isFinished: '未完成'
-          })
-        } else {
-          homeWork.push({
-            homeworkName: item.homeworkName,
-            teacherName: item.teacherName,
-            isFinished: '已完成'
-          })
-        }
+        homework.push(item)
       })
     })
-    .catch(() => { })
+    .catch()
     .finally(() => {
       loading.value = false
     })
@@ -149,28 +115,29 @@ loadData()
     <div>
       <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick" type="card">
 
-        <el-tab-pane label="课程" name="courses">
+        <el-tab-pane :label="'课程(' + coursePackages.length + ')'" name="courses">
           <div class="botPart1-2">
-            <DisplayQuestionCard class="postion" v-for="item in lessons" :key="item.title" :title="item.title"
-              :picture="item.picture" :tag="item.tag" :classfiction="item.classfiction" :time="item.time"
-              :time2="item.time2">
-            </DisplayQuestionCard>
+            <CourseCard v-for=" item  in  coursePackages " :key="item.coursesQuestionPackageId"
+              :picture="item.packageCover" :title="item.packageName" :difficultyLevel="item.packageDifficultyLevel"
+              :valid="item.valid" :grade="item.gradeName" :subject="item.subjectName" :label="item.labelName">
+            </CourseCard>
           </div>
 
         </el-tab-pane>
-        <el-tab-pane label="好题演练" name="questions">
+        <el-tab-pane :label="'好题演练(' + questionPackages.length + ')'" name="questions">
           <div class="botPart1-2">
-            <QuestionDisplayCard v-for="(key, val) in questionPackage" :key="val"
-              :questionName="key[0].coursesQuestionPackageName" :questionCount="(key.length - 1)"
-              :questionFinished="key[0][0]" :difficultyLevel="(key[0].difficultyLevel)">
-            </QuestionDisplayCard>
+            <CourseCard v-for=" item  in  questionPackages " :key="item.coursesQuestionPackageId"
+              :picture="item.packageCover" :title="item.packageName" :difficultyLevel="item.packageDifficultyLevel"
+              :valid="item.valid" :grade="item.gradeName" :subject="item.subjectName" :label="item.labelName">
+            </CourseCard>
           </div>
         </el-tab-pane>
 
-        <el-tab-pane label="作业巩固" name="homework">
+        <el-tab-pane :label="'作业巩固(' + homework.length + ')'" name="homework">
           <div class="botPart1-2">
-            <HomeworkQuestionDisplayCard v-for="item in homeWork" :key="item.title" :homeworkName="item.homeworkName"
-              :teacherName="item.teacherName" :isFinished="item.isFinished">
+            <HomeworkQuestionDisplayCard v-for=" item  in  homework " :key="item.title"
+              :homeworkName="item.homeworkName" :teacherName="item.teacherName" :isFinished="item.isFinished"
+              :subjectName="item.subjectName">
             </HomeworkQuestionDisplayCard>
           </div>
         </el-tab-pane>
@@ -182,6 +149,12 @@ loadData()
 
 <style scoped lang="scss">
 $scale: 0.88;
+
+.course-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 .downpart {}
 

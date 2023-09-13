@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ElDivider } from 'element-plus';
-
-
 const convert = (time: number) => {
     let a: number | string = ~~(time / 3600);
     let b: number | string = ~~(time / 60) - a * 60;
@@ -18,12 +16,6 @@ const convert = (time: number) => {
     }
 }
 
-
-// const playbar = (time: number, time2: number) => {
-//     let d = (time / time2)
-// }
-
-
 type Props = {
     title: string,
     time: number,
@@ -33,14 +25,12 @@ type Props = {
     tag: string,
 }
 const props = defineProps<Props>();
-
-
 </script>
 
 
 <template>
     <div class="DisplayQuestionCard">
-        <div class="picture">{{ picture }}</div>
+        <div class="picture"><img :src="picture" /></div>
         <div class="title">
             <div class="title-word"> {{ title }}</div>
         </div>
@@ -57,12 +47,9 @@ const props = defineProps<Props>();
     </div>
 </template>
 
-
 <style scoped lang="scss">
 
-
 $scale: 0.66;
-
 
 .DisplayQuestionCard {
     display: flex;

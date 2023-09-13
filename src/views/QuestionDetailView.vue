@@ -203,19 +203,21 @@ const handleCurrentChange = (val: number) => {
       </div>
 
       <div style="margin-top: 5px;margin-right: 15px;">
-        <div><el-button :disabled="!author.questionPackageEdit" type="primary" @click="giveCourse()">下发好题包</el-button></div>
+        <div><el-button :disabled="!author.questionPackageEdit" type="primary" @click="giveCourse()">下发好题包</el-button>
+        </div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
     <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button :disabled="!author.questionPackageEdit" type="primary" @click="questionCreate(route.query.id)">添加好题</el-button></div>
+        <div class="botPart1-1-1"><el-button :disabled="!author.questionPackageEdit" type="primary"
+            @click="questionCreate(route.query.id)">添加好题</el-button></div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
 
     <div>
-      <el-scrollbar height="1000px">
+      <el-scrollbar class="bottom-height">
 
         <el-card v-for="item in tableData" :key="item.id" style="margin-bottom: 10px;">
           <div style="display: flex;">
@@ -236,7 +238,8 @@ const handleCurrentChange = (val: number) => {
                         : "解答题" }}
             </span>
             <div style="flex-grow: 1"></div>
-            <el-button :disabled="!author.questionPackageEdit" @click="deleteQuestion(item.id)" type=primary>移除</el-button>
+            <el-button :disabled="!author.questionPackageEdit" @click="deleteQuestion(item.id)"
+              type=primary>移除</el-button>
           </div>
 
 
@@ -304,7 +307,9 @@ const handleCurrentChange = (val: number) => {
 $scale: 0.88;
 $gap: 15px;
 
-
+.bottom-height {
+    height: calc($page-height - 260px);
+}
 .page-container {
 
   margin-left: $gap;
@@ -451,5 +456,4 @@ $gap: 15px;
   align-self: center;
   border-left: 3px #f0f2f5 solid;
   box-sizing: border-box;
-}
-</style>
+}</style>

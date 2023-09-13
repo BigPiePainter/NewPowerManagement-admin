@@ -41,7 +41,7 @@ breadcrumbStore.data = [
 
 const loading = ref(true)
 
-const tableColumns = [
+const tableColumns = reactive([
   {
     dataKey: 'id',
     key: 'id',
@@ -128,7 +128,6 @@ const tableColumns = [
     title: '最后登陆时间',
     width: 160
   },
-
   {
     key: 'option',
     title: '操作',
@@ -151,14 +150,14 @@ const tableColumns = [
           <el-popconfirm hide-after={0} width='170' title={`重置${item.rowData.name}密码`} onConfirm={() => restPsw(item)} v-slots={resetPswSlot} />
 
           <el-popconfirm hide-after={0} width='170' title={`删除学生${item.rowData.name}`} onConfirm={() => preDeleteStu(item)} v-slots={deleteSlot} />
-        </div >
+        </div>
       )
     },
     width: 170,
     fixed: 'right',
     align: 'left'
   }
-]
+])
 
 const tableData = ref<object[]>([])
 

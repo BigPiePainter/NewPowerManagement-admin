@@ -1,38 +1,47 @@
 <script setup lang="ts">
-import { ElIcon } from 'element-plus';
 
 type Props = {
     picture?: string
     title?: string
-    time?: string
-    videoduration?: string
+    difficultyLevel?: number
+    valid?: number
+    subject?: string
+    grade?: string
+    label?: string
 }
 const props = defineProps<Props>()
-
-
 </script>
 
 <template>
     <div class="displayvideocard">
         <div class="displayvideocard-picture">
-            <div class="img">
-                <el-icon><VideoPlay/></el-icon></div>
             <img class="show-img" :src="picture" />
-            <div class="time">{{ videoduration }}</div>
         </div>
-        <el-icon><VideoPlay/></el-icon>
         <div class="displayvideocard-title">
-            <el-text>{{ title }}</el-text>
+            <div>{{ title }}</div>
+            <el-tag v-if="label != null" style="margin-left: 5px;">{{ label }}</el-tag>
+        </div>
+        <div class="displayvideocard-category">
+            <div>{{ grade }}{{ subject }}</div>
         </div>
         <div class="displayvideocard-time">
-            <div>{{ time }}</div>
+            <div>难度：</div>
+            <div>
+                {{ difficultyLevel == 1 ? '⭐'
+                    : difficultyLevel == 2 ? '⭐⭐'
+                        : difficultyLevel == 3 ? '⭐⭐⭐'
+                            : difficultyLevel == 4 ? '⭐⭐⭐⭐'
+                                : difficultyLevel == 5 ? '⭐⭐⭐⭐⭐'
+                                    : '无' }}
+            </div>
+            <div style="flex-grow: 1;"></div>
+            <div>{{ valid == 1 ? '有效' : '无效' }}</div>
         </div>
     </div>
 </template>
   
 <style scoped lang="scss">
 $scale: 0.88;
-
 
 .displayvideocard {
     display: flex;
@@ -55,46 +64,41 @@ $scale: 0.88;
 }
 
 .displayvideocard-time {
-
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-grow: 1;
     margin-left: 15px * $scale;
+    margin-right: 15px * $scale;
     font-size: 15px * $scale;
+    margin-bottom: 5px;
 }
 
-
 .displayvideocard-title {
+    display: flex;
+    flex-direction: row;
     padding-top: 2px * $scale;
     font-size: 20px * $scale;
     align-content: center;
     margin-left: 15px * $scale;
     width: 250px * $scale;
     margin-bottom: 10px * $scale;
-    height: 95px * $scale;
+    height: 45px * $scale;
     margin-top: 14px * $scale;
-
 }
 
-.time {
-    position: absolute;
-    bottom: 6px * $scale;
-    left: 6px * $scale;
-}
-
-.img {
-    display: flex;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    z-index: 9999;
+.displayvideocard-category {
+    font-size: 15px * $scale;
+    align-content: center;
+    margin-left: 15px * $scale;
+    width: 250px * $scale;
+    margin-bottom: 10px * $scale;
+    height: 35px * $scale;
 }
 
 .show-img {
     flex-grow: 1;
     height: 100px;
-  }
+}
 
 .displayvideocard-picture {
     display: flex;

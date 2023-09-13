@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { ElButton } from 'element-plus'
 import { useRoute } from 'vue-router'
 import { getGrades } from '@/apis/grade'
@@ -32,7 +32,6 @@ const putQuestion = (questionId: any) => {
                     title: '添加成功',
                     type: 'success'
                 })
-                loadData()
             }
         }).catch((err) => {
             ElNotification({
@@ -68,22 +67,17 @@ const loading = ref(true)
 // const createQuestionDailogShow = ref(false)
 
 const searchQuestionData = reactive<{
-
     difficultyType: string,
     gradeId: string,
     type: string,
     id: string,
     subjectId: string,
-
 }>({
-
     difficultyType: '',
     gradeId: '',
     type: '',
     id: '',
     subjectId: '',
-
-
 });
 
 const paginationInfo = reactive({
@@ -92,7 +86,6 @@ const paginationInfo = reactive({
 })
 
 const loadData = () => {
-    tableData.length = 0
     loading.value = true
     var args = {
         pageNum: paginationInfo.currentPage,
@@ -102,9 +95,9 @@ const loadData = () => {
         subjectId: searchQuestionData.subjectId,
         type: searchQuestionData.type
     }
-
     getGoodQuestion(args)
         .then((res) => {
+            tableData.length = 0
             console.log(res)
             totalNum.value = res.data.total
             res.data.records.forEach((item: any) => {
@@ -113,12 +106,6 @@ const loadData = () => {
             console.log(tableData)
         })
         .catch(() => { })
-        .finally(() => {
-            loading.value = false
-        })
-    tableData.forEach((item: any) => {
-        console.log(item)
-    })
 }
 loadData()
 
@@ -132,6 +119,13 @@ const handleCurrentChange = (val: number) => {
     paginationInfo.currentPage = val
     loadData()
 }
+
+watch(() => searchQuestionData, (val: any) => {
+    console.log(val)
+    loadData()
+},
+    { deep: true, immediate: true }
+)
 </script>
 
 <template>
@@ -144,7 +138,7 @@ const handleCurrentChange = (val: number) => {
                     <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </div>
-            <div class="margin-left">
+            <div>
                 <el-text style="margin-left: 10px;">学习阶段:</el-text>
                 <el-select @click="loadGradesOption" style="margin-left:5px" class="select-width" filterable place
                     holder="请选择学习阶段" v-model="searchQuestionData.gradeId">
@@ -159,58 +153,52 @@ const handleCurrentChange = (val: number) => {
 
         <div class="margin">
             <el-text>难度:</el-text>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = ''">
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = ''">
                 全部
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '1'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '1'">
                 容易
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '2'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '2'">
                 较易
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '3'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '3'">
                 一般
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '4'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '4'">
                 较难
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '5'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.difficultyType = '5'">
                 困难
-            </el-link>
+            </el-button>
         </div>
 
         <div class="margin">
             <el-text>题型:</el-text>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.type = ''">
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.type = ''">
                 全部
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.type = '1'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.type = '1'">
                 单选题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.type = '2'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.type = '2'">
                 多选题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.type = '3'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.type = '3'">
                 不定项选择题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.type = '4'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.type = '4'">
                 判断题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.type = '5'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.type = '5'">
                 填空题
-            </el-link>
-            <el-link class="margin-left" type="primary" @click="searchQuestionData.type = '6'">
+            </el-button>
+            <el-button link class="margin-left" type="primary" @click="searchQuestionData.type = '6'">
                 解答题
-            </el-link>
+            </el-button>
         </div>
 
-
-
-        <el-button style="margin:15px" @click="loadData">
-            搜索:
-        </el-button>
-
-        <el-scrollbar height="1000px">
+        <el-scrollbar class="bottom-height">
 
             <el-card v-for="item in tableData" :key="item.id" style="margin-bottom: 10px;">
                 <div style="display: flex;">
@@ -257,7 +245,11 @@ const handleCurrentChange = (val: number) => {
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+.bottom-height {
+    height: calc($page-height - 150px);
+}
+
 .margin {
     margin-top: 15px;
     margin-left: 15px;
@@ -282,6 +274,6 @@ const handleCurrentChange = (val: number) => {
 }
 
 .select-width {
-    width: 70px
+    width: 150px
 }
 </style>
