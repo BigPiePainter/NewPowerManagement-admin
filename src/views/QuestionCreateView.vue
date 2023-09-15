@@ -241,6 +241,17 @@ const dataTransformMBo = () => {
     console.log(JSONanswer)
 }
 
+const dataTransformCorrect = () => {
+    var args = {
+        answers: null,
+        correct: newAnswer.value == '正确' ? true : false
+    }
+    JSONoption.value = JSON.stringify(questionData.value)
+    JSONanswer.value = JSON.stringify(args)
+    console.log(JSONoption)
+    console.log(JSONanswer)
+}
+
 watch(() => newAnswer, (val: any) => {
     console.log('newAnswer', val)
     if (newQuestionData.type == '1') {
@@ -251,10 +262,13 @@ watch(() => newAnswer, (val: any) => {
         dataTransformMu()
         console.log(JSONoption)
         console.log(JSONanswer)
-    } else if (newQuestionData.type == '4'
-        || newQuestionData.type == '5'
+    } else if (newQuestionData.type == '5'
         || newQuestionData.type == '6') {
         dataTransformMBo()
+        console.log(JSONoption)
+        console.log(JSONanswer)
+    } else if (newQuestionData.type == '4') {
+        dataTransformCorrect()
         console.log(JSONoption)
         console.log(JSONanswer)
     }
