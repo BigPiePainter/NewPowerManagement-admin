@@ -151,8 +151,9 @@ const loadData = () => {
       res.data.records.forEach((item: any) => {
         tableData.push(item)
       })
+      console.log(tableData)
     })
-    .catch(() => { })
+    .catch()
     .finally(() => {
       loading.value = false
     })
@@ -169,7 +170,6 @@ const handleCurrentChange = (val: number) => {
   paginationInfo.currentPage = val
   loadData()
 }
-
 </script>
 
 <template>
@@ -203,82 +203,83 @@ const handleCurrentChange = (val: number) => {
       </div>
 
       <div style="margin-top: 5px;margin-right: 15px;">
-        <div><el-button :disabled="!author.questionPackageEdit" type="primary" @click="giveCourse()">下发好题包</el-button>
+        <div>
+          <el-button :disabled="!author.questionPackageEdit" type="primary" @click="questionCreate(route.query.id)">
+            添加好题
+          </el-button>
+          <el-button :disabled="!author.questionPackageEdit" type="primary" @click="giveCourse()">下发好题包</el-button>
         </div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
-    <div>
+    <!-- <div>
       <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-button :disabled="!author.questionPackageEdit" type="primary"
-            @click="questionCreate(route.query.id)">添加好题</el-button></div>
+        <div class="botPart1-1-1">
+          <el-button :disabled="!author.questionPackageEdit" type="primary" @click="questionCreate(route.query.id)">
+            添加好题
+          </el-button>
+        </div>
       </div>
     </div>
-    <el-divider class="row-divider"></el-divider>
+    <el-divider class="row-divider"></el-divider> -->
 
-    <div>
-      <el-scrollbar class="bottom-height">
+    <el-scrollbar class="bottom-height">
 
-        <el-card v-for="item in tableData" :key="item.id" style="margin-bottom: 10px;">
-          <div style="display: flex;">
-            <span style="margin-left: 5px;">
-              {{ item.difficultyType == 1 ? "容易"
-                : item.difficultyType == 2 ? "较易"
-                  : item.difficultyType == 3 ? "一般"
-                    : item.difficultyType == 4 ? "较难"
-                      : "困难" }}
-            </span>
-            <el-divider direction="vertical" />
-            <span style="margin-left: 5px;">
-              {{ item.type == 1 ? "单选题"
-                : item.type == 2 ? "多选题"
-                  : item.type == 3 ? "不定项选择题"
-                    : item.type == 4 ? "判断题"
-                      : item.type == 5 ? "填空题"
-                        : "解答题" }}
-            </span>
-            <div style="flex-grow: 1"></div>
-            <el-button :disabled="!author.questionPackageEdit" @click="deleteQuestion(item.id)"
-              type=primary>移除</el-button>
+      <el-card v-for="item in tableData" :key="item.id" style="margin-bottom: 10px;">
+        <div style="display: flex;">
+          <span style="margin-left: 5px;">
+            {{ item.difficultyType == 1 ? "容易"
+              : item.difficultyType == 2 ? "较易"
+                : item.difficultyType == 3 ? "一般"
+                  : item.difficultyType == 4 ? "较难"
+                    : "困难" }}
+          </span>
+          <el-divider direction="vertical" />
+          <span style="margin-left: 5px;">
+            {{ item.type == 1 ? "单选题"
+              : item.type == 2 ? "多选题"
+                : item.type == 3 ? "不定项选择题"
+                  : item.type == 4 ? "判断题"
+                    : item.type == 5 ? "填空题"
+                      : "解答题" }}
+          </span>
+          <div style="flex-grow: 1"></div>
+          <el-button :disabled="!author.questionPackageEdit" @click="deleteQuestion(item.id)" type=primary>移除</el-button>
+        </div>
+
+        <RichTextEditor :questionPrompt="item.questionPrompt" :isShow="false" :id="item.id">
+        </RichTextEditor>
+
+        <div v-if="item.type == 1 || item.type == 2 || item.type == 3" style="display:flex; flex-direction:row">
+          <div style="margin-left:10px;margin-top: 10px;" v-for="items in JSON.parse(item.options)" :key="items.options">
+            {{ items.identifier }}: {{ items.value }}</div>
+        </div>
+
+        <div style="display:flex; flex-direction:row; margin-bottom: 10px;margin-top: 10px;">
+          <div style="margin-left:10px">
+            答案：{{ JSON.parse(item.answer).answers ? JSON.parse(item.answer).answers
+              : JSON.parse(item.answer).correct == true ? '正确' : '错误' }}
           </div>
-
-
-          <RichTextEditor :questionPrompt="item.questionPrompt" :isShow="false" :id="item.id">
-          </RichTextEditor>
-
-          <div style="display:flex; flex-direction:row">
-            <div style="margin-left:10px;margin-top: 10px;" v-for="items in JSON.parse(item.options)"
-              :key="items.options">
-              {{ items.identifier }}: {{ items.value }}</div>
-          </div>
-
-          <div style="display:flex; flex-direction:row; margin-bottom: 10px;margin-top: 10px;">
-            <div style="margin-left:10px">
-              答案：{{ JSON.parse(item.answer).answers }}</div>
-          </div>
-        </el-card>
-        <el-pagination style="margin-left: 15px;margin-top: 10px;margin-bottom: 10px;"
-          v-model:current-page="paginationInfo.currentPage" v-model:page-size="paginationInfo.pageSize"
-          :page-sizes="[10, 20, 30, 100]" layout="total, sizes, prev, pager, next, jumper" :total=totalNum
-          @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-      </el-scrollbar>
-    </div>
+        </div>
+      </el-card>
+      <el-pagination style="margin-left: 15px;margin-top: 10px;margin-bottom: 10px;"
+        v-model:current-page="paginationInfo.currentPage" v-model:page-size="paginationInfo.pageSize"
+        :page-sizes="[10, 20, 30, 100]" layout="total, sizes, prev, pager, next, jumper" :total=totalNum
+        @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+    </el-scrollbar>
   </div>
 
 
   <el-dialog v-model="createQuestionDailogShow" width="400px">
     <template #header>
       <el-text>添加好题</el-text>
-
     </template>
 
     <template #footer>
       <ElButton @click="createQuestionDailogShow = false">取消</ElButton>
-
       <ElButton type="primary">确认</ElButton>
     </template>
   </el-dialog>
-
 
   <el-dialog class="teacher-group-dialog" width="400px" v-model="freeCourseDialogShow">
     <div>
@@ -308,8 +309,9 @@ $scale: 0.88;
 $gap: 15px;
 
 .bottom-height {
-    height: calc($page-height - 260px);
+  height: calc($page-height - 200px);
 }
+
 .page-container {
 
   margin-left: $gap;
@@ -370,7 +372,7 @@ $gap: 15px;
 
 .row-divider {
   width: 100%;
-  border-bottom: 7px #f0f2f5 solid;
+  border-bottom: 3px #f0f2f5 solid;
   box-sizing: border-box;
   margin: 0;
 }
@@ -456,4 +458,5 @@ $gap: 15px;
   align-self: center;
   border-left: 3px #f0f2f5 solid;
   box-sizing: border-box;
-}</style>
+}
+</style>

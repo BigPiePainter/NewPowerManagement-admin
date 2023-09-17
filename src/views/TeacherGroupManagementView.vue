@@ -51,8 +51,9 @@ const tableColumns = reactive<any[]>([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 150
-  }, {
+    width: 200
+  },
+  {
     dataKey: 'name',
     key: 'name',
     title: '教研组名称',
@@ -63,22 +64,27 @@ const tableColumns = reactive<any[]>([
         </div>
       )
     },
-    width: 150
-  }, {
+    width: 100
+  },
+  {
     dataKey: 'teacherName',
     key: 'teacherName',
     title: '教研组长',
-    width: 150
-  }, {
-    dataKey: 'memberNum',
-    key: 'memberNum',
+    width: 100,
+    align: 'center'
+  },
+  {
+    dataKey: 'teacherNumber',
+    key: 'teacherNumber',
     title: '成员人数',
-    width: 150
-  }, {
+    width: 100,
+    align: 'center'
+  },
+  {
     dataKey: 'createdAt',
     key: 'createdAt',
     title: '创建时间',
-    width: 150
+    width: 200
   },
   {
     key: 'option',
@@ -298,7 +304,8 @@ const cancelNewTeacherGroup = () => {
         <SearchBar :items="searchBarItems" @change="loadData()" />
       </div>
       <div class="table-div">
-        <el-button :disabled="!author.teacherGroupEdit" class="new-teacher-group-button" type="primary" @click="creatNewTeacherGroup()">新建教研组</el-button>
+        <el-button :disabled="!author.teacherGroupEdit" class="new-teacher-group-button" type="primary"
+          @click="creatNewTeacherGroup()">新建教研组</el-button>
       </div>
     </TablePage>
   </div>

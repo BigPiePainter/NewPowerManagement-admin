@@ -690,7 +690,7 @@ const editGoodsHot = (props: any) => {
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
     <div>
-      <el-button @click="router.push({ path: 'new-product' })" class="new-poster-button" type="primary">新建商品</el-button>
+      <el-button :disabled='!author.shopEdit' @click="router.push({ path: 'new-product' })" class="new-poster-button" type="primary">新建商品</el-button>
     </div>
   </TablePage>
 

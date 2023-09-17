@@ -51,31 +51,31 @@ const dialogTableColumns = reactive<any>([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 180
   },
   {
     dataKey: 'name',
     key: 'name',
     title: '教师姓名',
-    width: 200
+    width: 100
   },
   {
     dataKey: 'account',
     key: 'account',
     title: '账号',
-    width: 200
+    width: 150
   },
   {
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '课程类目',
-    width: 200
+    width: 100
   },
   {
     dataKey: 'phoneNumber',
     key: 'phoneNumber',
     title: '电话',
-    width: 200
+    width: 150
   },
 ])
 
@@ -86,25 +86,25 @@ const tableColumns = reactive<any>([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 150
+    width: 180
   },
   {
     dataKey: 'teacherName',
     key: 'teacherName',
     title: '教师姓名',
-    width: 200
+    width: 150
   },
   {
-    dataKey: 'account',
-    key: 'account',
+    dataKey: 'teacherAccount',
+    key: 'teacherAccount',
     title: '账号',
-    width: 200
+    width: 150
   },
   {
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '课程类目',
-    width: 200
+    width: 100
   },
   {
     dataKey: 'createdAt',

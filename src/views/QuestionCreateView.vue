@@ -133,10 +133,10 @@ const newAnswer = ref<any>([])
 const count = ref<number>(0)
 const giveData = () => {
     var newSMultipleChoice = reactive<any>([
-        { identifier: "A", value: newSMultipleChoiceQuestion.A },
-        { identifier: "B", value: newSMultipleChoiceQuestion.B },
-        { identifier: "C", value: newSMultipleChoiceQuestion.C },
-        { identifier: "D", value: newSMultipleChoiceQuestion.D }
+        { identifier: "A", value: "A", description: newSMultipleChoiceQuestion.A },
+        { identifier: "B", value: "B", description: newSMultipleChoiceQuestion.B },
+        { identifier: "C", value: "C", description: newSMultipleChoiceQuestion.C },
+        { identifier: "D", value: "D", description: newSMultipleChoiceQuestion.D }
     ])
     questionData.value = newSMultipleChoice
     console.log(questionData.value)
@@ -166,34 +166,35 @@ const confirmCreate = () => {
         options: JSONoption.value,
         answer: JSONanswer.value
     }
-    createGoodQuestion(args).then((res: any) => {
-        console.log(args)
-        if (res.code == 20000) {
-            ElNotification({
-                title: '成功',
-                message: '题目新建成功',
-                type: 'success'
-            })
-            // newQuestionData.difficultyType = ''
-            // newQuestionData.gradeId = ''
-            // newQuestionData.type = ''
-            // newQuestionData.id = ''
-            // newQuestionData.subjectId = ''
-            // newQuestionData.questionPrompt = ''
-            // newQuestionData.option = ''
-            // newQuestionData.answer = ''
-            // newAnswer.value = []
-            location.reload()
-            centerDialogVisible.value = false
-        } else {
-            ElNotification({
-                title: '新建失败',
-                message: res.msg,
-                type: 'error'
-            })
-            centerDialogVisible.value = false
-        }
-    }).catch()
+    createGoodQuestion(args)
+        .then((res: any) => {
+            console.log(args)
+            if (res.code == 20000) {
+                ElNotification({
+                    title: '成功',
+                    message: '题目新建成功',
+                    type: 'success'
+                })
+                // newQuestionData.difficultyType = ''
+                // newQuestionData.gradeId = ''
+                // newQuestionData.type = ''
+                // newQuestionData.id = ''
+                // newQuestionData.subjectId = ''
+                // newQuestionData.questionPrompt = ''
+                // newQuestionData.option = ''
+                // newQuestionData.answer = ''
+                // newAnswer.value = []
+                location.reload()
+                centerDialogVisible.value = false
+            } else {
+                ElNotification({
+                    title: '新建失败',
+                    message: res.msg,
+                    type: 'error'
+                })
+                centerDialogVisible.value = false
+            }
+        }).catch()
 }
 
 const centerDialogVisible = ref(false)

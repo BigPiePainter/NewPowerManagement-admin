@@ -120,6 +120,7 @@ const confrimCreateNewSubGrade = () => {
 
 //------------------删除学习阶段----------------------
 const deleteGrade = (id: any) => {
+  // if (author.categoryEdit == true) {
   deleteGrades({ id: id })
     .then((res: any) => {
       if (res.code == 20000) {
@@ -145,6 +146,12 @@ const deleteGrade = (id: any) => {
     .finally(() => {
       loadData()
     })
+  // } else {
+  //   ElNotification({
+  //     title: '没有权限',
+  //     type: 'error'
+  //   })
+  // }
 }
 
 //----------------------创建科目-----------------------
@@ -221,21 +228,24 @@ const deleteSubjects = (id: any) => {
       <div class="card-title-bar">
         <el-text class="card-title-text">学习阶段</el-text>
         <div style="flex-grow: 1;"></div>
-        <el-button :disabled="!author.categoryEdit" type="primary" link @Click="createNewUpperGrade">新增阶段</el-button>
+        <el-button v-if="author.categoryEdit" type="primary" link @Click="createNewUpperGrade">新增阶段</el-button>
       </div>
 
       <div v-for="(value, key) in allGrades" :key="key" class="subtitle">
 
         <div style="margin-left: 10px;">
           <el-text>{{ value.name }}</el-text>
-          <el-button :disabled="!author.categoryEdit" type="primary" link style="margin-left: 10px;" @Click="deleteGrade(value.id)">删除阶段</el-button>
+          <el-button v-if="author.categoryEdit" type="primary" link style="margin-left: 10px;"
+            @Click="deleteGrade(value.id)">删除阶段</el-button>
         </div>
 
         <div style="margin-left: 15px; margin-top: 10px;">
-          <el-tag style="margin-right: 15px;" v-for="(innervalue, innerKey) in value.subset" :key="innerKey" closable
-            @close="deleteGrade(innervalue.id)">{{
-              innervalue.name }}</el-tag>
-          <el-button :disabled="!author.categoryEdit" type="primary" link @click="createNewSubGrade(value.id)">新增</el-button>
+          <el-tag style="margin-right: 15px;" v-for="(innervalue, innerKey) in value.subset" :key="innerKey"
+            :closable="author.categoryEdit" @close="deleteGrade(innervalue.id)">{{
+              innervalue.name }}
+          </el-tag>
+          <el-button v-if="author.categoryEdit" type="primary" link
+            @click="createNewSubGrade(value.id)">新增</el-button>
         </div>
 
       </div>
@@ -249,10 +259,11 @@ const deleteSubjects = (id: any) => {
 
       <div class="card-body">
         <div class="div-major-items" style="margin-left: 10px;">
-          <el-tag style="margin-bottom: 10px;" class="major-item" v-for="item in allSubjects" :key="item.id" closable
-            @close="deleteSubjects(item.id)">{{
-              item.name }}</el-tag>
-          <el-button :disabled="!author.categoryEdit" type="primary" link @click="createNewSubject">新增</el-button>
+          <el-tag style="margin-bottom: 10px;" class="major-item" v-for="item in allSubjects" :key="item.id"
+            :closable="author.categoryEdit" @close="deleteSubjects(item.id)">{{
+              item.name }}
+          </el-tag>
+          <el-button v-if="author.categoryEdit" type="primary" link @click="createNewSubject">新增</el-button>
         </div>
       </div>
     </div>

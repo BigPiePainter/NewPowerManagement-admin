@@ -20,14 +20,14 @@ const totalNum = ref('')
 const centerDialogVisible = ref(false)
 const aim = ref<any>([])
 
-const PredeleteQuestion=(id:any)=>{
-    centerDialogVisible.value=true
-    aim.value=id
+const PredeleteQuestion = (id: any) => {
+    centerDialogVisible.value = true
+    aim.value = id
     console.log(aim)
 }
 
 const deleteQuestion = () => {
-    deleteGoodQuestion({id:aim.value})
+    deleteGoodQuestion({ id: aim.value })
         .then((res: any) => {
             console.log(aim.value)
             if (res.code != 20000) {
@@ -51,7 +51,7 @@ const deleteQuestion = () => {
                 type: 'error'
             })
         })
-    }
+}
 
 const loadSubjectsOption = () => {
     getSubjects()
@@ -147,19 +147,15 @@ const radio1 = ref('')
 const radio2 = ref('')
 
 const diffcultySearch = (val: any) => {
-
     searchQuestionData.difficultyType = val
-
     console.log(val)
     loadData()
 }
 
 const typeSearch = (val: any) => {
-
     searchQuestionData.type = val
-
-console.log(val)
-loadData()
+    console.log(val)
+    loadData()
 }
 
 </script>
@@ -199,31 +195,31 @@ loadData()
 
         <div class="margin">
             <el-text>难度:</el-text>
-                <el-radio-group v-model="radio1" @change="diffcultySearch" style="margin-left: 15px;">
-                    <el-radio label="">全部</el-radio>
-                    <el-radio label="1">容易</el-radio>
-                    <el-radio label="2">较易</el-radio>
-                    <el-radio label="3">一般</el-radio>
-                    <el-radio label="4">较难</el-radio>
-                    <el-radio label="5">困难</el-radio>
-                </el-radio-group>
+            <el-radio-group v-model="radio1" @change="diffcultySearch" style="margin-left: 15px;">
+                <el-radio label="">全部</el-radio>
+                <el-radio label="1">容易</el-radio>
+                <el-radio label="2">较易</el-radio>
+                <el-radio label="3">一般</el-radio>
+                <el-radio label="4">较难</el-radio>
+                <el-radio label="5">困难</el-radio>
+            </el-radio-group>
         </div>
 
         <div class="margin">
             <el-text>题型:</el-text>
 
             <el-radio-group v-model="radio2" @change="typeSearch" style="margin-left: 15px;">
-                    <el-radio label="">全部</el-radio>
-                    <el-radio label="1">单选题</el-radio>
-                    <el-radio label="2">多选题</el-radio>
-                    <el-radio label="3">不定项选择题</el-radio>
-                    <el-radio label="4">判断题</el-radio>
-                    <el-radio label="5">填空题</el-radio>
-                    <el-radio label="6">解答题</el-radio>
-                </el-radio-group>
+                <el-radio label="">全部</el-radio>
+                <el-radio label="1">单选题</el-radio>
+                <el-radio label="2">多选题</el-radio>
+                <el-radio label="3">不定项选择题</el-radio>
+                <el-radio label="4">判断题</el-radio>
+                <el-radio label="5">填空题</el-radio>
+                <el-radio label="6">解答题</el-radio>
+            </el-radio-group>
         </div>
-        <el-scrollbar height="1000px">
 
+        <el-scrollbar class="scrollBarHeight">
             <el-card v-for="item in tableData" :key="item.id" style="margin-bottom: 10px;">
                 <div style="display: flex;">
                     <span style="margin-left: 5px;">
@@ -243,21 +239,24 @@ loadData()
                                             : "解答题" }}
                     </span>
                     <div style="flex-grow: 1"></div>
-                    <el-button :disabled="!author.questionsEdit" @click="PredeleteQuestion(item.id)" type=primary>删除</el-button>
+                    <el-button :disabled="!author.questionsEdit" @click="PredeleteQuestion(item.id)"
+                        type=primary>删除</el-button>
                 </div>
 
                 <RichTextEditor :questionPrompt="item.questionPrompt" :isShow="false" :id="item.id">
                 </RichTextEditor>
 
-                <div style="display:flex; flex-direction:row">
+                <div v-if="item.type == 1 || item.type == 2 || item.type == 3" style="display:flex; flex-direction:row">
                     <div style="margin-left:10px;margin-top: 10px;" v-for="items in JSON.parse(item.options)"
                         :key="items.options">
-                        {{ items.identifier }}: {{ items.value }}</div>
+                        {{ items.identifier }}: {{ items.description }}</div>
                 </div>
 
                 <div style="display:flex; flex-direction:row; margin-bottom: 10px;margin-top: 10px;">
                     <div style="margin-left:10px">
-                        答案：{{ JSON.parse(item.answer).answers }}</div>
+                        答案：{{ JSON.parse(item.answer).answers ? JSON.parse(item.answer).answers
+                            : JSON.parse(item.answer).correct == true ? '正确' : '错误' }}
+                    </div>
                 </div>
             </el-card>
             <el-pagination style="margin-left: 15px;margin-top: 10px;margin-bottom: 10px;"
@@ -268,43 +267,51 @@ loadData()
     </div>
 
     <el-dialog v-model="centerDialogVisible" title="Warning" width="30%" center>
-    <span style="display: flex;  justify-content: center;">
-      是否确认删除题目
-    </span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="deleteQuestion(),centerDialogVisible = false">
-          确认
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
+        <span style="display: flex;  justify-content: center;">
+            是否确认删除题目
+        </span>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="centerDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="deleteQuestion(), centerDialogVisible = false">
+                    确认
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+.scrollBarHeight{
+    height: calc($page-height - 208px);
+}
 .margin {
     margin-top: 15px;
     margin-left: 15px;
     margin-right: 15px
 }
+
 .row-divider {
     width: 100%;
     border-bottom: 2px #f0f2f5 solid;
     box-sizing: border-box;
     margin: 0;
 }
+
 .margin-left {
     margin-left: 25px
 }
+
 .subandgrade {
     display: flex;
     flex-direction: row
 }
+
 .select-width {
     width: 90px
 }
+
 .dialog-footer button:first-child {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 </style>

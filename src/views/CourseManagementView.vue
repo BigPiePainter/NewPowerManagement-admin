@@ -77,7 +77,6 @@ const giveCourse = (item: any) => {
 }
 
 const freeCourseCreateConfirm = () => {
-
   freeCourseDialogShow.value = false
   var args = {
     id: freeCourseInfo.id,
@@ -258,7 +257,6 @@ const tableColumns = [
           <el-button disabled={!author.coursePackageEdit} link type="primary" onClick={() => editCourse(item)}>
             编辑
           </el-button>
-
           <el-popconfirm
             hide-after={0}
             width="170"

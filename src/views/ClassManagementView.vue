@@ -55,7 +55,7 @@ const searchBarItems = reactive([
   {
     name: "负责老师", type: InputType.Select,
     single: true,
-    value: "", 
+    value: "",
     options: allTeacher
   },
   {
@@ -125,7 +125,7 @@ const tableColumns = reactive([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 150
+    width: 200
   },
   {
     dataKey: 'name',
@@ -138,31 +138,35 @@ const tableColumns = reactive([
         </div>
       )
     },
-    width: 150
+    width: 100
   },
   {
     dataKey: 'teacherName',
     key: 'teacherName',
     title: '负责老师',
-    width: 150
+    width: 100,
+    align: 'center'
   },
   {
     dataKey: 'gradeName',
     key: 'gradeName',
     title: '学习阶段',
-    width: 150
+    width: 100,
+    align: 'center'
   },
   {
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '课程类目',
-    width: 150
+    width: 100,
+    align: 'center'
   },
   {
     dataKey: 'studentNumber',
     key: 'studentNumber',
-    title: '班级学生数量',
-    width: 150
+    title: '学生数量',
+    width: 100,
+    align: 'center'
   },
   {
     dataKey: 'endDate',
@@ -224,13 +228,13 @@ const editClassData = reactive<{
 
 const editClass = (props: any) => {
   console.log(props);
-  editClassDialogShow.value = true;
   editClassData.name = props.rowData.name;
   editClassData.teacherId = props.rowData.teacherId;
   editClassData.endDate = props.rowData.endDate;
   editClassData.subjectId = props.rowData.subjectId;
   editClassData.gradeId = props.rowData.gradeId;
   editClassData.id = props.rowData.id;
+  editClassDialogShow.value = true;
 }
 
 const deleteClassDialogShow = ref(false);
@@ -238,7 +242,6 @@ const deleteClassData = reactive<{ id: string, name: string }>({ id: '', name: '
 
 const deleteClass = (props: { rowData: { id: string, name: string } }) => {
   console.log(props);
-
   deleteClassDialogShow.value = true;
   deleteClassData.id = props.rowData.id
   deleteClassData.name = props.rowData.name
@@ -246,7 +249,14 @@ const deleteClass = (props: { rowData: { id: string, name: string } }) => {
 
 const confirmEditDialog = () => {
   console.log(editClassData)
-  editClasses({ id: editClassData.id, teacherId: editClassData.teacherId })
+  editClasses({
+    id: editClassData.id,
+    name: editClassData.name,
+    endDate: editClassData.endDate,
+    subjectId: editClassData.subjectId,
+    gradeId: editClassData.gradeId,
+    teacherId: editClassData.teacherId
+  })
     .then((res: any) => {
       if (res.code == 20000) {
         ElNotification({
@@ -350,7 +360,8 @@ loadData()
         <SearchBar :items="searchBarItems" @change="loadData()" />
       </div>
       <div>
-        <el-button :disabled="!author.classEdit" class="new-class-button" type="primary" @click="creatNewClass()">新建班级</el-button>
+        <el-button :disabled="!author.classEdit" class="new-class-button" type="primary"
+          @click="creatNewClass()">新建班级</el-button>
       </div>
     </TablePage>
   </div>
@@ -376,14 +387,16 @@ loadData()
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>起始时间：
         </span>
-        <el-date-picker class="dialog-input" placeholder="yyyy-mm-dd" v-model="newClassData.startDate">
+        <el-date-picker type="date" value-format="YYYY-MM-DD" class="dialog-input" placeholder="请选择"
+          v-model="newClassData.startDate">
         </el-date-picker>
       </div>
       <div class="div-input-element">
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>到期时间：
         </span>
-        <el-date-picker class="dialog-input" placeholder="请输入" v-model="newClassData.endDate">
+        <el-date-picker type="date" value-format="YYYY-MM-DD" class="dialog-input" placeholder="请选择"
+          v-model="newClassData.endDate">
         </el-date-picker>
       </div>
       <div class="div-input-element">
@@ -436,7 +449,8 @@ loadData()
         <span class="dialog-span">
           到期时间：
         </span>
-        <el-date-picker class="dialog-input" placeholder="yyyy-mm-dd" v-model="editClassData.endDate">
+        <el-date-picker type="date" value-format="YYYY-MM-DD" class="dialog-input" placeholder="请选择"
+          v-model="editClassData.endDate">
         </el-date-picker>
       </div>
       <div class="div-input-element">

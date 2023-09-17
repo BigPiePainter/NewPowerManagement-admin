@@ -9,10 +9,25 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getGoodQuestion } from '@/apis/questionStore'
 import { addGoodQuestionToPack } from '@/apis/questionPackageQuestion'
 import RichTextEditor from '@/components/RichTextEditor.vue';
+
 const route = useRoute()
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const totalNum = ref('')
+const radio1 = ref('')
+const radio2 = ref('')
+
+const diffcultySearch = (val: any) => {
+    searchQuestionData.difficultyType = val
+    console.log(val)
+    loadData()
+}
+
+const typeSearch = (val: any) => {
+    searchQuestionData.type = val
+    console.log(val)
+    loadData()
+}
 
 const putQuestion = (questionId: any) => {
     var args = {
@@ -134,6 +149,51 @@ watch(() => searchQuestionData, (val: any) => {
             <div>
                 <el-text style="margin-left: 15px;">科目:</el-text>
                 <el-select @click="loadSubjectsOption" style="margin-left:5px" class="select-width" filterable place
+                    holder="请选择科目" v-model="searchQuestionData.subjectId" @change="loadData">
+                    <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
+                </el-select>
+            </div>
+            <div class="margin-left">
+                <el-text style="margin-left: 10px;">学习阶段:</el-text>
+                <el-select @click="loadGradesOption" style="margin-left:5px" class="select-width" filterable place
+                    holder="请选择学习阶段" v-model="searchQuestionData.gradeId" @change="loadData">
+                    <el-option if v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
+                </el-select>
+            </div>
+        </div>
+
+        <div class="margin">
+        </div>
+
+        <div class="margin">
+            <el-text>难度:</el-text>
+            <el-radio-group v-model="radio1" @change="diffcultySearch" style="margin-left: 15px;">
+                <el-radio label="">全部</el-radio>
+                <el-radio label="1">容易</el-radio>
+                <el-radio label="2">较易</el-radio>
+                <el-radio label="3">一般</el-radio>
+                <el-radio label="4">较难</el-radio>
+                <el-radio label="5">困难</el-radio>
+            </el-radio-group>
+        </div>
+
+        <div class="margin">
+            <el-text>题型:</el-text>
+
+            <el-radio-group v-model="radio2" @change="typeSearch" style="margin-left: 15px;">
+                <el-radio label="">全部</el-radio>
+                <el-radio label="1">单选题</el-radio>
+                <el-radio label="2">多选题</el-radio>
+                <el-radio label="3">不定项选择题</el-radio>
+                <el-radio label="4">判断题</el-radio>
+                <el-radio label="5">填空题</el-radio>
+                <el-radio label="6">解答题</el-radio>
+            </el-radio-group>
+        </div>
+        <!-- <div class="subandgrade">
+            <div>
+                <el-text style="margin-left: 15px;">科目:</el-text>
+                <el-select @click="loadSubjectsOption" style="margin-left:5px" class="select-width" filterable place
                     holder="请选择科目" v-model="searchQuestionData.subjectId">
                     <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
@@ -196,7 +256,7 @@ watch(() => searchQuestionData, (val: any) => {
             <el-button link class="margin-left" type="primary" @click="searchQuestionData.type = '6'">
                 解答题
             </el-button>
-        </div>
+        </div> -->
 
         <el-scrollbar class="bottom-height">
 
@@ -226,15 +286,17 @@ watch(() => searchQuestionData, (val: any) => {
                 <RichTextEditor :questionPrompt="item.questionPrompt" :isShow="false" :id="item.id">
                 </RichTextEditor>
 
-                <div style="display:flex; flex-direction:row">
+                <div v-if="item.type == 1 || item.type == 2 || item.type == 3" style="display:flex; flex-direction:row">
                     <div style="margin-left:10px;margin-top: 10px;" v-for="items in JSON.parse(item.options)"
                         :key="items.options">
-                        {{ items.identifier }}: {{ items.value }}</div>
+                        {{ items.identifier }}: {{ items.description }}</div>
                 </div>
 
                 <div style="display:flex; flex-direction:row; margin-bottom: 10px;margin-top: 10px;">
                     <div style="margin-left:10px">
-                        答案：{{ JSON.parse(item.answer).answers }}</div>
+                        答案：{{ JSON.parse(item.answer).answers ? JSON.parse(item.answer).answers
+                            : JSON.parse(item.answer).correct == true ? '正确' : '错误' }}
+                    </div>
                 </div>
             </el-card>
             <el-pagination style="margin-left: 15px;margin-top: 10px;margin-bottom: 10px;"
@@ -247,7 +309,7 @@ watch(() => searchQuestionData, (val: any) => {
 
 <style lang="scss" scoped>
 .bottom-height {
-    height: calc($page-height - 150px);
+    height: calc($page-height - 165px);
 }
 
 .margin {

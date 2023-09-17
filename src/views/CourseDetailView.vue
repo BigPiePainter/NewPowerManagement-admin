@@ -13,6 +13,7 @@ import { getAllStudents } from '@/apis/student'
 import { freePackageCreate } from '@/apis/freeOrder'
 import { videoToUrl } from '@/apis/videoIdToUrl'
 
+const author = JSON.parse(localStorage.author)
 const route = useRoute()
 const warningDialogshow = ref(false)
 const deleteItemid = ref<any>()
@@ -267,12 +268,12 @@ const tableColumns = reactive<any>([
     cellRenderer: (cellData: any) => {
       const slots = {
         append: () =>
-          <el-button disabled={cellData.rowData.miniLessonIsTrial == 2 ? true : false} onClick={() => changeTrialDuration(cellData)}>设置</el-button>
+          <el-button disabled={cellData.rowData.miniLessonIsTrial == 2 && author.coursePackageEdit == true ? true : false} onClick={() => changeTrialDuration(cellData)}>设置</el-button>
       }
       return (
         <div>
           <el-input
-            disabled={cellData.rowData.miniLessonIsTrial == 2 ? true : false}
+            disabled={cellData.rowData.miniLessonIsTrial == 2 && author.coursePackageEdit == true ? true : false}
             style='width:120px' v-model={cellData.rowData.miniLessonTrialDuration}
             type='number'
             step={1}
@@ -304,7 +305,7 @@ const tableColumns = reactive<any>([
     cellRenderer: (cellData: any) => {
       return (
         <div>
-          <el-button link type="danger" onClick={() => warningDialog(cellData.rowData.id)}>
+          <el-button disabled={!author.coursePackageEdit} link type="danger" onClick={() => warningDialog(cellData.rowData.id)}>
             移除微课
           </el-button>
         </div>
@@ -487,15 +488,18 @@ const clickAdd = () => {
       </div>
 
       <div style="margin-top: 5px;margin-right: 15px;">
-        <div><el-button type="primary" @click="giveCourse()">下发课程包</el-button></div>
+        <div>
+          <el-button type="primary" @click="clickAdd()" :disabled='!author.coursePackageEdit'>添加微课</el-button>
+          <el-button type="primary" @click="giveCourse()" :disabled='!author.coursePackageEdit'>下发课程包</el-button>
+        </div>
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
-    <div>
+    <!-- <div>
       <div class="botPart1-1">
         <div class="botPart1-1-1"><el-button type="primary" @click="clickAdd()">添加微课</el-button></div>
       </div>
-    </div>
+    </div> -->
     <div class="botPart1-2">
       <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
         :columns="tableColumns" :data="tableData">
@@ -566,10 +570,9 @@ $scale: 0.88;
 $gap: 15px;
 
 .page-container {
-
   margin-left: $gap;
   margin-top: 15px;
-  height: calc($page-height - 270px) //margin-right: $gap;
+  height: calc($page-height - 202px) //margin-right: $gap;
 }
 
 .whole {
@@ -578,7 +581,6 @@ $gap: 15px;
   width: calc($page-width - $gap);
   height: calc($page-height);
 }
-
 
 .topPart {
   display: flex;
@@ -624,7 +626,7 @@ $gap: 15px;
 
 .row-divider {
   width: 100%;
-  border-bottom: 7px #f0f2f5 solid;
+  border-bottom: 1px #f0f2f5 solid;
   box-sizing: border-box;
   margin: 0;
 }

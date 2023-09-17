@@ -519,21 +519,16 @@ const confirmEditDialog = () => {
 <template>
   <TablePage :loading="loading" class="page-container" :columns="tableColumns" :itemsTotalLength="totalLength"
     @paginationChange="pageChange" :data="tableData" style="margin-left: 15px;">
-
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
-
     <div>
       <el-button class="new-button" style="margin-bottom: 15px; margin-left: 15px;" type="primary"
-        @click="clickCreate">新建好题包</el-button>
+        @click="clickCreate" :disabled='!author.questionPackageEdit'>新建好题包</el-button>
     </div>
-
   </TablePage>
 
-
   <el-dialog class="new-class-dialog" width="370px" v-model="editDialogShow">
-
     <div>
       <div class="div-input-element">
         <span class="dialog-span">
