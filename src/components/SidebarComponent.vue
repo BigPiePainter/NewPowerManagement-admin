@@ -361,7 +361,7 @@ onUnmounted(() => {
   <canvas class="sidebar-canvas"></canvas>
   <div class="sidebar">
     <div class="sidebar-header"><el-image :src="url" style="width: 27px; height: 25px"></el-image><el-text
-        style="margin-left: 15px;color: #FFFFFF;font-size: 20px;font-family: -, ;width: 80px;height=25px">满分智慧</el-text>
+        style="margin-left: 15px;color: #FFFFFF;font-size: 20px;font-family: -, ;width: 80px;height=25px">满分智汇</el-text>
     </div>
 
     <el-menu :unique-opened="true" :default-active="route.path" router>
