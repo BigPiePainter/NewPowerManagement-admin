@@ -13,6 +13,7 @@ import { InputType } from '@/type'
 import { ElButton, ElNotification, ElCheckbox } from 'element-plus'
 import type { CheckboxValueType } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { fa } from 'element-plus/es/locale';
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -45,8 +46,37 @@ const pageChange = (val: any) => {
 }
 
 const next = () => {
-  if (active.value >= 0 && active.value < 2) {
-    active.value = active.value + 1
+  if (active.value == 0) {
+    if (
+      newProductData.name == ''
+      || newProductData.gradeId == ''
+      || newProductData.subjectId == ''
+      || newProductData.version == ''
+      || newProductData.type == ''
+      || newProductData.hot == ''
+      || newProductData.versionType == ''
+    ) {
+      ElNotification({
+        title: '商品信息不完整',
+        type: 'warning'
+      })
+    } else if (isCoverOk.value == false) {
+      ElNotification({
+        title: '商品未设置封面',
+        type: 'warning'
+      })
+    } else {
+      active.value = 1
+    }
+  } else if (active.value == 1) {
+    if (newContentData.value.length == 0) {
+      ElNotification({
+        title: '未选择商品内容',
+        type: 'warning'
+      })
+    } else {
+      active.value = 2
+    }
   }
   if (active.value == 1)
     loadData()
@@ -289,7 +319,7 @@ const allHot: any = [
 ]
 
 const newCoverUrl = ref('')
-const showImgSrc = ref<string>('')
+// const showImgSrc = ref<string>('')
 const active = ref(0)
 
 const bgc = ref('#e2e5ec')
@@ -299,8 +329,10 @@ const mouseEnter = () => {
 const mouseLeave = () => {
   bgc.value = '#e2e5ec'
 }
+const isCoverOk = ref<boolean>(false)
 const imageFile = reactive<{ file: Blob | null }>({ file: null })
 const handleFileChange = (e: Event) => {
+  isCoverOk.value = false
   const currentTarget = e.target as HTMLInputElement;
   //图片上传到服务器返回url
   //url在res.data.url
@@ -314,6 +346,8 @@ const handleFileChange = (e: Event) => {
       upload(formData)
         .then((res: any) => {
           if (res.code != 20000) {
+            isCoverOk.value = false
+            newCoverUrl.value = ''
             console.log(res)
             console.log("失败")
             ElNotification({
@@ -324,9 +358,12 @@ const handleFileChange = (e: Event) => {
           } else {
             console.log(res.data.url)
             newCoverUrl.value = res.data.url
+            isCoverOk.value = true
           }
         })
         .catch(res => {
+          isCoverOk.value = false
+          newCoverUrl.value = ''
           ElNotification({
             title: '封面上传失败',
             message: res.msg,
@@ -334,14 +371,16 @@ const handleFileChange = (e: Event) => {
           })
         })
       console.log(imageFile.file)
-      var reader = new FileReader();
-      reader.readAsDataURL(imageFile.file);
-      reader.onload = () => {
-        showImgSrc.value = reader.result as string;
-      }
+      // var reader = new FileReader();
+      // reader.readAsDataURL(imageFile.file);
+      // reader.onload = () => {
+      //   showImgSrc.value = reader.result as string;
+      // }
     } else {
+      isCoverOk.value = false
       console.log("too big")
       imageFile.file = null
+      newCoverUrl.value = ''
       ElNotification({
         title: '图片不能大于1MB',
         type: 'error'
@@ -411,7 +450,7 @@ const create = () => {
             router.push({ path: 'shop-management' })
           } else {
             ElNotification({
-              title: '未知错误',
+              title: '新建失败',
               message: '加入课程包时 ' + res.msg,
               type: 'error',
             })
@@ -464,7 +503,7 @@ watch(() => tableData, (val: any) => {
         <div class="image-row-button">
           <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
             @dragleave="mouseLeave">
-            <img class="show-img" id="show_img" :src="showImgSrc" />
+            <img class="show-img" id="show_img" :src="newCoverUrl" />
             <div class="upload-file-area-text">
               <el-text>点击此处或拖拽上传封面</el-text>
               <el-text>图片不大于1MB</el-text>
@@ -517,11 +556,12 @@ watch(() => tableData, (val: any) => {
       </div>
 
       <div class="next-button-row">
-        <el-button class="next-button-row-button"
-        :disabled="newProductData.name == '' || newProductData.gradeId == '' || newProductData.subjectId == '' || newProductData.version == '' || newProductData.type == '' || newProductData.hot == '' || newProductData.versionType == ''"
-         type="text" @click="next">下一步<el-icon class="el-icon--right">
+        <el-button class="next-button-row-button" type="text" @click="next">
+          下一步
+          <el-icon class="el-icon--right">
             <ArrowRight />
-          </el-icon></el-button>
+          </el-icon>
+        </el-button>
       </div>
     </div>
 
@@ -529,23 +569,29 @@ watch(() => tableData, (val: any) => {
       :data="tableData" @paginationChange="pageChange" v-else-if="active == 1">
       <SearchBar class="search-bar" :items="searchBarItems" @change="loadData"></SearchBar>
       <div style="white-space:nowrap;margin-left: 5px;margin-top: 15px;margin-bottom: 15px;">
-        <!-- <el-button type="primary"
-          style="max-width: 150px;margin-left: 5px;margin-top: 15px;margin-bottom: 15px;">将课程包加入商品</el-button> -->
-        <el-button class="next-button-row-button" type="text" @click="up"><el-icon class="el-icon--left">
+        <el-button class="next-button-row-button" type="text" @click="up">
+          <el-icon class="el-icon--left">
             <ArrowLeft />
-          </el-icon>上一步</el-button>
-        <el-button :disabled="newContentData.length == 0" class="next-button-row-button" type="text"
-          @click="next">下一步<el-icon class="el-icon--right">
+          </el-icon>
+          上一步
+        </el-button>
+        <el-button class="next-button-row-button" type="text" @click="next">
+          下一步
+          <el-icon class="el-icon--right">
             <ArrowRight />
-          </el-icon></el-button>
+          </el-icon>
+        </el-button>
       </div>
     </TablePage>
 
     <div class="step-2" v-else-if="active == 2">
       <div style="margin-left: 15px;" class="next-button-row">
-        <el-button class="next-button-row-button" type="text" @click="up"><el-icon class="el-icon--left">
+        <el-button class="next-button-row-button" type="text" @click="up">
+          <el-icon class="el-icon--left">
             <ArrowLeft />
-          </el-icon>上一步</el-button>
+          </el-icon>
+          上一步
+        </el-button>
       </div>
       <div class="part2" style="margin-top: 20px; margin-left: 160px;">
 
@@ -577,10 +623,6 @@ watch(() => tableData, (val: any) => {
         </el-select>
         <el-button style="margin-left: 20px;" type="primary" @click="create()">确认新建商品</el-button>
       </div>
-
-      <!-- <div style="margin-top: 200px;margin-right: 40px;">
-        <el-button type="primary" @click="up()">上一页</el-button>
-      </div> -->
     </div>
 
   </div>
