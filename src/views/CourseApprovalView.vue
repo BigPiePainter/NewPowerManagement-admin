@@ -222,22 +222,54 @@ const tableColumnsPending = [
   {
     key: 'option',
     title: '操作',
-    cellRenderer: (cellData: any) => (
-      <>
-        <el-button disabled={!author.miniLessonEdit} link type="primary" class="" onClick={() => pass(cellData)}>
-          通过
-        </el-button>
-        <el-button disabled={!author.miniLessonEdit} link type="primary" class="" onClick={() => reject(cellData)}>
-          拒绝
-        </el-button>
-        <el-button disabled={!author.miniLessonEdit} link type="primary" class="" onClick={() => edit(cellData)}>
-          编辑
-        </el-button>
-        <el-button disabled={!author.miniLessonEdit} link type="danger" class="" onClick={() => warningDialog(cellData)}>
-          删除
-        </el-button>
-      </>
-    ),
+    cellRenderer: (cellData: any) => {
+      if (auditStatus.value == 1) {
+        return (
+          <>
+            <el-button disabled={!author.miniLessonEdit} link type="primary" onClick={() => pass(cellData)}>
+              通过
+            </el-button>
+            <el-button disabled={!author.miniLessonEdit} link type="primary" onClick={() => reject(cellData)}>
+              拒绝
+            </el-button>
+            <el-button disabled={!author.miniLessonEdit} link type="primary" onClick={() => edit(cellData)}>
+              编辑
+            </el-button>
+            <el-button disabled={!author.miniLessonEdit} link type="danger" onClick={() => warningDialog(cellData)}>
+              删除
+            </el-button>
+          </>
+        )
+      } else if (auditStatus.value == 3) {
+        return (
+          <>
+            <el-button disabled={!author.miniLessonEdit} link type="primary" onClick={() => reject(cellData)}>
+              拒绝
+            </el-button>
+            <el-button disabled={!author.miniLessonEdit} link type="primary" onClick={() => edit(cellData)}>
+              编辑
+            </el-button>
+            <el-button disabled={!author.miniLessonEdit} link type="danger" onClick={() => warningDialog(cellData)}>
+              删除
+            </el-button>
+          </>
+        )
+      } else if (auditStatus.value == 4) {
+        return (
+          <>
+            <el-button disabled={!author.miniLessonEdit} link type="primary" onClick={() => pass(cellData)}>
+              通过
+            </el-button>
+            <el-button disabled={!author.miniLessonEdit} link type="primary" onClick={() => edit(cellData)}>
+              编辑
+            </el-button>
+            <el-button disabled={!author.miniLessonEdit} link type="danger" onClick={() => warningDialog(cellData)}>
+              删除
+            </el-button>
+          </>
+        )
+      }
+    },
     width: 200,
     fixed: 'right',
   }
