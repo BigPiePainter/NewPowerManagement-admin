@@ -83,7 +83,7 @@ const allDifficultyType = [
     }
 ]
 
-const newGoodQuestion = reactive<any>([])
+const newGoodQuestion = reactive<any>({})
 const showImgSrc = ref<string>('')
 const imageFile = reactive<{ file: Blob | null }>({ file: null })
 
@@ -115,6 +115,7 @@ const createnewGoodQuestion = () => {
         description: newGoodQuestion.description,
         difficultyLevel: newGoodQuestion.difficultyLevel,
         gradeId: newGoodQuestion.gradeId,
+        subjectId: newGoodQuestion.subjectId,
         type: 2
     }
 

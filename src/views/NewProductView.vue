@@ -22,7 +22,7 @@ breadcrumbStore.data = [
 ]
 
 const searchBarItems = reactive([
-  { name: "课程名称:", value: "", },
+  { name: "名称:", value: "", },
   {
     name: '难度:',
     value: '',
@@ -79,7 +79,7 @@ const next = () => {
     }
   }
   if (active.value == 1)
-    loadData()
+    loadData(), console.log('111', tableData)
 }
 
 const up = () => {
@@ -87,7 +87,7 @@ const up = () => {
     active.value = active.value - 1
   }
   if (active.value == 1)
-    loadData()
+    loadData(), console.log('222')
 }
 
 const loading = ref(false)
