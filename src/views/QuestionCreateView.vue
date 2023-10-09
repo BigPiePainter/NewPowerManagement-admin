@@ -5,10 +5,15 @@ import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import RichTextEditor from '@/components/RichTextEditor.vue'
+import UploadVideo from '@/components/UploadVideo.vue'
 import { createGoodQuestion } from '@/apis/questionStore'
+import { ElLoading } from 'element-plus'
 
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
+const JSONoption = ref<any>([])
+const JSONanswer = ref<any>([])
+const centerDialogVisible = ref(false)
 
 const loadSelectOption = () => {
     getSubjects()
@@ -35,7 +40,9 @@ const newQuestionData = reactive<{
     subjectId: string,
     questionPrompt: string,
     option: string,
-    answer: string
+    answer: string,
+    solution: string,
+    filePath: string
 }>({
     difficultyType: '',
     gradeId: '',
@@ -44,7 +51,9 @@ const newQuestionData = reactive<{
     subjectId: '',
     questionPrompt: '',
     option: '',
-    answer: ''
+    answer: '',
+    solution: '',
+    filePath: ''
 });
 
 const allQuestionType = [
@@ -122,9 +131,7 @@ const trueFlase = [
 
 const newSMultipleChoiceQuestion = reactive<any>({
     A: '',
-    B: '',
-    C: '',
-    D: ''
+    B: ''
 })
 
 const questionData = ref<any>([])
@@ -132,14 +139,80 @@ const questionData = ref<any>([])
 const newAnswer = ref<any>([])
 const count = ref<number>(0)
 const giveData = () => {
-    var newSMultipleChoice = reactive<any>([
-        { identifier: "A", value: "A", description: newSMultipleChoiceQuestion.A },
-        { identifier: "B", value: "B", description: newSMultipleChoiceQuestion.B },
-        { identifier: "C", value: "C", description: newSMultipleChoiceQuestion.C },
-        { identifier: "D", value: "D", description: newSMultipleChoiceQuestion.D }
-    ])
+    var newSMultipleChoice = reactive<any>([])
+    Object.keys(newSMultipleChoiceQuestion).forEach((key: any) => {
+        newSMultipleChoice.push({
+            identifier: key, value: key, description: newSMultipleChoiceQuestion[key]
+        })
+    })
     questionData.value = newSMultipleChoice
     console.log(questionData.value)
+}
+
+const addOption = () => {
+    if (Object.keys(newSMultipleChoiceQuestion).length == 2) {
+        Object.assign(newSMultipleChoiceQuestion, { C: '' })
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 3) {
+        Object.assign(newSMultipleChoiceQuestion, { D: '' })
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 4) {
+        Object.assign(newSMultipleChoiceQuestion, { E: '' })
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 5) {
+        Object.assign(newSMultipleChoiceQuestion, { F: '' })
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 6) {
+        Object.assign(newSMultipleChoiceQuestion, { G: '' })
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 7) {
+        Object.assign(newSMultipleChoiceQuestion, { H: '' })
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+}
+
+const minOption = () => {
+    if (Object.keys(newSMultipleChoiceQuestion).length == 3) {
+        delete newSMultipleChoiceQuestion.C
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 4) {
+        delete newSMultipleChoiceQuestion.D
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 5) {
+        delete newSMultipleChoiceQuestion.E
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 6) {
+        delete newSMultipleChoiceQuestion.F
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 7) {
+        delete newSMultipleChoiceQuestion.G
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
+    if (Object.keys(newSMultipleChoiceQuestion).length == 8) {
+        delete newSMultipleChoiceQuestion.H
+        console.log(newSMultipleChoiceQuestion)
+        return
+    }
 }
 
 watch(() => newSMultipleChoiceQuestion, (val: any) => {
@@ -164,7 +237,9 @@ const confirmCreate = () => {
         subjectId: newQuestionData.subjectId,
         type: newQuestionData.type,
         options: JSONoption.value,
-        answer: JSONanswer.value
+        answer: JSONanswer.value,
+        solution: newQuestionData.solution,
+        filePath: newQuestionData.filePath
     }
     createGoodQuestion(args)
         .then((res: any) => {
@@ -197,13 +272,9 @@ const confirmCreate = () => {
         }).catch()
 }
 
-const centerDialogVisible = ref(false)
 const create = () => {
     centerDialogVisible.value = true
 }
-
-const JSONoption = ref<any>([])
-const JSONanswer = ref<any>([])
 
 const dataTransform = () => {
     var args = {
@@ -216,8 +287,17 @@ const dataTransform = () => {
     console.log(JSONanswer)
 }
 
-const change = (valueHtml: any) => {
+const changeQuestionPrompt = (valueHtml: any) => {
     newQuestionData.questionPrompt = valueHtml
+}
+
+const changeSolution = (valueHtml: any) => {
+    newQuestionData.solution = valueHtml
+}
+
+const getVideoPath = (path: any) => {
+    console.log('讲解视频', path)
+    newQuestionData.filePath = path
 }
 
 const dataTransformMu = () => {
@@ -317,29 +397,33 @@ watch(() => newAnswer, (val: any) => {
         <el-divider content-position="left">编辑题干</el-divider>
 
         <div style="padding-top: 0px;">
-            <RichTextEditor :questionPrompt="newQuestionData.questionPrompt" :isShow="true" @change="change"
+            <RichTextEditor :questionPrompt="newQuestionData.questionPrompt" :isShow="true" @change="changeQuestionPrompt"
                 v-model="newQuestionData.questionPrompt">
             </RichTextEditor>
         </div>
-        <el-divider content-position="left">编辑答案</el-divider>
+        <el-divider content-position="left" 
+        v-if="newQuestionData.type == '1' 
+        || newQuestionData.type == '2' 
+        || newQuestionData.type == '3' 
+        || newQuestionData.type == '4' 
+        || newQuestionData.type == '5' 
+        || newQuestionData.type == '6'">
+            编辑答案
+        </el-divider>
 
         <div style="width: 300px;" v-if="newQuestionData.type == '1'">
             <el-text>请输入单选题目选项</el-text>
             <diV>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                        style="margin-right: 5px;">A:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.A"></el-input></div>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                        style="margin-right: 5px;">B:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.B"></el-input></div>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                        style="margin-right: 5px;">C:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.C"></el-input></div>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                        style="margin-right: 5px;">D:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.D"></el-input></div>
+                <div v-for="(description, option) in newSMultipleChoiceQuestion" :key="option"
+                    style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span style="margin-right: 5px;">{{ option
+                    }}</span><el-input style="height: 27px;" v-model="newSMultipleChoiceQuestion[option]"></el-input>
+                </div>
+                <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
+                    <el-button @click="addOption">增加选项</el-button>
+                    <el-button @click="minOption">减少选项</el-button>
+                </div>
             </diV>
-            <div v-if="count == 4">
+            <div v-if="count >= 2">
                 <div style="display: flex; margin-top: 10px;">
                     <div style="margin-right: 5px;margin-top: 2px;">答案：</div>
                     <el-select style="height: 27px;width: 246px;" placeholder="正确选项" v-model="newAnswer">
@@ -354,10 +438,11 @@ watch(() => newAnswer, (val: any) => {
         <div style="width: 300px;" v-if="newQuestionData.type == '2'">
             <el-text>请输入多选题目选项</el-text>
             <diV>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                        style="margin-right: 5px;">A:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.A"></el-input></div>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
+                <div v-for="(description, option) in newSMultipleChoiceQuestion" :key="option"
+                    style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span style="margin-right: 5px;">{{ option
+                    }}</span><el-input style="height: 27px;" v-model="newSMultipleChoiceQuestion[option]"></el-input>
+                </div>
+                <!-- <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
                         style="margin-right: 5px;">B:</span><el-input style="height: 27px;"
                         v-model="newSMultipleChoiceQuestion.B"></el-input></div>
                 <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
@@ -365,9 +450,13 @@ watch(() => newAnswer, (val: any) => {
                         v-model="newSMultipleChoiceQuestion.C"></el-input></div>
                 <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
                         style="margin-right: 5px;">D:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.D"></el-input></div>
+                        v-model="newSMultipleChoiceQuestion.D"></el-input></div> -->
+                <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
+                    <el-button @click="addOption">增加选项</el-button>
+                    <el-button @click="minOption">减少选项</el-button>
+                </div>
             </diV>
-            <div v-if="count == 4">
+            <div v-if="count >= 2">
                 <div style="display: flex; margin-top: 10px;">
                     <div style="margin-right: 5px;margin-top: 2px;">答案：</div>
                     <el-select multiple style="height: 27px;width: 246px;" placeholder="正确选项" v-model="newAnswer">
@@ -381,20 +470,16 @@ watch(() => newAnswer, (val: any) => {
         <div style="width: 300px;" v-if="newQuestionData.type == '3'">
             <el-text>请输入不定项选择选项</el-text>
             <diV>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                        style="margin-right: 5px;">A:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.A"></el-input></div>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                        style="margin-right: 5px;">B:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.B"></el-input></div>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                        style="margin-right: 5px;">C:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.C"></el-input></div>
-                <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                        style="margin-right: 5px;">D:</span><el-input style="height: 27px;"
-                        v-model="newSMultipleChoiceQuestion.D"></el-input></div>
+                <div v-for="(description, option) in newSMultipleChoiceQuestion" :key="option"
+                    style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span style="margin-right: 5px;">{{ option
+                    }}</span><el-input style="height: 27px;" v-model="newSMultipleChoiceQuestion[option]"></el-input>
+                </div>
+                <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
+                    <el-button @click="addOption">增加选项</el-button>
+                    <el-button @click="minOption">减少选项</el-button>
+                </div>
             </diV>
-            <div v-if="count == 4">
+            <div v-if="count >= 2">
                 <div style="display: flex; margin-top: 10px;">
                     <div style="margin-right: 5px;margin-top: 2px;">答案：</div>
                     <el-select multiple style="height: 27px;width: 246px;" placeholder="正确选项" v-model="newAnswer">
@@ -425,7 +510,21 @@ watch(() => newAnswer, (val: any) => {
             </el-input>
         </div>
 
-        <el-button type="primary" style="margin:15px" @click="create">
+        <el-divider content-position="left">图文讲解</el-divider>
+
+        <div style="padding-top: 0px;">
+            <RichTextEditor :questionPrompt="newQuestionData.solution" :isShow="true" @change="changeSolution"
+                v-model="newQuestionData.solution">
+            </RichTextEditor>
+        </div>
+
+        <el-divider content-position="left">视频讲解</el-divider>
+
+        <div style="padding-top: 0px;">
+            <UploadVideo @change="getVideoPath"></UploadVideo>
+        </div>
+
+        <el-button type="primary" style="margin:20px" @click="create">
             创建
         </el-button>
     </div>

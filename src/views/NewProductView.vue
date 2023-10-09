@@ -13,7 +13,6 @@ import { InputType } from '@/type'
 import { ElButton, ElNotification, ElCheckbox } from 'element-plus'
 import type { CheckboxValueType } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { fa } from 'element-plus/es/locale';
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -533,11 +532,11 @@ watch(() => tableData, (val: any) => {
           <el-select class="input-input" placeholder="请选择课程类目阶段" v-model="newProductData.subjectId">
             <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
-          <el-select class="input-input" placeholder="请选择版本" v-model="newProductData.version">
-            <el-option v-for="item in allVersion" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
           <el-select class="input-input" placeholder="请选择商品种类" v-model="newProductData.type">
             <el-option v-for="item in allType" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+          <el-select class="input-input" placeholder="请选择版本" v-model="newProductData.version">
+            <el-option v-for="item in allVersion" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </div>
       </div>
