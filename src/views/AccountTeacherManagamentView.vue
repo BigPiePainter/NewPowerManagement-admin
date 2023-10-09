@@ -152,7 +152,7 @@ const tableColumns = [
     dataKey: 'name',
     key: 'name',
     title: '姓名',
-    width: 200,
+    width: 150,
     cellRenderer: (cellData: any) => (
       <ElButton link type="primary" onClick={() => clickName(cellData)} class="detailed">
         {cellData.cellData}
@@ -163,31 +163,34 @@ const tableColumns = [
     dataKey: 'account',
     key: 'account',
     title: '账号',
-    width: 200
+    width: 150
   },
   {
     dataKey: 'gradeName',
     key: 'gradeName',
     title: '学习阶段',
-    width: 100
+    width: 80,
+    align: 'center'
   },
   {
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '课程类目',
-    width: 100
+    width: 80,
+    align: 'center'
   },
   {
     dataKey: 'phoneNumber',
     key: 'phoneNumber',
     title: '手机号码',
-    width: 200
+    width: 120,
+    align: 'center'
   },
   {
-    dataKey: 'lastLoginTime',
-    key: 'lastLoginTime',
-    title: '最后登录时间',
-    width: 300
+    dataKey: 'createdAt',
+    key: 'createdAt',
+    title: '创建时间',
+    width: 200
   },
 
   {

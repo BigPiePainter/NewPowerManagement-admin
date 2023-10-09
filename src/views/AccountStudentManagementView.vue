@@ -123,12 +123,6 @@ const tableColumns = reactive([
     width: 160
   },
   {
-    dataKey: 'lastLoginTime',
-    key: 'lastLoginTime',
-    title: '最后登陆时间',
-    width: 160
-  },
-  {
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
