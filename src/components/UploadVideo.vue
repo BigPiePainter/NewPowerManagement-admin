@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input type="file" placeholder="只允许mp4" accept="video/mp4" @change="handleFileChange" />
+        <input id="uploadVideoInput" type="file" placeholder="只允许mp4" accept="video/mp4" @change="handleFileChange" />
     </div>
 </template>
 

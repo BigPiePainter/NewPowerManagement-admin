@@ -8,6 +8,7 @@ import { videoToUrl } from '@/apis/videoIdToUrl'
 import { useRoute } from 'vue-router'
 import { getMiniLessons } from '@/apis/minilessons'
 import { getClasses } from '@/apis/class'
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '账号管理', path: '' },
@@ -206,9 +207,6 @@ const handleCurrentChange2 = (val: number) => {
             <div style="width: 20px;"></div>
             <el-text>创建时间: {{ route.query.createdAt }}</el-text>
           </div>
-          <!-- <div class="topPart1-3-2">
-            <el-text>创建时间:{{ route.query.createdAt }}</el-text>
-          </div> -->
         </div>
       </div>
 
@@ -232,26 +230,7 @@ const handleCurrentChange2 = (val: number) => {
       </div>
     </div>
     <el-divider class="row-divider"></el-divider>
-    <!-- <div>
-      <div class="botPart1-1">
-        <div class="botPart1-1-1"><el-text>月度统计</el-text></div>
-        <div class="botPart1-1-2"> <el-input v-model="input" placeholder="2023-07" /></div>
-        <div class="botPart1-1-3"><el-text>共23个微课</el-text></div>
-      </div>
-    </div> -->
 
-    <!-- <el-collapse class="collapse">
-      <el-card>
-        <el-collapse-item title="所在教研组" class="sup-node">
-
-        </el-collapse-item>
-      </el-card>
-      <el-card>
-        <el-collapse-item title="所在教研组" class="sup-node">
-
-        </el-collapse-item>
-      </el-card>
-    </el-collapse> -->
     <div class="collapse">
       <div class="sup-node">
         <el-text class="sup-title">所在教研组</el-text>
@@ -326,7 +305,8 @@ $scale: 0.88;
       margin-left: 25px;
       margin-right: 15px;
       margin-top: 10px;
-      .group-name{
+
+      .group-name {
         margin-right: 10px;
         margin-bottom: 10px;
       }
