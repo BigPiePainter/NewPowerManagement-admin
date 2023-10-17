@@ -1,17 +1,17 @@
 import http from '@/libs/http'
 
-export const getEquipments = (data: any) => {
+export const getAllHomeworks = (data: object) => {
   const args = {
-    url: '/api/management/client-device/page-client-devices',
+    url: '/api/management/homework/page-homework',
     method: 'GET',
     params: data
   }
   return http.request(args)
 }
 
-export const cancelEquipments = (data: any) => {
+export const shareHomeworkToParents = (data: any) => {
   const args = {
-    url: '/api/management/client-device/unbind-device',
+    url: '/api/management/homework/share-homework',
     method: 'POST',
     data,
     mode: "json"

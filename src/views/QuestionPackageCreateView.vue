@@ -198,7 +198,7 @@ const createnewGoodQuestion = () => {
         </div>
 
         <div class="div-input-element">
-            <el-text class="dialog-el-text" style="font-size: 24px;">
+            <el-text class="dialog-el-text">
                 详情描述：
             </el-text>
             <RichTextEditor style="max-width: 600px;" :questionPrompt="newGoodQuestion.description" :isShow="true"
@@ -206,14 +206,14 @@ const createnewGoodQuestion = () => {
             </RichTextEditor>
         </div>
 
-        <div class="div-input-element">
+        <!-- <div class="div-input-element">
             <el-text class="dialog-el-text">
                 难度：
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.difficultyType">
                 <el-option v-for="items in allDifficultyType" :key="items.id" :label="items.label" :value="items.id" />
             </el-select>
-        </div>
+        </div> -->
 
         <div class="div-input-element">
             <el-text class="dialog-el-text">
@@ -224,14 +224,14 @@ const createnewGoodQuestion = () => {
             </el-select>
         </div>
 
-        <div class="div-input-element">
+        <!-- <div class="div-input-element">
             <el-text class="dialog-el-text">
                 老师：
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.teacherId">
                 <el-option v-for="item in allTeacher" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
-        </div>
+        </div> -->
 
         <div class="rich-text-area">
             <el-button type="primary" @click="createnewGoodQuestion">创建好题包</el-button>

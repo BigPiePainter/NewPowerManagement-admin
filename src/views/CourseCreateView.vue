@@ -222,14 +222,14 @@ const change = (valueHtml: any) => {
             </div>
         </div>
 
-        <div class="div-input-element">
+        <!-- <div class="div-input-element">
             <el-text class="dialog-el-text">
                 难度：
             </el-text>
             <el-select class="dialog-input" placeholder="请选择" v-model="newGoodQuestion.difficultyLevel">
                 <el-option v-for="items in allDifficultyType" :key="items.id" :label="items.label" :value="items.id" />
             </el-select>
-        </div>
+        </div> -->
 
         <div class="div-input-element">
             <el-text class="dialog-el-text">

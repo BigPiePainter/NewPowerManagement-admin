@@ -46,6 +46,7 @@ import CourseCreateView from '@/views/CourseCreateView.vue'
 import ShopProductDetailView from '@/views/ShopProductDetailView.vue'
 import PutQuestionIntoPackage from '@/views/PutQuestionIntoPackage.vue'
 import AuthorView from '@/views/AuthorView.vue'
+import HomeworkView from '@/views/HomeworkView.vue'
 
 import { userInfo } from '@/apis/manager'
 
@@ -229,7 +230,7 @@ const router = createRouter({
         {
           path: 'question-bank',
           name: 'question-bank',
-          component:QuestionsManagementView,
+          component: QuestionsManagementView,
           meta: { Protected: true }
         },
         {
@@ -332,6 +333,12 @@ const router = createRouter({
           path: 'author',
           name: 'author',
           component: AuthorView,
+          meta: { Protected: true }
+        },
+        {
+          path: 'homework',
+          name: 'homework',
+          component: HomeworkView,
           meta: { Protected: true }
         }
       ]

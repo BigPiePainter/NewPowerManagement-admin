@@ -71,7 +71,6 @@ const normalDialogSearchBarItems = reactive([
     single: true
   },
   { name: "姓名", value: "", },
-
 ])
 
 const dialogTableColumns = reactive<any>([
@@ -259,9 +258,9 @@ const confirmNewStudent = () => {
       })
     } else {
       ElNotification({
-        title: '成功',
-        message: '添加学生失败',
-        type: 'success'
+        title: '添加学生失败',
+        message: res.msg,
+        type: 'error'
       })
     }
 

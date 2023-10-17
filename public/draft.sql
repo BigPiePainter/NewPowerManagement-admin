@@ -72,3 +72,32 @@ CREATE TABLE `products` (
    `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
    PRIMARY KEY (`id`) USING BTREE
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='商品表'
+
+CREATE TABLE `share_parents` (
+   `id` bigint unsigned NOT NULL,
+   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
+   `option_user` bigint unsigned NOT NULL COMMENT '操作人id',
+   `option_type` int unsigned NOT NULL COMMENT '操作人类型 1老师 2管理员',
+   `student_id` bigint unsigned NOT NULL COMMENT '学生id',
+   `parents_phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '家长手机号',
+   `business_type` int unsigned NOT NULL COMMENT '业务类型 1 巩固作业 2 AI课',
+   `business_id` bigint unsigned NOT NULL COMMENT '业务id',
+   `created_at` datetime NOT NULL COMMENT '创建时间',
+   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+   `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+   PRIMARY KEY (`id`) USING BTREE,
+   UNIQUE KEY `pw` (`password`) USING BTREE
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='分享给家长数据'
+
+SELECT orders.*,
+       order_products.product_id AS product_id,
+       products.name AS product_name,
+       products.cover AS product_cover,
+       courses_question_packages.name AS courses_question_packages_name,
+       courses_question_packages.cover AS courses_question_packages_cover,
+       students.name AS student_name
+FROM (SELECT * FROM orders ${ew.customSqlSegment}) orders
+        LEFT JOIN order_products ON orders.id = order_products.order_id
+        LEFT JOIN products ON order_products.product_id = products.id
+        LEFT JOIN courses_question_packages ON order_products.product_id = courses_question_packages.id
+        LEFT JOIN students ON orders.student_id = students.id

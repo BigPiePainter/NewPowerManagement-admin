@@ -421,18 +421,19 @@ const create = () => {
     gradeId: newProductData.gradeId,
     cover: newCoverUrl.value
   }
-  if (newProductData.iosPoint != '') {
-    Object.assign(args, { iosPoint: newProductData.iosPoint })
-  }
-  if (newProductData.tcoin != '') {
-    Object.assign(args, { tcoin: newProductData.tcoin })
-  }
+  // if (newProductData.iosPoint != '') {
+  //   Object.assign(args, { iosPoint: newProductData.iosPoint })
+  // }
+  // if (newProductData.tcoin != '') {
+  //   Object.assign(args, { tcoin: newProductData.tcoin })
+  // }
   if (newProductData.androidPoint != '') {
     Object.assign(args, { androidPoint: newProductData.androidPoint })
+    Object.assign(args, { iosPoint: newProductData.androidPoint })
   }
-  if (newProductData.androidPrice != '') {
-    Object.assign(args, { androidPrice: Number(newProductData.androidPrice * 100) })
-  }
+  // if (newProductData.androidPrice != '') {
+  //   Object.assign(args, { androidPrice: Number(newProductData.androidPrice * 100) })
+  // }
   console.log(args)
   createProduct(args)
     .then((res: any) => {
@@ -597,6 +598,12 @@ watch(() => tableData, (val: any) => {
         <el-text style="margin-left: 15px;">商品价格: </el-text>
 
         <div style="margin-top:3px">
+          <el-text>积分: </el-text>
+          <el-input class="input-length" placeholder="请输入（积分）"
+            v-model="newProductData.androidPoint"></el-input>
+        </div>
+
+        <!-- <div style="margin-top:3px">
           <el-text>安卓: </el-text>
           <el-input :disabled="newProductData.androidPoint != ''" class="input-length" placeholder="请输入(元)"
             v-model="newProductData.androidPrice">元</el-input>
@@ -610,7 +617,7 @@ watch(() => tableData, (val: any) => {
             v-model="newProductData.tcoin">T币</el-input>
           / <el-input :disabled="newProductData.tcoin != ''" class="input-length" placeholder="请输入（积分）"
             v-model="newProductData.iosPoint">积分</el-input>
-        </div>
+        </div> -->
       </div>
 
       <div style="margin-left: 175px; margin-top:50px;">

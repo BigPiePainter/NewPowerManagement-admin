@@ -181,20 +181,20 @@ const tableColumns = [
   //   title: '老师名',
   //   width: 100
   // },
-  {
-    dataKey: 'difficultyLevel',
-    key: 'difficultyLevel',
-    title: '难度',
-    width: 100,
-    cellRenderer: (cellData: any) => (
-      <span>
-        {cellData.cellData == 1 ? '⭐'
-          : cellData.cellData == 2 ? '⭐⭐'
-            : cellData.cellData == 3 ? '⭐⭐⭐'
-              : cellData.cellData == 4 ? '⭐⭐⭐⭐'
-                : '⭐⭐⭐⭐⭐'}
-      </span>)
-  },
+  // {
+  //   dataKey: 'difficultyLevel',
+  //   key: 'difficultyLevel',
+  //   title: '难度',
+  //   width: 100,
+  //   cellRenderer: (cellData: any) => (
+  //     <span>
+  //       {cellData.cellData == 1 ? '⭐'
+  //         : cellData.cellData == 2 ? '⭐⭐'
+  //           : cellData.cellData == 3 ? '⭐⭐⭐'
+  //             : cellData.cellData == 4 ? '⭐⭐⭐⭐'
+  //               : '⭐⭐⭐⭐⭐'}
+  //     </span>)
+  // },
   {
     dataKey: 'labelName',
     key: 'labelName',

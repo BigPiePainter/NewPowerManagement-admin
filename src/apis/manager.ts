@@ -65,17 +65,3 @@ export const deleteManager = (data: any) => {
   }
   return http.request(args)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

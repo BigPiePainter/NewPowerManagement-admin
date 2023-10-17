@@ -150,6 +150,11 @@ const items = reactive([
       || author.bannerShow
       || author.messageShow,
     subs: [
+    {
+        index: '/homework',
+        title: '作业情况分享',
+        show: author.homeworkShow,
+      },
       {
         index: '/category-management',
         title: '分类管理',
