@@ -189,6 +189,11 @@ const items = reactive([
         index: '/info-center',
         title: '消息中心',
         show: author.messageShow,
+      },      
+      {
+        index: '/customer-service',
+        title: '客服二维码',
+        show: author.customerServiceShow,
       },
     ]
   },

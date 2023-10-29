@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { getBanners, createBanner, deleteBanner } from '@/apis/banner'
+import { getCustomerService, createCustomerService, editCustomerService, deleteCustomerService } from '@/apis/customerService'
 import { ref, reactive } from 'vue'
 import { ElButton, ElNotification } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
@@ -8,7 +8,7 @@ import { upload } from '@/apis/upload';
 
 const author = JSON.parse(localStorage.author)
 const breadcrumbStore = useBreadcrumbStore()
-breadcrumbStore.data = [{ name: '设置', path: '' }, { name: 'banner' }]
+breadcrumbStore.data = [{ name: '设置', path: '' }, { name: 'customer-service' }]
 const loading = ref(true)
 const tableColumns = [
   {
@@ -18,47 +18,42 @@ const tableColumns = [
     width: 200
   },
   {
-    dataKey: 'poster',
-    key: 'poster',
-    title: '海报',
+    dataKey: 'concatImageUrl',
+    key: 'concatImageUrl',
+    title: '客服二维码',
     width: 150,
+    outerHeight: 150,
     cellRenderer: (item: any) => (
       <el-image
         fit="scale-down"
-        src={item.rowData.poster}
+        src={item.rowData.concatImageUrl}
         //onClick={()=>console.log(item)}
         className="shop-Preview"
-        preview-src-list={[item.rowData.poster]}
+        preview-src-list={[item.rowData.concatImageUrl]}
         preview-teleported
       />
     )
   },
   {
-    dataKey: 'title',
-    key: 'title',
-    title: '标题',
+    dataKey: 'name',
+    key: 'name',
+    title: '客服名称',
     width: 300
-  },
-  {
-    dataKey: 'url',
-    key: 'url',
-    title: '链接',
-    width: 500
   },
   {
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
       const deleteSlot = {
-        reference: () => <el-button disabled={!author.bannerEdit} link type="danger">删除</el-button>
+        reference: () => <el-button disabled={!author.customerServiceEdit} link type="danger">删除</el-button>
       }
       return (
         <>
-          {/* <el-button disabled={!author.bannerEdit} link type="primary" onClick={() => console.log(item)}>
+          <el-button disabled={!author.customerServiceEdit} link type="primary" onClick={() => customerServiceEdit(item)}>
             编辑
-          </el-button> */}
+          </el-button>
 
-          <el-popconfirm hide-after={0} width='170' title={`删除banner ${item.rowData.title}`} onConfirm={() => bannerDelete(item)} v-slots={deleteSlot} />
+          <el-popconfirm hide-after={0} width='170' title={`删除客服 ${item.rowData.name}`} onConfirm={() => customerServiceDelete(item)} v-slots={deleteSlot} />
         </>
       )
     },
@@ -70,36 +65,32 @@ const tableColumns = [
 ]
 const tableData: object[] = reactive([])
 
-const newBannerContext = reactive({
-  title: '', url: ''
-})
-const newBannerDialogShow = ref(false)
+const customerServiceName = ref('')
+const newCustomerServiceDialogShow = ref(false)
+const editCustomerServiceDialogShow = ref(false)
+const serviceId = ref('')
 const showImgSrc = ref<string>('')
 
-const newBanner = () => {
-  newBannerDialogShow.value = true
-  newBannerContext.title = ''
-  newBannerContext.url = ''
+const newCustomerService = () => {
+  newCustomerServiceDialogShow.value = true
+  customerServiceName.value = ''
   showImgSrc.value = ''
 }
 
-const confirmNewBanner = () => {
-  console.log(newBannerContext)
-
+const confirmNewCustomerService = () => {
   var args = {
-    title: newBannerContext.title,
-    url: newBannerContext.url,
-    poster: showImgSrc.value
+    name: customerServiceName.value,
+    concatImageUrl: showImgSrc.value
   }
-  createBanner(args)
+  createCustomerService(args)
     .then((res: any) => {
       if (res.code == '20000') {
         ElNotification({
           title: '成功',
-          message: 'banner已上传',
+          message: '二维码已上传',
           type: 'success',
         })
-        newBannerDialogShow.value = false
+        newCustomerServiceDialogShow.value = false
         loadData()
       } else {
         ElNotification({
@@ -118,20 +109,65 @@ const confirmNewBanner = () => {
     })
 }
 
-const cancelNewBanner = () => {
-  newBannerDialogShow.value = false
+const cancelNewCustomerService = () => {
+  newCustomerServiceDialogShow.value = false
 }
 
-const bannerDelete = (item: any) => {
+const customerServiceEdit = (item: any) => {
+  console.log(item.rowData)
+  customerServiceName.value = item.rowData.name
+  showImgSrc.value = item.rowData.concatImageUrl
+  serviceId.value = item.rowData.id
+  editCustomerServiceDialogShow.value = true
+}
+
+const confirmEditCustomerService = () => {
   var args = {
-    id: item.rowData.id
+    id: serviceId.value,
+    name: customerServiceName.value,
+    concatImageUrl: showImgSrc.value
   }
-  deleteBanner(args)
+  editCustomerService(args)
     .then((res: any) => {
       if (res.code == '20000') {
         ElNotification({
           title: '成功',
-          message: `banner ${item.rowData.title} 已删除`,
+          message: '修改成功',
+          type: 'success',
+        })
+        editCustomerServiceDialogShow.value = false
+        loadData()
+      } else {
+        ElNotification({
+          title: '上传失败',
+          message: res.msg,
+          type: 'error',
+        })
+      }
+    })
+    .catch((res: any) => {
+      ElNotification({
+        title: '未知错误',
+        message: res.msg,
+        type: 'warning'
+      })
+    })
+}
+
+const cancelEditCustomerService = () => {
+  editCustomerServiceDialogShow.value = false
+}
+
+const customerServiceDelete = (item: any) => {
+  var args = {
+    id: item.rowData.id
+  }
+  deleteCustomerService(args)
+    .then((res: any) => {
+      if (res.code == '20000') {
+        ElNotification({
+          title: '成功',
+          message: `客服 ${item.rowData.name} 已删除`,
           type: 'success',
         })
       } else {
@@ -152,7 +188,6 @@ const mouseEnter = () => {
 const mouseLeave = () => {
   bgc.value = '#e2e5ec'
 }
-
 const handleFileChange = (e: Event) => {
   const currentTarget = e.target as HTMLInputElement;
   //图片上传到服务器返回url
@@ -189,14 +224,14 @@ const handleFileChange = (e: Event) => {
 
 const dataCompute = (data: any) => {
   tableData.length = 0
-  data.data.forEach((item: any) => {
+  data.data.records.forEach((item: any) => {
     tableData.push(item)
   });
 }
 
 const loadData = () => {
   loading.value = true
-  getBanners()
+  getCustomerService()
     .then((res) => {
       dataCompute(res)
     })
@@ -213,18 +248,19 @@ loadData()
   <div>
     <TablePage class="banner-table" :loading="loading" :columns="tableColumns" :data="tableData" :row-height="59">
       <div>
-        <el-button :disabled='!author.bannerEdit' @click="newBanner" class="new-banner-button" type="primary">新增</el-button>
+        <el-button :disabled='!author.customerServiceEdit' @click="newCustomerService" class="new-banner-button"
+          type="primary">新增</el-button>
       </div>
     </TablePage>
 
-    <el-dialog class="new-class-dialog" width="370px" v-model="newBannerDialogShow">
+    <el-dialog class="new-class-dialog" width="370px" v-model="newCustomerServiceDialogShow">
       <div>
 
         <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
           @dragleave="mouseLeave">
           <img class="show-img" id="show_img" :src="showImgSrc" />
           <div class="upload-file-area-text">
-            <el-text>点击此处或拖拽上传海报</el-text>
+            <el-text>点击此处或拖拽上传二维码图片</el-text>
             <el-text>图片不大于1MB</el-text>
             <el-text>只接受 *.png *.jpg *.jpeg</el-text>
           </div>
@@ -236,25 +272,54 @@ loadData()
         <div class="div-input-element">
           <span class="dialog-span">
             <el-text style="color:#ff0000">*</el-text>
-            标题：
+            客服名称:
           </span>
-          <el-input class="dialog-input" v-model="newBannerContext.title">
-          </el-input>
-        </div>
-        <div class="div-input-element">
-          <span class="dialog-span">
-            跳转链接：
-          </span>
-          <el-input class="dialog-input" v-model="newBannerContext.url">
+          <el-input class="dialog-input" v-model="customerServiceName">
           </el-input>
         </div>
       </div>
       <template #header>
-        <el-text>新建 banner</el-text>
+        <el-text>新建客服</el-text>
       </template>
       <template #footer>
-        <el-button type="primary" @click="confirmNewBanner">确定</el-button>
-        <el-button @click="cancelNewBanner">
+        <el-button type="primary" @click="confirmNewCustomerService">确定</el-button>
+        <el-button @click="cancelNewCustomerService">
+          取消
+        </el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog class="new-class-dialog" width="370px" v-model="editCustomerServiceDialogShow">
+      <div>
+
+        <div class="upload-file-area" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @dragenter="mouseEnter"
+          @dragleave="mouseLeave">
+          <img class="show-img" id="show_img" :src="showImgSrc" />
+          <div class="upload-file-area-text">
+            <el-text>点击此处或拖拽上传二维码图片</el-text>
+            <el-text>图片不大于1MB</el-text>
+            <el-text>只接受 *.png *.jpg *.jpeg</el-text>
+          </div>
+
+          <input class="upload-file-input" type="file" accept="image/png, image/jpeg, image/jpg"
+            @change="handleFileChange" />
+        </div>
+
+        <div class="div-input-element">
+          <span class="dialog-span">
+            <el-text style="color:#ff0000">*</el-text>
+            客服名称:
+          </span>
+          <el-input class="dialog-input" v-model="customerServiceName">
+          </el-input>
+        </div>
+      </div>
+      <template #header>
+        <el-text>编辑</el-text>
+      </template>
+      <template #footer>
+        <el-button type="primary" @click="confirmEditCustomerService">确定</el-button>
+        <el-button @click="cancelEditCustomerService">
           取消
         </el-button>
       </template>

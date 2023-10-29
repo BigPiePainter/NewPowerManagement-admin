@@ -60,6 +60,8 @@ const author = reactive<any>({
   messageEdit: { able: false, id: 53 },
   homeworkShow: { able: false, id: 54 },
   homeworkShare: { able: false, id: 55 },
+  customerServiceShow: { able: false, id: 56 },
+  customerServiceEdit: { able: false, id: 57 },
 })
 const account = ref('')
 const passwd = ref('')
@@ -437,6 +439,17 @@ watch(() => author, (val: any) => {
             </div>
             <div class="sub-node-check">
               <el-checkbox v-model="author.messageEdit.able" label="创建/删除消息" size="large" />
+            </div>
+          </div>
+          <div class="sub-node">
+            <div class="sub-node-span">
+              <span>客服二维码</span>
+            </div>
+            <div class="sub-node-check">
+              <el-checkbox v-model="author.customerServiceShow.able" label="查看客服二维码" size="large" />
+            </div>
+            <div class="sub-node-check">
+              <el-checkbox v-model="author.customerServiceEdit.able" label="编辑客服二维码" size="large" />
             </div>
           </div>
         </div>

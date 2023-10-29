@@ -47,6 +47,7 @@ import ShopProductDetailView from '@/views/ShopProductDetailView.vue'
 import PutQuestionIntoPackage from '@/views/PutQuestionIntoPackage.vue'
 import AuthorView from '@/views/AuthorView.vue'
 import HomeworkView from '@/views/HomeworkView.vue'
+import CustomerServiceView from '@/views/CustomerServiceView.vue'
 
 import { userInfo } from '@/apis/manager'
 
@@ -339,6 +340,12 @@ const router = createRouter({
           path: 'homework',
           name: 'homework',
           component: HomeworkView,
+          meta: { Protected: true }
+        },
+        {
+          path: 'customer-service',
+          name: 'customer-service',
+          component: CustomerServiceView,
           meta: { Protected: true }
         }
       ]
