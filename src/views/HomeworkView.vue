@@ -80,7 +80,7 @@ const dialogTableColumns = reactive<any>([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 180
   },
   {
     dataKey: 'name',
@@ -107,7 +107,7 @@ const tableColumns = reactive([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 100
+    width: 180
   },
   {
     dataKey: 'name',
@@ -125,7 +125,8 @@ const tableColumns = reactive([
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '课程类目',
-    width: 150
+    align: 'center',
+    width: 80
   },
   {
     dataKey: 'createdAt',
@@ -145,7 +146,7 @@ const tableColumns = reactive([
         </div>
       )
     },
-    width: 200,
+    width: 80,
     fixed: 'right',
     align: 'left'
   }
@@ -351,11 +352,11 @@ const cancelEditDialog = () => {
     </div>
   </TablePage>
 
-  <el-dialog v-model="studentDialogShow">
+  <el-dialog style="width: 700px;" v-model="studentDialogShow">
     <template #header>
       <el-text>选择学生</el-text>
     </template>
-    <TablePage :loading="dialogLoading" class="dialog-page-container" :itemsTotalLength="dialogTotalLength" @paginationChange="dialogPageChange"
+    <TablePage style="width: 640px;" :loading="dialogLoading" class="dialog-page-container" :itemsTotalLength="dialogTotalLength" @paginationChange="dialogPageChange"
       :columns="dialogTableColumns" :data="dialogTableData">
       <div class="div-search-bar">
         <SearchBar :items="dialogSearchBarItems" @change="loadDialogData"></SearchBar>

@@ -37,16 +37,14 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: '设备信息ID',
-    width: 200
+    width: 180
   },
-
   {
     dataKey: 'name',
     key: 'name',
     title: '姓名',
     width: 100
   },
-
   {
     dataKey: 'account',
     key: 'account',
@@ -57,9 +55,8 @@ const tableColumns = [
     dataKey: 'phoneNumber',
     key: 'phoneNumber',
     title: '手机号',
-    width: 200
+    width: 150
   },
-
   {
     dataKey: 'deviceModel',
     key: 'deviceModel',
@@ -80,7 +77,6 @@ const tableColumns = [
     title: '绑定时间',
     width: 200
   },
-
   {
     dataKey: 'lastLoginTime',
     key: 'lastLoginTime',

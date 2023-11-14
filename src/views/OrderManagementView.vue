@@ -95,7 +95,7 @@ const tableColumns = reactive([
     dataKey: 'productName',
     key: 'productName',
     title: '商品名称',
-    width: 260,
+    width: 180,
     cellRenderer: (item: any) => {
       return (
         <span>{item.rowData.productName ? item.rowData.productName : item.rowData.coursesQuestionPackagesName}</span>

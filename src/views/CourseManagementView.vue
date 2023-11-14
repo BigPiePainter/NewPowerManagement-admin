@@ -181,7 +181,7 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 150
+    width: 180
   },
   {
     dataKey: 'name',

@@ -128,7 +128,7 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 150
+    width: 180
   },
   {
     dataKey: 'account',
@@ -136,24 +136,24 @@ const tableColumns = [
     title: '账号',
     cellRenderer: (item: any) => {
       return (
-        <el-button link type="primary" onClick={() => detail(item)}>
+        <el-text link type="primary" onClick={() => detail(item)}>
           {item.rowData.account}
-        </el-button>
+        </el-text>
       )
     },
-    width: 200
+    width: 150
   },
   {
     dataKey: 'phoneNumber',
     key: 'phoneNumber',
     title: '手机号码',
-    width: 200
+    width: 150
   },
   {
     dataKey: 'remark',
     key: 'remark',
     title: '备注',
-    width: 200
+    width: 180
   },
   {
     key: 'option',

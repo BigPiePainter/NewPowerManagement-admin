@@ -6,10 +6,10 @@ import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
 import { editTeacherGroups, getTeacherGroup, createTeacherGroup, deleteTeacherGroups } from '@/apis/teacherGroup'
 import { getAllTeachers } from '@/apis/teacher'
-const router = useRouter()
-
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { InputType } from '@/type';
+
+const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '学校管理', path: '' },
@@ -51,7 +51,7 @@ const tableColumns = reactive<any[]>([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 180
   },
   {
     dataKey: 'name',
@@ -60,7 +60,7 @@ const tableColumns = reactive<any[]>([
     cellRenderer: (item: any) => {
       return (
         <div>
-          <ElButton link type='primary' onClick={() => clickDetail(item)}>{item.rowData.name}</ElButton>
+          <el-text link type='primary' onClick={() => clickDetail(item)}>{item.rowData.name}</el-text>
         </div>
       )
     },
@@ -109,7 +109,7 @@ const tableColumns = reactive<any[]>([
         </div>
       )
     },
-    width: 150,
+    width: 50,
     fixed: 'right',
     align: 'center'
   }

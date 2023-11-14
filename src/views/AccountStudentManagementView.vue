@@ -46,20 +46,20 @@ const tableColumns = reactive([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 60
+    width: 180
   },
   {
     dataKey: 'name',
     key: 'name',
     title: '姓名',
-    width: 150,
+    width: 130,
     cellRenderer: (cellData: any) => {
       if (Date.parse(cellData.rowData.expiration) > Date.now()) {
         return (
           <>
-            <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
+            <el-text link type="primary" onClick={() => clickDetail(cellData)}>
               {cellData.cellData}
-            </ElButton>
+            </el-text>
           </>
         )
       } else {

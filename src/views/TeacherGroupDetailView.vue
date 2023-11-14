@@ -8,9 +8,8 @@ import { ElCheckbox } from 'element-plus'
 import { getTeacherGroupTeachers, addTeacherTogroup, deleteTeacherFromGroup } from '@/apis/teacherGroup'
 import { getTeachers } from '@/apis/teacher'
 import type { CheckboxValueType } from 'element-plus'
-
-
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
+
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '学校管理', path: '' },
@@ -134,7 +133,7 @@ const tableColumns = reactive<any>([
         </div>
       )
     },
-    width: 150,
+    width: 50,
     fixed: 'right',
     align: 'center'
   }

@@ -22,12 +22,13 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 100
+    width: 180
   },
   {
     dataKey: 'icon',
     key: 'icon',
     title: '图标',
+    align: 'center',
     width: 150,
     cellRenderer: (item: any) => (
       <el-image
@@ -44,12 +45,14 @@ const tableColumns = [
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '科目',
-    width: 120
+    align: 'center',
+    width: 80
   },
   {
     dataKey: 'gradeName',
     key: 'gradeName',
     title: '学习阶段',
+    align: 'center',
     width: 80
   },
   {
@@ -65,7 +68,7 @@ const tableColumns = [
         </>
       )
     },
-    width: 150,
+    width: 60,
     fixed: 'right',
     align: 'center',
     height: 500

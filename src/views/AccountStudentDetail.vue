@@ -32,6 +32,18 @@ breadcrumbStore.data = [
   { name: '学生详情', path: '/student-detail-managament' },
 ]
 
+const clickCoursePackage = (item: any) => {
+  console.log('Course Package', item)
+}
+
+const clickQuestionPackage = (item: any) => {
+  console.log('Question Package', item)
+}
+
+const clickHomework = (item: any) => {
+  console.log('Homework', item)
+}
+
 //-------------------加载学生数据--------------
 const loadData = () => {
   coursePackages.length = 0
@@ -119,7 +131,8 @@ loadData()
           <div class="botPart1-2">
             <CourseCard v-for=" item  in  coursePackages " :key="item.coursesQuestionPackageId"
               :picture="item.packageCover" :title="item.packageName" :difficultyLevel="item.packageDifficultyLevel"
-              :valid="item.valid" :grade="item.gradeName" :subject="item.subjectName" :label="item.labelName">
+              :valid="item.valid" :grade="item.gradeName" :subject="item.subjectName" :label="item.labelName"
+              @click="clickCoursePackage(item)">
             </CourseCard>
           </div>
 
@@ -128,16 +141,17 @@ loadData()
           <div class="botPart1-2">
             <CourseCard v-for=" item  in  questionPackages " :key="item.coursesQuestionPackageId"
               :picture="item.packageCover" :title="item.packageName" :difficultyLevel="item.packageDifficultyLevel"
-              :valid="item.valid" :grade="item.gradeName" :subject="item.subjectName" :label="item.labelName">
+              :valid="item.valid" :grade="item.gradeName" :subject="item.subjectName" :label="item.labelName"
+              @click="clickQuestionPackage(item)">
             </CourseCard>
           </div>
         </el-tab-pane>
 
         <el-tab-pane :label="'作业巩固(' + homework.length + ')'" name="homework">
           <div class="botPart1-2">
-            <HomeworkQuestionDisplayCard v-for=" item  in  homework " :key="item.title"
-              :homeworkName="item.homeworkName" :teacherName="item.teacherName" :isFinished="item.isFinished"
-              :subjectName="item.subjectName">
+            <HomeworkQuestionDisplayCard v-for=" item  in  homework " :key="item.title" :homeworkName="item.homeworkName"
+              :teacherName="item.teacherName" :isFinished="item.isFinished" :subjectName="item.subjectName"
+              @click="clickHomework(item)">
             </HomeworkQuestionDisplayCard>
           </div>
         </el-tab-pane>

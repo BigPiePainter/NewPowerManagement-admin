@@ -35,15 +35,15 @@ const handleCurrentChange = (val: number) => {
     <div class="page-table-auto-resizer">
       <el-auto-resizer>
         <template #default="{ height, width }">
-          <el-table-v2 v-loading="loading || false" element-loading-text="加载中..." :columns="columns" :data="data"
-            :width="width" :height="height" fixed :row-height="rowHeight || 39">
+          <el-table-v2 :estimated-row-height="40" v-loading="loading || false" element-loading-text="加载中..."
+            :columns="columns" :data="data" :width="width" :height="height" fixed :row-height="rowHeight || 39">
           </el-table-v2>
         </template>
       </el-auto-resizer>
     </div>
     <div class="page-table-pagination">
       <el-pagination v-model:current-page="paginationInfo.currentPage" v-model:page-size="paginationInfo.pageSize"
-        :page-sizes="[1, 2, 20, 40, 60]" :small="false" layout="total, sizes, prev, pager, next, jumper"
+        :page-sizes="[10, 20, 35, 50, 100]" :small="false" layout="total, sizes, prev, pager, next, jumper"
         :total="itemsTotalLength" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
   </div>

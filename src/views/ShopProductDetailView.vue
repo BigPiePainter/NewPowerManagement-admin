@@ -73,25 +73,25 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 180
   },
   {
     dataKey: 'packageName',
     key: 'packageName',
     title: '名称',
-    width: 500,
+    width: 300,
     cellRenderer: (item: any) => {
       if (item.rowData.labelName != null) {
         return (
           <>
-            <span>{item.rowData.packageName}</span>
+            <el-text>{item.rowData.packageName}</el-text>
             <el-tag style="margin-left:5px">{item.rowData.labelName}</el-tag>
           </>
         )
       } else {
         return (
           <>
-            <span>{item.rowData.packageName}</span>
+            <el-text>{item.rowData.packageName}</el-text>
           </>
         )
       }

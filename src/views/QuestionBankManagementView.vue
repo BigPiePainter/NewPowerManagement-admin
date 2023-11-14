@@ -135,7 +135,7 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 120
+    width: 180
   },
   {
     dataKey: 'name',
@@ -143,9 +143,9 @@ const tableColumns = [
     title: '好题名称',
     width: 200,
     cellRenderer: (cellData: any) => (
-      <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
+      <el-text link type="primary" onClick={() => clickDetail(cellData)}>
         {cellData.cellData}
-      </ElButton>
+      </el-text>
     )
   },
   // {
@@ -228,13 +228,13 @@ const tableColumns = [
     dataKey: 'createdAt',
     key: 'createdAt',
     title: '创建时间',
-    width: 110
+    width: 160
   },
   {
     dataKey: 'updatedAt',
     key: 'updatedAt',
     title: '更新时间',
-    width: 110
+    width: 160
   },
   {
     key: 'option',

@@ -26,13 +26,13 @@ const tableColumns = reactive([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 50
+    width: 180
   },
   {
     dataKey: 'name',
     key: 'name',
     title: '姓名',
-    width: 100,
+    width: 130,
     cellRenderer: (cellData: any) => (
       <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
         {cellData.cellData}
@@ -43,13 +43,13 @@ const tableColumns = reactive([
     dataKey: 'phoneNumber',
     key: 'phoneNumber',
     title: '手机号',
-    width: 200
+    width: 150
   },
   {
     dataKey: 'school',
     key: 'school',
     title: '学校',
-    width: 200
+    width: 150
   },
   {
     dataKey: 'lastLoginTime',

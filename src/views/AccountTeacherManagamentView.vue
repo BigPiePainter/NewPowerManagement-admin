@@ -146,24 +146,24 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 150
+    width: 180
   },
   {
     dataKey: 'name',
     key: 'name',
     title: '姓名',
-    width: 150,
+    width: 130,
     cellRenderer: (cellData: any) => (
-      <ElButton link type="primary" onClick={() => clickName(cellData)} class="detailed">
+      <el-text link type="primary" onClick={() => clickName(cellData)} class="detailed">
         {cellData.cellData}
-      </ElButton>
+      </el-text>
     )
   },
   {
     dataKey: 'account',
     key: 'account',
     title: '账号',
-    width: 150
+    width: 130
   },
   {
     dataKey: 'gradeName',
@@ -190,9 +190,8 @@ const tableColumns = [
     dataKey: 'createdAt',
     key: 'createdAt',
     title: '创建时间',
-    width: 200
+    width: 180
   },
-
   {
     key: 'option',
     title: '操作',

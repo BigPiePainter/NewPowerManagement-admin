@@ -15,7 +15,7 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 80
   },
   {
     dataKey: 'concatImageUrl',

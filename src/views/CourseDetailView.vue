@@ -212,12 +212,11 @@ const loading = ref(true)
 const totalLength = ref<Number>()
 const dialogTotalLength = ref<Number>()
 const tableColumns = reactive<any>([
-
   {
     dataKey: 'miniLessonId',
     key: 'miniLessonId',
     title: 'ID',
-    width: 200
+    width: 180
   },
   {
     dataKey: 'miniLessonName',
@@ -226,7 +225,7 @@ const tableColumns = reactive<any>([
     cellRenderer: (cellData: any) => {
       return (
         <div>
-          <el-button link type="primary" onClick={() => playVideo(cellData.rowData.miniLessonVideoId)}> {cellData.cellData}</el-button>
+          <el-text link type="primary" onClick={() => playVideo(cellData.rowData.miniLessonVideoId)}> {cellData.cellData}</el-text>
         </div>
       )
     },
@@ -236,13 +235,13 @@ const tableColumns = reactive<any>([
     dataKey: 'teacherName',
     key: 'teacherName',
     title: '老师姓名',
-    width: 200
+    width: 100
   },
   {
     dataKey: 'miniLessonIsTrial',
     key: 'miniLessonIsTrial',
     title: '是否支持试看',
-    width: 200,
+    width: 100,
     cellRenderer: (cellData: any) => {
       return (
         <div>

@@ -5,6 +5,7 @@ import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import RichTextEditor from '@/components/RichTextEditor.vue'
+import SolutionTextEditor from '@/components/SolutionTextEditor.vue'
 import UploadVideo from '@/components/UploadVideo.vue'
 import { createGoodQuestion } from '@/apis/questionStore'
 
@@ -229,7 +230,7 @@ watch(() => newSMultipleChoiceQuestion, (val: any) => {
 )
 
 const confirmCreate = () => {
-  var args = {
+  var args : any = {
     questionPrompt: newQuestionData.questionPrompt,
     gradeId: newQuestionData.gradeId,
     difficultyType: newQuestionData.difficultyType,
@@ -242,12 +243,7 @@ const confirmCreate = () => {
   }
   console.log('args', args)
   if (args.solution == '<p><br></p>') {
-    ElNotification({
-      title: '题目新建失败',
-      message: '解答不能为空',
-      type: 'error'
-    })
-    return
+    delete args.solution
   }
   createGoodQuestion(args)
     .then((res: any) => {
@@ -298,8 +294,8 @@ const changeQuestionPrompt = (valueHtml: any) => {
   newQuestionData.questionPrompt = valueHtml
 }
 
-const changeSolution = (valueHtml: any) => {
-  newQuestionData.solution = valueHtml
+const changeSolution = (solutionHtml: any) => {
+  newQuestionData.solution = solutionHtml
 }
 
 const getVideoPath = (path: any) => {
@@ -439,7 +435,6 @@ watch(() => newAnswer, (val: any) => {
       </div>
     </div>
 
-
     <div style="width: 300px;" v-if="newQuestionData.type == '2'">
       <el-text>请输入多选题目选项</el-text>
       <diV>
@@ -516,9 +511,9 @@ watch(() => newAnswer, (val: any) => {
     <el-divider content-position="left">图文讲解</el-divider>
 
     <div style="padding-top: 0px;">
-      <RichTextEditor :questionPrompt="newQuestionData.solution" :isShow="true" @change="changeSolution"
+      <SolutionTextEditor :questionSolution="newQuestionData.solution" :isShow="true" @change="changeSolution"
         v-model="newQuestionData.solution">
-      </RichTextEditor>
+      </SolutionTextEditor>
     </div>
 
     <el-divider content-position="left">视频讲解</el-divider>

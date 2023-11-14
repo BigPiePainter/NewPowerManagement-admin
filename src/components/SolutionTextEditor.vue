@@ -9,15 +9,14 @@ import { ElNotification } from 'element-plus'
 const editorRef = shallowRef();
 
 type Props = {
-  questionPrompt?: string
   questionSolution?: string
   id?: string
   isShow: boolean
 }
 const props = defineProps<Props>()
 
-// 内容 HTML
-const valueHtml = ref(props.questionPrompt);
+// 讲解 HTML
+const solutionHtml = ref(props.questionSolution);
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
@@ -57,8 +56,8 @@ const handleCreated = (editor: any) => {
 
 const emit = defineEmits(['change'])
 const handleCurrentChange = () => {
-  console.log('change', valueHtml.value);
-  emit('change', valueHtml.value)
+  console.log('change', solutionHtml.value);
+  emit('change', solutionHtml.value)
 };
 
 const handleDestroyed = (editor: any) => {
@@ -67,7 +66,7 @@ const handleDestroyed = (editor: any) => {
 };
 
 const insertImage = () => {
-  var tg = document.getElementById("file")
+  var tg = document.getElementById("solution")
   tg?.click()
 }
 
@@ -91,7 +90,7 @@ const handleFileChange = (e: Event) => {
           } else {
             const editor = editorRef.value
             editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
-            console.log('插入成功' + res)
+            console.log('插入成功' + res.data.url)
           }
         })
         .catch()
@@ -106,8 +105,8 @@ const handleFileChange = (e: Event) => {
   }
 }
 
-watch(() => props.questionPrompt, (val: any) => {
-  valueHtml.value = val
+watch(() => props.questionSolution, (val: any) => {
+  solutionHtml.value = val
   console.log(val)
 },
   { deep: true, immediate: true }
@@ -119,10 +118,10 @@ watch(() => props.questionPrompt, (val: any) => {
   <div style="border: 1px solid #ccc; margin-top: 10px">
     <Toolbar v-if="isShow" :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple"
       style="border-bottom: 1px solid #ccc" />
-    <Editor :defaultConfig="editorConfig" mode="simple" v-model=valueHtml style="height: 150px; overflow-y: hidden"
+    <Editor :defaultConfig="editorConfig" mode="simple" v-model=solutionHtml style="height: 150px; overflow-y: hidden"
       @onCreated="handleCreated" @onDestroyed="handleDestroyed" @onChange="handleCurrentChange" />
     <button v-if="isShow" style="margin-top: 10px;" @click="insertImage">插入图片</button>
-    <input v-if="isShow" type="file" accept="image/png, image/jpeg, image/jpg" id="file" @change="handleFileChange"
+    <input v-if="isShow" type="file" accept="image/png, image/jpeg, image/jpg" id="solution" @change="handleFileChange"
       style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
   </div>
 </template>

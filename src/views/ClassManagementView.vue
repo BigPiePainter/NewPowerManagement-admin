@@ -125,7 +125,7 @@ const tableColumns = reactive([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 200
+    width: 180
   },
   {
     dataKey: 'name',
@@ -134,7 +134,7 @@ const tableColumns = reactive([
     cellRenderer: (item: any) => {
       return (
         <div>
-          <ElButton link type='primary' onClick={() => clickDetail(item)}>{item.rowData.name}</ElButton>
+          <el-text link type='primary' onClick={() => clickDetail(item)}>{item.rowData.name}</el-text>
         </div>
       )
     },
@@ -185,7 +185,7 @@ const tableColumns = reactive([
         </div>
       )
     },
-    width: 150,
+    width: 100,
     fixed: 'right',
     align: 'center'
   }

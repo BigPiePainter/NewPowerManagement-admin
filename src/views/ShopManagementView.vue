@@ -182,7 +182,7 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 80
+    width: 180
   },
   {
     dataKey: 'cover',
@@ -205,11 +205,11 @@ const tableColumns = [
     dataKey: 'name',
     key: 'name',
     title: '名称',
-    width: 230,
+    width: 180,
     cellRenderer: (cellData: any) => (
-      <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
+      <el-text link type="primary" onClick={() => clickDetail(cellData)}>
         {cellData.cellData}
-      </ElButton>
+      </el-text>
     )
   },
   {
@@ -226,6 +226,7 @@ const tableColumns = [
     dataKey: 'subjectName',
     key: 'subjectName',
     title: '课程类目',
+    align: 'center',
     cellRenderer: (cellData: any) => (
       <span>{cellData.cellData ? cellData.cellData : '无'}</span>
     ),

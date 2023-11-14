@@ -52,7 +52,7 @@ const tableColumns = reactive([
     dataKey: 'id',
     key: 'id',
     title: 'ID',
-    width: 50
+    width: 180
   },
   {
     dataKey: 'title',

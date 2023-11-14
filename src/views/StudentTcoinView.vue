@@ -42,7 +42,7 @@ const tableColumns = [
     dataKey: 'id',
     key: 'id',
     title: '用户ID',
-    width: 120
+    width: 180
   },
   {
     dataKey: 'account',
@@ -50,33 +50,34 @@ const tableColumns = [
     title: '账号',
     width: 120,
     cellRenderer: (cellData: any) => (
-      <ElButton link type="primary" onClick={() => clickDetail(cellData)}>
+      <el-text link type="primary" onClick={() => clickDetail(cellData)}>
         {cellData.cellData}
-      </ElButton>)
+      </el-text>)
   },
   {
     dataKey: 'name',
     key: 'name',
     title: '用户姓名',
-    width: 150
+    width: 130
   },
   {
     dataKey: 'gradeName',
     key: 'gradeName',
     title: '学习阶段',
-    width: 150
+    align: 'center',
+    width: 80
   },
   {
     dataKey: 'phoneNumber',
     key: 'phoneNumber',
     title: '手机号',
-    width: 200,
+    width: 150,
   },
   {
     dataKey: 'tcoin',
     key: 'tcoin',
     title: '当前T币数',
-    width: 200,
+    width: 150,
   },
   {
     key: 'option',

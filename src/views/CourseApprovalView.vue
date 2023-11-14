@@ -14,7 +14,7 @@ const activeName = ref('pending')
 const totalLength1 = ref<Number>()
 const totalLength2 = ref<Number>()
 const totalLength3 = ref<Number>()
-const auditStatus = ref<Number>()
+const auditStatus = ref<Number>(1)
 const warningDialogshow = ref(false)
 
 const loading1 = ref(false)
