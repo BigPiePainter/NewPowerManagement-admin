@@ -90,8 +90,8 @@ const handleFileChange = (e: Event) => {
             })
           } else {
             const editor = editorRef.value
-            editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
-            console.log('插入成功' + res)
+            editor.setHtml(editor.getHtml() + `<img src=` + res.data.url + ` />`)
+            // editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
           }
         })
         .catch()
@@ -108,7 +108,7 @@ const handleFileChange = (e: Event) => {
 
 watch(() => props.questionPrompt, (val: any) => {
   valueHtml.value = val
-  console.log(val)
+  console.log("组件watch questionPrompt",val)
 },
   { deep: true, immediate: true }
 )

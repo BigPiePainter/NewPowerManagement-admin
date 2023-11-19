@@ -8,12 +8,19 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
 import SolutionTextEditor from '@/components/SolutionTextEditor.vue'
 import UploadVideo from '@/components/UploadVideo.vue'
 import { createGoodQuestion } from '@/apis/questionStore'
+import { videoToUrl } from '@/apis/videoIdToUrl'
+import { getMiniLessons } from '@/apis/minilessons'
+import SearchBar from '@/components/SearchBar.vue'
+import TablePage from '@/components/TablePage.vue'
 
 const allGrades = ref<any>([])
 const allSubjects = ref<any>([])
 const JSONoption = ref<any>([])
 const JSONanswer = ref<any>([])
 const centerDialogVisible = ref(false)
+const searchBarItems = reactive([
+  { name: "微课名称", value: "" },
+])
 
 const loadSelectOption = () => {
   getSubjects()
@@ -30,6 +37,110 @@ const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
   { name: '题库管理', path: '' },
   { name: '好题详情', path: '/question-detail' }
+]
+
+const videoShow = ref(false)
+const url = ref<any>('')
+const playVideo = (videoId: any) => {
+  var args = { videoId: videoId }
+  console.log(args)
+  videoToUrl(args).then((res: any) => {
+    console.log(res)
+    url.value = res.playURL
+    videoShow.value = true
+  })
+}
+
+const loading = ref(false)
+const lessonName = ref('')
+const totalLength = ref<Number>()
+const dialogTableData = ref<any>([])
+const dialogVisible = ref(false)
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const pageChange = (val: any) => {
+  paginationInfo.currentPage = val.currentPage
+  paginationInfo.pageSize = val.pageSize
+  loadMinilessons()
+}
+const loadMinilessons = () => {
+  loading.value = true
+  var args = {
+    pageNum: paginationInfo.currentPage,
+    pageSize: paginationInfo.pageSize,
+    auditStatus: 3,
+    name: searchBarItems[0].value
+  }
+  getMiniLessons(args)
+    .then((res) => {
+      dialogTableData.value = res.data.records
+      totalLength.value = res.data.total
+    })
+    .catch()
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+const selectLessonDialog = () => {
+  loadMinilessons()
+  dialogVisible.value = true
+}
+
+const selectLesson = (cellData: any) => {
+  console.log(cellData)
+  videoToUrl({ videoId: cellData.rowData.videoId })
+    .then((res: any) => {
+      newQuestionData.filePath = res.playURL
+      lessonName.value = cellData.rowData.name
+      dialogVisible.value = false
+    })
+}
+
+const tableColumns = [
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 180
+  },
+  {
+    dataKey: 'name',
+    key: 'name',
+    title: '标题',
+    cellRenderer: (cellData: any) => {
+      return (
+        <div>
+          <el-text link type="primary" onClick={() => playVideo(cellData.rowData.videoId)}> {cellData.cellData}</el-text>
+        </div>
+      )
+    },
+    width: 200
+  },
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '上传者',
+    align: 'center',
+    width: 100
+  },
+  {
+    key: 'option',
+    title: '操作',
+    cellRenderer: (cellData: any) => {
+      return (
+        <>
+          <el-button link type="primary" onClick={() => selectLesson(cellData)}>
+            选择
+          </el-button>
+        </>
+      )
+    },
+    width: 60,
+    fixed: 'right',
+  }
 ]
 
 const newQuestionData = reactive<{
@@ -88,7 +199,6 @@ const allQuestionType = [
     label: '解答题',
   },
 ]
-
 
 const allDifficultyType = [
   {
@@ -230,7 +340,7 @@ watch(() => newSMultipleChoiceQuestion, (val: any) => {
 )
 
 const confirmCreate = () => {
-  var args : any = {
+  var args: any = {
     questionPrompt: newQuestionData.questionPrompt,
     gradeId: newQuestionData.gradeId,
     difficultyType: newQuestionData.difficultyType,
@@ -291,10 +401,12 @@ const dataTransform = () => {
 }
 
 const changeQuestionPrompt = (valueHtml: any) => {
+  console.log('valueHtml', valueHtml)
   newQuestionData.questionPrompt = valueHtml
 }
 
 const changeSolution = (solutionHtml: any) => {
+  console.log('solutionHtml', solutionHtml)
   newQuestionData.solution = solutionHtml
 }
 
@@ -400,8 +512,8 @@ watch(() => newAnswer, (val: any) => {
     <el-divider content-position="left">编辑题干</el-divider>
 
     <div style="padding-top: 0px;">
-      <RichTextEditor :questionPrompt="newQuestionData.questionPrompt" :isShow="true" @change="changeQuestionPrompt"
-        v-model="newQuestionData.questionPrompt">
+      <RichTextEditor :key="1" :questionPrompt="newQuestionData.questionPrompt" :isShow="true"
+        @change="changeQuestionPrompt" v-model="newQuestionData.questionPrompt">
       </RichTextEditor>
     </div>
     <el-divider content-position="left" v-if="newQuestionData.type == '1'
@@ -443,14 +555,14 @@ watch(() => newAnswer, (val: any) => {
           }}</span><el-input style="height: 27px;" v-model="newSMultipleChoiceQuestion[option]"></el-input>
         </div>
         <!-- <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                              style="margin-right: 5px;">B:</span><el-input style="height: 27px;"
-                              v-model="newSMultipleChoiceQuestion.B"></el-input></div>
-                      <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                              style="margin-right: 5px;">C:</span><el-input style="height: 27px;"
-                              v-model="newSMultipleChoiceQuestion.C"></el-input></div>
-                      <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                              style="margin-right: 5px;">D:</span><el-input style="height: 27px;"
-                              v-model="newSMultipleChoiceQuestion.D"></el-input></div> -->
+                                                      style="margin-right: 5px;">B:</span><el-input style="height: 27px;"
+                                                      v-model="newSMultipleChoiceQuestion.B"></el-input></div>
+                                              <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
+                                                      style="margin-right: 5px;">C:</span><el-input style="height: 27px;"
+                                                      v-model="newSMultipleChoiceQuestion.C"></el-input></div>
+                                              <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
+                                                      style="margin-right: 5px;">D:</span><el-input style="height: 27px;"
+                                                      v-model="newSMultipleChoiceQuestion.D"></el-input></div> -->
         <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
           <el-button @click="addOption">增加选项</el-button>
           <el-button @click="minOption">减少选项</el-button>
@@ -511,21 +623,39 @@ watch(() => newAnswer, (val: any) => {
     <el-divider content-position="left">图文讲解</el-divider>
 
     <div style="padding-top: 0px;">
-      <SolutionTextEditor :questionSolution="newQuestionData.solution" :isShow="true" @change="changeSolution"
+      <SolutionTextEditor :key="2" :questionSolution="newQuestionData.solution" :isShow="true" @change="changeSolution"
         v-model="newQuestionData.solution">
       </SolutionTextEditor>
     </div>
 
     <el-divider content-position="left">视频讲解</el-divider>
 
-    <div style="padding-top: 0px;">
+    <div style="padding-top: 0px;display: flex;">
+      <el-button type="primary" link @click="selectLessonDialog">选择微课讲解</el-button>
+      <span style="margin-left: 10px;margin-right: 10px;">或</span>
       <UploadVideo @change="getVideoPath"></UploadVideo>
+    </div>
+    <div style="padding-top: 0px;display: flex;">
+      <el-text style="margin-top: 10px;">{{ lessonName }}</el-text>
     </div>
 
     <el-button type="primary" style="margin:20px" @click="create">
       创建
     </el-button>
   </div>
+
+  <el-dialog style="height: 1000px;width: 1650px;" v-model="videoShow">
+    <video v-if="videoShow" style="height: 900px;width: 1600px;" :src="url" controls autoplay></video>
+  </el-dialog>
+
+  <el-dialog style="height: 700px; width: 750px;" v-model="dialogVisible">
+    <TablePage style="height: 650px;" :itemsTotalLength="totalLength" :loading="loading" :columns="tableColumns"
+      @paginationChange="pageChange" :data="dialogTableData">
+      <div style="margin-top: 0px;margin-bottom: 10px;">
+        <SearchBar :items="searchBarItems" @change="loadMinilessons()"></SearchBar>
+      </div>
+    </TablePage>
+  </el-dialog>
 
   <el-dialog v-model="centerDialogVisible" title="待确认" width="30%" align-center>
     <span>是否确认新建好题</span>

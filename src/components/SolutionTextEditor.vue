@@ -89,8 +89,7 @@ const handleFileChange = (e: Event) => {
             })
           } else {
             const editor = editorRef.value
-            editor.dangerouslyInsertHtml(`<img src=` + res.data.url + ` />`)
-            console.log('插入成功' + res.data.url)
+            editor.setHtml(editor.getHtml() + `<img src=` + res.data.url + ` />`)
           }
         })
         .catch()

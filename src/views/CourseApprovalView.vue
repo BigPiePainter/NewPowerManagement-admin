@@ -152,7 +152,7 @@ const tableColumnsPending = [
     cellRenderer: (cellData: any) => {
       return (
         <div>
-          <el-button link type="primary" onClick={() => playVideo(cellData.rowData.videoId)}> {cellData.cellData}</el-button>
+          <el-text link type="primary" onClick={() => playVideo(cellData.rowData.videoId)}> {cellData.cellData}</el-text>
         </div>
       )
     },

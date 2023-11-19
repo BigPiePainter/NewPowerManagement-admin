@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { getStudentCouse } from '@/apis/studentCourse'
 import CourseCard from '@/components/CourseCard.vue'
-import QuestionDisplayCard from '@/components/QuestionDisplayCard.vue'
 import { ref, reactive } from 'vue'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import type { TabsPaneContext } from 'element-plus'
 import { useRoute } from 'vue-router'
-import { getStudentQuestions } from '@/apis/studentQuestion'
 import { getStudentHomework } from '@/apis/studentHomework'
 import { getStudentPackages } from '@/apis/studentCourseQuestionPackages'
 import HomeworkQuestionDisplayCard from '@/components/HomeworkQuestionDisplayCard.vue'
@@ -15,8 +12,6 @@ const breadcrumbStore = useBreadcrumbStore()
 
 const route = useRoute()
 const activeName = ref('courses')
-const questionPackage = reactive<any>({})
-const lessons = reactive<any>([])
 const loading = ref(true)
 const coursePackages = reactive<any>([])
 const questionPackages = reactive<any>([])
