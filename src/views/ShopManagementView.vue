@@ -235,7 +235,7 @@ const tableColumns = [
   {
     dataKey: 'androidPoint',
     key: 'androidPoint',
-    title: '积分',
+    title: '安卓积分',
     align: 'center',
     cellRenderer: (cellData: any) => (
       <span>{cellData.cellData ? cellData.cellData : '无'}</span>
@@ -252,26 +252,26 @@ const tableColumns = [
   //   ),
   //   width: 80
   // },
-  // {
-  //   dataKey: 'iosPoint',
-  //   key: 'iosPoint',
-  //   title: 'ios积分',
-  //   align: 'center',
-  //   cellRenderer: (cellData: any) => (
-  //     <span>{cellData.cellData ? cellData.cellData : '无'}</span>
-  //   ),
-  //   width: 80,
-  // },
-  // {
-  //   dataKey: 'tcoin',
-  //   key: 'tcoin',
-  //   title: 'T币价格',
-  //   align: 'center',
-  //   cellRenderer: (cellData: any) => (
-  //     <span>{cellData.cellData ? cellData.cellData : '无'}</span>
-  //   ),
-  //   width: 80,
-  // },
+  {
+    dataKey: 'iosPoint',
+    key: 'iosPoint',
+    title: 'ios积分',
+    align: 'center',
+    cellRenderer: (cellData: any) => (
+      <span>{cellData.cellData ? cellData.cellData : '无'}</span>
+    ),
+    width: 80,
+  },
+  {
+    dataKey: 'tcoin',
+    key: 'tcoin',
+    title: 'T币价格',
+    align: 'center',
+    cellRenderer: (cellData: any) => (
+      <span>{cellData.cellData ? cellData.cellData : '无'}</span>
+    ),
+    width: 80,
+  },
   {
     dataKey: 'type',
     key: 'type',
