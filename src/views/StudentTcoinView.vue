@@ -79,22 +79,22 @@ const tableColumns = [
     title: '当前T币数',
     width: 150,
   },
-  {
-    key: 'option',
-    title: '操作',
+  // {
+  //   key: 'option',
+  //   title: '操作',
 
-    cellRenderer: (item: any) => (
-      <>
-        <el-button disabled={!author.tCoinEdit} link type="primary" class="" onClick={() => editFund(item)}>
-          变更T币数
-        </el-button>
-      </>
-    ),
+  //   cellRenderer: (item: any) => (
+  //     <>
+  //       <el-button disabled={!author.tCoinEdit} link type="primary" class="" onClick={() => editFund(item)}>
+  //         变更T币数
+  //       </el-button>
+  //     </>
+  //   ),
 
-    width: 100,
-    fixed: 'right',
-    align: 'left'
-  }
+  //   width: 100,
+  //   fixed: 'right',
+  //   align: 'left'
+  // }
 ]
 const totalLength = ref<Number>()
 const paginationInfo = reactive({
