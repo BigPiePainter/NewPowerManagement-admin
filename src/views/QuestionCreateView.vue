@@ -95,6 +95,10 @@ const selectLesson = (cellData: any) => {
     .then((res: any) => {
       newQuestionData.filePath = res.playURL
       lessonName.value = cellData.rowData.name
+      if (document.getElementById('uploadVideoInput')) {
+        var obj = document.getElementById('uploadVideoInput') as HTMLInputElement;
+        obj.value = '' 
+      }
       dialogVisible.value = false
     })
 }
@@ -411,6 +415,7 @@ const changeSolution = (solutionHtml: any) => {
 }
 
 const getVideoPath = (path: any) => {
+  lessonName.value = ''
   console.log('讲解视频', path)
   newQuestionData.filePath = path
 }

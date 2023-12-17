@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElButton } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { getGrades } from '@/apis/grade'
@@ -10,6 +10,10 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getGoodQuestion, deleteGoodQuestion, editGoodQuestion } from '@/apis/questionStore'
 import RichTextEditor from '@/components/RichTextEditor.vue';
 import UploadVideo from '@/components/UploadVideo.vue'
+import { getMiniLessons } from '@/apis/minilessons'
+import { videoToUrl } from '@/apis/videoIdToUrl'
+import SearchBar from '@/components/SearchBar.vue'
+import TablePage from '@/components/TablePage.vue'
 
 const author = JSON.parse(localStorage.author)
 const allGrades = ref<any>([])
@@ -23,7 +27,74 @@ const editSolutionShow = ref(false)
 const solutionPrompt = ref('')
 const videoFilePath = ref('')
 const questionId = ref('')
+const dialogVisible = ref(false)
+const dialogTableData = ref<any>([])
+const searchBarItems = reactive([
+  { name: "微课名称", value: "" },
+])
+const totalLength = ref<Number>()
+const tableColumns = [
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 180
+  },
+  {
+    dataKey: 'name',
+    key: 'name',
+    title: '标题',
+    cellRenderer: (cellData: any) => {
+      return (
+        <div>
+          <el-text link type="primary" onClick={() => playVideo2(cellData.rowData.videoId)}> {cellData.cellData}</el-text>
+        </div>
+      )
+    },
+    width: 200
+  },
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '上传者',
+    align: 'center',
+    width: 100
+  },
+  {
+    key: 'option',
+    title: '操作',
+    cellRenderer: (cellData: any) => {
+      return (
+        <>
+          <el-button link type="primary" onClick={() => selectLesson(cellData)}>
+            选择
+          </el-button>
+        </>
+      )
+    },
+    width: 60,
+    fixed: 'right',
+  }
+]
 
+const url = ref<any>('')
+const playVideo2 = (videoId: any) => {
+  var args = { videoId: videoId }
+  console.log(args)
+  videoToUrl(args).then((res: any) => {
+    console.log(res)
+    url.value = res.playURL
+    videoShow.value = true
+  })
+}
+//questionId.value = id
+const selectLesson = (cellData: any) => {
+  videoToUrl({ videoId: cellData.rowData.videoId })
+    .then((res: any) => {
+      getVideoPath(res.playURL)
+      dialogVisible.value = false
+    })
+}
 const PredeleteQuestion = (id: any) => {
   centerDialogVisible.value = true
   aim.value = id
@@ -78,6 +149,7 @@ breadcrumbStore.data = [
 ]
 const tableData = reactive<any>([])
 const loading = ref(true)
+const loading2 = ref(true)
 
 const router = useRouter()
 // const createQuestionDailogShow = ref(false)
@@ -146,12 +218,44 @@ const playVideo = (filePath: any, id: any) => {
   videoFilePath.value = filePath
   videoShow.value = true
 }
+const dialogPaginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const pageChange = (val: any) => {
+  dialogPaginationInfo.currentPage = val.currentPage
+  dialogPaginationInfo.pageSize = val.pageSize
+  loadMinilessons()
+}
+const loadMinilessons = () => {
+  loading2.value = true
+  var args = {
+    pageNum: dialogPaginationInfo.currentPage,
+    pageSize: dialogPaginationInfo.pageSize,
+    auditStatus: 3,
+    name: searchBarItems[0].value
+  }
+  getMiniLessons(args)
+    .then((res) => {
+      dialogTableData.value = res.data.records
+      totalLength.value = res.data.total
+    })
+    .catch()
+    .finally(() => {
+      loading2.value = false
+    })
+}
 
+const uploadVideoDialogShow = ref(false)
 const uploadVideoClick = (id: any) => {
   questionId.value = id
   console.log('questionId', id)
-  var target = document.getElementById("uploadVideoInput")
-  target?.click()
+  uploadVideoDialogShow.value = true
+}
+
+const selectLessonDialog = () => {
+  loadMinilessons()
+  dialogVisible.value = true
 }
 
 const uploadVideoClick2 = () => {
@@ -181,6 +285,8 @@ const getVideoPath = (filePath: any) => {
           type: 'error'
         })
       }
+      videoShow.value = false
+      uploadVideoDialogShow.value = false
     })
     .catch((res: any) => {
       ElNotification({
@@ -371,10 +477,10 @@ const typeSearch = (val: any) => {
             查看图文讲解
           </el-button>
 
-          <!-- <el-button style="width: 95px;" v-if="!item.solution" :disabled="!author.questionsEdit"
+          <el-button style="width: 95px;" v-if="!item.solution" :disabled="!author.questionsEdit"
             @click="uploadSolution(item.id)" type='primary'>
             上传图文讲解
-          </el-button> -->
+          </el-button>
 
           <el-button :disabled="!author.questionsEdit" @click="PredeleteQuestion(item.id)" type=danger>
             删除
@@ -419,22 +525,39 @@ const typeSearch = (val: any) => {
 
   <el-dialog style="height: 1000px;width: 1650px;" v-model="videoShow">
     <video v-if="videoShow" style="height: 900px;width: 1600px;" :src="videoFilePath" controls autoplay></video>
-    <el-button type="primary" @click='uploadVideoClick2'>重新上传</el-button>
+    <el-button
+      type="primary" link @click="selectLessonDialog">重新选择微课讲解</el-button>
+    <span style="margin-left: 10px;margin-right: 10px;">或</span>
+    <el-button type="primary" link @click='uploadVideoClick2'>本地重新上传</el-button>
   </el-dialog>
 
   <el-dialog style="height: 300px;width: 1000px" v-model="solutionShow">
-    <!-- <el-button type="primary" @click='editSolution'>编辑</el-button> -->
+    <el-button type="primary" @click='editSolution'>编辑</el-button>
     <RichTextEditor :questionPrompt="solutionPrompt" v-model="solutionPrompt" :isShow="false">
     </RichTextEditor>
   </el-dialog>
 
-  <!-- <el-dialog style="height: 350px;width: 1000px" v-model="editSolutionShow">
+  <el-dialog style="height: 350px;width: 1000px" v-model="editSolutionShow">
     <el-button type="primary" @click='confirmEditSolution'>确认</el-button>
     <el-button type="danger" @click='cancelEditSolution'>取消</el-button>
     <RichTextEditor :questionPrompt="solutionPrompt" v-model="solutionPrompt" @change="changeSolutionPrompt"
       :isShow="true">
     </RichTextEditor>
-  </el-dialog> -->
+  </el-dialog>
+
+  <el-dialog style="height: 700px; width: 750px;" v-model="dialogVisible">
+    <TablePage style="height: 650px;" :itemsTotalLength="totalLength" :loading="loading2" :columns="tableColumns"
+      @paginationChange="pageChange" :data="dialogTableData">
+      <div style="margin-top: 0px;margin-bottom: 10px;">
+        <SearchBar :items="searchBarItems" @change="loadMinilessons()"></SearchBar>
+      </div>
+    </TablePage>
+  </el-dialog>
+
+  <el-dialog style="height: 100px; width: 250px;" v-model="uploadVideoDialogShow">
+    <el-button @click="selectLessonDialog">微课视频</el-button>
+    <el-button type="primary" @click='uploadVideoClick2'>本地上传</el-button>
+  </el-dialog>
 </template>
 
 <style lang="scss" scoped>
