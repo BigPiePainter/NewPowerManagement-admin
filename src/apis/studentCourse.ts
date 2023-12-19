@@ -1,6 +1,6 @@
 import http from '@/libs/http'
 
-export const getStudentCouse = (data: object) => {
+export const getStudentCourse = (data: object) => {
   const args = {
     url: '/api/management/student-course/get-all-student-course',
     method: 'GET',

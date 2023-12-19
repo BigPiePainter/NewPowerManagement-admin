@@ -101,3 +101,19 @@ FROM (SELECT * FROM orders ${ew.customSqlSegment}) orders
         LEFT JOIN products ON order_products.product_id = products.id
         LEFT JOIN courses_question_packages ON order_products.product_id = courses_question_packages.id
         LEFT JOIN students ON orders.student_id = students.id
+
+SELECT student_answer_question_records.*,
+  question_stores.answer AS key_answer,
+  question_stores.type AS question_type,
+  courses_question_packages.id AS course_question_package_id,
+  courses_question_packages.name AS courses_question_packages_name,
+  courses_question_packages.cover AS courses_question_packages_cover,
+  courses_question_packages.difficulty_level AS difficulty_level,
+  teachers.name AS teacher_name,
+  students.name AS student_name
+FROM student_answer_question_records
+  LEFT JOIN question_stores ON student_answer_question_records.question_id = question_stores.id
+  LEFT JOIN courses_question_packages ON student_answer_question_records.question_package_id = courses_question_packages.id
+  LEFT JOIN teachers ON courses_question_packages.teacher_id = teachers.id
+  LEFT JOIN students ON student_answer_question_records.student_id = students.id
+WHERE student_answer_question_records.deleted_at IS NULL AND student_answer_question_records.student_id=#{studentId}

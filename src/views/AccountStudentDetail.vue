@@ -27,14 +27,6 @@ breadcrumbStore.data = [
   { name: '学生详情', path: '/student-detail-managament' },
 ]
 
-const clickCoursePackage = (item: any) => {
-  console.log('Course Package', item)
-}
-
-const clickQuestionPackage = (item: any) => {
-  console.log('Question Package', item)
-}
-
 const clickHomework = (item: any) => {
   console.log('Homework', item)
 }
@@ -118,7 +110,7 @@ loadData()
 
   <el-divider class="row-divider"></el-divider>
 
-  <div class="downpart">
+  <div>
     <div>
       <el-tabs v-model="activeName" class="tabs-page" @tab-click="handleClick" type="card">
 
@@ -127,7 +119,7 @@ loadData()
             <CourseCard v-for=" item  in  coursePackages " :key="item.coursesQuestionPackageId"
               :picture="item.packageCover" :title="item.packageName" :difficultyLevel="item.packageDifficultyLevel"
               :valid="item.valid" :grade="item.gradeName" :subject="item.subjectName" :label="item.labelName"
-              @click="clickCoursePackage(item)">
+              :orderId="item.orderId" :studentId="item.studentId" :type="item.type" :packageId="item.coursesQuestionPackageId" @reload="loadData()">
             </CourseCard>
           </div>
 
@@ -137,7 +129,7 @@ loadData()
             <CourseCard v-for=" item  in  questionPackages " :key="item.coursesQuestionPackageId"
               :picture="item.packageCover" :title="item.packageName" :difficultyLevel="item.packageDifficultyLevel"
               :valid="item.valid" :grade="item.gradeName" :subject="item.subjectName" :label="item.labelName"
-              @click="clickQuestionPackage(item)">
+              :orderId="item.orderId" :studentId="item.studentId" :type="item.type" :packageId="item.coursesQuestionPackageId"  @reload="loadData()">
             </CourseCard>
           </div>
         </el-tab-pane>
@@ -164,8 +156,6 @@ $scale: 0.88;
   flex-direction: column;
   align-items: center;
 }
-
-.downpart {}
 
 .whole {
   display: flex;

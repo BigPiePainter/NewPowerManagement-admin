@@ -68,6 +68,7 @@ const giveCourse = (item: any) => {
   snapShot.versionType = item.rowData.versionType
   getAllStudents()
     .then((res: any) => {
+      allStudent.length = 0
       res.data.forEach((item: any) => {
         allStudent.push(item)
       })
