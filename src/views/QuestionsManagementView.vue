@@ -20,7 +20,7 @@ const router = useRouter()
 const questionCreate = () => { router.push({ path: 'question-create' }) }
 
 const editQuestion = (props: any) => {
-  console.log('编辑',props)
+  console.log('编辑', props)
   router.push({
     path: 'question-edit',
     query: {
@@ -175,6 +175,7 @@ const searchQuestionData = reactive<any>({
   type: '',
   id: '',
   subjectId: '',
+  questionPrompt: ''
 });
 
 const paginationInfo = reactive({
@@ -192,7 +193,8 @@ const loadData = () => {
     gradeId: searchQuestionData.gradeId,
     difficultyType: searchQuestionData.difficultyType,
     subjectId: searchQuestionData.subjectId,
-    type: searchQuestionData.type
+    type: searchQuestionData.type,
+    questionPrompt: searchQuestionData.questionPrompt
   }
 
   getGoodQuestion(args)
@@ -405,12 +407,18 @@ const typeSearch = (val: any) => {
           <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
+
       <div class="margin-left">
         <el-text style="margin-left: 10px;">学习阶段:</el-text>
         <el-select @click="loadGradesOption" style="margin-left:5px" class="select-width" filterable place
           holder="请选择学习阶段" v-model="searchQuestionData.gradeId" @change="loadData">
           <el-option if v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
+      </div>
+
+      <div class="margin-left">
+        <el-text style="margin-left: 10px;">相关内容:</el-text>
+        <el-input  style="margin-left:5px" class="select-width" @change="loadData" v-model="searchQuestionData.questionPrompt"></el-input>
       </div>
     </div>
 
@@ -497,8 +505,7 @@ const typeSearch = (val: any) => {
             上传图文讲解
           </el-button>
 
-          <el-button :disabled="!author.questionsEdit"
-            @click="editQuestion(item)" type='primary'>
+          <el-button :disabled="!author.questionsEdit" @click="editQuestion(item)" type='primary'>
             编辑
           </el-button>
 
@@ -545,8 +552,7 @@ const typeSearch = (val: any) => {
 
   <el-dialog style="height: 1000px;width: 1650px;" v-model="videoShow">
     <video v-if="videoShow" style="height: 900px;width: 1600px;" :src="videoFilePath" controls autoplay></video>
-    <el-button
-      type="primary" link @click="selectLessonDialog">重新选择微课讲解</el-button>
+    <el-button type="primary" link @click="selectLessonDialog">重新选择微课讲解</el-button>
     <span style="margin-left: 10px;margin-right: 10px;">或</span>
     <el-button type="primary" link @click='uploadVideoClick2'>本地重新上传</el-button>
   </el-dialog>
@@ -599,7 +605,7 @@ const typeSearch = (val: any) => {
 }
 
 .margin-left {
-  margin-left: 25px
+  margin-left: 25px;
 }
 
 .subandgrade {
