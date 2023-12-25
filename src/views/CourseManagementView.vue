@@ -11,9 +11,16 @@ import { getAllTeachers } from '@/apis/teacher'
 import { getGrades } from '@/apis/grade'
 import { getSubjects } from '@/apis/subject'
 import { getAllStudents } from '@/apis/student'
+import { InputType } from '@/type'
 
 const breadcrumbStore = useBreadcrumbStore()
 
+const author = JSON.parse(localStorage.author)
+const allGrades = reactive<any>([])
+const allSubjects = reactive<any>([])
+const allTeachers = reactive<any>([])
+
+const router = useRouter()
 breadcrumbStore.data = [
   { name: '课程管理', path: '' },
   { name: '课程管理', path: '/course-management' }
@@ -23,13 +30,23 @@ const totalLength = ref<Number>()
 const loading = ref(false)
 const searchBarItems = reactive([
   { name: "课程名称", value: "", label: "请输入" },
+  {
+    name: '科目:',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options: allSubjects,
+    single: true
+  },
+  {
+    name: '学习阶段:',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options: allGrades,
+    single: true
+  }
 ])
-const author = JSON.parse(localStorage.author)
-const allGrades = reactive<any>([])
-const allSubjects = reactive<any>([])
-const allTeachers = reactive<any>([])
-
-const router = useRouter()
 
 const courseCreat = () => {
   router.push({ path: 'course-create' })
@@ -401,6 +418,8 @@ const loadData = () => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     name: searchBarItems[0].value,
+    subjectId: searchBarItems[1].value,
+    gradeId: searchBarItems[2].value,
     type: 1
   }
   getCourseQuestionPackage(args)

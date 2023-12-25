@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive } from 'vue'
+import { Delete } from '@element-plus/icons-vue'
 import { ArrowRight, ArrowLeft } from '@element-plus/icons-vue'
 import { upload } from '@/apis/upload';
 import { getGrades } from '@/apis/grade';
@@ -10,8 +11,7 @@ import { getCourseQuestionPackage } from '@/apis/coursequestionpackage';
 import TablePage from '@/components/TablePage.vue'
 import SearchBar from '@/components/SearchBar.vue'
 import { InputType } from '@/type'
-import { ElButton, ElNotification, ElCheckbox } from 'element-plus'
-import type { CheckboxValueType } from 'element-plus'
+import { ElButton, ElNotification } from 'element-plus'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const breadcrumbStore = useBreadcrumbStore()
@@ -19,6 +19,16 @@ breadcrumbStore.data = [
   { name: '商城管理', path: '/shop-management' },
   { name: '新建商品', path: '' }
 ]
+
+const loading = ref(false)
+const paginationInfo = reactive({
+  currentPage: 1,
+  pageSize: 20
+})
+const totalLength = ref<number>()
+const allGrades = ref<any>([])
+const allSubjects = ref<any>([])
+const tableData = reactive<any>([])
 
 const searchBarItems = reactive([
   { name: "名称:", value: "", },
@@ -34,6 +44,14 @@ const searchBarItems = reactive([
       { name: "较难", id: 4 },
       { name: "困难", id: 5 }
     ],
+    single: true
+  },
+  {
+    name: '科目:',
+    value: '',
+    type: InputType.Select,
+    label: '请选择',
+    options: allSubjects,
     single: true
   }
 ])
@@ -68,7 +86,7 @@ const next = () => {
       active.value = 1
     }
   } else if (active.value == 1) {
-    if (newContentData.value.length == 0) {
+    if (newContentData.length == 0) {
       ElNotification({
         title: '未选择商品内容',
         type: 'warning'
@@ -77,8 +95,10 @@ const next = () => {
       active.value = 2
     }
   }
-  if (active.value == 1)
-    loadData(), console.log('111', tableData)
+  if (active.value == 1) {
+    searchBarItems[2].value = newProductData.subjectId
+    loadData()
+  }
 }
 
 const up = () => {
@@ -86,31 +106,21 @@ const up = () => {
     active.value = active.value - 1
   }
   if (active.value == 1)
-    loadData(), console.log('222')
+    loadData()
 }
 
-const loading = ref(false)
-const paginationInfo = reactive({
-  currentPage: 1,
-  pageSize: 20
-})
-const totalLength = ref<number>()
-const allGrades = ref<any>([])
-const allSubjects = ref<any>([])
-const tableData = reactive<any>([])
 const loadData = () => {
   tableData.length = 0
   loading.value = true
-  var args = {
+  var args: any = {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     type: newProductData.type,
-    subjectId: newProductData.subjectId,
+    subjectId: searchBarItems[2].value,
     gradeId: newProductData.gradeId,
     difficultyLevel: searchBarItems[1].value,
     name: searchBarItems[0].value
   }
-
   getCourseQuestionPackage(args)
     .then((res: any) => {
       totalLength.value = res.data.total
@@ -125,26 +135,6 @@ const loadData = () => {
 }
 
 const tableColumn = reactive<any>([
-  {
-    key: 'selection',
-    width: 50,
-    cellRenderer: (item: any) => {
-      const onChange = (value: CheckboxValueType) => item.rowData.checked = value
-      return <ElCheckbox modelValue={item.rowData.checked} onChange={onChange} />
-    },
-    headerCellRenderer: () => {
-      const onChange = (value: CheckboxValueType) => {
-        tableData.forEach((i: any) => i.checked = value);
-      }
-      return <ElCheckbox
-        onChange={onChange}
-        modelValue={tableData.every((i: any) => i.checked)}
-        indeterminate={!tableData.every((i: any) => i.checked)
-          && tableData.some((i: any) => i.checked)}
-      />
-    },
-    checked: false,
-  },
   {
     dataKey: 'id',
     key: 'id',
@@ -222,6 +212,19 @@ const tableColumn = reactive<any>([
     key: 'updatedAt',
     title: '更新时间',
     width: 100
+  },
+  {
+    key: 'option',
+    title: '操作',
+    cellRenderer: (item: any) => {
+      return (
+        <el-button link type="primary" onClick={() => addPackage(item.rowData)}>
+          选择
+        </el-button>
+      )
+    },
+    width: 80,
+    align: 'center'
   }
 ])
 
@@ -287,7 +290,6 @@ const loadSelectOption = () => {
     })
     .then((res) => {
       allSubjects.value = res.data
-      allSubjects.value.push({ id: '10000', name: '综合' })
     })
     .catch()
 }
@@ -407,10 +409,34 @@ const newProductData = reactive<any>({
   cover: newCoverUrl.value
 });
 
-const newContentData = ref<any>([])
+const newContentData = reactive<any>([])
+
+const addPackage = (item: any) => {
+  for (let i = 0; i < newContentData.length; i++) {
+    if (newContentData[i].id == item.id) {
+      ElNotification({
+        title: '已存在',
+        type: 'warning'
+      })
+      return
+    }
+  }
+  newContentData.push(item)
+  console.log('newContentData', newContentData)
+}
+
+const removePackage = (id: any) => {
+  for (let i = 0; i < newContentData.length; i++) {
+    if (newContentData[i].id == id) {
+      newContentData.splice(i, 1)
+      console.log('newContentData', newContentData)
+      return
+    }
+  }
+}
 
 const create = () => {
-  let data = newContentData.value.map((item: any) => item.id)
+  let data = newContentData.map((item: any) => item.id)
   var args = {
     id: newProductData.id,
     hot: newProductData.hot,
@@ -481,13 +507,6 @@ const create = () => {
       })
     })
 }
-
-watch(() => tableData, (val: any) => {
-  newContentData.value = val.filter((item: any) => item.checked)
-  console.log(newContentData.value)
-},
-  { deep: true, immediate: true }
-)
 </script>
 
 <template>
@@ -567,24 +586,40 @@ watch(() => tableData, (val: any) => {
       </div>
     </div>
 
-    <TablePage class="table-class" :loading="loading" :itemsTotalLength="totalLength" :columns="tableColumn"
-      :data="tableData" @paginationChange="pageChange" v-else-if="active == 1">
-      <SearchBar class="search-bar" :items="searchBarItems" @change="loadData"></SearchBar>
-      <div style="white-space:nowrap;margin-left: 5px;margin-top: 15px;margin-bottom: 15px;">
-        <el-button class="next-button-row-button" type="text" @click="up">
-          <el-icon class="el-icon--left">
-            <ArrowLeft />
-          </el-icon>
-          上一步
-        </el-button>
-        <el-button class="next-button-row-button" type="text" @click="next">
-          下一步
-          <el-icon class="el-icon--right">
-            <ArrowRight />
-          </el-icon>
-        </el-button>
+    <div style="display: flex;flex-direction: row;" v-else-if="active == 1">
+      <TablePage class="table-class" :loading="loading" :itemsTotalLength="totalLength" :columns="tableColumn"
+        :data="tableData" @paginationChange="pageChange">
+        <SearchBar class="search-bar" :items="searchBarItems" @change="loadData"></SearchBar>
+        <div style="white-space:nowrap;margin-left: 5px;margin-top: 15px;margin-bottom: 15px;">
+          <el-button class="next-button-row-button" type="text" @click="up">
+            <el-icon class="el-icon--left">
+              <ArrowLeft />
+            </el-icon>
+            上一步
+          </el-button>
+          <el-button class="next-button-row-button" type="text" @click="next">
+            下一步
+            <el-icon class="el-icon--right">
+              <ArrowRight />
+            </el-icon>
+          </el-button>
+        </div>
+      </TablePage>
+
+      <div class="selected-package-frame">
+        <div style="height: 95px;"></div>
+        <el-scrollbar class="scroll-bar">
+          <div class="selected-package-bar" v-for="item in newContentData" :key="item.id">
+            <img class="selected-img" :src="item.cover" />
+            <el-text style="margin-right: 25px;margin-left: 10px;">{{ item.name }}</el-text>
+            <div style="flex-grow: 1;"></div>
+            <el-button type="danger" :icon="Delete" link style="margin-right: 10px;"
+              @click="removePackage(item.id)"></el-button>
+          </div>
+        </el-scrollbar>
       </div>
-    </TablePage>
+    </div>
+
 
     <div class="step-2" v-else-if="active == 2">
       <div style="margin-left: 15px;" class="next-button-row">
@@ -742,12 +777,14 @@ watch(() => tableData, (val: any) => {
 }
 
 .search-bar {
-  width: calc($page-width - 30px);
+  // width: calc($page-width - 30px);
+  width: calc(100% - 10px);
   margin-left: 5px;
 }
 
 .table-class {
   margin-left: 5px;
+  width: 80%;
   height: calc($page-height - 160px);
 }
 
@@ -758,5 +795,36 @@ watch(() => tableData, (val: any) => {
 
 .input-length {
   width: 120px;
+}
+
+.selected-package-frame {
+  display: flex;
+  flex-direction: column;
+  width: 23%;
+  margin-left: 10px;
+  height: calc($page-height - 158px);
+}
+
+.scroll-bar {
+  height: 85%;
+  border: 1px rgba(0, 0, 0, 0.2) solid;
+}
+
+.selected-package-bar {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 65px;
+  background-color: #e1e2e4ea;
+  border-radius: 10px;
+}
+
+.selected-img {
+  width: 55px;
+  height: 55px;
+  margin: 5px;
+  border-radius: 10px;
 }
 </style>

@@ -385,11 +385,16 @@ const confirmAdd = () => {
 
         <div class="topPart1-3">
           <div class="topPart1-3-2">
-            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{ route.query.name }}</el-text></div>
-            <div class="topPart1-3-2"><el-text>更新时间:{{ route.query.updatedAt }}</el-text></div>
-            <div class="topPart1-3-2"><el-text>阶段：{{ route.query.gradeName }}</el-text></div>
-            <div class="topPart1-3-2"><el-text>科目：{{ route.query.categoryName }}</el-text></div>
-            <div class="topPart1-3-2"><el-text>老师：{{ route.query.teacherName }}</el-text></div>
+            <div class="topPart1-3-2"><el-text style="font-size: 20px;">{{ route.query.name ? route.query.name : '无'
+            }}</el-text></div>
+            <div class="topPart1-3-2"><el-text>更新时间:{{ route.query.updatedAt ? route.query.updatedAt : '无' }}</el-text>
+            </div>
+            <div class="topPart1-3-2"><el-text>阶段：{{ route.query.gradeName ? route.query.gradeName : '无' }}</el-text>
+            </div>
+            <div class="topPart1-3-2"><el-text>科目：{{ route.query.subjectName ? route.query.subjectName : '无' }}</el-text>
+            </div>
+            <div class="topPart1-3-2"><el-text>老师：{{ route.query.teacherName ? route.query.teacherName : '无' }}</el-text>
+            </div>
           </div>
         </div>
       </div>
@@ -599,5 +604,4 @@ $gap: 15px;
   align-self: center;
   border-left: 3px #f0f2f5 solid;
   box-sizing: border-box;
-}
-</style>
+}</style>
