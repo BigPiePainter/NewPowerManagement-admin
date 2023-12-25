@@ -83,10 +83,11 @@ const questionDataAnalyze = () => {
   allGoodQuestions.detail.length = 0;
   getStudentQuestions({ studentId: props.studentId })
     .then((res: any) => {
+      console.log("res.data", res.data)
       for (let i = 0; i < res.data.length; i++) {
         if (res.data[i].questionPackageId == props.packageId) {
           allGoodQuestions.total += 1;
-          allGoodQuestions.detail.push({ questionStoreId: res.data[i].questionId, type: res.data[i].questionType, outcomeType: res.data[i].outcomeType, answer: JSON.parse(res.data[i].answer), keyAnswer: JSON.parse(res.data[i].keyAnswer), answerTime: res.data[i].answerTime, no: i + 1 })
+          allGoodQuestions.detail.push({ questionStoreId: res.data[i].questionId, type: res.data[i].questionType, outcomeType: res.data[i].outcomeType, answer: JSON.parse(res.data[i].answer), keyAnswer: JSON.parse(res.data[i].keyAnswer), answerTime: res.data[i].answerTime, no: allGoodQuestions.total })
           if (res.data[i].outcomeType == 1) {
             allGoodQuestions.correct += 1;
             allGoodQuestions.done += 1;
@@ -212,6 +213,10 @@ const clickCard = () => {
               </div>
             </div>
 
+            <div class="choice-wrong-answer" v-if="item.outcomeType == 4">
+              <div style="margin-right: 3px;margin-left: 3px;"><el-text size="large" tag="b" class="choice-key-span">未答</el-text></div>
+            </div>
+
             <div style="margin-right: 3px;margin-left: 6px;" v-if="item.type == 1 || item.type == 2">{{ item.outcomeType
               == 1 ? "答对:" : "正解:" }}
             </div>
@@ -234,6 +239,10 @@ const clickCard = () => {
               <div class="judge-question-result">
                 <el-text size="large" tag="b" class="judge-key-span">{{ item.answer.answers[0] }}</el-text>
               </div>
+            </div>
+
+            <div class="choice-wrong-answer" v-if="item.outcomeType == 4">
+              <div style="margin-right: 3px;margin-left: 3px;"><el-text size="large" tag="b" class="choice-key-span">未答</el-text></div>
             </div>
 
             <div style="margin-right: 3px;margin-left: 6px;" v-if="item.type == 1 || item.type == 2">{{ item.outcomeType
