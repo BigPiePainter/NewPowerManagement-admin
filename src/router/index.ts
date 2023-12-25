@@ -48,6 +48,7 @@ import PutQuestionIntoPackage from '@/views/PutQuestionIntoPackage.vue'
 import AuthorView from '@/views/AuthorView.vue'
 import HomeworkView from '@/views/HomeworkView.vue'
 import CustomerServiceView from '@/views/CustomerServiceView.vue'
+import QuestionEditView from '@/views/QuestionEditView.vue'
 
 import { userInfo } from '@/apis/manager'
 
@@ -346,6 +347,12 @@ const router = createRouter({
           path: 'customer-service',
           name: 'customer-service',
           component: CustomerServiceView,
+          meta: { Protected: true }
+        },
+        {
+          path: 'question-edit',
+          name: 'question-edit',
+          component: QuestionEditView,
           meta: { Protected: true }
         }
       ]

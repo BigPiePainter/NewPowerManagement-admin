@@ -417,11 +417,11 @@ const loadData = () => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     name: searchBarItems[0].value,
-    type: searchBarItems[1].value[0],
-    status: searchBarItems[2].value[0],
-    gradeId: searchBarItems[3].value[0],
-    subjectId: searchBarItems[4].value[0],
-    version: searchBarItems[5].value[0]
+    type: searchBarItems[1].value,
+    status: searchBarItems[2].value,
+    gradeId: searchBarItems[3].value,
+    subjectId: searchBarItems[4].value,
+    version: searchBarItems[5].value
   }
   getProduct(args)
     .then((res) => {
@@ -455,8 +455,6 @@ const loadData = () => {
     .catch(() => { })
     .finally(() => {
       loading.value = false
-      console.log(allGrades)
-      console.log(allSubjects)
     })
 }
 loadData()

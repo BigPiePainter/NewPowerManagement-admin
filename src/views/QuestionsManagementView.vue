@@ -14,6 +14,24 @@ import { getMiniLessons } from '@/apis/minilessons'
 import { videoToUrl } from '@/apis/videoIdToUrl'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
+const router = useRouter()
+// const createQuestionDailogShow = ref(false)
+
+const questionCreate = () => { router.push({ path: 'question-create' }) }
+
+const editQuestion = (props: any) => {
+  console.log('编辑',props)
+  router.push({
+    path: 'question-edit',
+    query: {
+      id: props.id,
+      questionPrompt: props.questionPrompt,
+      options: props.options,
+      answer: props.answer,
+      type: props.type
+    }
+  })
+}
 
 const author = JSON.parse(localStorage.author)
 const allGrades = ref<any>([])
@@ -150,11 +168,6 @@ breadcrumbStore.data = [
 const tableData = reactive<any>([])
 const loading = ref(true)
 const loading2 = ref(true)
-
-const router = useRouter()
-// const createQuestionDailogShow = ref(false)
-
-const questionCreate = () => { router.push({ path: 'question-create' }) }
 
 const searchQuestionData = reactive<any>({
   difficultyType: '',
@@ -367,6 +380,8 @@ const downloadFromatFile = () => { }
 const radio1 = ref('')
 const radio2 = ref('')
 
+const editDialogShow = ref(false)
+
 const diffcultySearch = (val: any) => {
   searchQuestionData.difficultyType = val
   console.log(val)
@@ -480,6 +495,11 @@ const typeSearch = (val: any) => {
           <el-button style="width: 95px;" v-if="!item.solution" :disabled="!author.questionsEdit"
             @click="uploadSolution(item.id)" type='primary'>
             上传图文讲解
+          </el-button>
+
+          <el-button :disabled="!author.questionsEdit"
+            @click="editQuestion(item)" type='primary'>
+            编辑
           </el-button>
 
           <el-button :disabled="!author.questionsEdit" @click="PredeleteQuestion(item.id)" type=danger>

@@ -110,6 +110,7 @@ const loadData = () => {
     difficultyLevel: searchBarItems[1].value,
     name: searchBarItems[0].value
   }
+
   getCourseQuestionPackage(args)
     .then((res: any) => {
       totalLength.value = res.data.total
@@ -286,6 +287,7 @@ const loadSelectOption = () => {
     })
     .then((res) => {
       allSubjects.value = res.data
+      allSubjects.value.push({ id: '10000', name: '综合' })
     })
     .catch()
 }
@@ -530,7 +532,7 @@ watch(() => tableData, (val: any) => {
           <el-select class="input-input" placeholder="请选择学习阶段" v-model="newProductData.gradeId">
             <el-option v-for="item in allGrades" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
-          <el-select class="input-input" placeholder="请选择课程类目阶段" v-model="newProductData.subjectId">
+          <el-select class="input-input" placeholder="请选择课程类目" v-model="newProductData.subjectId">
             <el-option v-for="item in allSubjects" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <el-select class="input-input" placeholder="请选择商品种类" v-model="newProductData.type">
@@ -608,8 +610,7 @@ watch(() => tableData, (val: any) => {
           <!-- <el-input :disabled="newProductData.androidPoint != ''" class="input-length" placeholder="请输入(元)"
             v-model="newProductData.androidPrice">元</el-input>
           /  -->
-          <el-input class="input-length" placeholder="请输入（积分）"
-            v-model="newProductData.androidPoint">积分</el-input>
+          <el-input class="input-length" placeholder="请输入（积分）" v-model="newProductData.androidPoint">积分</el-input>
         </div>
 
         <!--<div style="margin-left: 30px;">
