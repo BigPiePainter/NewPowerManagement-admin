@@ -12,6 +12,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllTeachers } from '@/apis/teacher'
 import { freePackageCreate } from '@/apis/freeOrder'
 import { getAllStudents } from '@/apis/student'
+import RichTextEditor from '@/components/RichTextEditor.vue';
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [{ name: '好题包管理', path: '' }]
@@ -20,6 +21,10 @@ const author = JSON.parse(localStorage.author)
 const editDialogShow = ref(false)
 
 const loading = ref(true)
+
+const showDetailDialogShow = ref(false)
+const detailPrompt = ref<any>('')
+const detailTitle = ref<any>('')
 
 const clickDetail = (props: any) => {
 
@@ -223,7 +228,22 @@ const tableColumns = [
     dataKey: 'description',
     key: 'description',
     title: '详情描述',
-    width: 200
+    width: 100,
+    cellRenderer: (cellData: any) => {
+      if (cellData.cellData == '<p><br></p>') {
+        return (
+          <>
+            <el-text>--</el-text>
+          </>
+        )
+      } else {
+        return (
+          <>
+            <ElButton link type='primary' onClick={() => showDetail(cellData)}>查看详情</ElButton>
+          </>
+        )
+      }
+    }
   },
   {
     dataKey: 'createdAt',
@@ -515,6 +535,12 @@ const confirmEditDialog = () => {
     .catch()
   editDialogShow.value = false
 }
+
+const showDetail = (item: any) => {
+  showDetailDialogShow.value = true;
+  detailPrompt.value = item.cellData;
+  detailTitle.value = item.rowData.name
+}
 </script>
 
 <template>
@@ -524,20 +550,20 @@ const confirmEditDialog = () => {
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
     <div>
-      <el-button class="new-button" style="margin-bottom: 15px; margin-left: 15px;" type="primary"
-        @click="clickCreate" :disabled='!author.questionPackageEdit'>新建好题包</el-button>
+      <el-button class="new-button" style="margin-bottom: 15px; margin-left: 15px;" type="primary" @click="clickCreate"
+        :disabled='!author.questionPackageEdit'>新建好题包</el-button>
     </div>
   </TablePage>
 
   <el-dialog class="new-class-dialog" width="370px" v-model="editDialogShow">
     <div>
-      <div class="div-input-element">
+      <!-- <div class="div-input-element">
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>封面路径：
         </span>
         <el-input class="dialog-input" v-model="newCourseData.cover">
         </el-input>
-      </div>
+      </div> -->
       <div class="div-input-element">
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>好题包名称：
@@ -617,6 +643,11 @@ const confirmEditDialog = () => {
         取消
       </el-button>
     </template>
+  </el-dialog>
+
+  <el-dialog :title="detailTitle" :show-close="false" v-model="showDetailDialogShow">
+    <RichTextEditor :questionPrompt="detailPrompt" :isShow="false">
+    </RichTextEditor>
   </el-dialog>
 </template>
 

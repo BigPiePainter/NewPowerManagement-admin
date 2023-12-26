@@ -35,7 +35,7 @@ const handleCurrentChange = (val: number) => {
     <div class="page-table-auto-resizer">
       <el-auto-resizer>
         <template #default="{ height, width }">
-          <el-table-v2 :estimated-row-height="40" v-loading="loading || false" element-loading-text="加载中..."
+          <el-table-v2 :estimated-row-height="rowHeight || 40" v-loading="loading || false" element-loading-text="加载中..."
             :columns="columns" :data="data" :width="width" :height="height" fixed :row-height="rowHeight || 39">
           </el-table-v2>
         </template>

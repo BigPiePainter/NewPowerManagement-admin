@@ -6,11 +6,12 @@ import TablePage from '@/components/TablePage.vue';
 import { useRoute } from 'vue-router'
 import { InputType } from '@/type'
 import { getProductContent, addProduct, deleteProductContent } from '@/apis/product';
-import type { CheckboxValueType } from 'element-plus'
+import { ElButton, type CheckboxValueType } from 'element-plus'
 import { ElCheckbox, ElNotification } from 'element-plus'
 import { getCourseQuestionPackage } from '@/apis/coursequestionpackage';
 import { getGrades } from '@/apis/grade';
 import { getSubjects } from '@/apis/subject';
+import RichTextEditor from '@/components/RichTextEditor.vue';
 
 const breadcrumbStore = useBreadcrumbStore()
 breadcrumbStore.data = [
@@ -24,6 +25,9 @@ const deleteItemid = ref<any>()
 const tableData = ref<any>([])
 const loading = ref(true)
 const totalLength = ref<Number>()
+const showDetailDialogShow = ref(false)
+const detailPrompt = ref<any>('')
+const detailTitle = ref<any>('')
 
 const warningDialog = (cellData2: any) => {
   console.log(cellData2)
@@ -124,7 +128,22 @@ const tableColumns = [
     dataKey: 'packageDescription',
     key: 'packageDescription',
     title: '课程描述',
-    width: 200
+    width: 100,
+    cellRenderer: (cellData: any) => {
+      if (cellData.cellData == '<p><br></p>') {
+        return (
+          <>
+            <el-text>--</el-text>
+          </>
+        )
+      } else {
+        return (
+          <>
+            <ElButton link type='primary' onClick={() => showDetail(cellData)}>查看详情</ElButton>
+          </>
+        )
+      }
+    }
   },
 
   {
@@ -372,6 +391,12 @@ const confirmAdd = () => {
     loadData()
   }).catch
 }
+
+const showDetail = (item: any) => {
+  showDetailDialogShow.value = true;
+  detailPrompt.value = item.cellData;
+  detailTitle.value = item.rowData.name
+}
 </script>
 
 <template>
@@ -450,6 +475,11 @@ const confirmAdd = () => {
         取消
       </el-button>
     </template>
+  </el-dialog>
+
+  <el-dialog :title="detailTitle" :show-close="false" v-model="showDetailDialogShow">
+    <RichTextEditor :questionPrompt="detailPrompt" :isShow="false">
+    </RichTextEditor>
   </el-dialog>
 </template>
 
@@ -604,4 +634,5 @@ $gap: 15px;
   align-self: center;
   border-left: 3px #f0f2f5 solid;
   box-sizing: border-box;
-}</style>
+}
+</style>

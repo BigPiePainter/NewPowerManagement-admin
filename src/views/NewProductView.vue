@@ -162,12 +162,6 @@ const tableColumn = reactive<any>([
     width: 180
   },
   {
-    dataKey: 'description',
-    key: 'description',
-    title: '描述',
-    width: 180
-  },
-  {
     dataKey: 'difficultyLevel',
     key: 'difficultyLevel',
     title: '难度',
@@ -181,13 +175,7 @@ const tableColumn = reactive<any>([
                   : '困难'
         }
       </span>),
-    width: 100
-  },
-  {
-    dataKey: 'teacherName',
-    key: 'teacherName',
-    title: '老师',
-    width: 80
+    width: 50
   },
   {
     dataKey: 'subjectName',
@@ -202,18 +190,6 @@ const tableColumn = reactive<any>([
     width: 80
   },
   {
-    dataKey: 'createdAt',
-    key: 'createdAt',
-    title: '创建时间',
-    width: 100
-  },
-  {
-    dataKey: 'updatedAt',
-    key: 'updatedAt',
-    title: '更新时间',
-    width: 100
-  },
-  {
     key: 'option',
     title: '操作',
     cellRenderer: (item: any) => {
@@ -223,7 +199,7 @@ const tableColumn = reactive<any>([
         </el-button>
       )
     },
-    width: 80,
+    width: 50,
     align: 'center'
   }
 ])
@@ -802,7 +778,7 @@ const create = () => {
   flex-direction: column;
   width: 23%;
   margin-left: 10px;
-  height: calc($page-height - 158px);
+  height: calc($page-height - 160px);
 }
 
 .scroll-bar {
