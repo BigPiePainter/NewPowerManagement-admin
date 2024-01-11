@@ -97,7 +97,7 @@ const selectLesson = (cellData: any) => {
       lessonName.value = cellData.rowData.name
       if (document.getElementById('uploadVideoInput')) {
         var obj = document.getElementById('uploadVideoInput') as HTMLInputElement;
-        obj.value = '' 
+        obj.value = ''
       }
       dialogVisible.value = false
     })
@@ -251,6 +251,7 @@ const newSMultipleChoiceQuestion = reactive<any>({
 const questionData = ref<any>([])
 
 const newAnswer = ref<any>([])
+const fillBlankQuestionAnswer = reactive<any>({ a: '' })
 const count = ref<number>(0)
 const giveData = () => {
   var newSMultipleChoice = reactive<any>([])
@@ -262,6 +263,53 @@ const giveData = () => {
   questionData.value = newSMultipleChoice
   console.log(questionData.value)
 }
+
+const addBlank = () => {
+  if (Object.keys(fillBlankQuestionAnswer).length == 1) {
+    Object.assign(fillBlankQuestionAnswer, { b: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 2) {
+    Object.assign(fillBlankQuestionAnswer, { c: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 3) {
+    Object.assign(fillBlankQuestionAnswer, { d: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 4) {
+    Object.assign(fillBlankQuestionAnswer, { e: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+}
+
+const minBlank = () => {
+  if (Object.keys(fillBlankQuestionAnswer).length == 5) {
+    delete fillBlankQuestionAnswer.e
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 4) {
+    delete fillBlankQuestionAnswer.d
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 3) {
+    delete fillBlankQuestionAnswer.c
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 2) {
+    delete fillBlankQuestionAnswer.b
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+}
+
 
 const addOption = () => {
   if (Object.keys(newSMultipleChoiceQuestion).length == 2) {
@@ -339,6 +387,16 @@ watch(() => newSMultipleChoiceQuestion, (val: any) => {
   console.log('count', count.value)
   console.log('newSMultipleChoiceQuestion', val)
   console.log('questionData', questionData.value)
+},
+  { deep: true, immediate: true }
+)
+
+watch(() => fillBlankQuestionAnswer, (val: any) => {
+  newAnswer.value.length = 0
+  Object.keys(fillBlankQuestionAnswer).forEach((item: any) => {
+    newAnswer.value.push(fillBlankQuestionAnswer[item])
+  })
+  console.log('fillBlankQuestionAnswer', val)
 },
   { deep: true, immediate: true }
 )
@@ -442,6 +500,20 @@ const dataTransformMBo = () => {
   console.log(JSONanswer)
 }
 
+const dataTransformBlank = () => {
+  Object.keys(fillBlankQuestionAnswer).forEach((item: any) => {
+    newAnswer.value.push(fillBlankQuestionAnswer[item])
+  })
+  var args = {
+    answers: newAnswer.value,
+    correct: null
+  }
+  JSONoption.value = JSON.stringify(questionData.value)
+  JSONanswer.value = JSON.stringify(args)
+  console.log(JSONoption)
+  console.log(JSONanswer)
+}
+
 const dataTransformCorrect = () => {
   var args = {
     answers: null,
@@ -463,8 +535,7 @@ watch(() => newAnswer, (val: any) => {
     dataTransformMu()
     console.log(JSONoption)
     console.log(JSONanswer)
-  } else if (newQuestionData.type == '5'
-    || newQuestionData.type == '6') {
+  } else if (newQuestionData.type == '5' || newQuestionData.type == '6') {
     dataTransformMBo()
     console.log(JSONoption)
     console.log(JSONanswer)
@@ -614,9 +685,18 @@ watch(() => newAnswer, (val: any) => {
     </div>
 
     <div style="width: 300px;" v-if="newQuestionData.type == '5'">
-      <div style="margin-top: 20px;margin-bottom:10px">答案：</div>
-      <el-input placeholder="请输入答案" v-model="newAnswer">
-      </el-input>
+      <diV>
+        <div style="margin-bottom:10px">答案：</div>
+        <!-- <el-input placeholder="请输入答案" v-model="newAnswer">
+        </el-input> -->
+        <div style="margin-top: 10px" v-for="(val, option) in fillBlankQuestionAnswer" :key="option">
+          <el-input style="height: 27px;" v-model="fillBlankQuestionAnswer[option]"></el-input>
+        </div>
+        <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
+          <el-button @click="addBlank">增加</el-button>
+          <el-button @click="minBlank">减少</el-button>
+        </div>
+      </diV>
     </div>
 
     <div style="width: 300px;" v-if="newQuestionData.type == '6'">
