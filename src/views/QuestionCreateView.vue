@@ -285,9 +285,159 @@ const addBlank = () => {
     console.log(fillBlankQuestionAnswer)
     return
   }
+  if (Object.keys(fillBlankQuestionAnswer).length == 5) {
+    Object.assign(fillBlankQuestionAnswer, { f: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 6) {
+    Object.assign(fillBlankQuestionAnswer, { g: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 7) {
+    Object.assign(fillBlankQuestionAnswer, { h: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 8) {
+    Object.assign(fillBlankQuestionAnswer, { i: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 9) {
+    Object.assign(fillBlankQuestionAnswer, { j: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 10) {
+    Object.assign(fillBlankQuestionAnswer, { k: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 11) {
+    Object.assign(fillBlankQuestionAnswer, { l: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 12) {
+    Object.assign(fillBlankQuestionAnswer, { m: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 13) {
+    Object.assign(fillBlankQuestionAnswer, { n: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 14) {
+    Object.assign(fillBlankQuestionAnswer, { o: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 15) {
+    Object.assign(fillBlankQuestionAnswer, { p: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 16) {
+    Object.assign(fillBlankQuestionAnswer, { q: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 17) {
+    Object.assign(fillBlankQuestionAnswer, { r: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 18) {
+    Object.assign(fillBlankQuestionAnswer, { s: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 19) {
+    Object.assign(fillBlankQuestionAnswer, { t: '' })
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
 }
 
 const minBlank = () => {
+  if (Object.keys(fillBlankQuestionAnswer).length == 20) {
+    delete fillBlankQuestionAnswer.t
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 19) {
+    delete fillBlankQuestionAnswer.s
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 18) {
+    delete fillBlankQuestionAnswer.r
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 17) {
+    delete fillBlankQuestionAnswer.q
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 16) {
+    delete fillBlankQuestionAnswer.p
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 15) {
+    delete fillBlankQuestionAnswer.o
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 14) {
+    delete fillBlankQuestionAnswer.n
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 13) {
+    delete fillBlankQuestionAnswer.m
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 12) {
+    delete fillBlankQuestionAnswer.l
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 11) {
+    delete fillBlankQuestionAnswer.k
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 10) {
+    delete fillBlankQuestionAnswer.j
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 9) {
+    delete fillBlankQuestionAnswer.i
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 8) {
+    delete fillBlankQuestionAnswer.h
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 7) {
+    delete fillBlankQuestionAnswer.g
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
+  if (Object.keys(fillBlankQuestionAnswer).length == 6) {
+    delete fillBlankQuestionAnswer.f
+    console.log(fillBlankQuestionAnswer)
+    return
+  }
   if (Object.keys(fillBlankQuestionAnswer).length == 5) {
     delete fillBlankQuestionAnswer.e
     console.log(fillBlankQuestionAnswer)

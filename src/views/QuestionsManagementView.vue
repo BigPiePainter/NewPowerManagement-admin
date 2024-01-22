@@ -28,7 +28,10 @@ const editQuestion = (props: any) => {
       questionPrompt: props.questionPrompt,
       options: props.options,
       answer: props.answer,
-      type: props.type
+      type: props.type,
+      gradeId: props.gradeId,
+      subjectId: props.subjectId,
+      difficultyType: props.difficultyType
     }
   })
 }
