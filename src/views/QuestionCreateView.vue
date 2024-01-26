@@ -563,7 +563,7 @@ const confirmCreate = () => {
     solution: newQuestionData.solution,
     filePath: newQuestionData.filePath
   }
-  console.log('args', args)
+  console.log('confirmCreate args', args)
   if (args.solution == '<p><br></p>') {
     delete args.solution
   }
@@ -650,20 +650,6 @@ const dataTransformMBo = () => {
   console.log(JSONanswer)
 }
 
-const dataTransformBlank = () => {
-  Object.keys(fillBlankQuestionAnswer).forEach((item: any) => {
-    newAnswer.value.push(fillBlankQuestionAnswer[item])
-  })
-  var args = {
-    answers: newAnswer.value,
-    correct: null
-  }
-  JSONoption.value = JSON.stringify(questionData.value)
-  JSONanswer.value = JSON.stringify(args)
-  console.log(JSONoption)
-  console.log(JSONanswer)
-}
-
 const dataTransformCorrect = () => {
   var args = {
     answers: null,
@@ -694,6 +680,14 @@ watch(() => newAnswer, (val: any) => {
     console.log(JSONoption)
     console.log(JSONanswer)
   }
+},
+  { deep: true, immediate: true }
+)
+
+watch(() => newQuestionData.type, (val: any) => {
+  newAnswer.value = null;
+  JSONanswer.value = null;
+  console.log('newQuestionData.type', val)
 },
   { deep: true, immediate: true }
 )
