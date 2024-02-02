@@ -6,6 +6,7 @@ import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import RichTextEditor from '@/components/RichTextEditor.vue'
 import SolutionTextEditor from '@/components/SolutionTextEditor.vue'
+import OptionText from '@/components/OptionText.vue'
 import UploadVideo from '@/components/UploadVideo.vue'
 import { createGoodQuestion } from '@/apis/questionStore'
 import { videoToUrl } from '@/apis/videoIdToUrl'
@@ -542,10 +543,12 @@ watch(() => newSMultipleChoiceQuestion, (val: any) => {
 )
 
 watch(() => fillBlankQuestionAnswer, (val: any) => {
-  newAnswer.value.length = 0
+  // newAnswer.value.length = 0
+  var fillBlank = reactive<any>([])
   Object.keys(fillBlankQuestionAnswer).forEach((item: any) => {
-    newAnswer.value.push(fillBlankQuestionAnswer[item])
+    fillBlank.push(fillBlankQuestionAnswer[item])
   })
+  newAnswer.value = fillBlank
   console.log('fillBlankQuestionAnswer', val)
 },
   { deep: true, immediate: true }
@@ -601,20 +604,26 @@ const create = () => {
   centerDialogVisible.value = true
 }
 
-const dataTransform = () => {
-  var args = {
-    answers: [newAnswer.value.identifier],
-    correct: null
-  }
-  JSONoption.value = JSON.stringify(questionData.value)
-  JSONanswer.value = JSON.stringify(args)
-  console.log(JSONoption)
-  console.log(JSONanswer)
-}
-
 const changeQuestionPrompt = (valueHtml: any) => {
   console.log('valueHtml', valueHtml)
   newQuestionData.questionPrompt = valueHtml
+}
+
+const changeOptionPrompt = (valueHtml: any, option: any) => {
+  console.log('valueHtml', valueHtml)
+  console.log('option', option)
+  newSMultipleChoiceQuestion[option] = valueHtml
+}
+
+const changeBlankFillingPrompt = (valueHtml: any, option: any) => {
+  console.log('valueHtml', valueHtml)
+  console.log('option', option)
+  fillBlankQuestionAnswer[option] = valueHtml
+}
+
+const changeBigQuestionAnswerPrompt = (valueHtml: any, option: any) => {
+  console.log('valueHtml', valueHtml)
+  newAnswer.value = valueHtml
 }
 
 const changeSolution = (solutionHtml: any) => {
@@ -628,9 +637,20 @@ const getVideoPath = (path: any) => {
   newQuestionData.filePath = path
 }
 
+const dataTransform = () => {
+  var args = {
+    answers: [(newAnswer.value || []).identifier],
+    correct: null
+  }
+  JSONoption.value = JSON.stringify(questionData.value)
+  JSONanswer.value = JSON.stringify(args)
+  console.log(JSONoption)
+  console.log(JSONanswer)
+}
+
 const dataTransformMu = () => {
   var args = {
-    answers: newAnswer.value.map((item: any) => item.identifier),
+    answers: (newAnswer.value || []).map((item: any) => item.identifier),
     correct: null
   }
   JSONoption.value = JSON.stringify(questionData.value)
@@ -749,8 +769,15 @@ watch(() => newQuestionData.type, (val: any) => {
       <el-text>请输入单选题目选项</el-text>
       <diV>
         <div v-for="(description, option) in newSMultipleChoiceQuestion" :key="option"
-          style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span style="margin-right: 5px;">{{ option
-          }}</span><el-input style="height: 27px;" v-model="newSMultipleChoiceQuestion[option]"></el-input>
+          style="display: flex;margin-top: 10px;margin-bottom: 5px;">
+          <span style="margin-right: 5px;">
+            {{ option }}
+          </span>
+          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="newSMultipleChoiceQuestion[option]"
+            :option="(option as unknown as string)" :isShow="true" @change="changeOptionPrompt"
+            v-model="newSMultipleChoiceQuestion[option]">
+          </OptionText>
+          <!-- <el-input style="height: 27px;" v-model="newSMultipleChoiceQuestion[option]"></el-input> -->
         </div>
         <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
           <el-button @click="addOption">增加选项</el-button>
@@ -771,18 +798,16 @@ watch(() => newQuestionData.type, (val: any) => {
       <el-text>请输入多选题目选项</el-text>
       <diV>
         <div v-for="(description, option) in newSMultipleChoiceQuestion" :key="option"
-          style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span style="margin-right: 5px;">{{ option
-          }}</span><el-input style="height: 27px;" v-model="newSMultipleChoiceQuestion[option]"></el-input>
+          style="display: flex;margin-top: 10px;margin-bottom: 5px;">
+          <span style="margin-right: 5px;">
+            {{ option }}
+          </span>
+          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="newSMultipleChoiceQuestion[option]"
+            :option="(option as unknown as string)" :isShow="true" @change="changeOptionPrompt"
+            v-model="newSMultipleChoiceQuestion[option]">
+          </OptionText>
+          <!-- <el-input style="height: 27px;" v-model="newSMultipleChoiceQuestion[option]"></el-input> -->
         </div>
-        <!-- <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                                                      style="margin-right: 5px;">B:</span><el-input style="height: 27px;"
-                                                      v-model="newSMultipleChoiceQuestion.B"></el-input></div>
-                                              <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                                                      style="margin-right: 5px;">C:</span><el-input style="height: 27px;"
-                                                      v-model="newSMultipleChoiceQuestion.C"></el-input></div>
-                                              <div style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span
-                                                      style="margin-right: 5px;">D:</span><el-input style="height: 27px;"
-                                                      v-model="newSMultipleChoiceQuestion.D"></el-input></div> -->
         <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
           <el-button @click="addOption">增加选项</el-button>
           <el-button @click="minOption">减少选项</el-button>
@@ -802,8 +827,14 @@ watch(() => newQuestionData.type, (val: any) => {
       <el-text>请输入不定项选择选项</el-text>
       <diV>
         <div v-for="(description, option) in newSMultipleChoiceQuestion" :key="option"
-          style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span style="margin-right: 5px;">{{ option
-          }}</span><el-input style="height: 27px;" v-model="newSMultipleChoiceQuestion[option]"></el-input>
+          style="display: flex;margin-top: 10px;margin-bottom: 5px;">
+          <span style="margin-right: 5px;">
+            {{ option }}
+          </span>
+          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="newSMultipleChoiceQuestion[option]"
+            :option="(option as unknown as string)" :isShow="true" @change="changeOptionPrompt"
+            v-model="newSMultipleChoiceQuestion[option]">
+          </OptionText>
         </div>
         <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
           <el-button @click="addOption">增加选项</el-button>
@@ -831,10 +862,10 @@ watch(() => newQuestionData.type, (val: any) => {
     <div style="width: 300px;" v-if="newQuestionData.type == '5'">
       <diV>
         <div style="margin-bottom:10px">答案：</div>
-        <!-- <el-input placeholder="请输入答案" v-model="newAnswer">
-        </el-input> -->
         <div style="margin-top: 10px" v-for="(val, option) in fillBlankQuestionAnswer" :key="option">
-          <el-input style="height: 27px;" v-model="fillBlankQuestionAnswer[option]"></el-input>
+          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="fillBlankQuestionAnswer[option]" :option="(option as unknown as string)"
+            :isShow="true" @change="changeBlankFillingPrompt" v-model="fillBlankQuestionAnswer[option]">
+          </OptionText>
         </div>
         <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
           <el-button @click="addBlank">增加</el-button>
@@ -845,8 +876,9 @@ watch(() => newQuestionData.type, (val: any) => {
 
     <div style="width: 300px;" v-if="newQuestionData.type == '6'">
       <div style="margin-top: 20px;margin-bottom:10px">答案：</div>
-      <el-input placeholder="请输入答案" v-model="newAnswer">
-      </el-input>
+      <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="newAnswer" :isShow="true"
+        @change="changeBigQuestionAnswerPrompt" v-model="newAnswer">
+      </OptionText>
     </div>
 
     <el-divider content-position="left">图文讲解</el-divider>

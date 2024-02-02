@@ -3,6 +3,7 @@ import { ref, reactive } from 'vue'
 import { ElButton, ElNotification } from 'element-plus'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import RichTextEditor from '@/components/RichTextEditor.vue'
+import OptionText from '@/components/OptionText.vue'
 import { editGoodQuestion } from '@/apis/questionStore'
 import { useRoute } from 'vue-router'
 import { getGrades } from '@/apis/grade'
@@ -159,6 +160,29 @@ const edit = () => {
 const changeQuestionPrompt = (valueHtml: any) => {
   console.log('valueHtml', valueHtml)
   editQuestionData.questionPrompt = valueHtml
+}
+
+const changeOptionPrompt = (valueHtml: any, option: any) => {
+  console.log('valueHtml', valueHtml)
+  console.log('option', option)
+  editQuestionData.options.forEach((item: any) => {
+    if (item.identifier == option) {
+      item.description = valueHtml
+    }
+  })
+  console.log('test', editQuestionData.options)
+  // editQuestionData.options[option] = valueHtml
+}
+
+const changeBlankFillingPrompt = (valueHtml: any, option: any) => {
+  console.log('valueHtml', valueHtml)
+  console.log('option', option)
+  fillBlankQuestionAnswer[option] = valueHtml
+}
+
+const changeBigQuestionAnswerPrompt = (valueHtml: any, option: any) => {
+  console.log('valueHtml', valueHtml)
+  editQuestionData.answer.answers = valueHtml
 }
 
 const addBlank = () => {
@@ -414,8 +438,13 @@ const minBlank = () => {
       <el-text>单选题选项</el-text>
       <diV>
         <div v-for="item in editQuestionData.options" :key="item.value"
-          style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span style="margin-right: 5px;">{{ item.identifier
-          }}</span><el-input style="height: 27px;" v-model=item.description></el-input>
+          style="display: flex;margin-top: 10px;margin-bottom: 5px;">
+          <span style="margin-right: 5px;">
+            {{ item.identifier }}
+          </span>
+          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="item.description" :option="item.identifier" :isShow="true"
+            @change="changeOptionPrompt" v-model="item.description">
+          </OptionText>
         </div>
       </diV>
       <div style="display: flex; margin-top: 10px;">
@@ -431,8 +460,13 @@ const minBlank = () => {
       <el-text>多选题选项</el-text>
       <diV>
         <div v-for="item in editQuestionData.options" :key="item.value"
-          style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span style="margin-right: 5px;">{{ item.identifier
-          }}</span><el-input style="height: 27px;" v-model=item.description></el-input>
+          style="display: flex;margin-top: 10px;margin-bottom: 5px;">
+          <span style="margin-right: 5px;">
+            {{ item.identifier }}
+          </span>
+          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="item.description" :option="item.identifier" :isShow="true"
+            @change="changeOptionPrompt" v-model="item.description">
+          </OptionText>
         </div>
       </diV>
       <div style="display: flex; margin-top: 10px;">
@@ -449,8 +483,13 @@ const minBlank = () => {
       <el-text>不定项选择题选项</el-text>
       <diV>
         <div v-for="item in editQuestionData.options" :key="item.value"
-          style="display: flex;margin-top: 10px;margin-bottom: 5px;"><span style="margin-right: 5px;">{{ item.identifier
-          }}</span><el-input style="height: 27px;" v-model=item.description></el-input>
+          style="display: flex;margin-top: 10px;margin-bottom: 5px;">
+          <span style="margin-right: 5px;">
+            {{ item.identifier }}
+          </span>
+          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="item.description" :option="item.identifier" :isShow="true"
+            @change="changeOptionPrompt" v-model="item.description">
+          </OptionText>
         </div>
       </diV>
       <div style="display: flex; margin-top: 10px;">
@@ -472,15 +511,12 @@ const minBlank = () => {
     </div>
 
     <div style="width: 300px;" v-if="editQuestionData.type == '5'">
-      <!-- <div style="margin-top: 20px;margin-bottom:10px">答案：</div>
-      <el-input placeholder="请输入答案" v-model="editQuestionData.answer.answers">
-      </el-input> -->
       <diV>
         <div style="margin-bottom:10px">答案：</div>
-        <!-- <el-input placeholder="请输入答案" v-model="newAnswer">
-        </el-input> -->
         <div style="margin-top: 10px" v-for="(val, option) in fillBlankQuestionAnswer" :key="option">
-          <el-input style="height: 27px;" v-model="fillBlankQuestionAnswer[option]"></el-input>
+          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="fillBlankQuestionAnswer[option]" :option="(option as unknown as string)"
+            :isShow="true" @change="changeBlankFillingPrompt" v-model="fillBlankQuestionAnswer[option]">
+          </OptionText>
         </div>
         <div style="display: flex;margin-top: 10px;margin-bottom: 25px;margin-left: 15px;">
           <el-button @click="addBlank">增加</el-button>
@@ -491,8 +527,11 @@ const minBlank = () => {
 
     <div style="width: 300px;" v-if="editQuestionData.type == '6'">
       <div style="margin-top: 20px;margin-bottom:10px">答案：</div>
-      <el-input placeholder="请输入答案" v-model="editQuestionData.answer.answers">
-      </el-input>
+      <!-- <el-input placeholder="请输入答案" v-model="editQuestionData.answer.answers"></el-input> -->
+      <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="editQuestionData.answer.answers" :isShow="true"
+        @change="changeBigQuestionAnswerPrompt" v-model="editQuestionData.answer.answers">
+      </OptionText>
+      
     </div>
 
 

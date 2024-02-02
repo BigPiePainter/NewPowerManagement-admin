@@ -8,7 +8,8 @@ import { ElNotification } from 'element-plus'
 import { getSubjects } from '@/apis/subject'
 import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getGoodQuestion, deleteGoodQuestion, editGoodQuestion } from '@/apis/questionStore'
-import RichTextEditor from '@/components/RichTextEditor.vue';
+import RichTextEditor from '@/components/RichTextEditor.vue'
+import OptionText from '@/components/OptionText.vue'
 import UploadVideo from '@/components/UploadVideo.vue'
 import { getMiniLessons } from '@/apis/minilessons'
 import { videoToUrl } from '@/apis/videoIdToUrl'
@@ -376,16 +377,10 @@ const changeSolutionPrompt = (valueHtml: any) => {
   console.log('solutionPrompt', solutionPrompt.value)
 }
 
-//------------------下载文档格式功能-----------------------
-
-const downloadFromatFile = () => { }
-
 //-------------------------------------------------------
 
 const radio1 = ref('')
 const radio2 = ref('')
-
-const editDialogShow = ref(false)
 
 const diffcultySearch = (val: any) => {
   searchQuestionData.difficultyType = val
@@ -421,7 +416,8 @@ const typeSearch = (val: any) => {
 
       <div class="margin-left">
         <el-text style="margin-left: 10px;">相关内容:</el-text>
-        <el-input  style="margin-left:5px" class="select-width" @change="loadData" v-model="searchQuestionData.questionPrompt"></el-input>
+        <el-input style="margin-left:5px" class="select-width" @change="loadData"
+          v-model="searchQuestionData.questionPrompt"></el-input>
       </div>
     </div>
 
@@ -429,14 +425,6 @@ const typeSearch = (val: any) => {
       <el-button :disabled="!author.questionsEdit" type="primary" @click="questionCreate()">
         新建好题
       </el-button>
-      <!-- 
-                                                            <el-button class="margin-left" type="primary">
-                                                                文档导入
-                                                            </el-button>
-
-                                                            <el-link class="margin-left" type="primary" @click="downloadFromatFile">
-                                                                下载文档格式
-                                                            </el-link> -->
     </div>
 
     <div class="margin">
@@ -466,7 +454,7 @@ const typeSearch = (val: any) => {
     </div>
 
     <el-scrollbar class="scrollBarHeight">
-      <el-card v-for="item in tableData" :key="item.id" style="margin-bottom: 10px;">
+      <el-card v-for="item in tableData" :key="item.id" style="margin-bottom: 10px">
         <div style="display: flex;">
           <span style="margin-left: 5px;">
             {{ item.difficultyType == 1 ? "容易"
@@ -522,13 +510,27 @@ const typeSearch = (val: any) => {
 
         <div v-if="item.type == 1 || item.type == 2 || item.type == 3" style="display:flex; flex-direction:row">
           <div style="margin-left:10px;margin-top: 10px;" v-for="items in JSON.parse(item.options)" :key="items.options">
-            {{ items.identifier }}: {{ items.description }}</div>
+            {{ items.identifier }}: 
+            <OptionText :key="2" :questionPrompt="items.description" :isShow="false"></OptionText>
+          </div>
         </div>
 
-        <div style="display:flex; flex-direction:row; margin-bottom: 10px;margin-top: 10px;">
+        <div v-if="item.type == 1 || item.type == 2 || item.type == 3 || item.type == 4" style="display:flex; flex-direction:row; margin-bottom: 10px;margin-top: 10px;">
           <div style="margin-left:10px">
             答案：{{ JSON.parse(item.answer).answers ? JSON.parse(item.answer).answers
               : JSON.parse(item.answer).correct == true ? '正确' : '错误' }}
+          </div>
+        </div>
+
+        <div v-else-if="item.type == 5" style="display:flex; flex-direction:row; margin-bottom: 10px;margin-top: 10px;">
+          答案：<div style="margin-left:10px" v-for="items in JSON.parse(item.answer).answers" :key="items.answer">
+            <OptionText :key="2" :questionPrompt="items" :isShow="false"></OptionText>
+          </div>
+        </div>
+
+        <div v-else-if="item.type == 6" style="display:flex; flex-direction:row; margin-bottom: 10px;margin-top: 10px;">
+          答案：<div style="margin-left:10px">
+            <OptionText :key="2" :questionPrompt="JSON.parse(item.answer).answers" :isShow="false"></OptionText>
           </div>
         </div>
       </el-card>
