@@ -58,7 +58,7 @@ const freeCourseDialogShow = ref(false)
 const freeCourseInfo = reactive<any>({
   courseQuestionPackageSnapshot: "",
   id: 0,
-  studentId: 0,
+  studentIds: [],
   type: 0
 })
 const allStudent = reactive<any>([])
@@ -66,7 +66,7 @@ const allStudent = reactive<any>([])
 const giveCourse = (item: any) => {
   freeCourseInfo.id = item.rowData.id
   freeCourseInfo.type = 2
-  freeCourseInfo.studentId = ''
+  freeCourseInfo.studentIds = []
   snapShot.androidPoint = item.rowData.androidPoint
   snapShot.categoryId = item.rowData.categoryId
   snapShot.categoryName = item.rowData.categoryName
@@ -98,7 +98,7 @@ const freeCourseCreateConfirm = () => {
   var args = {
     id: freeCourseInfo.id,
     courseQuestionPackageSnapshot: JSON.stringify(snapShot),
-    studentId: freeCourseInfo.studentId,
+    studentIds: freeCourseInfo.studentIds,
     type: freeCourseInfo.type
   }
   freePackageCreate(args).then((res: any) => {
@@ -629,7 +629,7 @@ const showDetail = (item: any) => {
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>选择学生：
         </span>
-        <el-select filterable class="dialog-input" v-model="freeCourseInfo.studentId">
+        <el-select filterable multiple class="dialog-input" v-model="freeCourseInfo.studentIds">
           <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>

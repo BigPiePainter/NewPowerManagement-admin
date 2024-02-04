@@ -20,13 +20,13 @@ const snapShot = reactive<any>({})
 const freeOrderDialogShow = ref(false)
 const freeOrderInfo = reactive<any>({
   productId: '',
-  studentId: '',
+  studentIds: [],
   totalAmount: ''
 })
 const allStudent = reactive<any>([])
 const freeOrderClick = (item: any) => {
   freeOrderInfo.productId = item.rowData.id
-  freeOrderInfo.studentId = ''
+  freeOrderInfo.studentIds = []
   freeOrderInfo.totalAmount = item.rowData.androidPrice
   snapShot.androidPoint = item.rowData.androidPoint
   snapShot.categoryId = item.rowData.categoryId
@@ -65,7 +65,7 @@ const freeOrderCreateConfirm = () => {
   var args = {
     productId: freeOrderInfo.productId,
     productSnapshot: JSON.stringify(snapShot),
-    studentId: freeOrderInfo.studentId,
+    studentIds: freeOrderInfo.studentIds,
     totalAmount: freeOrderInfo.totalAmount
   }
   freeOrderCreate(args)
@@ -754,7 +754,7 @@ const editGoodsHot = (props: any) => {
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>选择学生：
         </span>
-        <el-select filterable class="dialog-input" v-model="freeOrderInfo.studentId">
+        <el-select filterable multiple class="dialog-input" v-model="freeOrderInfo.studentIds">
           <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>

@@ -311,9 +311,9 @@ const loadData = () => {
     pageNum: paginationInfo.currentPage,
     pageSize: paginationInfo.pageSize,
     type: paginationInfo.type,
-    account: searchBarItems[2].value,
-    name: searchBarItems[0].value,
-    phoneNumber: searchBarItems[1].value,
+    account: searchBarItems[0].value,
+    name: searchBarItems[1].value,
+    phoneNumber: searchBarItems[2].value,
     gradeIds: searchBarItems[3].value
   }
   getStudent(args)
