@@ -773,7 +773,7 @@ watch(() => newQuestionData.type, (val: any) => {
           <span style="margin-right: 5px;">
             {{ option }}
           </span>
-          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="newSMultipleChoiceQuestion[option]"
+          <OptionText :set-height="50" :set-width="250" :inputId="(option as unknown as string)" :key="2" :questionPrompt="newSMultipleChoiceQuestion[option]"
             :option="(option as unknown as string)" :isShow="true" @change="changeOptionPrompt"
             v-model="newSMultipleChoiceQuestion[option]">
           </OptionText>
@@ -802,7 +802,7 @@ watch(() => newQuestionData.type, (val: any) => {
           <span style="margin-right: 5px;">
             {{ option }}
           </span>
-          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="newSMultipleChoiceQuestion[option]"
+          <OptionText :set-height="50" :set-width="250" :key="2" :inputId="(option as unknown as string)" :questionPrompt="newSMultipleChoiceQuestion[option]"
             :option="(option as unknown as string)" :isShow="true" @change="changeOptionPrompt"
             v-model="newSMultipleChoiceQuestion[option]">
           </OptionText>
@@ -831,7 +831,7 @@ watch(() => newQuestionData.type, (val: any) => {
           <span style="margin-right: 5px;">
             {{ option }}
           </span>
-          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="newSMultipleChoiceQuestion[option]"
+          <OptionText :set-height="50" :set-width="250" :key="2" :inputId="(option as unknown as string)" :questionPrompt="newSMultipleChoiceQuestion[option]"
             :option="(option as unknown as string)" :isShow="true" @change="changeOptionPrompt"
             v-model="newSMultipleChoiceQuestion[option]">
           </OptionText>
@@ -863,7 +863,7 @@ watch(() => newQuestionData.type, (val: any) => {
       <diV>
         <div style="margin-bottom:10px">答案：</div>
         <div style="margin-top: 10px" v-for="(val, option) in fillBlankQuestionAnswer" :key="option">
-          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="fillBlankQuestionAnswer[option]" :option="(option as unknown as string)"
+          <OptionText :set-height="50" :set-width="250" :key="2" :inputId="(option as unknown as string)" :questionPrompt="fillBlankQuestionAnswer[option]" :option="(option as unknown as string)"
             :isShow="true" @change="changeBlankFillingPrompt" v-model="fillBlankQuestionAnswer[option]">
           </OptionText>
         </div>
@@ -876,7 +876,7 @@ watch(() => newQuestionData.type, (val: any) => {
 
     <div style="width: 300px;" v-if="newQuestionData.type == '6'">
       <div style="margin-top: 20px;margin-bottom:10px">答案：</div>
-      <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="newAnswer" :isShow="true"
+      <OptionText :set-height="50" :set-width="250" :key="2" :inputId="(111 as unknown as string)" :questionPrompt="newAnswer" :isShow="true"
         @change="changeBigQuestionAnswerPrompt" v-model="newAnswer">
       </OptionText>
     </div>

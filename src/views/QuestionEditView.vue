@@ -442,7 +442,7 @@ const minBlank = () => {
           <span style="margin-right: 5px;">
             {{ item.identifier }}
           </span>
-          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="item.description" :option="item.identifier" :isShow="true"
+          <OptionText :set-height="50" :set-width="250" :key="2" :inputId="(item.identifier as unknown as string)" :questionPrompt="item.description" :option="item.identifier" :isShow="true"
             @change="changeOptionPrompt" v-model="item.description">
           </OptionText>
         </div>
@@ -464,7 +464,7 @@ const minBlank = () => {
           <span style="margin-right: 5px;">
             {{ item.identifier }}
           </span>
-          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="item.description" :option="item.identifier" :isShow="true"
+          <OptionText :set-height="50" :set-width="250" :key="2" :inputId="(item.identifier as unknown as string)" :questionPrompt="item.description" :option="item.identifier" :isShow="true"
             @change="changeOptionPrompt" v-model="item.description">
           </OptionText>
         </div>
@@ -487,7 +487,7 @@ const minBlank = () => {
           <span style="margin-right: 5px;">
             {{ item.identifier }}
           </span>
-          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="item.description" :option="item.identifier" :isShow="true"
+          <OptionText :set-height="50" :set-width="250" :key="2" :inputId="(item.identifier as unknown as string)" :questionPrompt="item.description" :option="item.identifier" :isShow="true"
             @change="changeOptionPrompt" v-model="item.description">
           </OptionText>
         </div>
@@ -514,7 +514,7 @@ const minBlank = () => {
       <diV>
         <div style="margin-bottom:10px">答案：</div>
         <div style="margin-top: 10px" v-for="(val, option) in fillBlankQuestionAnswer" :key="option">
-          <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="fillBlankQuestionAnswer[option]" :option="(option as unknown as string)"
+          <OptionText :set-height="50" :set-width="250" :key="2" :inputId="(option as unknown as string)" :questionPrompt="fillBlankQuestionAnswer[option]" :option="(option as unknown as string)"
             :isShow="true" @change="changeBlankFillingPrompt" v-model="fillBlankQuestionAnswer[option]">
           </OptionText>
         </div>
@@ -528,7 +528,7 @@ const minBlank = () => {
     <div style="width: 300px;" v-if="editQuestionData.type == '6'">
       <div style="margin-top: 20px;margin-bottom:10px">答案：</div>
       <!-- <el-input placeholder="请输入答案" v-model="editQuestionData.answer.answers"></el-input> -->
-      <OptionText :set-height="50" :set-width="250" :key="2" :questionPrompt="editQuestionData.answer.answers" :isShow="true"
+      <OptionText :set-height="50" :set-width="250" :key="2" :inputId="(111 as unknown as string)" :questionPrompt="editQuestionData.answer.answers" :isShow="true"
         @change="changeBigQuestionAnswerPrompt" v-model="editQuestionData.answer.answers">
       </OptionText>
       

@@ -16,6 +16,7 @@ type Props = {
   option?: string
   setHeight?: number
   setWidth?: number
+  inputId: string
 }
 const props = defineProps<Props>()
 
@@ -58,7 +59,7 @@ const handleDestroyed = (editor: any) => {
 };
 
 const insertImage = () => {
-  var tg = document.getElementById("file")
+  var tg = document.getElementById(props.inputId)
   tg?.click()
 }
 
@@ -117,7 +118,7 @@ watch(() => props.option, (val: any) => {
     <Editor :defaultConfig="editorConfig" mode="simple" v-model=valueHtml :style="{height: setHeight + 'px',width: setWidth + 'px'}"
       @onCreated="handleCreated" @onDestroyed="handleDestroyed" @onChange="handleCurrentChange" />
     <button v-if="isShow" style="margin-top: 10px;" @click="insertImage">插入图片</button>
-    <input v-if="isShow" type="file" accept="image/png, image/jpeg, image/jpg" id="file" @change="handleFileChange"
+    <input v-if="isShow" type="file" accept="image/png, image/jpeg, image/jpg" :id="inputId" @change="handleFileChange"
       style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
   </div>
 </template>
