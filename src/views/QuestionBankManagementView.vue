@@ -12,6 +12,7 @@ import { useBreadcrumbStore } from '@/stores/breadcrumb'
 import { getAllTeachers } from '@/apis/teacher'
 import { freePackageCreate } from '@/apis/freeOrder'
 import { getAllStudents } from '@/apis/student'
+import { upload } from '@/apis/upload'
 import RichTextEditor from '@/components/RichTextEditor.vue';
 
 const breadcrumbStore = useBreadcrumbStore()
@@ -541,6 +542,49 @@ const showDetail = (item: any) => {
   detailPrompt.value = item.cellData;
   detailTitle.value = item.rowData.name
 }
+
+const bgc = ref('#e2e5ec')
+const mouseEnter = () => {
+  bgc.value = '#BEC2CB'
+}
+const mouseLeave = () => {
+  bgc.value = '#e2e5ec'
+}
+
+const handleFileChange = (e: Event) => {
+  const currentTarget = e.target as HTMLInputElement;
+  //图片上传到服务器返回url
+  //url在res.data.url
+  if (currentTarget.files) {
+    var imageSize = currentTarget.files[0].size
+    var formData = new FormData()
+    formData.append('file', currentTarget.files[0])
+    if (imageSize < 1048576) {
+      upload(formData)
+        .then((res: any) => {
+          if (res.code != 20000) {
+            console.log(res)
+            console.log("失败")
+            ElNotification({
+              title: '封面上传失败',
+              message: res.msg,
+              type: 'error'
+            })
+          } else {
+            console.log(res)
+            newCourseData.cover = res.data.url
+          }
+        })
+        .catch()
+    } else {
+      console.log("too big")
+      ElNotification({
+        title: '图片不能大于1MB',
+        type: 'error'
+      })
+    }
+  }
+}
 </script>
 
 <template>
@@ -557,13 +601,17 @@ const showDetail = (item: any) => {
 
   <el-dialog class="new-class-dialog" width="370px" v-model="editDialogShow">
     <div>
-      <!-- <div class="div-input-element">
-        <span class="dialog-span">
-          <el-text style="color:#ff0000">*</el-text>封面路径：
-        </span>
-        <el-input class="dialog-input" v-model="newCourseData.cover">
-        </el-input>
-      </div> -->
+      <div v-bind:style="{ backgroundColor: bgc }" class="upload-file-area" @mouseenter="mouseEnter"
+        @mouseleave="mouseLeave" @dragenter="mouseEnter" @dragleave="mouseLeave">
+        <img class="show-img" id="show_img" :src="newCourseData.cover" />
+        <div class="upload-file-area-text">
+          <el-text>点击此处或拖拽上传封面</el-text>
+          <el-text>图片不大于1MB</el-text>
+          <el-text>只接受 *.png *.jpg *.jpeg</el-text>
+        </div>
+        <input class="upload-file-input" type="file" accept="image/png, image/jpeg, image/jpg"
+          @change="handleFileChange" />
+      </div>
       <div class="div-input-element">
         <span class="dialog-span">
           <el-text style="color:#ff0000">*</el-text>好题包名称：
@@ -653,6 +701,55 @@ const showDetail = (item: any) => {
 
 <style lang="scss" scoped>
 $gap: 15px;
+
+.upload-file-area {
+  // text-align: center;
+  width: 300px;
+  min-height: 200px;
+  //height: 300px;
+  background-color: v-bind(bgc);
+  margin-bottom: 15px;
+  //border-radius: 5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  // &:hover{
+  //   background-color: green;
+  // }
+  >.show-img {
+    //height: 300px;
+    width: 300px;
+    height: auto;
+    //border-radius: 5px;
+    pointer-events: none;
+    //position: absolute;
+    //top: 80px;
+    z-index: 3;
+  }
+
+  >.upload-file-area-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  >.upload-file-input {
+    position: absolute;
+    opacity: 0;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+}
 
 .page-container {
   width: calc($page-width - $gap);
