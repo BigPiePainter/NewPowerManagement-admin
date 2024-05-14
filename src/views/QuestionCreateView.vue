@@ -91,9 +91,10 @@ const selectLessonDialog = () => {
 }
 
 const selectLesson = (cellData: any) => {
-  console.log(cellData)
+  // console.log(cellData)
   videoToUrl({ videoId: cellData.rowData.videoId })
     .then((res: any) => {
+      newQuestionData.videoId = cellData.rowData.videoId
       newQuestionData.filePath = res.playURL
       lessonName.value = cellData.rowData.name
       if (document.getElementById('uploadVideoInput')) {
@@ -158,7 +159,8 @@ const newQuestionData = reactive<{
   option: string,
   answer: string,
   solution: string,
-  filePath: string
+  filePath: string,
+  videoId: string
 }>({
   difficultyType: '',
   gradeId: '',
@@ -169,7 +171,8 @@ const newQuestionData = reactive<{
   option: '',
   answer: '',
   solution: '',
-  filePath: ''
+  filePath: '',
+  videoId: ''
 });
 
 const allQuestionType = [
