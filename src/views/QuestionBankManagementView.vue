@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton, ElNotification } from 'element-plus'
+import { ElButton, ElNotification, ElCheckbox } from 'element-plus'
 import SearchBar from '@/components/SearchBar.vue'
 import TablePage from '@/components/TablePage.vue'
 import { useRouter } from 'vue-router'
@@ -13,6 +13,7 @@ import { getAllTeachers } from '@/apis/teacher'
 import { freePackageCreate } from '@/apis/freeOrder'
 import { getAllStudents } from '@/apis/student'
 import { upload } from '@/apis/upload'
+import type { CheckboxValueType } from 'element-plus'
 import RichTextEditor from '@/components/RichTextEditor.vue';
 
 const breadcrumbStore = useBreadcrumbStore()
@@ -56,6 +57,7 @@ const clickDetail = (props: any) => {
 
 const snapShot = reactive<any>({})
 const freeCourseDialogShow = ref(false)
+const multipleFreeCourseDialogShow = ref(false)
 const freeCourseInfo = reactive<any>({
   courseQuestionPackageSnapshot: "",
   id: 0,
@@ -93,8 +95,7 @@ const giveCourse = (item: any) => {
   freeCourseDialogShow.value = true
 }
 
-const freeCourseCreateConfirm = () => {
-
+const freePackageCreateConfirm = () => {
   freeCourseDialogShow.value = false
   var args = {
     id: freeCourseInfo.id,
@@ -102,21 +103,22 @@ const freeCourseCreateConfirm = () => {
     studentIds: freeCourseInfo.studentIds,
     type: freeCourseInfo.type
   }
-  freePackageCreate(args).then((res: any) => {
-    if (res.code != 20000) {
-      ElNotification({
-        title: '下发失败',
-        message: res.msg,
-        type: 'error'
-      })
-    } else {
-      ElNotification({
-        title: '成功',
-        message: '好题包下发成功',
-        type: 'success'
-      })
-    }
-  })
+  freePackageCreate(args)
+    .then((res: any) => {
+      if (res.code != 20000) {
+        ElNotification({
+          title: '下发失败',
+          message: res.msg,
+          type: 'error'
+        })
+      } else {
+        ElNotification({
+          title: '成功',
+          message: '好题包下发成功',
+          type: 'success'
+        })
+      }
+    })
     .catch((res: any) => {
       ElNotification({
         title: '下发失败',
@@ -124,6 +126,77 @@ const freeCourseCreateConfirm = () => {
         type: 'error'
       })
     })
+}
+
+const selectedPackages = ref<any>([])
+const clickMultipuleFreePackageCreate = () => {
+  freeCourseInfo.studentIds = []
+  console.log("多选好题包")
+  selectedPackages.value = tableData.value.filter((data: any) => data.checked == true)
+  console.log(selectedPackages)
+
+  getAllStudents()
+    .then((res: any) => {
+      allStudent.length = 0
+      res.data.forEach((item: any) => {
+        allStudent.push(item)
+      })
+    })
+
+  multipleFreeCourseDialogShow.value = true
+}
+
+const multipleFreePackageCreateConfirm = () => {
+  multipleFreeCourseDialogShow.value = false
+  selectedPackages.value.forEach((item: any) => {
+    freeCourseInfo.id = item.id
+    freeCourseInfo.type = 2
+    snapShot.androidPoint = item.androidPoint
+    snapShot.categoryId = item.categoryId
+    snapShot.categoryName = item.categoryName
+    snapShot.coursesQuestionPackagesId = item.id
+    snapShot.cover = item.cover
+    snapShot.gradeId = item.gradeId
+    snapShot.gradeName = item.gradeName
+    snapShot.iosPoint = item.iosPoint
+    snapShot.name = item.name
+    snapShot.subjectId = item.subjectId
+    snapShot.subjectName = item.subjectName
+    snapShot.type = 2
+    snapShot.version = item.version
+    snapShot.versionType = item.versionType
+
+    var args = {
+      id: freeCourseInfo.id,
+      courseQuestionPackageSnapshot: JSON.stringify(snapShot),
+      studentIds: freeCourseInfo.studentIds,
+      type: freeCourseInfo.type
+    }
+    freePackageCreate(args)
+      .then((res: any) => {
+        if (res.code != 20000) {
+          ElNotification({
+            title: '下发失败',
+            message: res.msg,
+            type: 'error'
+          })
+        } else {
+          ElNotification({
+            title: '成功',
+            message: '好题包下发成功',
+            type: 'success'
+          })
+        }
+      })
+      .catch((res: any) => {
+        ElNotification({
+          title: '下发失败',
+          message: res.msg,
+          type: 'error'
+        })
+      })
+  })
+
 }
 
 const newCourseData = reactive<any>({
@@ -138,6 +211,21 @@ const newCourseData = reactive<any>({
   cover: ''
 });
 const tableColumns = [
+  {
+    key: 'selection',
+    width: 50,
+    cellRenderer: (item: any) => {
+      const onChange = (value: CheckboxValueType) => item.rowData.checked = value
+      return <ElCheckbox modelValue={item.rowData.checked} onChange={onChange} />
+    },
+    headerCellRenderer: () => {
+      const onChange = (value: CheckboxValueType) => {
+        tableData.value.forEach((i: any) => i.checked = value);
+      }
+      return <ElCheckbox onChange={onChange} modelValue={tableData.value.every((i: any) => i.checked)} indeterminate={!tableData.value.every((i: any) => i.checked) && tableData.value.some((i: any) => i.checked)} />
+    },
+    checked: false,
+  },
   {
     dataKey: 'id',
     key: 'id',
@@ -593,9 +681,11 @@ const handleFileChange = (e: Event) => {
     <div class="div-search-bar">
       <SearchBar :items="searchBarItems" @change="loadData()"></SearchBar>
     </div>
-    <div>
+    <div style="display: flex;">
       <el-button class="new-button" style="margin-bottom: 15px; margin-left: 15px;" type="primary" @click="clickCreate"
         :disabled='!author.questionPackageEdit'>新建好题包</el-button>
+      <div style="flex-grow: 1;"></div>
+      <el-button style="margin-right: 15px;" @click="clickMultipuleFreePackageCreate">多选下发</el-button>
     </div>
   </TablePage>
 
@@ -686,7 +776,29 @@ const handleFileChange = (e: Event) => {
       <el-text>下发题包</el-text>
     </template>
     <template #footer>
-      <el-button type="primary" @click="freeCourseCreateConfirm()">确定</el-button>
+      <el-button type="primary" @click="freePackageCreateConfirm()">确定</el-button>
+      <el-button @click="freeCourseDialogShow = false">
+        取消
+      </el-button>
+    </template>
+  </el-dialog>
+
+  <el-dialog class="teacher-group-dialog" width="400px" v-model="multipleFreeCourseDialogShow">
+    <div>
+      <div class="div-input-element">
+        <span class="dialog-span">
+          <el-text style="color:#ff0000">*</el-text>选择学生：
+        </span>
+        <el-select filterable multiple class="dialog-input" v-model="freeCourseInfo.studentIds">
+          <el-option v-for="item in allStudent" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </div>
+    </div>
+    <template #header>
+      <el-text>下发题包</el-text>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="multipleFreePackageCreateConfirm()">确定</el-button>
       <el-button @click="freeCourseDialogShow = false">
         取消
       </el-button>
