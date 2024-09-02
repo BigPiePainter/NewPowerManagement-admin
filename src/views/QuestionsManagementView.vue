@@ -49,6 +49,7 @@ const editSolutionShow = ref(false)
 const solutionPrompt = ref('')
 const videoFilePath = ref('')
 const questionId = ref('')
+const videoId = ref('')
 const dialogVisible = ref(false)
 const dialogTableData = ref<any>([])
 const searchBarItems = reactive([
@@ -99,13 +100,13 @@ const tableColumns = [
   }
 ]
 
-const url = ref<any>('')
+// const url = ref<any>('')
 const playVideo2 = (videoId: any) => {
   var args = { videoId: videoId }
   console.log(args)
   videoToUrl(args).then((res: any) => {
     console.log(res)
-    url.value = res.playURL
+    videoFilePath.value = res.playURL
     videoShow.value = true
   })
 }
@@ -113,6 +114,7 @@ const playVideo2 = (videoId: any) => {
 const selectLesson = (cellData: any) => {
   videoToUrl({ videoId: cellData.rowData.videoId })
     .then((res: any) => {
+      videoId.value = cellData.rowData.videoId
       getVideoPath(res.playURL)
       dialogVisible.value = false
     })
@@ -286,7 +288,8 @@ const getVideoPath = (filePath: any) => {
   console.log('filePath', filePath)
   var args = {
     id: questionId.value,
-    filePath: filePath
+    filePath: filePath,
+    videoId: videoId.value
   }
   console.log('args', args)
   editGoodQuestion(args)

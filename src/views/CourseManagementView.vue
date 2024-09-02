@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { ref, reactive } from 'vue'
-import { ElButton, ElNotification } from 'element-plus'
+import { ElButton, ElNotification, ElCheckbox } from 'element-plus'
+import type { CheckboxValueType } from 'element-plus'
 import TablePage from '@/components/TablePage.vue'
 import { freePackageCreate } from '@/apis/freeOrder'
 import { useRouter } from 'vue-router'
@@ -15,6 +16,8 @@ import { InputType } from '@/type'
 import { upload } from '@/apis/upload'
 
 const breadcrumbStore = useBreadcrumbStore()
+
+const multipleSelectionMode = ref(false)
 
 const author = JSON.parse(localStorage.author)
 const allGrades = reactive<any>([])
@@ -95,6 +98,21 @@ const giveCourse = (item: any) => {
   freeCourseDialogShow.value = true
 }
 
+const multipuleCourseData = ref<any>([])
+
+const giveMultipleCourse = () => {
+  freeCourseInfo.studentIds = []
+  getAllStudents()
+    .then((res: any) => {
+      allStudent.length = 0
+      res.data.forEach((item: any) => {
+        allStudent.push(item)
+      })
+    })
+
+  freeCourseDialogShow.value = true
+}
+
 const freeCourseCreateConfirm = () => {
   freeCourseDialogShow.value = false
   var args = {
@@ -125,6 +143,65 @@ const freeCourseCreateConfirm = () => {
         type: 'error'
       })
     })
+}
+
+const multipleFreeCourseCreateConfirm = () => {
+  freeCourseDialogShow.value = false
+  multipuleCourseData.value = tableData.value.filter((item: any) => item.checked)
+  console.log(multipuleCourseData.value)
+
+  multipuleCourseData.value.forEach((item: any) => {
+    freeCourseInfo.id = item.id
+    freeCourseInfo.type = 1
+    freeCourseInfo.totalAmount = item.androidPrice
+    snapShot.androidPoint = item.androidPoint
+    snapShot.categoryId = item.categoryId
+    snapShot.categoryName = item.categoryName
+    var idArr = []
+    idArr.push(item.id)
+    snapShot.coursesQuestionPackagesId = idArr
+    snapShot.cover = item.cover
+    snapShot.gradeId = item.gradeId
+    snapShot.gradeName = item.gradeName
+    snapShot.iosPoint = item.iosPoint
+    snapShot.name = item.name
+    snapShot.subjectId = item.subjectId
+    snapShot.subjectName = item.subjectName
+    snapShot.type = 1
+    snapShot.version = item.version
+    snapShot.versionType = item.versionType
+
+    var args = {
+      id: item.id,
+      courseQuestionPackageSnapshot: JSON.stringify(snapShot),
+      studentIds: freeCourseInfo.studentIds,
+      type: 1
+    }
+
+    freePackageCreate(args).then((res: any) => {
+      if (res.code != 20000) {
+        ElNotification({
+          title: item.name + '下发失败',
+          message: res.msg,
+          type: 'error'
+        })
+        setTimeout( ()=> 1000 )
+      } else {
+        ElNotification({
+          title: item.name + '下发成功',
+          message: '课程包下发成功',
+          type: 'success'
+        })
+      }
+    })
+      .catch((res: any) => {
+        ElNotification({
+          title: item.name + '下发失败',
+          message: res.msg,
+          type: 'error'
+        })
+      })
+  });
 }
 
 const newCourseData = reactive<any>({
@@ -194,6 +271,124 @@ const couseDetail = (props: any) => {
     }
   })
 }
+
+const multipleTableColumns = [
+  {
+    key: 'selection',
+    width: 50,
+    cellRenderer: (item: any) => {
+      const onChange = (value: CheckboxValueType) => item.rowData.checked = value
+      return <ElCheckbox modelValue={item.rowData.checked} onChange={onChange} />
+    },
+    headerCellRenderer: () => {
+      const onChange = (value: CheckboxValueType) => {
+        tableData.value.forEach((i: any) => i.checked = value);
+      }
+      return <ElCheckbox onChange={onChange} modelValue={tableData.value.every((i: any) => i.checked)} indeterminate={!tableData.value.every((i: any) => i.checked) && tableData.value.some((i: any) => i.checked)} />
+    },
+    checked: false,
+  },
+  {
+    dataKey: 'id',
+    key: 'id',
+    title: 'ID',
+    width: 180
+  },
+  {
+    dataKey: 'name',
+    key: 'name',
+    title: '课程名称',
+    width: 200,
+    cellRenderer: (item: any) => {
+      if (item.rowData.labelName != null) {
+        return (
+          <>
+            <ElButton link type='primary' onClick={() => couseDetail(item)} class="detailed">{item.rowData.name}</ElButton>
+            <el-tag>{item.rowData.labelName}</el-tag>
+          </>
+        )
+      } else {
+        return (
+          <>
+            <ElButton link type='primary' onClick={() => couseDetail(item)} class="detailed">{item.rowData.name}</ElButton>
+          </>
+        )
+      }
+    },
+  },
+  {
+    dataKey: 'cover',
+    key: 'cover',
+    title: '封面',
+    width: 150,
+    cellRenderer: (item: any) => (
+      <el-image
+        fit="scale-down"
+        src={item.rowData.cover}
+        //onClick={()=>console.log(item)}
+        className="shop-Preview"
+        preview-src-list={[item.rowData.cover]}
+        preview-teleported
+      />
+    )
+  },
+  {
+    dataKey: 'teacherName',
+    key: 'teacherName',
+    title: '负责老师',
+    width: 100
+  },
+  {
+    dataKey: 'subjectName',
+    key: 'subjectName',
+    title: '课程类目',
+    width: 100
+  },
+  {
+    dataKey: 'gradeName',
+    key: 'gradeName',
+    title: '阶段',
+    width: 100
+  },
+  {
+    dataKey: 'createdAt',
+    key: 'createdAt',
+    title: '创建时间',
+    width: 200
+  },
+  {
+    key: 'option',
+    title: '操作',
+    cellRenderer: (item: any) => {
+      return (
+        <div>
+          <el-button disabled link type="primary" onClick={() => giveCourse(item)}>
+            下发
+          </el-button>
+          <el-button disabled link type="primary" onClick={() => editCourse(item)}>
+            编辑
+          </el-button>
+          <el-popconfirm
+            hide-after={0}
+            width="170"
+            title={`删除课程包${item.rowData.name}`}
+            onConfirm={() => preDeleteTea(item)}
+            v-slots={{
+              reference: () => (
+                <el-button disabled link type="danger">
+                  删除
+                </el-button>
+              )
+            }}
+          />
+        </div>
+      )
+    },
+    width: 150,
+    fixed: 'right',
+    align: 'left'
+  }
+]
 
 const tableColumns = [
   {
@@ -515,11 +710,20 @@ const handleFileChange = (e: Event) => {
 
 <template>
   <TablePage :loading="loading" class="page-container" :itemsTotalLength="totalLength" @paginationChange="pageChange"
-    :columns="tableColumns" :data="tableData">
+    :columns="multipleSelectionMode == true ? multipleTableColumns : tableColumns" :data="tableData">
     <div class='div-search-bar'>
       <SearchBar :items="searchBarItems" @change="loadData"></SearchBar>
-      <el-button :disabled='!author.coursePackageEdit' class="ARMbutton" type="primary"
-        @click="courseCreat">新建课程包</el-button>
+      <div style="display: flex;">
+        <el-button :disabled='!author.coursePackageEdit' class="ARMbutton" type="primary"
+          @click="courseCreat">新建课程包</el-button>
+        <div style="flex-grow: 1;"></div>
+        <el-button @click="giveMultipleCourse" v-if="multipleSelectionMode" :disabled='!author.coursePackageEdit'
+          class="ARMbutton" type="primary" plain>下发</el-button>
+        <el-button :disabled='!author.coursePackageEdit' class="ARMbutton"
+          :type="multipleSelectionMode == true ? 'danger' : 'primary'" plain
+          @click="multipleSelectionMode = !multipleSelectionMode">{{ multipleSelectionMode == true ? "取消" : "多选下发"
+          }}</el-button>
+      </div>
     </div>
   </TablePage>
 
@@ -612,7 +816,7 @@ const handleFileChange = (e: Event) => {
       <el-text>下发课程</el-text>
     </template>
     <template #footer>
-      <el-button type="primary" @click="freeCourseCreateConfirm()">确定</el-button>
+      <el-button type="primary" @click="multipleSelectionMode == true ? multipleFreeCourseCreateConfirm() : freeCourseCreateConfirm()">确定</el-button>
       <el-button @click="freeCourseDialogShow = false">
         取消
       </el-button>
@@ -622,6 +826,7 @@ const handleFileChange = (e: Event) => {
 
 <style scoped lang="scss">
 $gap: 15px;
+
 .upload-file-area {
   // text-align: center;
   width: 300px;
@@ -670,6 +875,7 @@ $gap: 15px;
     bottom: 0px;
   }
 }
+
 .page-container {
   width: calc($page-width - $gap);
   height: calc($page-height);
