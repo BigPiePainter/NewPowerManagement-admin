@@ -279,12 +279,12 @@ onMounted(() => {
       this.graphics = new PIXI.Graphics()
       this.graphics.alpha = 0.825
 
-      window.addEventListener(
-        'resize',
-        debounce(() => {
-          this.bounds = this.setBounds()
-        }, 250)
-      )
+      // window.addEventListener(
+      //   'resize',
+      //   debounce(() => {
+      //     this.bounds = this.setBounds()
+      //   }, 250)
+      // )
     }
 
     setBounds() {
