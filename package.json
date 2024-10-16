@@ -15,6 +15,7 @@
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.4.0",
+    "debounce": "^2.2.0",
     "element-plus": "^2.3.6",
     "pinia": "^2.0.36",
     "qs": "^6.11.2",
