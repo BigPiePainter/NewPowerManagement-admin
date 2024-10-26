@@ -246,7 +246,7 @@ const deleteClass = (props: { rowData: { id: string, name: string } }) => {
   deleteClassData.id = props.rowData.id
   deleteClassData.name = props.rowData.name
 }
-
+// test commit
 const confirmEditDialog = () => {
   console.log(editClassData)
   editClasses({
