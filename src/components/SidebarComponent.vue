@@ -1,8 +1,8 @@
 <script lang="ts">
-import * as PIXI from 'https://cdn.skypack.dev/pixi.js@5.x'
-import { KawaseBlurFilter } from 'https://cdn.skypack.dev/@pixi/filter-kawase-blur@3.2.0'
-import SimplexNoise from 'https://cdn.skypack.dev/simplex-noise@3.0.0'
-import hsl from 'https://cdn.skypack.dev/hsl-to-hex'
+import * as PIXI from 'pixi.js'
+import { KawaseBlurFilter } from '@pixi/filter-kawase-blur'
+import SimplexNoise from 'simplex-noise'
+import hsl from 'hsl-to-hex'
 import debounce from 'debounce'
 PIXI.utils.skipHello()
 console.log('超炫酷无敌动画依赖import加载完毕')
@@ -329,9 +329,13 @@ onMounted(() => {
     }
   }
 
+  const sidebarCanvas = document.querySelector<HTMLCanvasElement>('.sidebar-canvas')
+  const sidebarElement = document.querySelector<HTMLElement>('.sidebar')
+  if (!sidebarCanvas || !sidebarElement) return
+
   PIXIApp = new PIXI.Application({
-    view: document.querySelector('.sidebar-canvas'),
-    resizeTo: document.querySelector('.sidebar'),
+    view: sidebarCanvas,
+    resizeTo: sidebarElement,
     transparent: true
   })
 
@@ -363,7 +367,7 @@ console.log('全部结束')
 
 onUnmounted(() => {
   console.log(PIXIApp)
-  PIXIApp.stop()
+  PIXIApp?.stop()
 })
 </script>
 

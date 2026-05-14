@@ -16,7 +16,7 @@ type Props = {
   option?: string
   setHeight?: number
   setWidth?: number
-  inputId: string
+  inputId?: string
 }
 const props = defineProps<Props>()
 
@@ -59,6 +59,7 @@ const handleDestroyed = (editor: any) => {
 };
 
 const insertImage = () => {
+  if (!props.inputId) return
   var tg = document.getElementById(props.inputId)
   tg?.click()
 }
